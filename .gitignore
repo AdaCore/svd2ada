@@ -1,6 +1,12 @@
 # Object file
 *.o
 *.a
+auto.cgpr
+gpsauto.cgpr
+b__*
+gnatinspect*
+*.bexch
+*-loc.xml
 
 # Ada Library Information
 *.ali
