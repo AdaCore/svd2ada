@@ -1,5 +1,12 @@
 # Object file
 *.o
+*.a
 
 # Ada Library Information
 *.ali
+
+# Temporary files
+*~
+
+# executable
+svd2ada
