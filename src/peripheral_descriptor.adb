@@ -235,7 +235,7 @@ package body Peripheral_Descriptor is
 
       if Length (Peripheral.Version) > 0 then
          Ada_Gen.Gen_Constant
-           ("Version", "String", To_String (Peripheral.Version));
+           ("Version", "String", """" & To_String (Peripheral.Version) & """");
       end if;
 
       if not Interrupt_Vectors.Is_Empty (Peripheral.Interrupts) then
