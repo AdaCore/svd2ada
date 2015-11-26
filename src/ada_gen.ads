@@ -50,6 +50,14 @@ package Ada_Gen is
                        Comment : Unbounded_String);
    procedure End_Enum;
 
+   -- Array type
+   procedure Gen_Array_Type
+     (Id           : String;
+      Index_Type   : String;
+      Low          : Unsigned;
+      High         : Unsigned;
+      Element_Type : String);
+
    -- Constant Arrays:
 
    procedure Start_Constant_Array (Id      : String;
@@ -67,12 +75,12 @@ package Ada_Gen is
    procedure Add_Record_Field
      (Id          : String;
       Typ         : String;
-      Offset      : Natural;
-      LSB         : Natural;
-      MSB         : Natural;
+      Offset      : Unsigned;
+      LSB         : Unsigned;
+      MSB         : Unsigned;
       Descr       : String;
       Has_Default : Boolean := False;
-      Default     : Unsigned_32 := 0);
+      Default     : Unsigned := 0);
    --  Adds a new field to the record opened via Start_Record_Def
    --  Id : The ID of the field
    --  Typ : The base type
@@ -84,11 +92,11 @@ package Ada_Gen is
    procedure Add_Record_Union_Field
      (Id       : String;
       Typ      : String;
-      Elts     : Natural;
+      Elts     : Unsigned;
       Elts_Typ : String;
-      Offset   : Natural;
-      LSB      : Natural;
-      MSB      : Natural;
+      Offset   : Unsigned;
+      LSB      : Unsigned;
+      MSB      : Unsigned;
       Descr    : String);
    procedure End_Record
      (Kind : Record_Type);

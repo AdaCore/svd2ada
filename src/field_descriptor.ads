@@ -24,17 +24,20 @@ with DOM.Core;
 with Base_Types;                     use Base_Types;
 with Base_Types.Register_Properties; use Base_Types.Register_Properties;
 
+with Enumerate_Descriptor;
+
 --  Decodes the <field> elements of the SVD file.
 package Field_Descriptor is
 
    type Field_T is record
       Name             : Unbounded.Unbounded_String;
       Description      : Unbounded.Unbounded_String;
-      LSB              : Natural;
-      Size             : Natural;
+      LSB              : Unsigned;
+      Size             : Unsigned;
       Acc              : Access_Type := Undefined_Access;
       Mod_Write_Values : Modified_Write_Values_Type :=
                            Undefined_Modified_Write_Value;
+      Enums            : Enumerate_Descriptor.Enumerate_Vectors.Vector;
    end record;
 
    function "=" (F1, F2 : Field_T) return Boolean;
@@ -45,7 +48,8 @@ package Field_Descriptor is
                    0,
                    0,
                    Undefined_Access,
-                   Undefined_Modified_Write_Value);
+                   Undefined_Modified_Write_Value,
+                   Enumerate_Descriptor.Enumerate_Vectors.Empty_Vector);
 
    package Field_Vectors is new Ada.Containers.Vectors
      (Positive, Field_T);

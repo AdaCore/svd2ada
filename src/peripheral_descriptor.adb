@@ -196,26 +196,20 @@ package body Peripheral_Descriptor is
    is
       use Ada.Strings.Unbounded;
       Off          : Natural := 0;
-      Reserved_Num : Natural := 0;
    begin
+      Ada_Gen.Gen_Comment (To_String (Peripheral.Description));
       Ada_Gen.Start_Record_Def (Type_Name);
 
       for Reg of Peripheral.Registers loop
-         while Natural (Reg.Address_Offset) > Off loop
-            Ada_Gen.Add_Record_Field
-              ("Reserved_" & To_String (Reserved_Num),
-               Target_Type (32),
-               Off, 0, 31,
-               "");
-            Reserved_Num := Reserved_Num + 1;
-            Off := Off + 4;
-         end loop;
          Ada_Gen.Add_Record_Field
-           (To_String (Reg.Name),
-            Get_Ada_Type (Reg),
-            Off, 0, Natural (Reg.Reg_Properties.Size) - 1,
-            To_String (Reg.Description));
-         Off := Off + Natural (Reg.Reg_Properties.Size / 8);
+           (Id     => To_String (Reg.Name),
+            Typ    => Get_Ada_Type (Reg),
+            Offset => Reg.Address_Offset,
+            LSB    => 0,
+            MSB    => (if Reg.Dim = 0
+                       then Reg.Reg_Properties.Size - 1
+                       else Reg.Dim * Reg.Dim_Increment * 8 - 1),
+            Descr  => To_String (Reg.Description));
       end loop;
 
       Ada_Gen.End_Record (Register_List);
@@ -262,6 +256,11 @@ package body Peripheral_Descriptor is
       for Reg of Peripheral.Registers loop
          Dump (Reg);
       end loop;
+
+      Ada_Gen.Gen_Comment ("***************");
+      Ada_Gen.Gen_Comment ("* Peripherals *");
+      Ada_Gen.Gen_Comment ("***************");
+      Ada_Gen.Gen_NL;
 
       Dump_Periph_Type
         (Peripheral, To_String (Peripheral.Name) & "_Periph_T");

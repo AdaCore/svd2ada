@@ -17,6 +17,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Text_IO;
+with Interfaces;         use Interfaces;
 
 with DOM.Core;           use DOM.Core;
 with DOM.Core.Elements;  use DOM.Core.Elements;
@@ -90,9 +91,9 @@ package body Field_Descriptor is
                      for K in Val'Range loop
                         if Val(K) = ':' then
                            Ret.LSB :=
-                             Natural'Value (Val (K + 1 .. Val'Last - 1));
+                             Unsigned'Value (Val (K + 1 .. Val'Last - 1));
                            Ret.Size :=
-                             Natural'Value (Val (2 .. K - 1)) - Ret.LSB + 1;
+                             Unsigned'Value (Val (2 .. K - 1)) - Ret.LSB + 1;
                         end if;
                      end loop;
                   end;
@@ -102,6 +103,15 @@ package body Field_Descriptor is
 
                elsif Tag = "modifiedWriteValues" then
                   Ret.Mod_Write_Values := Get_Value (Child);
+
+               elsif Tag = "enumeratedValues" then
+                  declare
+                     Enum : constant Enumerate_Descriptor.Enumerate_T :=
+                              Enumerate_Descriptor.Read_Enumerate
+                                (Child, Ret.Enums);
+                  begin
+                     Ret.Enums.Append (Enum);
+                  end;
 
                else
                   Ada.Text_IO.Put_Line

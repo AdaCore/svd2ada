@@ -166,8 +166,10 @@ package Base_Types is
 
    function To_Hex (Val : Unsigned) return String;
    function To_String (Val : Integer) return String;
+   function To_String (Val : Unsigned) return String;
 
    function Target_Type (Size : Integer) return String;
+   function Target_Type (Size : Unsigned) return String;
    --  Returns the name of the type on the target given the size of the int
 
    function Get_Value (Elt : DOM.Core.Element) return String;
@@ -187,5 +189,6 @@ package Base_Types is
    function Get_Value (Elt : DOM.Core.Element) return Write_Constraint_Type;
    function Get_Value (Elt : DOM.Core.Element) return Address_Block_Type;
    function Get_Value (Elt : DOM.Core.Element) return Interrupt_Type;
+   function Get_Value (Elt : DOM.Core.Element) return Enum_Usage_Type;
 
 end Base_Types;

@@ -401,6 +401,27 @@ package body Ada_Gen is
       G_Indent := G_Indent - 1;
    end End_Enum;
 
+   --------------------
+   -- Gen_Array_Type --
+   --------------------
+
+   procedure Gen_Array_Type
+     (Id           : String;
+      Index_Type   : String;
+      Low          : Unsigned;
+      High         : Unsigned;
+      Element_Type : String)
+   is
+   begin
+      Put_Indent;
+      Put ("type " & Id & " is array (" & Index_Type & " range" & Low'Img &
+             " .." & High'Img & ")");
+      New_Line; Put_Indent;
+      Put ("  of " & Element_Type & ";");
+      New_Line;
+      New_Line;
+   end Gen_Array_Type;
+
    --------------------------
    -- Start_Constant_Array --
    --------------------------
@@ -476,12 +497,12 @@ package body Ada_Gen is
    procedure Add_Record_Field
      (Id          : String;
       Typ         : String;
-      Offset      : Natural;
-      LSB         : Natural;
-      MSB         : Natural;
+      Offset      : Unsigned;
+      LSB         : Unsigned;
+      MSB         : Unsigned;
       Descr       : String;
       Has_Default : Boolean := False;
-      Default     : Unsigned_32 := 0)
+      Default     : Unsigned := 0)
    is
       Low : constant String := Ada.Characters.Handling.To_Lower (Id);
    begin
@@ -490,16 +511,21 @@ package body Ada_Gen is
         or else Low = "abort"
         or else Low = "delay"
       then
-         Add_Record_Field (Id & "_r", Typ, Offset, LSB, MSB, Descr);
+         Add_Record_Field
+           (Id & "r", Typ, Offset,
+            LSB, MSB, Descr, Has_Default, Default);
          return;
       end if;
 
       G_Rec_Field_Id.Append (Id);
+
       if not Has_Default then
          G_Rec_Field_Type.Append (Typ & ";");
+
       else
-         G_Rec_Field_Type.Append (Typ & " :=" & Default'Img & ";");
+         G_Rec_Field_Type.Append (Typ & " :=" & To_Hex (Default) & ";");
       end if;
+
       G_Rec_Field_Desc.Append (Descr);
       G_Rec_Repr_Clause.Append
         ("at " & To_String (Offset) & " range " &
@@ -513,11 +539,11 @@ package body Ada_Gen is
    procedure Add_Record_Union_Field
      (Id       : String;
       Typ      : String;
-      Elts     : Natural;
+      Elts     : Unsigned;
       Elts_Typ : String;
-      Offset   : Natural;
-      LSB      : Natural;
-      MSB      : Natural;
+      Offset   : Unsigned;
+      LSB      : Unsigned;
+      MSB      : Unsigned;
       Descr    : String)
    is
       Union_T : constant String := Id & "_Union_T";

@@ -75,8 +75,25 @@ package body Register_Descriptor is
                Tag   : String renames Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
-                  Ret.Name := Get_Value (Child);
-
+                  if Ret.Dim = 0 then
+                     Ret.Name := Get_Value (Child);
+                  else
+                     declare
+                        Name : String renames Get_Value (Child);
+                     begin
+                        if Name'Length > 4
+                          and then Name (Name'Last - 3 .. Name'Last) = "[%s]"
+                        then
+                           Ret.Name :=
+                             Unbounded.To_Unbounded_String
+                               (Name (Name'First .. Name'Last - 4));
+                        elsif Name'Length > 0 then
+                           Ada.Text_IO.Put_Line
+                             ("*** WARNING: Unsupported register " &
+                                "naming schema: " & Name);
+                        end if;
+                     end;
+                  end if;
 
                elsif Tag = "displayName" then
                   Ret.Display_Name := Get_Value (Child);
@@ -123,6 +140,30 @@ package body Register_Descriptor is
                      end loop;
                   end;
 
+               elsif Tag = "dim" then
+                  Ret.Dim := Get_Value (Child);
+                  declare
+                     Name : String renames Unbounded.To_String (Ret.Name);
+                  begin
+                     if Name'Length > 4
+                       and then Name (Name'Last - 3 .. Name'Last) = "[%s]"
+                     then
+                        Ret.Name :=
+                          Unbounded.To_Unbounded_String
+                            (Name (Name'First .. Name'Last - 4));
+                     elsif Name'Length > 0 then
+                        Ada.Text_IO.Put_Line
+                          ("*** WARNING: Unsupported register naming schema: "
+                           & Name);
+                     end if;
+                  end;
+
+               elsif Tag = "dimIncrement" then
+                  Ret.Dim_Increment := Get_Value (Child);
+
+               elsif Tag = "dimIndex" then
+                  Ret.Dim_Index := Get_Value (Child);
+
                else
                   Ada.Text_IO.Put_Line
                     ("*** WARNING: ignoring register element " & Tag);
@@ -165,7 +206,9 @@ package body Register_Descriptor is
    begin
       return R1.Name = R2.Name
         and then R1.Address_Offset = R2.Address_Offset
-        and then R1.Reg_Properties.Size = R2.Reg_Properties.Size;
+        and then R1.Reg_Properties.Size = R2.Reg_Properties.Size
+        and then R1.Dim = R2.Dim
+        and then R1.Dim_Increment = R2.Dim_Increment;
    end "=";
 
    --------------
@@ -185,8 +228,10 @@ package body Register_Descriptor is
       for J in Vec2.First_index .. Vec2.Last_Index loop
          Reg2 := Vec2 (J);
 
+         --  See if Reg2 already exists in Vec1
          Idx := Vec1.Find_Index (Reg2);
          if Idx >= Vec1.First_Index then
+            --  Found it, try to merge the types
             Reg1 := Vec1.Element (Idx);
             if Length (Reg1.Type_Name) > 0 then
                --  Make sure that similar registers have the same type name
@@ -196,6 +241,7 @@ package body Register_Descriptor is
 
             elsif Length (Reg2.Type_Name) > 0 then
                Vec1.Append (Reg2);
+               --  ??? We should replace Reg1 here with a proper type_name
             end if;
          else
             Vec1.Append (Reg2);
@@ -255,18 +301,18 @@ package body Register_Descriptor is
    is
       use Field_Vectors;
       use type Ada.Containers.Count_Type;
-      F1, F2 : Field_T;
 
    begin
       if Length (R1.Fields) /= Length (R2.Fields) then
          return Unbounded.Null_Unbounded_String;
       end if;
 
-      for J in R1.Fields.First_Index .. R1.Fields.Last_Index loop
-         F1 := R1.Fields (J);
-         F2 := R2.Fields (J);
+      if R1.Dim /= R2.Dim then
+         return Unbounded.Null_Unbounded_String;
+      end if;
 
-         if F1 /= F2 then
+      for J in R1.Fields.First_Index .. R1.Fields.Last_Index loop
+         if Field_T'(R1.Fields (J)) /= R2.Fields (J) then
             return Unbounded.Null_Unbounded_String;
          end if;
       end loop;
@@ -278,9 +324,23 @@ package body Register_Descriptor is
    -- Get_Ada_Type --
    ------------------
 
-   function Get_Ada_Type (Reg : Register_T) return String is
+   function Get_Ada_Type (Reg      : Register_T;
+                          Elt_Type : Boolean := False) return String
+   is
+      use type Ada.Containers.Count_Type;
    begin
-      if not Field_Vectors.Is_Empty (Reg.Fields) then
+      if not Elt_Type and then Reg.Dim > 0 then
+         if Unbounded.Length (Reg.Type_Name) > 0 then
+            return Unbounded.To_String (Reg.Type_Name) & "_Array";
+         else
+            return Unbounded.To_String (Reg.Name) & "_Array";
+         end if;
+
+      elsif not Field_Vectors.Is_Empty (Reg.Fields)
+        and then
+          (Field_Vectors.Length (Reg.Fields) > 1
+           or else Reg.Fields.First_Element.Size /= Reg.Reg_Properties.Size)
+      then
          if Unbounded.Length (Reg.Type_Name) > 0 then
             return Unbounded.To_String (Reg.Type_Name) & "_T";
          else
@@ -324,16 +384,25 @@ package body Register_Descriptor is
    procedure Dump (Reg : Register_T)
    is
       use Ada.Strings.Unbounded;
+      use type Ada.Containers.Count_Type;
    begin
-      Gen_Comment (To_String (Reg.Description));
+      if Field_Vectors.Length (Reg.Fields) = 1
+        and then Reg.Fields.First_Element.Size = Reg.Reg_Properties.Size
+      then
+         --  Don't generate anything here: we use a base type definition here
+         if Reg.Dim > 0 then
+            --  Just generate a comment to document the array that's going
+            --  to be generated
+            Gen_Comment (To_String (Reg.Description));
+         end if;
 
-      if not Field_Vectors.Is_Empty (Reg.Fields) and then Reg.Gen_Type then
+      elsif not Field_Vectors.Is_Empty (Reg.Fields) and then Reg.Gen_Type then
          declare
-            Fields   : array (0 .. Natural (Reg.Reg_Properties.Size) - 1) of
+            Fields   : array (0 .. Reg.Reg_Properties.Size - 1) of
                          Field_T := (others => Null_Field);
-            Index    : Natural := 0;
-            Index2   : Natural;
-            Length   : Natural;
+            Index    : Unsigned := 0;
+            Index2   : Unsigned;
+            Length   : Unsigned;
             Prefix   : Natural;
             Default  : Unsigned_32;
             Mask     : Unsigned_32;
@@ -343,16 +412,16 @@ package body Register_Descriptor is
                Fields (Field.LSB) := Field;
             end loop;
 
-            Ada_Gen.Start_Record_Def (Get_Ada_Type (Reg));
+            Gen_Comment (To_String (Reg.Description));
 
-            while Index < Natural (Reg.Reg_Properties.Size) loop
+            Ada_Gen.Start_Record_Def (Get_Ada_Type (Reg, Elt_Type => True));
+
+            while Index < Reg.Reg_Properties.Size loop
                if Fields (Index) = Null_Field then
                   --  First look for undefined/reserved parts of the register
                   Length := 1;
 
-                  for J in Index + 1 ..
-                    Natural (Reg.Reg_Properties.Size) - 1
-                  loop
+                  for J in Index + 1 .. Reg.Reg_Properties.Size - 1 loop
                      if Fields (J) = Null_Field then
                         Length := Length + 1;
                      else
@@ -366,26 +435,27 @@ package body Register_Descriptor is
                      Default := 0;
                   else
                      Default :=
-                       Shift_Right (Reg.Reg_Properties.Reset_Value, Index);
+                       Shift_Right (Reg.Reg_Properties.Reset_Value,
+                                    Natural (Index));
                      Mask := 0;
                      for J in 0 .. Length - 1 loop
-                        Mask := Mask or 2 ** J;
+                        Mask := Mask or 2 ** Natural (J);
                      end loop;
                      Default := Default and Mask;
                   end if;
 
                   Ada_Gen.Add_Record_Field
                     ("Reserved_" & To_String (Index) &
-                       "_" & To_String (Index + Length - 1),
+                       "_" & To_String (Index + Unsigned (Length) - 1),
                      Target_Type (Length),
                      Offset      => 0,
                      LSB         => Index,
-                     MSB         => Index + Length - 1,
+                     MSB         => Index + Unsigned (Length) - 1,
                      Descr       => "",
                      Has_Default => True,
                      Default     => Default);
 
-                  Index    := Index + Length;
+                  Index    := Index + Unsigned (Length);
 
                else
                   --  Check if it's an array, in which case it's easier
@@ -395,7 +465,7 @@ package body Register_Descriptor is
                   Prefix := Unbounded.Length (Fields (Index).Name);
 
                   Index2 := Index + Fields (Index).Size;
-                  while Index2 < Natural (Reg.Reg_Properties.Size) loop
+                  while Index2 < Reg.Reg_Properties.Size loop
                      if Similar_Field
                        (Fields (Index), Fields (Index2), Prefix)
                      then
@@ -411,7 +481,7 @@ package body Register_Descriptor is
                      Ada_Gen.Add_Record_Union_Field
                        (Slice (Fields (Index).Name, 1, Prefix),
                         Target_Type (Length * Fields (Index).Size),
-                        Elts     => Length,
+                        Elts     => Unsigned (Length),
                         Elts_Typ => Target_Type (Fields (Index).Size),
                         Offset   => 0,
                         LSB      => Index,
@@ -432,6 +502,15 @@ package body Register_Descriptor is
             end loop;
             Ada_Gen.End_Record (Register);
          end;
+      end if;
+
+      if Reg.Dim > 0 then
+         Gen_Array_Type
+           (Get_Ada_Type (Reg, Elt_Type => False),
+            Index_Type   => "Natural",
+            Low          => 0,
+            High         => Reg.Dim - 1,
+            Element_Type => Get_Ada_Type (Reg, Elt_Type => True));
       end if;
    end Dump;
 

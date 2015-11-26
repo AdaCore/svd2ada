@@ -42,6 +42,20 @@ package body Base_Types is
       end if;
    end Target_Type;
 
+   -----------------
+   -- Target_Type --
+   -----------------
+
+   function Target_Type (Size : Unsigned) return String
+   is
+   begin
+      return Target_Type (Integer (Size));
+   end Target_Type;
+
+   ---------
+   -- "=" --
+   ---------
+
    function "=" (I1, I2 : Interrupt_Type) return Boolean
    is
       use Unbounded;
@@ -63,10 +77,18 @@ package body Base_Types is
    -- To_Hex --
    ------------
 
-   function To_Hex (Val : Unsigned) return String is
+   function To_Hex (Val : Unsigned) return String
+   is
       Ret : String (1 .. 12); --  16#01234567#
    begin
       Unsigned_IO.Put (Ret, Val, 16);
+
+      for J in Ret'Range loop
+         if Ret (J) /= ' ' then
+            return Ret (J .. Ret'Last);
+         end if;
+      end loop;
+
       return Ret;
    end To_Hex;
 
@@ -77,6 +99,21 @@ package body Base_Types is
    function To_String (Val : Integer) return String
    is
       S : constant String := Integer'Image (Val);
+   begin
+      if S (S'First) = ' ' then
+         return S (S'First + 1 .. S'Last);
+      else
+         return S;
+      end if;
+   end To_String;
+
+   ---------------
+   -- To_String --
+   ---------------
+
+   function To_String (Val : Unsigned) return String
+   is
+      S : constant String := Unsigned'Image (Val);
    begin
       if S (S'First) = ' ' then
          return S (S'First + 1 .. S'Last);
@@ -500,6 +537,26 @@ package body Base_Types is
    begin
       Read_Interrupt (Elt, Ret);
       return Ret;
+   end Get_Value;
+
+   ---------------
+   -- Get_Value --
+   ---------------
+
+   function Get_Value (Elt : DOM.Core.Element) return Enum_Usage_Type
+   is
+      Value : String renames Get_Value (Elt);
+   begin
+      if Value = "read" then
+         return Read;
+      elsif Value = "write" then
+         return Write;
+      elsif Value = "read-write" then
+         return Read_Write;
+      else
+         raise Constraint_Error
+           with "Invalid 'enum-usage' type value " & Value;
+      end if;
    end Get_Value;
 
 end Base_Types;

@@ -109,10 +109,10 @@ package body Device_Descriptor is
       end if;
 
       Ada_Gen.Gen_Comment ("Base type:");
-      Ada_Gen.Gen_Scalar_Type (Target_Type (32), 32);
-      Ada_Gen.Gen_Scalar_Type (Target_Type (16), 16);
-      Ada_Gen.Gen_Scalar_Type (Target_Type (8), 8);
-      Ada_Gen.Gen_Scalar_Type (Target_Type (1), 1);
+      Ada_Gen.Gen_Scalar_Type (Target_Type (Natural'(32)), 32);
+      Ada_Gen.Gen_Scalar_Type (Target_Type (Natural'(16)), 16);
+      Ada_Gen.Gen_Scalar_Type (Target_Type (Natural'(8)), 8);
+      Ada_Gen.Gen_Scalar_Type (Target_Type (Natural'(1)), 1);
       Ada_Gen.Gen_NL;
 
       for J in 2 .. Natural (Device.Width) loop

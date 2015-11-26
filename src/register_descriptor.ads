@@ -50,6 +50,9 @@ package Register_Descriptor is
       --  When two registers are identical, the second register will not
       --  generate an Ada type. We specify the behavior here
       Gen_Type         : Boolean := True;
+      Dim              : Unsigned := 0;
+      Dim_Increment    : Unsigned := 0;
+      Dim_Index        : Unbounded.Unbounded_String;
    end record;
 
    function "=" (R1, R2 : Register_T) return Boolean;
@@ -70,7 +73,8 @@ package Register_Descriptor is
       Reg_Properties : Register_Properties_T;
       Vec            : in out Register_Vectors.Vector) return Register_T;
 
-   function Get_Ada_Type (Reg : Register_T) return String;
+   function Get_Ada_Type (Reg      : Register_T;
+                          Elt_Type : Boolean := False) return String;
 
    procedure Dump (Reg : Register_T);
 
