@@ -158,7 +158,7 @@ package body Peripheral_Descriptor is
          end if;
       end loop;
 
-      Merge_Aliased (Ret.Registers);
+      Find_Aliased (Ret.Registers);
 
       return Ret;
    end Read_Peripheral;
@@ -208,16 +208,31 @@ package body Peripheral_Descriptor is
       Add_Aspect (Rec, "Volatile");
 
       for Reg of Peripheral.Registers loop
-         Add_Field
-           (Rec,
-            Id      => To_String (Reg.Name),
-            Typ     => Get_Ada_Type (Reg),
-            Offset  => Reg.Address_Offset,
-            LSB     => 0,
-            MSB     => (if Reg.Dim = 0
-                        then Reg.Reg_Properties.Size - 1
-                        else Reg.Dim * Reg.Dim_Increment * 8 - 1),
-            Comment => To_String (Reg.Description));
+         if Reg.Is_Aliased then
+            if Reg.First_Alias then
+               Add_Field
+                 (Rec,
+                  Id      => To_String (Reg.Alias_Name),
+                  Typ     => Get_Ada_Type (Reg),
+                  Offset  => Reg.Address_Offset,
+                  LSB     => 0,
+                  MSB     => (if Reg.Dim = 0
+                              then Reg.Reg_Properties.Size - 1
+                              else Reg.Dim * Reg.Dim_Increment * 8 - 1),
+                  Comment => To_String (Reg.Description));
+            end if;
+         else
+            Add_Field
+              (Rec,
+               Id      => To_String (Reg.Name),
+               Typ     => Get_Ada_Type (Reg),
+               Offset  => Reg.Address_Offset,
+               LSB     => 0,
+               MSB     => (if Reg.Dim = 0
+                           then Reg.Reg_Properties.Size - 1
+                           else Reg.Dim * Reg.Dim_Increment * 8 - 1),
+               Comment => To_String (Reg.Description));
+         end if;
       end loop;
 
       Add (Spec, Rec);
@@ -266,6 +281,8 @@ package body Peripheral_Descriptor is
       for Reg of Peripheral.Registers loop
          Dump (Spec, Reg);
       end loop;
+
+      Dump_Aliased (Spec, Peripheral.Registers);
 
       Add (Spec, New_Comment_Box ("Peripherals"));
 
@@ -353,6 +370,8 @@ package body Peripheral_Descriptor is
       for Reg of Regs loop
          Dump (Spec, Reg);
       end loop;
+
+      Dump_Aliased (Spec, Regs);
 
       Add (Spec, New_Comment_Box ("Peripherals"));
 

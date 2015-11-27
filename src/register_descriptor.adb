@@ -196,15 +196,15 @@ package body Register_Descriptor is
       return Ret;
    end Read_Register;
 
-   -------------------
-   -- Merge_Aliased --
-   -------------------
+   ------------------
+   -- Find_Aliased --
+   ------------------
 
-   procedure Merge_Aliased (Reg_Set : in out Register_Vectors.Vector)
+   procedure Find_Aliased (Reg_Set : in out Register_Vectors.Vector)
    is
       use Unbounded;
    begin
-      for J in Reg_Set.First_Index .. Reg_Set.Last_Index loop
+      for J in Reg_Set.First_Index .. Reg_Set.Last_Index - 1 loop
          --  Do not perform a second pass if the register has already been
          --  detected as aliased
          if not Reg_Set (J).Is_Aliased then
@@ -214,9 +214,7 @@ package body Register_Descriptor is
                Last   : Natural := Prefix'Last;
             begin
                for K in J + 1 .. Reg_Set.Last_Index loop
-                  if not Reg_Set (K).Is_Aliased
-                    and then Reg_Set (K).Address_Offset = Reg.Address_Offset
-                  then
+                  if Reg_Set (K).Address_Offset = Reg.Address_Offset then
                      Reg.Is_Aliased := True;
 
                      for J in 1 .. Last loop
@@ -225,9 +223,9 @@ package body Register_Descriptor is
                            if Last not in Prefix'Range then
                               Ada.Text_IO.Put_Line
                                 ("*** WARNING ***: cannot find a proper " &
-                                   "Ada type name for the aliased registers " &
-                                   Prefix & " and " &
-                                   To_String (Reg_Set (K).Name));
+                                 "Ada type name for the aliased registers " &
+                                 Prefix & " and " &
+                                 To_String (Reg_Set (K).Name));
                            end if;
 
                            exit;
@@ -240,28 +238,29 @@ package body Register_Descriptor is
                   if Prefix (Last) = '_'
                     or else Prefix (Last) = '-'
                   then
-                     Reg.Type_Name :=
-                       To_Unbounded_String (Prefix (Prefix'First .. Last - 1));
+                     Reg.Alias_Name :=
+                       To_Unbounded_String
+                         (Prefix (Prefix'First .. Last - 1));
                   else
-                     Reg.Type_Name :=
-                       To_Unbounded_String (Prefix (Prefix'First .. Last));
+                     Reg.Alias_Name :=
+                       To_Unbounded_String
+                         (Prefix (Prefix'First .. Last));
                   end if;
 
-                  Reg.Aliased_Suffix := To_Unbounded_String
-                    (Prefix (Last + 1 .. Prefix'Last));
+                  Reg.Alias_Suffix :=
+                    To_Unbounded_String (Prefix (Last + 1 .. Prefix'Last));
+                  Reg.First_Alias  := True;
                   Reg_Set.Replace_Element (J, Reg);
 
                   --  Now apply the type name to all aliased registers
                   for K in J + 1 .. Reg_Set.Last_Index loop
-                     if Reg_Set (K).Is_Aliased
-                       and then Reg_Set (K).Address_Offset = Reg.Address_Offset
-                     then
+                     if Reg_Set (K).Address_Offset = Reg.Address_Offset then
                         declare
                            Oth : Register_T := Reg_Set (K);
                         begin
-                           Oth.Type_Name  := Reg.Type_Name;
+                           Oth.Alias_Name  := Reg.Alias_Name;
                            Oth.Is_Aliased := True;
-                           Oth.Aliased_Suffix := Unbounded_Slice
+                           Oth.Alias_Suffix := Unbounded_Slice
                              (Oth.Name, Last + 1, Length (Oth.Name));
                            Reg_Set.Replace_Element (K, Oth);
                         end;
@@ -271,7 +270,7 @@ package body Register_Descriptor is
             end;
          end if;
       end loop;
-   end Merge_Aliased;
+   end Find_Aliased;
 
    ---------
    -- "=" --
@@ -413,6 +412,9 @@ package body Register_Descriptor is
          else
             return Unbounded.To_String (Reg.Name) & "_Array";
          end if;
+
+      elsif not Elt_Type and then Reg.Is_Aliased then
+         return Unbounded.To_String (Reg.Alias_Name) & "_Register";
 
       elsif not Field_Vectors.Is_Empty (Reg.Fields)
         and then
@@ -666,5 +668,81 @@ package body Register_Descriptor is
          end;
       end if;
    end Dump;
+
+   ------------------
+   -- Dump_Aliased --
+   ------------------
+
+   procedure Dump_Aliased
+     (Spec  : in out Ada_Gen.Ada_Spec;
+      Regs  : Register_Vectors.Vector)
+   is
+      use Ada.Strings.Unbounded;
+      List : Register_Vectors.Vector := Regs;
+      Idx2 : Natural;
+
+   begin
+      while not List.Is_Empty loop
+         if not List.First_Element.Is_Aliased then
+            List.Delete_First;
+
+         else
+            declare
+               Reg   : constant Register_T := List.First_Element;
+               Enum  : Ada_Type_Enum :=
+                         New_Type_Enum
+                           (To_String (Reg.Alias_Name) & "_Discriminent");
+               Union : Ada_Type_Union;
+            begin
+               Add_Enum_Id (Enum, To_String (Reg.Alias_Suffix));
+               List.Delete_First;
+
+               for K in List.First_Index .. List.Last_Index loop
+                  if List (K).Is_Aliased
+                    and then List (K).Alias_Name = Reg.Alias_Name
+                  then
+                     Add_Enum_Id (Enum, To_String (List (K).Alias_Suffix));
+                  end if;
+               end loop;
+
+               Add (Spec, Enum);
+               Union := New_Type_Union
+                 (Id        => To_String (Reg.Alias_Name) & "_Register",
+                  Disc_Name => "Disc",
+                  Disc_Type => Enum);
+
+               Add_Field
+                 (Rec      => Union,
+                  Enum_Val => To_String (Reg.Alias_Suffix),
+                  Id       => To_String (Reg.Alias_Suffix),
+                  Typ      => Get_Ada_Type (Reg, True),
+                  Offset   => 0,
+                  LSB      => 0,
+                  MSB      => Reg.Reg_Properties.Size - 1);
+
+               Idx2 := List.First_Index;
+               while Idx2 <= List.Last_Index loop
+                  if List (Idx2).Is_Aliased
+                    and then List (Idx2).Alias_Name = Reg.Alias_Name
+                  then
+                     Add_Field
+                       (Rec      => Union,
+                        Enum_Val => To_String (List (Idx2).Alias_Suffix),
+                        Id       => To_String (List (Idx2).Alias_Suffix),
+                        Typ      => Get_Ada_Type (List (Idx2), True),
+                        Offset   => 0,
+                        LSB      => 0,
+                        MSB      => List (Idx2).Reg_Properties.Size - 1);
+                     List.Delete (Idx2);
+                  else
+                     Idx2 := Idx2 + 1;
+                  end if;
+               end loop;
+
+               Add (Spec, Union);
+            end;
+         end if;
+      end loop;
+   end Dump_Aliased;
 
 end Register_Descriptor;

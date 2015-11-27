@@ -229,6 +229,8 @@ package body Ada_Gen is
      (Element : Ada_Type_Enum;
       File    : Ada.Text_IO.File_Type)
    is
+      First    : Boolean := True;
+      Has_Repr : Boolean := False;
    begin
       if not Element.Comment.Is_Empty then
          Dump (Comment => Element.Comment,
@@ -237,7 +239,31 @@ package body Ada_Gen is
                Inline  => False);
       end if;
 
-      pragma Compile_Time_Warning (True, "Dump Type Enum todo");
+      Ada.Text_IO.Put_Line
+        (File, "   type " & To_String (Element.Id) & " is");
+
+      for Value of Element.Values loop
+         if First then
+            Ada.Text_IO.Put (File, (1 .. 5 => ' ') & '(');
+            First := False;
+         else
+            Ada.Text_IO.Put_Line (File, ",");
+            Ada.Text_IO.Put (File, (1 .. 6 => ' '));
+         end if;
+
+         Ada.Text_IO.Put (File, To_String (Value.Id));
+
+         if Value.Has_Repr then
+            Has_Repr := True;
+         end if;
+      end loop;
+      Ada.Text_IO.Put_Line (File, ");");
+      Ada.Text_IO.New_Line (File);
+
+      if Has_Repr then
+         pragma Compile_Time_Warning (True, "Dump Type Enum todo");
+         null;
+      end if;
    end Dump;
 
    ----------

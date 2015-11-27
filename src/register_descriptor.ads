@@ -38,8 +38,6 @@ package Register_Descriptor is
       Alternate_Group  : Unbounded.Unbounded_String;
       Alternate_Reg    : Unbounded.Unbounded_String;
       Address_Offset   : Unsigned;
-      Is_Aliased       : Boolean := False;
-      Aliased_Suffix   : Unbounded.Unbounded_String;
       Reg_Properties   : Register_Properties_T;
       Mod_Write_Values : Modified_Write_Values_Type :=
                            Undefined_Modified_Write_Value;
@@ -48,7 +46,11 @@ package Register_Descriptor is
 
       --  When two registers are identical, we specify a shared common type
       --  name here to generate just one Ada record
+      Is_Aliased       : Boolean := False;
+      First_Alias      : Boolean := False;
       Type_Name        : Unbounded.Unbounded_String;
+      Alias_Name       : Unbounded.Unbounded_String;
+      Alias_Suffix     : Unbounded.Unbounded_String;
 
       --  When two registers are identical, the second register will not
       --  generate an Ada type. We specify the behavior here
@@ -68,7 +70,7 @@ package Register_Descriptor is
    package Register_Vectors is new Ada.Containers.Vectors
      (Positive, Register_T);
 
-   procedure Merge_Aliased (Reg_Set : in out Register_Vectors.Vector);
+   procedure Find_Aliased (Reg_Set : in out Register_Vectors.Vector);
 
    procedure Add_Regs
      (Vec1, Vec2 : in out Register_Vectors.Vector);
@@ -81,6 +83,11 @@ package Register_Descriptor is
    function Get_Ada_Type (Reg      : Register_T;
                           Elt_Type : Boolean := False) return String;
 
-   procedure Dump (Spec : in out Ada_Gen.Ada_Spec; Reg : Register_T);
+   procedure Dump (Spec : in out Ada_Gen.Ada_Spec;
+                   Reg  : Register_T);
+
+   procedure Dump_Aliased
+     (Spec  : in out Ada_Gen.Ada_Spec;
+      Regs  : Register_Vectors.Vector);
 
 end Register_Descriptor;
