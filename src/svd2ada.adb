@@ -25,12 +25,8 @@ with Sax.Readers;
 with Schema.Dom_Readers;          use Schema.Dom_Readers;
 with DOM.Core;                    use DOM.Core;
 with DOM.Core.Documents;
-with DOM.Core.Elements;
 
-with Ada_Gen;
 with Device_Descriptor;
-
-with System;
 
 --  SVD Binding Generator: this tool is meant to handle
 --  A SVD file is an xml file representing a specific hardware device, and
@@ -74,8 +70,7 @@ begin
    Doc := Get_Tree (Reader);
    Device := Device_Descriptor.Read_Device (Documents.Get_Element (Doc));
 
-   Ada_Gen.Set_Output_Dir (Ada.Command_Line.Argument (2));
-   Device_Descriptor.Dump (Device);
+   Device_Descriptor.Dump (Device, Ada.Command_Line.Argument (2));
 
    return 0;
 

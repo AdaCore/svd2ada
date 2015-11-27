@@ -18,10 +18,8 @@
 
 with Interfaces; use Interfaces;
 
-with Ada.Containers.Ordered_Maps;
 with Ada.Containers.Vectors;
 with Ada.Strings.Unbounded;  use Ada.Strings;
-with Ada.Strings.Unbounded.Hash;
 
 with DOM.Core;
 
@@ -29,7 +27,7 @@ with DOM.Core;
 --  file.
 package Base_Types is
 
-   subtype Unsigned is Unsigned_32;
+   subtype Unsigned is Unsigned_64;
    --  We have to use a 64-bit type here, as the analyzed board can manipulate
    --  potentially 64-bit addresses.
 

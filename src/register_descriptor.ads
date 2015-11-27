@@ -18,7 +18,6 @@
 
 with Ada.Containers.Vectors;
 with Ada.Strings.Unbounded;          use Ada.Strings;
-with Ada.Strings.Hash;
 
 with DOM.Core;
 
@@ -26,6 +25,8 @@ with Base_Types;                     use Base_Types;
 with Base_Types.Register_Properties; use Base_Types.Register_Properties;
 
 with Field_Descriptor;               use Field_Descriptor;
+
+with Ada_Gen;
 
 --  Decodes and then dumps the <register> elements of the SVD file.
 package Register_Descriptor is
@@ -37,6 +38,8 @@ package Register_Descriptor is
       Alternate_Group  : Unbounded.Unbounded_String;
       Alternate_Reg    : Unbounded.Unbounded_String;
       Address_Offset   : Unsigned;
+      Is_Aliased       : Boolean := False;
+      Aliased_Suffix   : Unbounded.Unbounded_String;
       Reg_Properties   : Register_Properties_T;
       Mod_Write_Values : Modified_Write_Values_Type :=
                            Undefined_Modified_Write_Value;
@@ -65,6 +68,8 @@ package Register_Descriptor is
    package Register_Vectors is new Ada.Containers.Vectors
      (Positive, Register_T);
 
+   procedure Merge_Aliased (Reg_Set : in out Register_Vectors.Vector);
+
    procedure Add_Regs
      (Vec1, Vec2 : in out Register_Vectors.Vector);
 
@@ -76,6 +81,6 @@ package Register_Descriptor is
    function Get_Ada_Type (Reg      : Register_T;
                           Elt_Type : Boolean := False) return String;
 
-   procedure Dump (Reg : Register_T);
+   procedure Dump (Spec : in out Ada_Gen.Ada_Spec; Reg : Register_T);
 
 end Register_Descriptor;

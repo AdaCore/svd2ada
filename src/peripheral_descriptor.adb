@@ -158,6 +158,8 @@ package body Peripheral_Descriptor is
          end if;
       end loop;
 
+      Merge_Aliased (Ret.Registers);
+
       return Ret;
    end Read_Peripheral;
 
@@ -192,85 +194,98 @@ package body Peripheral_Descriptor is
    -- Dump_Periph_Type --
    ----------------------
 
-   procedure Dump_Periph_Type (Peripheral : Peripheral_T; Type_Name : String)
+   procedure Dump_Periph_Type
+     (Spec       : in out Ada_Gen.Ada_Spec;
+      Peripheral : Peripheral_T;
+      Type_Name  : String)
    is
       use Ada.Strings.Unbounded;
-      Off          : Natural := 0;
+      Rec          : Ada_Type_Record;
    begin
-      Ada_Gen.Gen_Comment (To_String (Peripheral.Description));
-      Ada_Gen.Start_Record_Def (Type_Name);
+      Rec := New_Type_Record
+        (Type_Name,
+         To_String (Peripheral.Description));
+      Add_Aspect (Rec, "Volatile");
 
       for Reg of Peripheral.Registers loop
-         Ada_Gen.Add_Record_Field
-           (Id     => To_String (Reg.Name),
-            Typ    => Get_Ada_Type (Reg),
-            Offset => Reg.Address_Offset,
-            LSB    => 0,
-            MSB    => (if Reg.Dim = 0
-                       then Reg.Reg_Properties.Size - 1
-                       else Reg.Dim * Reg.Dim_Increment * 8 - 1),
-            Descr  => To_String (Reg.Description));
+         Add_Field
+           (Rec,
+            Id      => To_String (Reg.Name),
+            Typ     => Get_Ada_Type (Reg),
+            Offset  => Reg.Address_Offset,
+            LSB     => 0,
+            MSB     => (if Reg.Dim = 0
+                        then Reg.Reg_Properties.Size - 1
+                        else Reg.Dim * Reg.Dim_Increment * 8 - 1),
+            Comment => To_String (Reg.Description));
       end loop;
 
-      Ada_Gen.End_Record (Register_List);
+      Add (Spec, Rec);
    end Dump_Periph_Type;
 
    ----------
    -- Dump --
    ----------
 
-   procedure Dump (Peripheral : Peripheral_T;
-                   Dev_Name   : String)
+   procedure Dump
+     (Peripheral : Peripheral_T;
+      Dev_Name   : String;
+      Output_Dir : String)
    is
       use Ada.Strings.Unbounded;
+      Spec : Ada_Spec;
    begin
-      Ada_Gen.New_Spec (Dev_Name & "." & To_String (Peripheral.Name),
-                        Unbounded.To_String (Peripheral.Description));
+      Spec := New_Child_Spec (To_String (Peripheral.Name),
+                              Parent => Dev_Name,
+                              Descr  => To_String (Peripheral.Description));
 
       if Length (Peripheral.Version) > 0 then
-         Ada_Gen.Gen_Constant
-           ("Version", "String", """" & To_String (Peripheral.Version) & """");
+         Add (Spec,
+              New_Constant_Value
+                (Id    => "Version",
+                 Typ   => "String",
+                 Value => '"' & To_String (Peripheral.Version) & '"'));
       end if;
 
       if not Interrupt_Vectors.Is_Empty (Peripheral.Interrupts) then
-         Ada_Gen.Gen_Comment ("**************");
-         Ada_Gen.Gen_Comment ("* Interrupts *");
-         Ada_Gen.Gen_Comment ("**************");
-         Ada_Gen.Gen_NL;
+         Add (Spec, New_Comment_Box ("Interrupts"));
       end if;
 
       for Int of Peripheral.Interrupts loop
-         Ada_Gen.Gen_Comment (To_String (Int.Description));
-         Ada_Gen.Gen_Constant
-           (To_String (Int.Name) & "_Int", "Natural",
-            To_String (Integer (Int.Value)));
+         Add (Spec,
+              New_Constant_Value
+                (Id    => To_String (Int.Name) & "_Int",
+                 Typ   => "Natural",
+                 Value => To_String (Integer (Int.Value))));
       end loop;
 
       if not Register_Vectors.Is_Empty (Peripheral.Registers) then
-         Ada_Gen.Gen_Comment ("*************");
-         Ada_Gen.Gen_Comment ("* Registers *");
-         Ada_Gen.Gen_Comment ("*************");
-         Ada_Gen.Gen_NL;
+         Add (Spec, New_Comment_Box ("Registers"));
       end if;
 
       for Reg of Peripheral.Registers loop
-         Dump (Reg);
+         Dump (Spec, Reg);
       end loop;
 
-      Ada_Gen.Gen_Comment ("***************");
-      Ada_Gen.Gen_Comment ("* Peripherals *");
-      Ada_Gen.Gen_Comment ("***************");
-      Ada_Gen.Gen_NL;
+      Add (Spec, New_Comment_Box ("Peripherals"));
 
       Dump_Periph_Type
-        (Peripheral, To_String (Peripheral.Name) & "_Periph_T");
+        (Spec, Peripheral, To_String (Peripheral.Name) & "_Peripheral");
 
-      Ada_Gen.Gen_Register
-        (To_String (Peripheral.Name) & "_Periph",
-         To_String (Peripheral.Name) & "_Periph_T",
-         Peripheral.Base_Address);
+      declare
+         Inst : Ada_Instance :=
+                  New_Instance
+                    (To_String (Peripheral.Name) & "_Periph",
+                     To_String (Peripheral.Name) & "_Peripheral",
+                     True,
+                     To_String (Peripheral.Description));
+      begin
+         Add_Aspect (Inst, "Import");
+         Add_Address_Aspect (Inst, Peripheral.Base_Address);
+         Add (Spec, Inst);
+      end;
 
-      Ada_Gen.Close_All;
+      Write_Spec (Spec, Output_Dir);
    end Dump;
 
    ----------
@@ -278,21 +293,24 @@ package body Peripheral_Descriptor is
    ----------
 
    procedure Dump
-     (Group    : in out Peripheral_Vectors.Vector;
-      Dev_Name : String)
+     (Group      : in out Peripheral_Vectors.Vector;
+      Dev_Name   : String;
+      Output_Dir : String)
    is
       use Ada.Strings.Unbounded;
       use type Register_Vectors.Vector;
       use type Ada.Containers.Count_Type;
-      Interrupts : Interrupt_Vectors.Vector;
-      Regs       : Register_Vectors.Vector;
-      Sorted     : Peripheral_Vectors.Vector := Group;
+      Interrupts         : Interrupt_Vectors.Vector;
+      Regs               : Register_Vectors.Vector;
+      Sorted             : Peripheral_Vectors.Vector := Group;
       Partial_Similarity : Boolean := False;
+      Spec               : Ada_Spec;
 
    begin
-      Ada_Gen.New_Spec
-        (Dev_Name & "." & To_String (Sorted.First_Element.Group_Name),
-         Unbounded.To_String (Sorted.First_Element.Description));
+      Spec := New_Child_Spec
+        (To_String (Sorted.First_Element.Group_Name),
+         Dev_Name,
+         "");
 
       for Periph of Sorted loop
          for Int of Periph.Interrupts loop
@@ -315,43 +333,35 @@ package body Peripheral_Descriptor is
       end loop;
 
       if not Interrupts.Is_Empty then
-         Ada_Gen.Gen_Comment ("**************");
-         Ada_Gen.Gen_Comment ("* Interrupts *");
-         Ada_Gen.Gen_Comment ("**************");
-         Ada_Gen.Gen_NL;
+         Add (Spec, New_Comment_Box ("Interrupts"));
       end if;
 
       Interrupt_Sort.Sort (Interrupts);
 
       for Int of Interrupts loop
-         Ada_Gen.Gen_Comment (To_String (Int.Description));
-         Ada_Gen.Gen_Constant
-           (To_String (Int.Name) & "_Int", "Natural",
-            To_String (Integer (Int.Value)));
+         Add (Spec,
+              New_Constant_Value
+                (Id    => To_String (Int.Name) & "_Int",
+                 Typ   => "Natural",
+                 Value => To_String (Integer (Int.Value))));
       end loop;
 
       if not Regs.Is_Empty then
-         Ada_Gen.Gen_Comment ("*************");
-         Ada_Gen.Gen_Comment ("* Registers *");
-         Ada_Gen.Gen_Comment ("*************");
-         Ada_Gen.Gen_NL;
+         Add (Spec, New_Comment_Box ("Registers"));
       end if;
 
       for Reg of Regs loop
-         Dump (Reg);
+         Dump (Spec, Reg);
       end loop;
 
-      Ada_Gen.Gen_Comment ("***************");
-      Ada_Gen.Gen_Comment ("* Peripherals *");
-      Ada_Gen.Gen_Comment ("***************");
-      Ada_Gen.Gen_NL;
+      Add (Spec, New_Comment_Box ("Peripherals"));
 
       --  Determine if all peripherals of the group have the same layout
       Peripheral_Sort.Sort (Sorted);
 
       while not Sorted.Is_Empty loop
          declare
-            First : Peripheral_T := Sorted.First_Element;
+            First : constant Peripheral_T := Sorted.First_Element;
             List  : Peripheral_Vectors.Vector;
             Idx   : Natural;
          begin
@@ -370,40 +380,64 @@ package body Peripheral_Descriptor is
 
             if List.Length = 1 then
                Dump_Periph_Type
-                 (First, To_String (First.Name) & "_Periph_T");
+                 (Spec, First, To_String (First.Name) & "_Peripheral");
 
-               Ada_Gen.Gen_Register
-                 (To_String (First.Name) & "_Periph",
-                  To_String (First.Name) & "_Periph_T",
-                  First.Base_Address);
+               declare
+                  Inst : Ada_Instance :=
+                           New_Instance
+                             (To_String (First.Name) & "_Periph",
+                              To_String (First.Name) & "_Peripheral",
+                              True,
+                              To_String (First.Description));
+               begin
+                  Add_Aspect (Inst, "Import");
+                  Add_Address_Aspect (Inst, First.Base_Address);
+                  Add (Spec, Inst);
+               end;
 
             elsif Sorted.Is_Empty and then not Partial_Similarity then
                Dump_Periph_Type
-                 (First, To_String (First.Group_Name) & "_Periph_T");
+                 (Spec, First, To_String (First.Group_Name) & "_Peripheral");
 
                for Periph of List loop
-                  Ada_Gen.Gen_Register
-                    (To_String (Periph.Name) & "_Periph",
-                     To_String (First.Group_Name) & "_Periph_T",
-                     Periph.Base_Address);
+                  declare
+                     Inst : Ada_Instance :=
+                              New_Instance
+                                (To_String (Periph.Name) & "_Periph",
+                                 To_String (First.Group_Name) & "_Peripheral",
+                                 True,
+                                 To_String (Periph.Description));
+                  begin
+                     Add_Aspect (Inst, "Import");
+                     Add_Address_Aspect (Inst, Periph.Base_Address);
+                     Add (Spec, Inst);
+                  end;
                end loop;
 
             else
                Partial_Similarity := True;
                Dump_Periph_Type
-                 (First, To_String (First.Name) & "_Periph_T");
+                 (Spec, First, To_String (First.Name) & "_Peripheral");
 
                for Periph of List loop
-                  Ada_Gen.Gen_Register
-                    (To_String (Periph.Name) & "_Periph",
-                     To_String (First.Name) & "_Periph_T",
-                     Periph.Base_Address);
+                  declare
+                     Inst : Ada_Instance :=
+                              New_Instance
+                                (To_String (Periph.Name) & "_Periph",
+                                 To_String (First.Name) & "_Peripheral",
+                                 True,
+                                 To_String (Periph.Description));
+                  begin
+                     Add_Aspect (Inst, "Import");
+                     Add_Address_Aspect (Inst, Periph.Base_Address);
+                     Add (Spec, Inst);
+                  end;
                end loop;
             end if;
          end;
       end loop;
 
-      Ada_Gen.Close_All;
+      Write_Spec (Spec, Output_Dir);
    end Dump;
 
 end Peripheral_Descriptor;

@@ -16,6 +16,7 @@
 --  <http://www.gnu.org/licenses/>.                                         --
 ------------------------------------------------------------------------------
 
+with Interfaces;         use Interfaces;
 with Ada.Text_IO;
 
 with DOM.Core;           use DOM.Core;
@@ -95,41 +96,47 @@ package body Device_Descriptor is
    -- Dump --
    ----------
 
-   procedure Dump (Device : Device_T)
+   procedure Dump
+     (Device     : Device_T;
+      Output_Dir : String)
    is
       use Ada.Strings.Unbounded;
       Peripherals : Peripheral_Vectors.Vector;
+      Spec        : Ada_Gen.Ada_Spec :=
+                      New_Spec (To_String (Device.Name),
+                                To_String (Device.Description));
    begin
-      Ada_Gen.New_Spec (Unbounded.To_String (Device.Name),
-                        Unbounded.To_String (Device.Description));
-
       if Length (Device.Version) > 0 then
-         Ada_Gen.Gen_Constant
-           ("Version", "String", '"' & To_String (Device.Version) & '"');
+         Add (Spec,
+              New_Constant_Value
+                (Id    => "Version",
+                 Typ   => "String",
+                 Value => '"' & To_String (Device.Version) & '"'));
       end if;
 
-      Ada_Gen.Gen_Comment ("Base type:");
-      Ada_Gen.Gen_Scalar_Type (Target_Type (Natural'(32)), 32);
-      Ada_Gen.Gen_Scalar_Type (Target_Type (Natural'(16)), 16);
-      Ada_Gen.Gen_Scalar_Type (Target_Type (Natural'(8)), 8);
-      Ada_Gen.Gen_Scalar_Type (Target_Type (Natural'(1)), 1);
-      Ada_Gen.Gen_NL;
+      Add (Spec, New_Comment ("Base type:"));
+      Add_No_Check (Spec, New_Type_Scalar (Target_Type (Natural'(32)), 32));
+      Add_No_Check (Spec, New_Type_Scalar (Target_Type (Natural'(16)), 16));
+      Add_No_Check (Spec, New_Type_Scalar (Target_Type (Natural'(8)), 8));
+      Add_No_Check (Spec, New_Type_Scalar (Target_Type (Natural'(1)), 1));
 
-      for J in 2 .. Natural (Device.Width) loop
+      for J in 2 .. Device.Width loop
          if J /= 8 and then J /= 16 and then J /= 32 then
-            Ada_Gen.Gen_Scalar_Type (Target_Type (J), J);
+            Add_No_Check (Spec, New_Type_Scalar (Target_Type (J), J));
          end if;
       end loop;
 
-      Ada_Gen.Gen_Comment ("Base addresses:");
+      Add (Spec, New_Comment ("Base addresses:"));
 
       for Periph of Device.Peripherals loop
-         Ada_Gen.Gen_Constant
-           (To_String (Periph.Name) & "_Base", "",
-            To_Hex (Periph.Base_Address));
+         Add (Spec,
+              New_Constant_Value
+                (Id    => To_String (Periph.Name) & "_Base",
+                 Typ   => "",
+                 Value => To_Hex (Periph.Base_Address)));
       end loop;
 
-      Ada_Gen.Close_All;
+      Ada_Gen.Write_Spec (Spec, Output_Dir);
 
       Peripherals := Device.Peripherals;
 
@@ -142,7 +149,7 @@ package body Device_Descriptor is
             Peripherals.Delete_First;
 
             if Unbounded.Length (P.Group_Name) = 0 then
-               Dump (P, Unbounded.To_String (Device.Name));
+               Dump (P, Unbounded.To_String (Device.Name), Output_Dir);
             else
                Vec.Append (P);
                Index := Peripherals.First_Index;
@@ -156,7 +163,7 @@ package body Device_Descriptor is
                   end if;
                end loop;
 
-               Dump (Vec, Unbounded.To_String (Device.Name));
+               Dump (Vec, Unbounded.To_String (Device.Name), Output_Dir);
             end if;
          end;
       end loop;

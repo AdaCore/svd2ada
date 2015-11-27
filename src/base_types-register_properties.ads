@@ -16,7 +16,6 @@
 --  <http://www.gnu.org/licenses/>.                                         --
 ------------------------------------------------------------------------------
 
-with Interfaces;
 with DOM.Core; use DOM.Core;
 
 --  Decodes the register properties group from an SVD element.
@@ -27,8 +26,8 @@ package Base_Types.Register_Properties is
       Size        : Unsigned;
       Reg_Access  : Access_Type;
       Protection  : Protection_Type;
-      Reset_Value : Interfaces.Unsigned_32;
-      Reset_Mask  : Interfaces.Unsigned_32;
+      Reset_Value : Unsigned;
+      Reset_Mask  : Unsigned;
    end record;
 
    Null_Register_Property : constant Register_Properties_T :=

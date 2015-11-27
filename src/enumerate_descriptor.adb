@@ -32,7 +32,6 @@ package body Enumerate_Descriptor is
 
    function Read_Value (Elt : DOM.Core.Element) return Enumerate_Value
    is
-      use DOM.Core;
       List : constant Node_List := Nodes.Child_Nodes (Elt);
       Ret  : Enumerate_Value;
    begin
@@ -77,7 +76,6 @@ package body Enumerate_Descriptor is
       Vector : Enumerate_Vectors.Vector)
       return Enumerate_T
    is
-      use DOM.Core;
       List         : constant Node_List := Nodes.Child_Nodes (Elt);
       Ret          : Enumerate_T;
       Derived_From : constant String :=

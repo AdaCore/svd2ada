@@ -22,7 +22,6 @@ with Ada.Strings.Unbounded;          use Ada.Strings;
 with DOM.Core;
 
 with Base_Types;                     use Base_Types;
-with Base_Types.Register_Properties; use Base_Types.Register_Properties;
 
 with Enumerate_Descriptor;
 

@@ -17,7 +17,6 @@
 ------------------------------------------------------------------------------
 
 with Ada.Strings.Unbounded;          use Ada.Strings;
-with Ada.Strings.Hash;
 
 with DOM.Core;
 
@@ -49,6 +48,8 @@ package Device_Descriptor is
 
    function Read_Device (Elt : DOM.Core.Element) return Device_T;
 
-   procedure Dump (Device : Device_T);
+   procedure Dump
+     (Device     : Device_T;
+      Output_Dir : String);
 
 end Device_Descriptor;

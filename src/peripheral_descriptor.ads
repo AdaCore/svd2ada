@@ -18,7 +18,6 @@
 
 with Ada.Containers.Vectors;
 with Ada.Strings.Unbounded;          use Ada.Strings;
-with Ada.Strings.Hash;
 
 with DOM.Core;
 
@@ -54,10 +53,12 @@ package Peripheral_Descriptor is
 
    procedure Dump
      (Peripheral : Peripheral_T;
-      Dev_Name   : String);
+      Dev_Name   : String;
+      Output_Dir : String);
 
    procedure Dump
-     (Group    : in out Peripheral_Vectors.Vector;
-      Dev_Name : String);
+     (Group      : in out Peripheral_Vectors.Vector;
+      Dev_Name   : String;
+      Output_Dir : String);
 
 end Peripheral_Descriptor;
