@@ -249,7 +249,11 @@ package body Peripheral_Descriptor is
    is
       use Ada.Strings.Unbounded;
       Spec : Ada_Spec;
+
    begin
+      Ada.Text_IO.Put_Line
+        ("Generate " & To_String (Peripheral.Name));
+
       Spec := New_Child_Spec (To_String (Peripheral.Name),
                               Parent => Dev_Name,
                               Descr  => To_String (Peripheral.Description));
@@ -277,6 +281,8 @@ package body Peripheral_Descriptor is
       if not Register_Vectors.Is_Empty (Peripheral.Registers) then
          Add (Spec, New_Comment_Box ("Registers"));
       end if;
+
+      Find_Common_Types (Peripheral.Registers);
 
       for Reg of Peripheral.Registers loop
          Dump (Spec, Reg);
@@ -310,7 +316,7 @@ package body Peripheral_Descriptor is
    ----------
 
    procedure Dump
-     (Group      : in out Peripheral_Vectors.Vector;
+     (Group      : Peripheral_Vectors.Vector;
       Dev_Name   : String;
       Output_Dir : String)
    is
@@ -324,6 +330,9 @@ package body Peripheral_Descriptor is
       Spec               : Ada_Spec;
 
    begin
+      Ada.Text_IO.Put_Line
+        ("Generate " & To_String (Group.First_Element.Group_Name));
+
       Spec := New_Child_Spec
         (To_String (Sorted.First_Element.Group_Name),
          Dev_Name,
@@ -337,17 +346,11 @@ package body Peripheral_Descriptor is
          end loop;
       end loop;
 
-      for J in Sorted.First_Index .. Sorted.Last_Index loop
-         declare
-            Periph : Peripheral_T := Sorted (J);
-         begin
-            Add_Regs (Regs, Periph.Registers);
-            --  Registers may have been modified due to type merge between
-            --  similar registers of different peripheral. We thus re-inject
-            --  the potentially modified peripheral into the group
-            Sorted.Replace_Element (J, Periph);
-         end;
+      for Periph of Sorted loop
+         Regs.Append (Periph.Registers);
       end loop;
+
+      Find_Common_Types (Regs);
 
       if not Interrupts.Is_Empty then
          Add (Spec, New_Comment_Box ("Interrupts"));
@@ -371,7 +374,9 @@ package body Peripheral_Descriptor is
          Dump (Spec, Reg);
       end loop;
 
-      Dump_Aliased (Spec, Regs);
+      for Periph of Sorted loop
+         Dump_Aliased (Spec, Periph.Registers);
+      end loop;
 
       Add (Spec, New_Comment_Box ("Peripherals"));
 

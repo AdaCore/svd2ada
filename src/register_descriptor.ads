@@ -31,7 +31,11 @@ with Ada_Gen;
 --  Decodes and then dumps the <register> elements of the SVD file.
 package Register_Descriptor is
 
-   type Register_T is record
+   type Register;
+
+   type Register_T is access all Register;
+
+   type Register is record
       Name             : Unbounded.Unbounded_String;
       Display_Name     : Unbounded.Unbounded_String;
       Description      : Unbounded.Unbounded_String;
@@ -52,39 +56,40 @@ package Register_Descriptor is
       Alias_Name       : Unbounded.Unbounded_String;
       Alias_Suffix     : Unbounded.Unbounded_String;
 
+      Ada_Type         : Unbounded.Unbounded_String;
+
       --  When two registers are identical, the second register will not
-      --  generate an Ada type. We specify the behavior here
-      Gen_Type         : Boolean := True;
+      --  generate an Ada type. We reference the first register here to
+      --  keep track of the type name.
+      Type_Holder      : Register_T := null;
+
       Dim              : Unsigned := 0;
       Dim_Increment    : Unsigned := 0;
       Dim_Index        : Unbounded.Unbounded_String;
    end record;
 
-   function "=" (R1, R2 : Register_T) return Boolean;
+   function Equal (R1, R2 : Register_T) return Boolean;
 
    function Similar_Type
-     (R1, R2 : Register_T) return Unbounded.Unbounded_String;
+     (R1, R2 : Register) return Unbounded.Unbounded_String;
    --  If R1 and R2 share a common type, then return the base type name.
    --  else, return an empty string
 
    package Register_Vectors is new Ada.Containers.Vectors
-     (Positive, Register_T);
+     (Positive, Register_T, Equal);
 
-   procedure Find_Aliased (Reg_Set : in out Register_Vectors.Vector);
+   procedure Find_Aliased (Reg_Set : Register_Vectors.Vector);
 
-   procedure Add_Regs
-     (Vec1, Vec2 : in out Register_Vectors.Vector);
+   procedure Find_Common_Types (Reg_Set : Register_Vectors.Vector);
 
    function Read_Register
      (Elt            : DOM.Core.Element;
       Reg_Properties : Register_Properties_T;
       Vec            : in out Register_Vectors.Vector) return Register_T;
 
-   function Get_Ada_Type (Reg      : Register_T;
-                          Elt_Type : Boolean := False) return String;
+   function Get_Ada_Type (Reg : Register_T) return String;
 
-   procedure Dump (Spec : in out Ada_Gen.Ada_Spec;
-                   Reg  : Register_T);
+   procedure Dump (Spec : in out Ada_Gen.Ada_Spec; Reg : Register_T);
 
    procedure Dump_Aliased
      (Spec  : in out Ada_Gen.Ada_Spec;

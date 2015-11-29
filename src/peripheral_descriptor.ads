@@ -57,7 +57,7 @@ package Peripheral_Descriptor is
       Output_Dir : String);
 
    procedure Dump
-     (Group      : in out Peripheral_Vectors.Vector;
+     (Group      : Peripheral_Vectors.Vector;
       Dev_Name   : String;
       Output_Dir : String);
 

@@ -43,7 +43,7 @@ package body Register_Descriptor is
    is
       use DOM.Core;
       List         : constant Node_List := Nodes.Child_Nodes (Elt);
-      Ret          : Register_T;
+      Ret          : Register;
       Derived_From : constant String :=
                        Elements.Get_Attribute (Elt, "derivedFrom");
 
@@ -56,7 +56,7 @@ package body Register_Descriptor is
          begin
             for Oth of Vec loop
                if Unbounded.To_String (Oth.Name) = Derived_From then
-                  Ret := Oth;
+                  Ret := Oth.all;
                   Found := True;
                   exit;
                end if;
@@ -95,6 +95,8 @@ package body Register_Descriptor is
                         end if;
                      end;
                   end if;
+
+                  Ret.Type_Name := Ret.Name;
 
                elsif Tag = "displayName" then
                   Ret.Display_Name := Get_Value (Child);
@@ -173,34 +175,14 @@ package body Register_Descriptor is
          end if;
       end loop;
 
-      --  Look for fields with similar types, to use a single type definition
-      --  in such situation
-      for J in Vec.First_Index .. Vec.Last_Index loop
-         declare
-            Oth    : Register_T := Vec (J);
-            Prefix : constant Unbounded.Unbounded_String :=
-                       Similar_Type (Oth, Ret);
-         begin
-            if Unbounded.Length (Prefix) > 0 then
-               Ret.Type_Name := Prefix;
-               Ret.Gen_Type := False;
-
-               if Unbounded.Length (Oth.Type_Name) = 0 then
-                  Oth.Type_Name := Prefix;
-                  Vec.Replace_Element (J, Oth);
-               end if;
-            end if;
-         end;
-      end loop;
-
-      return Ret;
+      return new Register'(Ret);
    end Read_Register;
 
    ------------------
    -- Find_Aliased --
    ------------------
 
-   procedure Find_Aliased (Reg_Set : in out Register_Vectors.Vector)
+   procedure Find_Aliased (Reg_Set : Register_Vectors.Vector)
    is
       use Unbounded;
    begin
@@ -209,7 +191,7 @@ package body Register_Descriptor is
          --  detected as aliased
          if not Reg_Set (J).Is_Aliased then
             declare
-               Reg    : Register_T := Reg_Set (J);
+               Reg    : constant Register_T := Reg_Set (J);
                Prefix : constant String := To_String (Reg.Name);
                Last   : Natural := Prefix'Last;
             begin
@@ -220,7 +202,7 @@ package body Register_Descriptor is
                      for J in 1 .. Last loop
                         if Prefix (J) /= Element (Reg_Set (K).Name, J) then
                            Last := J - 1;
-                           if Last not in Prefix'Range then
+                           if Last = 0 then
                               Ada.Text_IO.Put_Line
                                 ("*** WARNING ***: cannot find a proper " &
                                  "Ada type name for the aliased registers " &
@@ -247,22 +229,47 @@ package body Register_Descriptor is
                          (Prefix (Prefix'First .. Last));
                   end if;
 
-                  Reg.Alias_Suffix :=
-                    To_Unbounded_String (Prefix (Last + 1 .. Prefix'Last));
+                  if Last = Prefix'Last then
+                     Reg.Alias_Suffix := To_Unbounded_String ("Default");
+                  else
+                     Reg.Alias_Suffix :=
+                       To_Unbounded_String (Prefix (Last + 1 .. Prefix'Last));
+                  end if;
+
                   Reg.First_Alias  := True;
-                  Reg_Set.Replace_Element (J, Reg);
 
                   --  Now apply the type name to all aliased registers
                   for K in J + 1 .. Reg_Set.Last_Index loop
                      if Reg_Set (K).Address_Offset = Reg.Address_Offset then
                         declare
-                           Oth : Register_T := Reg_Set (K);
+                           Oth : Register renames Reg_Set (K).all;
                         begin
                            Oth.Alias_Name  := Reg.Alias_Name;
-                           Oth.Is_Aliased := True;
-                           Oth.Alias_Suffix := Unbounded_Slice
-                             (Oth.Name, Last + 1, Length (Oth.Name));
-                           Reg_Set.Replace_Element (K, Oth);
+                           Oth.Is_Aliased  := True;
+                           Oth.First_Alias := False;
+
+                           if Last = Length (Oth.Name) then
+                              Oth.Alias_Suffix :=
+                                To_Unbounded_String ("Default");
+                           else
+                              declare
+                                 Suffix : constant String :=
+                                            Slice
+                                              (Oth.Name, Last + 1,
+                                               Length (Oth.Name));
+                                 First  : Natural := Suffix'First;
+                              begin
+                                 while Suffix (First) not in 'a' .. 'z'
+                                   and then Suffix (First) not in 'A' .. 'Z'
+                                 loop
+                                    First := First + 1;
+                                 end loop;
+
+                                 Oth.Alias_Suffix :=
+                                   To_Unbounded_String
+                                     (Suffix (First .. Suffix'Last));
+                              end;
+                           end if;
                         end;
                      end if;
                   end loop;
@@ -276,55 +283,58 @@ package body Register_Descriptor is
    -- "=" --
    ---------
 
-   function "=" (R1, R2 : Register_T) return Boolean
+   function Equal (R1, R2 : Register_T) return Boolean
    is
       use type Unbounded.Unbounded_String;
       use type Field_Vectors.Vector;
    begin
+      if R1 = null then
+         return R2 = null;
+      elsif R2 = null then
+         return False;
+      end if;
+
       return R1.Name = R2.Name
         and then R1.Address_Offset = R2.Address_Offset
         and then R1.Reg_Properties.Size = R2.Reg_Properties.Size
         and then R1.Dim = R2.Dim
         and then R1.Dim_Increment = R2.Dim_Increment;
-   end "=";
+   end Equal;
 
-   --------------
-   -- Add_Regs --
-   --------------
+   -----------------------
+   -- Find_Common_Types --
+   -----------------------
 
-   procedure Add_Regs
-     (Vec1, Vec2 : in out Register_Vectors.Vector)
-   is
-      Idx        : Natural;
-      Reg1, Reg2 : Register_T;
-      use Unbounded;
-
+   procedure Find_Common_Types (Reg_Set : Register_Vectors.Vector) is
    begin
-      --  Merge two register vectors, to handle type declaration of registers
-      --  that use the same type.
-      for J in Vec2.First_index .. Vec2.Last_Index loop
-         Reg2 := Vec2 (J);
-
-         --  See if Reg2 already exists in Vec1
-         Idx := Vec1.Find_Index (Reg2);
-         if Idx >= Vec1.First_Index then
-            --  Found it, try to merge the types
-            Reg1 := Vec1.Element (Idx);
-            if Length (Reg1.Type_Name) > 0 then
-               --  Make sure that similar registers have the same type name
-               Reg2.Type_Name := Reg1.Type_Name;
-               Reg2.Gen_Type  := False;
-               Vec2.Replace_Element (J, Reg2);
-
-            elsif Length (Reg2.Type_Name) > 0 then
-               Vec1.Append (Reg2);
-               --  ??? We should replace Reg1 here with a proper type_name
-            end if;
-         else
-            Vec1.Append (Reg2);
+      --  Look for fields with similar types, to use a single type definition
+      --  in such situation
+      for J in Reg_Set.First_Index .. Reg_Set.Last_Index - 1 loop
+         if Reg_Set (J).Type_Holder = null then
+            for K in J + 1 .. Reg_Set.Last_Index loop
+               if Equal (Reg_Set (J), Reg_Set (K)) then
+                  --  Simple case: two identical registers.
+                  Reg_Set (K).Type_Holder := Reg_Set (J);
+               else
+                  declare
+                     Prefix : constant Unbounded.Unbounded_String :=
+                                Similar_Type (Reg_Set (J).all,
+                                              Reg_Set (K).all);
+                  begin
+                     if Unbounded.Length (Prefix) > 0 then
+                        --  We have similar types, but with different names.
+                        --  In such situation, it'd be nice to generate a
+                        --  common type definition.
+                        Reg_Set (J).Type_Name := Prefix;
+                        Reg_Set (K).Type_Name := Prefix;
+                        Reg_Set (K).Type_Holder := Reg_Set (J);
+                     end if;
+                  end;
+               end if;
+            end loop;
          end if;
       end loop;
-   end Add_Regs;
+   end Find_Common_Types;
 
    -------------------
    -- Common_Prefix --
@@ -374,7 +384,7 @@ package body Register_Descriptor is
    -----------------
 
    function Similar_Type
-     (R1, R2 : Register_T) return Unbounded.Unbounded_String
+     (R1, R2 : Register) return Unbounded.Unbounded_String
    is
       use Field_Vectors;
       use type Ada.Containers.Count_Type;
@@ -401,33 +411,19 @@ package body Register_Descriptor is
    -- Get_Ada_Type --
    ------------------
 
-   function Get_Ada_Type (Reg      : Register_T;
-                          Elt_Type : Boolean := False) return String
+   function Get_Ada_Type (Reg : Register_T) return String
    is
       use type Ada.Containers.Count_Type;
+      use Unbounded;
    begin
-      if not Elt_Type and then Reg.Dim > 0 then
-         if Unbounded.Length (Reg.Type_Name) > 0 then
-            return Unbounded.To_String (Reg.Type_Name) & "_Array";
-         else
-            return Unbounded.To_String (Reg.Name) & "_Array";
-         end if;
-
-      elsif not Elt_Type and then Reg.Is_Aliased then
-         return Unbounded.To_String (Reg.Alias_Name) & "_Register";
-
-      elsif not Field_Vectors.Is_Empty (Reg.Fields)
-        and then
-          (Field_Vectors.Length (Reg.Fields) > 1
-           or else Reg.Fields.First_Element.Size /= Reg.Reg_Properties.Size)
-      then
-         if Unbounded.Length (Reg.Type_Name) > 0 then
-            return Unbounded.To_String (Reg.Type_Name) & "_Register";
-         else
-            return Unbounded.To_String (Reg.Name) & "_Register";
-         end if;
+      if Reg.Type_Holder /= null then
+         return Get_Ada_Type (Reg.Type_Holder);
+      elsif Length (Reg.Ada_Type) > 0 then
+         return To_String (Reg.Ada_Type);
       else
-         return Target_Type (Integer (Reg.Reg_Properties.Size));
+         Ada.Text_IO.Put_Line (To_String (Reg.Name));
+         Ada.Text_IO.Put_Line (To_String (Reg.Type_Name));
+         raise Constraint_Error with "No ada type defined yet";
       end if;
    end Get_Ada_Type;
 
@@ -466,17 +462,31 @@ package body Register_Descriptor is
       use Ada.Strings.Unbounded;
       use type Ada.Containers.Count_Type;
    begin
+      if Reg.Type_Holder /= null then
+         --  This register is not responsible for emitting the Ada type.
+         return;
+      end if;
+
       if Field_Vectors.Length (Reg.Fields) = 1
         and then Reg.Fields.First_Element.Size = Reg.Reg_Properties.Size
       then
-         --  Don't generate anything here: we use a base type definition here
+         --  Don't generate anything here: we use a base type
+         Reg.Ada_type :=
+           To_Unbounded_String
+             (Target_Type (Integer (Reg.Reg_Properties.Size)));
+
          if Reg.Dim > 0 then
             --  Just generate a comment to document the array that's going
             --  to be generated
             Add (Spec, New_Comment (To_String (Reg.Description)));
          end if;
 
-      elsif not Field_Vectors.Is_Empty (Reg.Fields) and then Reg.Gen_Type then
+      elsif Reg.Fields.Is_Empty then
+         Reg.Ada_type :=
+           To_Unbounded_String
+             (Target_Type (Integer (Reg.Reg_Properties.Size)));
+
+      else
          declare
             Fields   : array (0 .. Reg.Reg_Properties.Size - 1) of
                          Field_T := (others => Null_Field);
@@ -494,7 +504,7 @@ package body Register_Descriptor is
             end loop;
 
             Rec := New_Type_Record
-              (Get_Ada_Type (Reg, Elt_Type => True),
+              (To_String (Reg.Type_Name) & "_Register",
                To_String (Reg.Description));
 
             Add_Aspect (Rec, "Volatile_Full_Access");
@@ -565,7 +575,8 @@ package body Register_Descriptor is
                   if Length > 1 then
                      declare
                         T_Name  : constant String :=
-                                    Slice (Fields (Index).Name, 1, Prefix);
+                                    Slice (Fields (Index).Name,
+                                           1, Prefix);
                         Union_T : Ada_Type_Union :=
                                     New_Type_Union
                                       (Id        => T_Name & "_Field",
@@ -649,22 +660,24 @@ package body Register_Descriptor is
             end loop;
 
             Add (Spec, Rec);
+            Reg.Ada_Type := Id (Rec);
          end;
       end if;
 
       if Reg.Dim > 0 then
          declare
-            Array_T : constant Ada_Type_Array :=
+            Array_T : Ada_Type_Array :=
                         New_Type_Array
-                          (Id           => Get_Ada_Type (Reg, False),
+                          (Id           =>
+                                    To_String (Reg.Type_Name) & "_Registers",
                            Index_Type   => "",
                            Index_First  => 0,
                            Index_Last   => Reg.Dim - 1,
-                           Element_Type => Get_Ada_Type (reg, True),
-                           Comment      =>
-                             Get_Ada_Type (Reg, Elt_Type => True));
+                           Element_Type => Get_Ada_Type (reg),
+                           Comment      => To_String (Reg.Description));
          begin
-            Add_No_Check (Spec, Array_T);
+            Add (Spec, Array_T);
+            Reg.Ada_Type := Id (Array_T);
          end;
       end if;
    end Dump;
@@ -679,16 +692,15 @@ package body Register_Descriptor is
    is
       use Ada.Strings.Unbounded;
       List : Register_Vectors.Vector := Regs;
-      Idx2 : Natural;
 
    begin
-      while not List.Is_Empty loop
-         if not List.First_Element.Is_Aliased then
-            List.Delete_First;
-
-         else
+      for J in Regs.First_Index .. Regs.Last_Index loop
+         if Regs (J).Is_Aliased
+           and then Regs (J).First_Alias
+           and then Regs (J).Type_Holder = null
+         then
             declare
-               Reg   : constant Register_T := List.First_Element;
+               Reg   : constant Register_T := Regs (J);
                Enum  : Ada_Type_Enum :=
                          New_Type_Enum
                            (To_String (Reg.Alias_Name) & "_Discriminent");
@@ -697,17 +709,19 @@ package body Register_Descriptor is
                Add_Enum_Id (Enum, To_String (Reg.Alias_Suffix));
                List.Delete_First;
 
-               for K in List.First_Index .. List.Last_Index loop
-                  if List (K).Is_Aliased
-                    and then List (K).Alias_Name = Reg.Alias_Name
+               for Reg2 of Regs loop
+                  if Reg2 /= Reg
+                    and then Reg2.Is_Aliased
+                    and then Reg2.Alias_Name = Reg.Alias_Name
                   then
-                     Add_Enum_Id (Enum, To_String (List (K).Alias_Suffix));
+                     Add_Enum_Id (Enum, To_String (Reg2.Alias_Suffix));
                   end if;
                end loop;
 
                Add (Spec, Enum);
                Union := New_Type_Union
-                 (Id        => To_String (Reg.Alias_Name) & "_Register",
+                 (Id        =>
+                    To_String (Reg.Alias_Name) & "_Aliased_Register",
                   Disc_Name => "Disc",
                   Disc_Type => Enum);
 
@@ -715,31 +729,29 @@ package body Register_Descriptor is
                  (Rec      => Union,
                   Enum_Val => To_String (Reg.Alias_Suffix),
                   Id       => To_String (Reg.Alias_Suffix),
-                  Typ      => Get_Ada_Type (Reg, True),
+                  Typ      => Get_Ada_Type (Reg),
                   Offset   => 0,
                   LSB      => 0,
                   MSB      => Reg.Reg_Properties.Size - 1);
 
-               Idx2 := List.First_Index;
-               while Idx2 <= List.Last_Index loop
-                  if List (Idx2).Is_Aliased
-                    and then List (Idx2).Alias_Name = Reg.Alias_Name
+               for Reg2 of Regs loop
+                  if Reg2 /= Reg
+                    and then Reg2.Is_Aliased
+                    and then Reg2.Alias_Name = Reg.Alias_Name
                   then
                      Add_Field
                        (Rec      => Union,
-                        Enum_Val => To_String (List (Idx2).Alias_Suffix),
-                        Id       => To_String (List (Idx2).Alias_Suffix),
-                        Typ      => Get_Ada_Type (List (Idx2), True),
+                        Enum_Val => To_String (Reg2.Alias_Suffix),
+                        Id       => To_String (Reg2.Alias_Suffix),
+                        Typ      => Get_Ada_Type (Reg2),
                         Offset   => 0,
                         LSB      => 0,
-                        MSB      => List (Idx2).Reg_Properties.Size - 1);
-                     List.Delete (Idx2);
-                  else
-                     Idx2 := Idx2 + 1;
+                        MSB      => Reg2.Reg_Properties.Size - 1);
                   end if;
                end loop;
 
                Add (Spec, Union);
+               Reg.Ada_Type := Id (Union);
             end;
          end if;
       end loop;
