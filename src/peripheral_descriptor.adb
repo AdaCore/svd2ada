@@ -72,6 +72,11 @@ package body Peripheral_Descriptor is
                if Unbounded.To_String (P.Name) = Derived_From then
                   Found := True;
                   Ret   := P;
+                  --  Deep copy of the registers list
+                  Ret.Registers.Clear;
+                  for Reg of P.Registers loop
+                     Ret.Registers.Append (new Register'(Reg.all));
+                  end loop;
                   --  Do not inherit interrupts
                   Ret.Interrupts.Clear;
                   exit;
@@ -338,6 +343,8 @@ package body Peripheral_Descriptor is
          Dev_Name,
          "");
 
+      --  Interrupts
+
       for Periph of Sorted loop
          for Int of Periph.Interrupts loop
             if not Interrupts.Contains (Int) then
@@ -345,12 +352,6 @@ package body Peripheral_Descriptor is
             end if;
          end loop;
       end loop;
-
-      for Periph of Sorted loop
-         Regs.Append (Periph.Registers);
-      end loop;
-
-      Find_Common_Types (Regs);
 
       if not Interrupts.Is_Empty then
          Add (Spec, New_Comment_Box ("Interrupts"));
@@ -366,9 +367,17 @@ package body Peripheral_Descriptor is
                  Value => To_String (Integer (Int.Value))));
       end loop;
 
+      --  Registers
+
+      for Periph of Sorted loop
+         Regs.Append (Periph.Registers);
+      end loop;
+
       if not Regs.Is_Empty then
          Add (Spec, New_Comment_Box ("Registers"));
       end if;
+
+      Find_Common_Types (Regs);
 
       for Reg of Regs loop
          Dump (Spec, Reg);

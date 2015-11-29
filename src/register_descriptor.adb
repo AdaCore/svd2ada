@@ -315,6 +315,7 @@ package body Register_Descriptor is
                if Equal (Reg_Set (J), Reg_Set (K)) then
                   --  Simple case: two identical registers.
                   Reg_Set (K).Type_Holder := Reg_Set (J);
+
                else
                   declare
                      Prefix : constant Unbounded.Unbounded_String :=
@@ -326,7 +327,6 @@ package body Register_Descriptor is
                         --  In such situation, it'd be nice to generate a
                         --  common type definition.
                         Reg_Set (J).Type_Name := Prefix;
-                        Reg_Set (K).Type_Name := Prefix;
                         Reg_Set (K).Type_Holder := Reg_Set (J);
                      end if;
                   end;
@@ -418,12 +418,13 @@ package body Register_Descriptor is
    begin
       if Reg.Type_Holder /= null then
          return Get_Ada_Type (Reg.Type_Holder);
+
       elsif Length (Reg.Ada_Type) > 0 then
          return To_String (Reg.Ada_Type);
+
       else
-         Ada.Text_IO.Put_Line (To_String (Reg.Name));
-         Ada.Text_IO.Put_Line (To_String (Reg.Type_Name));
-         raise Constraint_Error with "No ada type defined yet";
+         raise Constraint_Error with "No ada type defined yet for " &
+           To_String (Reg.Name);
       end if;
    end Get_Ada_Type;
 
