@@ -345,27 +345,20 @@ package body Register_Descriptor is
       return Unbounded.Unbounded_String
    is
       use Unbounded;
-      Prefix : Natural;
+      Prefix : Natural := Length (Name1);
    begin
-      for J in 1 .. Length (Name1) loop
+      --  Try to find names of the form REGNAMEXX where XX is a number
+      --  and extract the prefix
+      for J in reverse 1 .. Length (Name1) loop
+         Prefix := J;
+         exit when Element (Name1, J) not in '0' .. '9';
+      end loop;
+
+      for J in 1 .. Prefix loop
          if J > Length (Name2) then
             return Null_Unbounded_String;
 
-         elsif Element (Name1, J) in '0' .. '9' then
-            --  If Name2(J) is also a number, we have a proper prefix
-            exit when Element (Name2, J) in '0' .. '9';
-            --  Else, R1 and R2 don't have a shared prefix
-            return Null_Unbounded_String;
-
          elsif Element (Name1, J) /= Element (Name2, J) then
-            return Null_Unbounded_String;
-         end if;
-
-         Prefix := J;
-      end loop;
-
-      for J in Prefix + 1 .. Length (Name1) loop
-         if Element (Name1, J) not in '0' .. '9' then
             return Null_Unbounded_String;
          end if;
       end loop;

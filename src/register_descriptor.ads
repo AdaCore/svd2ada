@@ -48,20 +48,25 @@ package Register_Descriptor is
       Read_Action      : Read_Action_Type := Undefined_Read_Action;
       Fields           : Field_Vectors.Vector;
 
-      --  When two registers are identical, we specify a shared common type
-      --  name here to generate just one Ada record
+      --  By default, equal to Name. In case similar types are found, then
+      --  this holds the common prefix to be used to the type definition
+      Type_Name        : Unbounded.Unbounded_String;
+
+      --  When two registers are at the same location, we specify a shared
+      --  common union type name here to support this aliasing
       Is_Aliased       : Boolean := False;
       First_Alias      : Boolean := False;
-      Type_Name        : Unbounded.Unbounded_String;
       Alias_Name       : Unbounded.Unbounded_String;
       Alias_Suffix     : Unbounded.Unbounded_String;
 
-      Ada_Type         : Unbounded.Unbounded_String;
 
       --  When two registers are identical, the second register will not
       --  generate an Ada type. We reference the first register here to
       --  keep track of the type name.
       Type_Holder      : Register_T := null;
+      --  This holds the Ada type as generated in the spec file.
+      --  Only available when Type_Holder is null.
+      Ada_Type         : Unbounded.Unbounded_String;
 
       Dim              : Unsigned := 0;
       Dim_Increment    : Unsigned := 0;
