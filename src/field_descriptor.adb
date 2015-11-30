@@ -191,6 +191,7 @@ package body Field_Descriptor is
       Mask          : Unsigned;
       Ada_Type      : Unbounded_String;
       Ada_Type_Size : Unsigned;
+      Ada_Name      : Unbounded_String;
 
    begin
       for Field of Reg_Fields loop
@@ -242,6 +243,7 @@ package body Field_Descriptor is
             Ada_Type_Size := Fields (Index).Size;
             Ada_Type :=
               To_Unbounded_String (Target_Type (Ada_Type_Size));
+            Ada_Name := Fields (Index).Name;
 
             --  First check if some enumerate is defined for the field
             if not Fields (Index).Enums.Is_Empty then
@@ -356,13 +358,14 @@ package body Field_Descriptor is
 
                   Ada_Type := Id (Union_T);
                   Ada_Type_Size := Fields (Index).Size * Length;
+                  Ada_Name := To_Unbounded_String (T_Name);
 
                end;
             end if;
 
             Add_Field
               (Rec,
-               Id      => To_String (Fields (Index).Name),
+               Id      => To_String (Ada_Name),
                Typ     => To_String (Ada_Type),
                Offset  => 0,
                LSB     => Index,
