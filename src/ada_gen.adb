@@ -257,13 +257,37 @@ package body Ada_Gen is
             Has_Repr := True;
          end if;
       end loop;
-      Ada.Text_IO.Put_Line (File, ");");
-      Ada.Text_IO.New_Line (File);
+      Ada.Text_IO.Put (File, ")");
+
+      if Element.Aspects.Is_Empty then
+         Ada.Text_IO.Put_Line (File, ";");
+      else
+         Ada.Text_IO.New_Line (File);
+         Dump_Aspects (Element.Aspects, File);
+      end if;
 
       if Has_Repr then
-         pragma Compile_Time_Warning (True, "Dump Type Enum todo");
-         null;
+         Ada.Text_IO.Put_Line
+           (File, "   for " & To_String (Element.Id) & " use");
+         First := True;
+
+         for Value of Element.Values loop
+            if First then
+               Ada.Text_IO.Put (File, (1 .. 5 => ' ') & '(');
+               First := False;
+            else
+               Ada.Text_IO.Put_Line (File, ",");
+               Ada.Text_IO.Put (File, (1 .. 6 => ' '));
+            end if;
+
+            Ada.Text_IO.Put
+              (File, To_String (Value.Id) & " => " & To_String (Value.Repr));
+         end loop;
+
+         Ada.Text_IO.Put_Line (File, ");");
       end if;
+
+      Ada.Text_IO.New_Line (File);
    end Dump;
 
    ----------
@@ -832,6 +856,24 @@ package body Ada_Gen is
       Elt.Aspects.Append ("Size => " & Size_Str);
    end Add_Size_Aspect;
 
+   ---------------------
+   -- Get_Size_Aspect --
+   ---------------------
+
+   function Get_Size_Aspect (Elt  : Ada_Type'Class) return Unsigned
+   is
+   begin
+      for Aspect of Elt.Aspects loop
+         if Aspect'Length > 8
+           and then Aspect (Aspect'First .. Aspect'First + 7) = "Size => "
+         then
+            return Unsigned'Value (Aspect (Aspect'First + 8 .. Aspect'Last));
+         end if;
+      end loop;
+
+      return 0;
+   end Get_Size_Aspect;
+
    ----------------
    -- Add_Aspect --
    ----------------
@@ -974,6 +1016,55 @@ package body Ada_Gen is
       return Ret;
    end New_Type_Enum;
 
+   --------------------------
+   -- Add_Enum_Id_Internal --
+   --------------------------
+
+   procedure Add_Enum_Id_Internal
+     (Enum     : in out Ada_Type_Enum;
+      Id       : String;
+      Has_Repr : Boolean;
+      Repr     : Unsigned;
+      Comment  : String := "")
+   is
+      Enum_Value : Ada_Enum_Value;
+      Camel_C    : String := Id;
+      First      : Boolean := True;
+
+   begin
+      for J in Camel_C'Range loop
+         if First then
+           if Camel_C (J) in 'a' .. 'z' then
+               Camel_C (J) := Ada.Characters.Handling.To_Upper (Camel_C (J));
+            elsif Camel_C (J) in 'A' .. 'Z' then
+               First := False;
+            end if;
+
+         else
+            if Camel_C (J) in 'A' .. 'Z' then
+               Camel_C (J) := Ada.Characters.Handling.To_Lower (Camel_C (J));
+            elsif Camel_C (J) not in 'a' .. 'z' then
+               First := True;
+            end if;
+         end if;
+      end loop;
+
+      if Id (Id'First) in '0' .. '9' then
+         Enum_Value :=
+           (Id       => Enum.Id & "_" & Camel_C,
+            Has_Repr => Has_Repr,
+            Repr     => Repr,
+            Comment  => New_Comment (Comment));
+      else
+         Enum_Value :=
+           (Id       => To_Unbounded_String (Camel_C),
+            Has_Repr => Has_Repr,
+            Repr     => Repr,
+            Comment  => New_Comment (Comment));
+      end if;
+      Enum.Values.Append (Enum_Value);
+   end Add_Enum_Id_Internal;
+
    -----------------
    -- Add_Enum_Id --
    -----------------
@@ -983,14 +1074,8 @@ package body Ada_Gen is
       Id      : String;
       Comment : String := "")
    is
-      Enum_Value : Ada_Enum_Value;
    begin
-      Enum_Value :=
-        (Id       => To_Unbounded_String (Id),
-         Has_Repr => False,
-         Repr     => 0,
-         Comment  => New_Comment (Comment));
-      Enum.Values.Append (Enum_Value);
+      Add_Enum_Id_Internal (Enum, Id, False, 0, Comment);
    end Add_Enum_Id;
 
    -----------------
@@ -1003,14 +1088,8 @@ package body Ada_Gen is
       Repr    : Unsigned;
       Comment : String := "")
    is
-      Enum_Value : Ada_Enum_Value;
    begin
-      Enum_Value :=
-        (Id       => To_Unbounded_String (Id),
-         Has_Repr => True,
-         Repr     => Repr,
-         Comment  => New_Comment (Comment));
-      Enum.Values.Append (Enum_Value);
+      Add_Enum_Id_Internal (Enum, Id, True, Repr, Comment);
    end Add_Enum_Id;
 
    ---------

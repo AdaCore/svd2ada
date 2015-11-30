@@ -27,7 +27,7 @@ with Ada_Gen;            use Ada_Gen;
 package body Peripheral_Descriptor is
 
    procedure Insert_Register (Periph : in out Peripheral_T;
-                              Reg    : Register_T);
+                              Reg    : Register_Access);
 
    package Interrupt_Sort is new Interrupt_Vectors.Generic_Sorting
      (Base_Types."<");
@@ -75,7 +75,7 @@ package body Peripheral_Descriptor is
                   --  Deep copy of the registers list
                   Ret.Registers.Clear;
                   for Reg of P.Registers loop
-                     Ret.Registers.Append (new Register'(Reg.all));
+                     Ret.Registers.Append (new Register_T'(Reg.all));
                   end loop;
                   --  Do not inherit interrupts
                   Ret.Interrupts.Clear;
@@ -139,7 +139,7 @@ package body Peripheral_Descriptor is
                   declare
                      Child_List : constant Node_List :=
                                     Nodes.Child_Nodes (Child);
-                     Register   : Register_T;
+                     Register   : Register_Access;
                   begin
                      for K in 0 .. Nodes.Length (Child_List) - 1 loop
                         if Nodes.Node_Type (Nodes.Item (Child_List, K)) =
@@ -173,7 +173,7 @@ package body Peripheral_Descriptor is
    ---------------------
 
    procedure Insert_Register (Periph : in out Peripheral_T;
-                              Reg    : Register_T)
+                              Reg    : Register_Access)
    is
       Added : Boolean;
    begin

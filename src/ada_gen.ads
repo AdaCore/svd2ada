@@ -140,6 +140,9 @@ package Ada_Gen is
       Size : Unsigned);
    --  Generates a 'with Sixe => value' aspect
 
+   function Get_Size_Aspect (Elt  : Ada_Type'Class) return Unsigned;
+   --  Retrieve the size aspect of the type, or 0 if undefined
+
    procedure Add_Aspect
      (Elt    : in out Ada_Type'Class;
       Aspect : String);

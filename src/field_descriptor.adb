@@ -25,6 +25,10 @@ with DOM.Core.Nodes;
 
 package body Field_Descriptor is
 
+   function Similar_Field
+     (F1, F2     : Field_T;
+      Prefix_Idx : in out Natural) return Boolean;
+
    ----------------
    -- Read_Field --
    ----------------
@@ -135,5 +139,238 @@ package body Field_Descriptor is
       return F1.LSB = F2.LSB
         and then F1.Size = F2.Size;
    end "=";
+
+   ------------------------
+   -- Similar_Field_Name --
+   ------------------------
+
+   function Similar_Field
+     (F1, F2     : Field_T;
+      Prefix_Idx : in out Natural) return Boolean
+   is
+      use Unbounded, Enumerate_Descriptor.Enumerate_Vectors;
+      Prefix : Unbounded_String;
+   begin
+      if F1.Size /= F2.Size then
+         return False;
+      end if;
+
+      if F1.Enums /= F2.Enums then
+         return False;
+      end if;
+
+      Prefix := Common_Prefix (F1.Name, F2.Name);
+
+      if Length (Prefix) = 0 then
+         return False;
+      end if;
+
+      Prefix_Idx := Length (Prefix);
+
+      return True;
+   end Similar_Field;
+
+   ----------
+   -- Dump --
+   ----------
+
+   procedure Dump
+     (Spec       : in out Ada_Gen.Ada_Spec;
+      Rec        : in out Ada_Gen.Ada_Type_Record;
+      Reg_Fields : Field_Vectors.Vector;
+      Properties : Register_Properties_T)
+   is
+      use Unbounded, Ada_Gen;
+      Fields        : array (0 .. Properties.Size - 1) of Field_T :=
+                        (others => Null_Field);
+      Index         : Unsigned := 0;
+      Index2        : Unsigned;
+      Length        : Unsigned;
+      Prefix        : Natural;
+      Default       : Unsigned;
+      Mask          : Unsigned;
+      Ada_Type      : Unbounded_String;
+      Ada_Type_Size : Unsigned;
+
+   begin
+      for Field of Reg_Fields loop
+         Fields (Field.LSB) := Field;
+      end loop;
+
+      while Index < Properties.Size loop
+         if Fields (Index) = Null_Field then
+            --  First look for undefined/reserved parts of the register
+            Length := 1;
+
+            for J in Index + 1 .. Properties.Size - 1 loop
+               if Fields (J) = Null_Field then
+                  Length := Length + 1;
+               else
+                  exit;
+               end if;
+            end loop;
+
+            --  Retrieve the reset value
+            if Properties.Reset_Value = 0 then
+               --  Most common case
+               Default := 0;
+            else
+               Default :=
+                 Shift_Right (Properties.Reset_Value, Natural (Index));
+               Mask := 0;
+               for J in 0 .. Length - 1 loop
+                  Mask := Mask or 2 ** Natural (J);
+               end loop;
+               Default := Default and Mask;
+            end if;
+
+            Ada_Gen.Add_Field
+              (Rec,
+               "Reserved_" & To_String (Index) &
+                 "_" & To_String (Index + Length - 1),
+               Target_Type (Length),
+               Offset      => 0,
+               LSB         => Index,
+               MSB         => Index + Length - 1,
+               Default     => Default,
+               Comment     => "unspecified");
+
+            Index    := Index + Length;
+
+         else
+            --  By default, the type of the field is a simple mod type
+            Ada_Type_Size := Fields (Index).Size;
+            Ada_Type :=
+              To_Unbounded_String (Target_Type (Ada_Type_Size));
+
+            --  First check if some enumerate is defined for the field
+            if not Fields (Index).Enums.Is_Empty then
+               for Enum of Fields (Index).Enums loop
+                  declare
+                     Enum_Name : constant String :=
+                                   (if Unbounded.Length (Enum.Name) > 0
+                                    then To_String (Enum.Name)
+                                    else To_String (Fields (Index).Name) &
+                                      "_Field");
+
+                     Enum_T    : Ada_Type_Enum :=
+                                   New_Type_Enum
+                                     (Id      => Enum_Name,
+                                      Size    => Ada_Type_Size,
+                                      Comment =>
+                                        To_String
+                                          (Fields (Index).Description));
+                  begin
+                     Add_Size_Aspect (Enum_T, Ada_Type_Size);
+
+                     for Val of Enum.Values loop
+                        Add_Enum_Id
+                          (Enum_T,
+                           Id      => To_String (Val.Name),
+                           Repr    => Val.Value,
+                           Comment => To_String (Val.Descr));
+                     end loop;
+
+                     Add (Spec, Enum_T);
+                     Ada_Type := Id (Enum_T);
+                  end;
+               end loop;
+            end if;
+
+            --  Check if it's an array, in which case it's easier
+            --  to handle them as such.
+
+            Length := 1;
+            Prefix := Unbounded.Length (Fields (Index).Name);
+
+            Index2 := Index + Fields (Index).Size;
+            while Index2 < Properties.Size loop
+               if Similar_Field
+                 (Fields (Index), Fields (Index2), Prefix)
+               then
+                  Length := Length + 1;
+               else
+                  exit;
+               end if;
+
+               Index2 := Index2 + Fields (Index).Size;
+            end loop;
+
+            if Length > 1 then
+               declare
+                  T_Name  : constant String :=
+                              Slice (Fields (Index).Name, 1, Prefix);
+                  Union_T : Ada_Type_Union :=
+                              New_Type_Union
+                                (Id        => T_Name & "_Union",
+                                 Disc_Name => "As_Array",
+                                 Disc_Type => Ada_Gen.Get_Boolean,
+                                 Comment   =>
+                                   "Type definition for " & T_Name);
+                  Array_T : Ada_Type_Array :=
+                              New_Type_Array
+                                (Id           => T_Name & "_Field_Array",
+                                 Index_Type   => "",
+                                 Index_First  => 0,
+                                 Index_Last   => Unsigned (Length - 1),
+                                 Element_Type => To_String (Ada_Type),
+                                 Comment      => "");
+               begin
+                  Add_Aspect
+                    (Array_T,
+                     "Component_Size => " &
+                       To_String (Fields (Index).Size));
+                  Add_Size_Aspect
+                    (Array_T, Fields (Index).Size * Length);
+
+                  Add (Spec, Array_T);
+
+                  Add_Size_Aspect
+                    (Union_T, Fields (Index).Size * Length);
+
+                  Add_Field
+                    (Rec      => Union_T,
+                     Enum_Val => "True",
+                     Id       => "Arr",
+                     Typ      => Id (Array_T),
+                     Offset   => 0,
+                     LSB      => 0,
+                     MSB      => Fields (Index).Size * Length - 1,
+                     Comment  =>
+                       "Array vision of " &
+                       To_String (Fields (Index).Name));
+                  Add_Field
+                    (Rec      => Union_T,
+                     Enum_Val => "False",
+                     Id       => "Val",
+                     Typ      =>
+                       Target_Type (Fields (Index).Size * Length),
+                     Offset   => 0,
+                     LSB      => 0,
+                     MSB      => Fields (Index).Size * Length - 1,
+                     Comment  =>
+                       "Value vision of " &
+                       To_String (Fields (Index).Name));
+
+                  Add (Spec, Union_T);
+
+                  Ada_Type := Id (Union_T);
+                  Ada_Type_Size := Fields (Index).Size * Length;
+
+               end;
+            end if;
+
+            Add_Field
+              (Rec,
+               Id      => To_String (Fields (Index).Name),
+               Typ     => To_String (Ada_Type),
+               Offset  => 0,
+               LSB     => Index,
+               MSB     => Index + Ada_Type_Size - 1,
+               Comment => To_String (Fields (Index).Description));
+            Index   := Index + Ada_Type_Size;
+         end if;
+      end loop;
+   end Dump;
 
 end Field_Descriptor;

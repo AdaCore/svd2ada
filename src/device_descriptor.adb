@@ -44,6 +44,7 @@ package body Device_Descriptor is
             begin
                if Tag = "name" then
                   Ret.Name := Get_Value (Child);
+                  Base_Types.Base_Package := Ret.Name;
 
                elsif Tag = "version" then
                   Ret.Version := Get_Value (Child);
@@ -115,14 +116,19 @@ package body Device_Descriptor is
       end if;
 
       Add (Spec, New_Comment ("Base type:"));
-      Add_No_Check (Spec, New_Type_Scalar (Target_Type (Natural'(32)), 32));
-      Add_No_Check (Spec, New_Type_Scalar (Target_Type (Natural'(16)), 16));
-      Add_No_Check (Spec, New_Type_Scalar (Target_Type (Natural'(8)), 8));
-      Add_No_Check (Spec, New_Type_Scalar (Target_Type (Natural'(1)), 1));
+      Add_No_Check
+        (Spec, New_Type_Scalar (Target_Type (Natural'(32), False), 32));
+      Add_No_Check
+        (Spec, New_Type_Scalar (Target_Type (Natural'(16), False), 16));
+      Add_No_Check
+        (Spec, New_Type_Scalar (Target_Type (Natural'(8), False), 8));
+      Add_No_Check
+        (Spec, New_Type_Scalar (Target_Type (Natural'(1), False), 1));
 
       for J in 2 .. Device.Width loop
          if J /= 8 and then J /= 16 and then J /= 32 then
-            Add_No_Check (Spec, New_Type_Scalar (Target_Type (J), J));
+            Add_No_Check
+              (Spec, New_Type_Scalar (Target_Type (J, False), J));
          end if;
       end loop;
 

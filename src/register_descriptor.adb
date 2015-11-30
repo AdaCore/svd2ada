@@ -28,10 +28,6 @@ with Ada_Gen;            use Ada_Gen;
 
 package body Register_Descriptor is
 
-   function Similar_Field
-     (F1, F2     : Field_T;
-      Prefix_Idx : in out Natural) return Boolean;
-
    -------------------
    -- Read_Register --
    -------------------
@@ -39,11 +35,11 @@ package body Register_Descriptor is
    function Read_Register
      (Elt            : DOM.Core.Element;
       Reg_Properties : Register_Properties_T;
-      Vec            : in out Register_Vectors.Vector) return Register_T
+      Vec            : in out Register_Vectors.Vector) return Register_Access
    is
       use DOM.Core;
       List         : constant Node_List := Nodes.Child_Nodes (Elt);
-      Ret          : Register;
+      Ret          : Register_T;
       Derived_From : constant String :=
                        Elements.Get_Attribute (Elt, "derivedFrom");
 
@@ -175,7 +171,7 @@ package body Register_Descriptor is
          end if;
       end loop;
 
-      return new Register'(Ret);
+      return new Register_T'(Ret);
    end Read_Register;
 
    ------------------
@@ -191,7 +187,7 @@ package body Register_Descriptor is
          --  detected as aliased
          if not Reg_Set (J).Is_Aliased then
             declare
-               Reg    : constant Register_T := Reg_Set (J);
+               Reg    : constant Register_Access := Reg_Set (J);
                Prefix : constant String := To_String (Reg.Name);
                Last   : Natural := Prefix'Last;
             begin
@@ -242,7 +238,7 @@ package body Register_Descriptor is
                   for K in J + 1 .. Reg_Set.Last_Index loop
                      if Reg_Set (K).Address_Offset = Reg.Address_Offset then
                         declare
-                           Oth : Register renames Reg_Set (K).all;
+                           Oth : Register_T renames Reg_Set (K).all;
                         begin
                            Oth.Alias_Name  := Reg.Alias_Name;
                            Oth.Is_Aliased  := True;
@@ -283,7 +279,7 @@ package body Register_Descriptor is
    -- "=" --
    ---------
 
-   function Equal (R1, R2 : Register_T) return Boolean
+   function Equal (R1, R2 : Register_Access) return Boolean
    is
       use type Unbounded.Unbounded_String;
       use type Field_Vectors.Vector;
@@ -319,8 +315,7 @@ package body Register_Descriptor is
                else
                   declare
                      Prefix : constant Unbounded.Unbounded_String :=
-                                Similar_Type (Reg_Set (J).all,
-                                              Reg_Set (K).all);
+                                Similar_Type (Reg_Set (J), Reg_Set (K));
                   begin
                      if Unbounded.Length (Prefix) > 0 then
                         --  We have similar types, but with different names.
@@ -336,48 +331,12 @@ package body Register_Descriptor is
       end loop;
    end Find_Common_Types;
 
-   -------------------
-   -- Common_Prefix --
-   -------------------
-
-   function Common_Prefix
-     (Name1, Name2 : Unbounded.Unbounded_String)
-      return Unbounded.Unbounded_String
-   is
-      use Unbounded;
-      Prefix : Natural := Length (Name1);
-   begin
-      --  Try to find names of the form REGNAMEXX where XX is a number
-      --  and extract the prefix
-      for J in reverse 1 .. Length (Name1) loop
-         Prefix := J;
-         exit when Element (Name1, J) not in '0' .. '9';
-      end loop;
-
-      for J in 1 .. Prefix loop
-         if J > Length (Name2) then
-            return Null_Unbounded_String;
-
-         elsif Element (Name1, J) /= Element (Name2, J) then
-            return Null_Unbounded_String;
-         end if;
-      end loop;
-
-      for J in Prefix + 1 .. Length (Name2) loop
-         if Element (Name2, J) not in '0' .. '9' then
-            return Null_Unbounded_String;
-         end if;
-      end loop;
-
-      return To_Unbounded_String (Slice (Name1, 1, Prefix));
-   end Common_Prefix;
-
    -----------------
    -- Common_Type --
    -----------------
 
    function Similar_Type
-     (R1, R2 : Register) return Unbounded.Unbounded_String
+     (R1, R2 : Register_Access) return Unbounded.Unbounded_String
    is
       use Field_Vectors;
       use type Ada.Containers.Count_Type;
@@ -404,7 +363,7 @@ package body Register_Descriptor is
    -- Get_Ada_Type --
    ------------------
 
-   function Get_Ada_Type (Reg : Register_T) return String
+   function Get_Ada_Type (Reg : Register_Access) return String
    is
       use type Ada.Containers.Count_Type;
       use Unbounded;
@@ -421,37 +380,11 @@ package body Register_Descriptor is
       end if;
    end Get_Ada_Type;
 
-   ------------------------
-   -- Similar_Field_Name --
-   ------------------------
-
-   function Similar_Field
-     (F1, F2     : Field_T;
-      Prefix_Idx : in out Natural) return Boolean
-   is
-      use Unbounded;
-      Prefix : Unbounded_String;
-   begin
-      if F1.Size /= F2.Size then
-         return False;
-      end if;
-
-      Prefix := Common_Prefix (F1.Name, F2.Name);
-
-      if Length (Prefix) = 0 then
-         return False;
-      end if;
-
-      Prefix_Idx := Length (Prefix);
-
-      return True;
-   end Similar_Field;
-
    ----------
    -- Dump --
    ----------
 
-   procedure Dump (Spec : in out Ada_Gen.Ada_Spec; Reg : Register_T)
+   procedure Dump (Spec : in out Ada_Gen.Ada_Spec; Reg : Register_Access)
    is
       use Ada.Strings.Unbounded;
       use type Ada.Containers.Count_Type;
@@ -482,21 +415,9 @@ package body Register_Descriptor is
 
       else
          declare
-            Fields   : array (0 .. Reg.Reg_Properties.Size - 1) of
-                         Field_T := (others => Null_Field);
-            Index    : Unsigned := 0;
-            Index2   : Unsigned;
-            Length   : Unsigned;
-            Prefix   : Natural;
-            Default  : Unsigned;
-            Mask     : Unsigned;
             Rec      : Ada_Type_Record;
 
          begin
-            for Field of Reg.Fields loop
-               Fields (Field.LSB) := Field;
-            end loop;
-
             Rec := New_Type_Record
               (To_String (Reg.Type_Name) & "_Register",
                To_String (Reg.Description));
@@ -505,153 +426,8 @@ package body Register_Descriptor is
             Add_Size_Aspect (Rec, Reg.Reg_Properties.Size);
             Add_Bit_Order_Aspect (Rec, System.Low_Order_First);
 
-            while Index < Reg.Reg_Properties.Size loop
-               if Fields (Index) = Null_Field then
-                  --  First look for undefined/reserved parts of the register
-                  Length := 1;
-
-                  for J in Index + 1 .. Reg.Reg_Properties.Size - 1 loop
-                     if Fields (J) = Null_Field then
-                        Length := Length + 1;
-                     else
-                        exit;
-                     end if;
-                  end loop;
-
-                  --  Retrieve the reset value
-                  if Reg.Reg_Properties.Reset_Value = 0 then
-                     --  Most common case
-                     Default := 0;
-                  else
-                     Default :=
-                       Shift_Right (Reg.Reg_Properties.Reset_Value,
-                                    Natural (Index));
-                     Mask := 0;
-                     for J in 0 .. Length - 1 loop
-                        Mask := Mask or 2 ** Natural (J);
-                     end loop;
-                     Default := Default and Mask;
-                  end if;
-
-                  Add_Field
-                    (Rec,
-                     "Reserved_" & To_String (Index) &
-                       "_" & To_String (Index + Length - 1),
-                     Target_Type (Length),
-                     Offset      => 0,
-                     LSB         => Index,
-                     MSB         => Index + Length - 1,
-                     Default     => Default,
-                     Comment     => "unspecified");
-
-                  Index    := Index + Length;
-
-               else
-                  --  Check if it's an array, in which case it's easier
-                  --  to handle them as such.
-
-                  Length := 1;
-                  Prefix := Unbounded.Length (Fields (Index).Name);
-
-                  Index2 := Index + Fields (Index).Size;
-                  while Index2 < Reg.Reg_Properties.Size loop
-                     if Similar_Field
-                       (Fields (Index), Fields (Index2), Prefix)
-                     then
-                        Length := Length + 1;
-                     else
-                        exit;
-                     end if;
-
-                     Index2 := Index2 + Fields (Index).Size;
-                  end loop;
-
-                  if Length > 1 then
-                     declare
-                        T_Name  : constant String :=
-                                    Slice (Fields (Index).Name,
-                                           1, Prefix);
-                        Union_T : Ada_Type_Union :=
-                                    New_Type_Union
-                                      (Id        => T_Name & "_Field",
-                                       Disc_Name => "As_Array",
-                                       Disc_Type => Get_Boolean,
-                                       Comment   =>
-                                         "Type definition for " & T_Name);
-                        Array_T : Ada_Type_Array :=
-                                    New_Type_Array
-                                      (Id           => T_Name & "_Field_Array",
-                                       Index_Type   => "",
-                                       Index_First  => 0,
-                                       Index_Last   => Unsigned (Length - 1),
-                                       Element_Type =>
-                                         Target_Type (Fields (Index).Size),
-                                       Comment      => "");
-                     begin
-                        Add (Spec, New_Comment (To_String (Reg.Description)));
-
-                        Add_Aspect
-                          (Array_T,
-                           "Component_Size => " &
-                             To_String (Fields (Index).Size));
-                        Add_Size_Aspect
-                          (Array_T, Fields (Index).Size * Length);
-
-                        Add (Spec, Array_T);
-
-                        Add_Size_Aspect
-                          (Union_T, Fields (Index).Size * Length);
-
-                        Add_Field
-                          (Rec      => Union_T,
-                           Enum_Val => "True",
-                           Id       => "Arr",
-                           Typ      => Id (Array_T),
-                           Offset   => 0,
-                           LSB      => 0,
-                           MSB      => Fields (Index).Size * Length - 1,
-                           Comment  =>
-                             "Array vision of " &
-                             To_String (Fields (Index).Name));
-                        Add_Field
-                          (Rec      => Union_T,
-                           Enum_Val => "False",
-                           Id       => "Val",
-                           Typ      =>
-                             Target_Type (Fields (Index).Size * Length),
-                           Offset   => 0,
-                           LSB      => 0,
-                           MSB      => Fields (Index).Size * Length - 1,
-                           Comment  =>
-                             "Value vision of " &
-                             To_String (Fields (Index).Name));
-
-                        Add (Spec, Union_T);
-
-                        Add_Field
-                          (Rec,
-                           Id      => T_Name,
-                           Typ     => Id (Union_T),
-                           Offset  => 0,
-                           LSB     => Index,
-                           MSB     => Index + Fields (Index).Size * Length - 1,
-                           Comment => To_String (Fields (Index).Description));
-                     end;
-
-                     Index   := Index + Length * Fields (Index).Size;
-                  else
-                     Add_Field
-                       (Rec,
-                        Id      => To_String (Fields (Index).Name),
-                        Typ     => Target_Type (Fields (Index).Size),
-                        Offset  => 0,
-                        LSB     => Index,
-                        MSB     => Index + Fields (Index).Size - 1,
-                        Comment => To_String (Fields (Index).Description));
-                     Index := Index + Fields (Index).Size;
-                  end if;
-               end if;
-            end loop;
+            Field_Descriptor.Dump
+              (Spec, Rec, Reg.Fields, Reg.Reg_Properties);
 
             Add (Spec, Rec);
             Reg.Ada_Type := Id (Rec);
@@ -688,13 +464,12 @@ package body Register_Descriptor is
       List : Register_Vectors.Vector := Regs;
 
    begin
-      for J in Regs.First_Index .. Regs.Last_Index loop
-         if Regs (J).Is_Aliased
-           and then Regs (J).First_Alias
-           and then Regs (J).Type_Holder = null
+      for Reg of Regs loop
+         if Reg.Is_Aliased
+           and then Reg.First_Alias
+           and then Reg.Type_Holder = null
          then
             declare
-               Reg   : constant Register_T := Regs (J);
                Enum  : Ada_Type_Enum :=
                          New_Type_Enum
                            (To_String (Reg.Alias_Name) & "_Discriminent");

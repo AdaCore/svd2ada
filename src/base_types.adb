@@ -16,7 +16,6 @@
 --  <http://www.gnu.org/licenses/>.                                         --
 ------------------------------------------------------------------------------
 
-with DOM.Core; use DOM.Core;
 with DOM.Core.Nodes;
 with DOM.Core.Elements;
 
@@ -26,9 +25,16 @@ package body Base_Types is
 
    package Unsigned_IO is new Ada.Text_IO.Modular_IO (Unsigned);
 
-   function Target_Type (Size : Integer) return String
+   function Target_Type
+     (Size      : Integer;
+      Full_Name : Boolean := True) return String
    is
    begin
+      if Full_Name then
+         return Unbounded.To_String (Base_Package) &
+           "." & Target_Type (Size, False);
+      end if;
+
       if Size = 1 then
          return "Bit";
       elsif Size = 8 then
@@ -46,10 +52,12 @@ package body Base_Types is
    -- Target_Type --
    -----------------
 
-   function Target_Type (Size : Unsigned) return String
+   function Target_Type
+     (Size      : Unsigned;
+      Full_Name : Boolean := True) return String
    is
    begin
-      return Target_Type (Integer (Size));
+      return Target_Type (Integer (Size), Full_Name);
    end Target_Type;
 
    ---------
@@ -126,7 +134,9 @@ package body Base_Types is
    -- Get_Value --
    ---------------
 
-   function Get_Value (Elt : DOM.Core.Element) return String is
+   function Get_Value (Elt : DOM.Core.Element) return String
+   is
+      use DOM.Core;
       List : constant Node_List := Nodes.Child_Nodes (Elt);
 
    begin
@@ -396,6 +406,7 @@ package body Base_Types is
    procedure Gen_DOM_Iter (Elt : DOM.Core.Element;
                            Obj : in out T)
    is
+      use DOM.Core;
       List : constant Node_List := Nodes.Child_Nodes (Elt);
    begin
       for J in 0 .. Nodes.Length (List) - 1 loop
@@ -410,9 +421,9 @@ package body Base_Types is
       end loop;
    end Gen_DOM_Iter;
 
-   ---------------
-   -- Get_Value --
-   ---------------
+   ---------------------
+   -- Read_Range_Elts --
+   ---------------------
 
    procedure Read_Range_Elts
      (Tag : String;
@@ -431,6 +442,10 @@ package body Base_Types is
    procedure Read_Range is new Gen_DOM_Iter
      (T        => Write_Constraint_Type,
       Read_Elt => Read_Range_Elts);
+
+   --------------------------------
+   -- Read_Write_Constraint_Elts --
+   --------------------------------
 
    procedure Read_Write_Constraint_Elts
      (Tag : String;
@@ -452,6 +467,10 @@ package body Base_Types is
    procedure Read_Write_Constraint is new Gen_DOM_Iter
      (T        => Write_Constraint_Type,
       Read_Elt => Read_Write_Constraint_Elts);
+
+   ---------------
+   -- Get_Value --
+   ---------------
 
    function Get_Value (Elt : DOM.Core.Element) return Write_Constraint_Type is
       Ret  : Write_Constraint_Type;
@@ -558,5 +577,41 @@ package body Base_Types is
            with "Invalid 'enum-usage' type value " & Value;
       end if;
    end Get_Value;
+
+   -------------------
+   -- Common_Prefix --
+   -------------------
+
+   function Common_Prefix
+     (Name1, Name2 : Unbounded.Unbounded_String)
+      return Unbounded.Unbounded_String
+   is
+      use Unbounded;
+      Prefix : Natural := Length (Name1);
+   begin
+      --  Try to find names of the form REGNAMEXX where XX is a number
+      --  and extract the prefix
+      for J in reverse 1 .. Length (Name1) loop
+         Prefix := J;
+         exit when Element (Name1, J) not in '0' .. '9';
+      end loop;
+
+      for J in 1 .. Prefix loop
+         if J > Length (Name2) then
+            return Null_Unbounded_String;
+
+         elsif Element (Name1, J) /= Element (Name2, J) then
+            return Null_Unbounded_String;
+         end if;
+      end loop;
+
+      for J in Prefix + 1 .. Length (Name2) loop
+         if Element (Name2, J) not in '0' .. '9' then
+            return Null_Unbounded_String;
+         end if;
+      end loop;
+
+      return To_Unbounded_String (Slice (Name1, 1, Prefix));
+   end Common_Prefix;
 
 end Base_Types;

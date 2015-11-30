@@ -27,6 +27,8 @@ with DOM.Core;
 --  file.
 package Base_Types is
 
+   Base_Package : Unbounded.Unbounded_String;
+
    subtype Unsigned is Unsigned_64;
    --  We have to use a 64-bit type here, as the analyzed board can manipulate
    --  potentially 64-bit addresses.
@@ -166,8 +168,12 @@ package Base_Types is
    function To_String (Val : Integer) return String;
    function To_String (Val : Unsigned) return String;
 
-   function Target_Type (Size : Integer) return String;
-   function Target_Type (Size : Unsigned) return String;
+   function Target_Type
+     (Size      : Integer;
+      Full_Name : Boolean := True) return String;
+   function Target_Type
+     (Size      : Unsigned;
+      Full_Name : Boolean := True) return String;
    --  Returns the name of the type on the target given the size of the int
 
    function Get_Value (Elt : DOM.Core.Element) return String;
@@ -188,5 +194,11 @@ package Base_Types is
    function Get_Value (Elt : DOM.Core.Element) return Address_Block_Type;
    function Get_Value (Elt : DOM.Core.Element) return Interrupt_Type;
    function Get_Value (Elt : DOM.Core.Element) return Enum_Usage_Type;
+
+   function Common_Prefix
+     (Name1, Name2 : Unbounded.Unbounded_String)
+      return Unbounded.Unbounded_String;
+   --  Returns the prefix common to Name1 and Name2 if any, or
+   --  Null_Unbounded_String
 
 end Base_Types;

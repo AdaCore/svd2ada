@@ -21,8 +21,9 @@ with Ada.Strings.Unbounded;          use Ada.Strings;
 
 with DOM.Core;
 
+with Ada_Gen;
 with Base_Types;                     use Base_Types;
-
+with Base_Types.Register_Properties; use Base_Types.Register_Properties;
 with Enumerate_Descriptor;
 
 --  Decodes the <field> elements of the SVD file.
@@ -55,5 +56,11 @@ package Field_Descriptor is
 
    function Read_Field (Elt : DOM.Core.Element;
                         Vec : Field_Vectors.Vector) return Field_T;
+
+   procedure Dump
+     (Spec       : in out Ada_Gen.Ada_Spec;
+      Rec        : in out Ada_Gen.Ada_Type_Record;
+      Reg_Fields : Field_Vectors.Vector;
+      Properties : Register_Properties_T);
 
 end Field_Descriptor;
