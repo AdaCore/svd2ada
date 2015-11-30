@@ -16,9 +16,11 @@
 --  <http://www.gnu.org/licenses/>.                                         --
 ------------------------------------------------------------------------------
 
-with Ada.Command_Line;
 with Ada.Exceptions;
+with Ada.Strings.Unbounded;       use Ada.Strings.Unbounded;
 with Ada.Text_IO;
+
+with GNAT.Command_Line;
 
 with Input_Sources.File;          use Input_Sources.File;
 with Sax.Readers;
@@ -48,19 +50,44 @@ with Device_Descriptor;
 --    for the field, and use this enum as type of the field.
 function SVD2Ada return Integer
 is
-   Input  : File_Input;
-   Reader : Tree_Reader;
-   Doc    : Document;
-   Device : Device_Descriptor.Device_T;
+   procedure Usage;
+
+   procedure Usage is
+   begin
+      Ada.Text_IO.Put_Line
+        ("Usage: svd2ada file.svd [-p pkg_name] -o output_dir");
+      Ada.Text_IO.Put_Line
+        ("   where OPTIONS can be:");
+   end Usage;
+
+   Input    : File_Input;
+   Reader   : Tree_Reader;
+   Doc      : Document;
+   Device   : Device_Descriptor.Device_T;
+   Pkg      : Unbounded_String;
+   Out_Dir  : Unbounded_String;
+   SVD_File : Unbounded_String;
 
 begin
-   if Ada.Command_Line.Argument_Count /= 2 then
-      Ada.Text_IO.Put_Line
-        ("Usage: " & Ada.Command_Line.Command_Name & " file.svd output_dir");
+   while GNAT.Command_Line.Getopt ("* o= p=") /= ASCII.NUL loop
+      if GNAT.Command_Line.Full_Switch = "p" then
+         Pkg := To_Unbounded_String (GNAT.Command_Line.Parameter);
+      elsif GNAT.Command_Line.Full_Switch = "o" then
+         Out_Dir := To_Unbounded_String (GNAT.Command_Line.Parameter);
+      else
+         SVD_File := To_Unbounded_String (GNAT.Command_Line.Full_Switch);
+      end if;
+   end loop;
+
+
+   if SVD_File = Null_Unbounded_String
+     or else Out_Dir = Null_Unbounded_String
+   then
+      Usage;
       return 1;
    end if;
 
-   Input_Sources.File.Open (Ada.Command_Line.Argument (1), Input);
+   Input_Sources.File.Open (To_String (SVD_File), Input);
 
    Set_Feature (Reader, Sax.Readers.Schema_Validation_Feature, False);
    Use_Basename_In_Error_Messages (Reader, True);
@@ -68,9 +95,10 @@ begin
    Close (Input);
 
    Doc := Get_Tree (Reader);
-   Device := Device_Descriptor.Read_Device (Documents.Get_Element (Doc));
+   Device := Device_Descriptor.Read_Device (Documents.Get_Element (Doc),
+                                            To_String (Pkg));
 
-   Device_Descriptor.Dump (Device, Ada.Command_Line.Argument (2));
+   Device_Descriptor.Dump (Device, To_String (Out_Dir));
 
    return 0;
 

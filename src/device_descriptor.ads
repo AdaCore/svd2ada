@@ -46,7 +46,8 @@ package Device_Descriptor is
       Peripherals       : Peripheral_Vectors.Vector;
    end record;
 
-   function Read_Device (Elt : DOM.Core.Element) return Device_T;
+   function Read_Device (Elt      : DOM.Core.Element;
+                         Pkg_Name : String) return Device_T;
 
    procedure Dump
      (Device     : Device_T;

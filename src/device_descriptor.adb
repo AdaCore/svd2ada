@@ -16,14 +16,14 @@
 --  <http://www.gnu.org/licenses/>.                                         --
 ------------------------------------------------------------------------------
 
-with Interfaces;         use Interfaces;
+with Interfaces;            use Interfaces;
 with Ada.Text_IO;
 
-with DOM.Core;           use DOM.Core;
-with DOM.Core.Elements;  use DOM.Core.Elements;
+with DOM.Core;              use DOM.Core;
+with DOM.Core.Elements;     use DOM.Core.Elements;
 with DOM.Core.Nodes;
 
-with Ada_Gen;            use Ada_Gen;
+with Ada_Gen;               use Ada_Gen;
 
 package body Device_Descriptor is
 
@@ -34,7 +34,10 @@ package body Device_Descriptor is
    -- Read_Device --
    -----------------
 
-   function Read_Device (Elt : DOM.Core.Element) return Device_T is
+   function Read_Device
+     (Elt      : DOM.Core.Element;
+      Pkg_Name : String) return Device_T
+   is
       List : constant Node_List := Nodes.Child_Nodes (Elt);
       Ret  : Device_T;
 
@@ -46,7 +49,12 @@ package body Device_Descriptor is
                Tag   : String renames Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
-                  Ret.Name := Get_Value (Child);
+                  if Pkg_Name'Length > 0 then
+                     Ret.Name :=
+                       Ada.Strings.Unbounded.To_Unbounded_String (Pkg_Name);
+                  else
+                     Ret.Name := Get_Value (Child);
+                  end if;
                   Base_Types.Base_Package := Ret.Name;
 
                elsif Tag = "version" then
