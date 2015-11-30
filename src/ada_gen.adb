@@ -114,12 +114,18 @@ package body Ada_Gen is
    ------------------
 
    procedure Dump_Aspects (Aspects : String_Vectors.Vector;
-                           File    : Ada.Text_IO.File_Type)
+                           File    : Ada.Text_IO.File_Type;
+                           Inline  : Boolean := False)
    is
       First : Boolean := True;
       Col   : Natural;
    begin
-      Ada.Text_IO.Put (File, "     with ");
+      if Inline then
+         Ada.Text_IO.Put (File, " with ");
+      else
+         Ada.Text_IO.Put (File, "     with ");
+      end if;
+
       Col := 11;
 
       for A of Aspects loop
@@ -128,7 +134,7 @@ package body Ada_Gen is
             Col := Col + A'Length;
             First := False;
 
-         elsif Col + A'Length + 2 > Max_Width then
+         elsif Col + A'Length + 2 > Max_Width and then not Inline then
             Ada.Text_IO.Put_Line (File, ",");
             Ada.Text_IO.Put (File, (1 .. 10 => ' ') & A);
             Col := A'Length + 11;
@@ -229,8 +235,10 @@ package body Ada_Gen is
      (Element : Ada_Type_Enum;
       File    : Ada.Text_IO.File_Type)
    is
-      First    : Boolean := True;
       Has_Repr : Boolean := False;
+      Value    : Ada_Enum_Value;
+      Inline_Aspect : Boolean := False;
+
    begin
       if not Element.Comment.Is_Empty then
          Dump (Comment => Element.Comment,
@@ -242,39 +250,64 @@ package body Ada_Gen is
       Ada.Text_IO.Put_Line
         (File, "   type " & To_String (Element.Id) & " is");
 
-      for Value of Element.Values loop
-         if First then
+      for J in Element.Values.First_Index .. Element.Values.Last_Index loop
+         Value := Element.Values (J);
+
+         if J = Element.Values.First_Index then
             Ada.Text_IO.Put (File, (1 .. 5 => ' ') & '(');
-            First := False;
          else
-            Ada.Text_IO.Put_Line (File, ",");
             Ada.Text_IO.Put (File, (1 .. 6 => ' '));
          end if;
 
          Ada.Text_IO.Put (File, To_String (Value.Id));
 
+         if J < Element.Values.Last_Index then
+            if Is_Empty (Value.Comment) then
+               Ada.Text_IO.Put_Line (File, ",");
+            else
+               Ada.Text_IO.Put (File, ", ");
+               Dump (Value.Comment,
+                     F      => File,
+                     Indent => 0,
+                     Inline => True);
+            end if;
+         else
+            if Is_Empty (Value.Comment) then
+               Ada.Text_IO.Put (File, ")");
+            else
+               Ada.Text_IO.Put (File, " ");
+               Dump (Value.Comment,
+                     F      => File,
+                     Indent => 0,
+                     Inline => True);
+               Ada.Text_IO.Put (File, (1 .. 5 => ' ') & ")");
+               Inline_Aspect := True;
+            end if;
+         end if;
+
          if Value.Has_Repr then
             Has_Repr := True;
          end if;
       end loop;
-      Ada.Text_IO.Put (File, ")");
 
       if Element.Aspects.Is_Empty then
          Ada.Text_IO.Put_Line (File, ";");
       else
-         Ada.Text_IO.New_Line (File);
-         Dump_Aspects (Element.Aspects, File);
+         if not Inline_Aspect then
+            Ada.Text_IO.New_Line (File);
+         end if;
+
+         Dump_Aspects (Element.Aspects, File, Inline_Aspect);
       end if;
 
       if Has_Repr then
          Ada.Text_IO.Put_Line
            (File, "   for " & To_String (Element.Id) & " use");
-         First := True;
 
-         for Value of Element.Values loop
-            if First then
+         for J in Element.Values.First_Index .. Element.Values.Last_Index loop
+            Value := Element.Values (J);
+            if J = Element.Values.First_Index then
                Ada.Text_IO.Put (File, (1 .. 5 => ' ') & '(');
-               First := False;
             else
                Ada.Text_IO.Put_Line (File, ",");
                Ada.Text_IO.Put (File, (1 .. 6 => ' '));
