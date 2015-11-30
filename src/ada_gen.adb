@@ -531,13 +531,15 @@ package body Ada_Gen is
    --------------
 
    function New_Spec
-     (Name  : String;
-      Descr : String) return Ada_Spec
+     (Name          : String;
+      Descr         : String;
+      Preelaborated : Boolean) return Ada_Spec
    is
       Spec : Ada_Spec;
    begin
       Spec.Id := To_Unbounded_String (Name);
       Spec.Comment := New_Comment (Descr);
+      Spec.Preelaborated := Preelaborated;
       return Spec;
    end New_Spec;
 
@@ -546,12 +548,13 @@ package body Ada_Gen is
    --------------------
 
    function New_Child_Spec
-     (Name   : String;
-      Parent : String;
-      Descr  : String) return Ada_Spec
+     (Name          : String;
+      Parent        : String;
+      Descr         : String;
+      Preelaborated : Boolean) return Ada_Spec
    is
    begin
-      return New_Spec (Parent & "." & Name, Descr);
+      return New_Spec (Parent & "." & Name, Descr, Preelaborated);
    end New_Child_Spec;
 
    ---------------
@@ -638,7 +641,9 @@ package body Ada_Gen is
       end if;
 
       Ada.Text_IO.Put_Line (F, "package " & To_String (Spec.Id) & " is");
-      Ada.Text_IO.Put_Line (F, "   pragma Preelaborate;");
+      if Spec.Preelaborated then
+         Ada.Text_IO.Put_Line (F, "   pragma Preelaborate;");
+      end if;
       Ada.Text_IO.New_Line (F);
 
       for Elt of Spec.Elements loop

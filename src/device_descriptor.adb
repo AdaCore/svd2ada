@@ -27,6 +27,9 @@ with Ada_Gen;            use Ada_Gen;
 
 package body Device_Descriptor is
 
+   package Interrupt_Sort is new Interrupt_Vectors.Generic_Sorting
+     (Base_Types."<");
+
    -----------------
    -- Read_Device --
    -----------------
@@ -103,9 +106,11 @@ package body Device_Descriptor is
    is
       use Ada.Strings.Unbounded;
       Peripherals : Peripheral_Vectors.Vector;
+      Interrupts  : Interrupt_Vectors.Vector;
       Spec        : Ada_Gen.Ada_Spec :=
                       New_Spec (To_String (Device.Name),
-                                To_String (Device.Description));
+                                To_String (Device.Description),
+                                True);
    begin
       if Length (Device.Version) > 0 then
          Add (Spec,
@@ -115,7 +120,7 @@ package body Device_Descriptor is
                  Value => '"' & To_String (Device.Version) & '"'));
       end if;
 
-      Add (Spec, New_Comment ("Base type:"));
+      Add (Spec, New_Comment_Box ("Base type"));
       Add_No_Check
         (Spec, New_Type_Scalar (Target_Type (Natural'(32), False), 32));
       Add_No_Check
@@ -132,7 +137,7 @@ package body Device_Descriptor is
          end if;
       end loop;
 
-      Add (Spec, New_Comment ("Base addresses:"));
+      Add (Spec, New_Comment_Box ("Base addresses"));
 
       for Periph of Device.Peripherals loop
          Add (Spec,
@@ -143,6 +148,34 @@ package body Device_Descriptor is
       end loop;
 
       Ada_Gen.Write_Spec (Spec, Output_Dir);
+
+      Spec := New_Child_Spec ("Interrupts",
+                              To_String (Device.Name),
+                              "Definition of the device's interrupts",
+                              False);
+
+      Add (Spec, New_Comment_Box ("Interrupts"));
+      Add (Spec, New_With_Clause ("Ada.Interrupts", True));
+
+      for Periph of Device.Peripherals loop
+         for Int of Periph.Interrupts loop
+            if not Interrupts.Contains (Int) then
+               Interrupts.Append (Int);
+            end if;
+         end loop;
+      end loop;
+
+      Interrupt_Sort.Sort (Interrupts);
+
+      for Int of Interrupts loop
+         Add (Spec,
+              New_Constant_Value
+                (Id    => To_String (Int.Name) & "_Interrupt",
+                 Typ   => "Interrupt_ID",
+                 Value => To_String (Integer (Int.Value))));
+      end loop;
+
+      Write_Spec (Spec, Output_Dir);
 
       Peripherals := Device.Peripherals;
 

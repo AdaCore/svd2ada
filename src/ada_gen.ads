@@ -36,13 +36,15 @@ package Ada_Gen is
    type Ada_Spec is private;
 
    function New_Spec
-     (Name : String;
-      Descr : String) return Ada_Spec;
+     (Name          : String;
+      Descr         : String;
+      Preelaborated : Boolean) return Ada_Spec;
 
    function New_Child_Spec
-     (Name   : String;
-      Parent : String;
-      Descr  : String) return Ada_Spec;
+     (Name          : String;
+      Parent        : String;
+      Descr         : String;
+      Preelaborated : Boolean) return Ada_Spec;
 
    procedure Write_Spec
      (Spec       : Ada_Spec;
@@ -468,10 +470,11 @@ private
       Spec    : in out Ada_Spec);
 
    type Ada_Spec is record
-      With_Clauses : With_Maps.Map;
-      Id           : Unbounded_String;
-      Comment      : Ada_Comment;
-      Elements     : Element_Vectors.Vector;
+      With_Clauses  : With_Maps.Map;
+      Id            : Unbounded_String;
+      Comment       : Ada_Comment;
+      Elements      : Element_Vectors.Vector;
+      Preelaborated : Boolean;
    end record;
 
    function File_Name (Spec : Ada_Spec) return String;

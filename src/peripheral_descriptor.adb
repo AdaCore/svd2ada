@@ -29,9 +29,6 @@ package body Peripheral_Descriptor is
    procedure Insert_Register (Periph : in out Peripheral_T;
                               Reg    : Register_Access);
 
-   package Interrupt_Sort is new Interrupt_Vectors.Generic_Sorting
-     (Base_Types."<");
-
    function Less (P1, P2 : Peripheral_T) return Boolean;
 
    package Peripheral_Sort is new Peripheral_Vectors.Generic_Sorting
@@ -259,9 +256,11 @@ package body Peripheral_Descriptor is
       Ada.Text_IO.Put_Line
         ("Generate " & To_String (Peripheral.Name));
 
-      Spec := New_Child_Spec (To_String (Peripheral.Name),
-                              Parent => Dev_Name,
-                              Descr  => To_String (Peripheral.Description));
+      Spec := New_Child_Spec
+        (To_String (Peripheral.Name),
+         Parent        => Dev_Name,
+         Descr         => To_String (Peripheral.Description),
+         Preelaborated => True);
 
       if Length (Peripheral.Version) > 0 then
          Add (Spec,
@@ -270,18 +269,6 @@ package body Peripheral_Descriptor is
                  Typ   => "String",
                  Value => '"' & To_String (Peripheral.Version) & '"'));
       end if;
-
-      if not Interrupt_Vectors.Is_Empty (Peripheral.Interrupts) then
-         Add (Spec, New_Comment_Box ("Interrupts"));
-      end if;
-
-      for Int of Peripheral.Interrupts loop
-         Add (Spec,
-              New_Constant_Value
-                (Id    => To_String (Int.Name) & "_Int",
-                 Typ   => "Natural",
-                 Value => To_String (Integer (Int.Value))));
-      end loop;
 
       if not Register_Vectors.Is_Empty (Peripheral.Registers) then
          Add (Spec, New_Comment_Box ("Registers"));
@@ -328,7 +315,6 @@ package body Peripheral_Descriptor is
       use Ada.Strings.Unbounded;
       use type Register_Vectors.Vector;
       use type Ada.Containers.Count_Type;
-      Interrupts         : Interrupt_Vectors.Vector;
       Regs               : Register_Vectors.Vector;
       Sorted             : Peripheral_Vectors.Vector := Group;
       Partial_Similarity : Boolean := False;
@@ -341,31 +327,8 @@ package body Peripheral_Descriptor is
       Spec := New_Child_Spec
         (To_String (Sorted.First_Element.Group_Name),
          Dev_Name,
-         "");
-
-      --  Interrupts
-
-      for Periph of Sorted loop
-         for Int of Periph.Interrupts loop
-            if not Interrupts.Contains (Int) then
-               Interrupts.Append (Int);
-            end if;
-         end loop;
-      end loop;
-
-      if not Interrupts.Is_Empty then
-         Add (Spec, New_Comment_Box ("Interrupts"));
-      end if;
-
-      Interrupt_Sort.Sort (Interrupts);
-
-      for Int of Interrupts loop
-         Add (Spec,
-              New_Constant_Value
-                (Id    => To_String (Int.Name) & "_Int",
-                 Typ   => "Natural",
-                 Value => To_String (Integer (Int.Value))));
-      end loop;
+         "",
+         True);
 
       --  Registers
 
