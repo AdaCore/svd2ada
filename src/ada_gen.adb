@@ -192,6 +192,29 @@ package body Ada_Gen is
    ----------
 
    overriding procedure Dump
+     (Element : Ada_Subtype_Scalar;
+      File    : Ada.Text_IO.File_Type)
+   is
+   begin
+      if not Element.Comment.Is_Empty then
+         Dump (Comment => Element.Comment,
+               F       => File,
+               Indent  => 1,
+               Inline  => False);
+      end if;
+
+      Ada.Text_IO.Put_Line
+        (File, "   subtype " & To_String (Element.Id) & " is " &
+           To_String (Element.Typ) & ";");
+
+      Ada.Text_IO.New_Line (File);
+   end Dump;
+
+   ----------
+   -- Dump --
+   ----------
+
+   overriding procedure Dump
      (Element : Ada_Type_Array;
       File    : Ada.Text_IO.File_Type)
    is
@@ -949,6 +972,22 @@ package body Ada_Gen is
       return Ret;
    end New_Type_Scalar;
 
+   ---------------------
+   -- New_Type_Scalar --
+   ---------------------
+
+   function New_Subype_Scalar
+     (Id      : String;
+      Typ     : String;
+      Comment : String := "") return Ada_Subtype_Scalar
+   is
+   begin
+      return (Id      => To_Unbounded_String (Id),
+              Comment => New_Comment (Comment),
+              Typ     => To_Unbounded_String (Typ),
+              others  => <>);
+   end New_Subype_Scalar;
+
    -------------------
    -- Added_In_Spec --
    -------------------
@@ -977,6 +1016,18 @@ package body Ada_Gen is
    begin
       return T1.Id = T2.Id
         and then T1.Size = T2.Size;
+   end Is_Similar;
+
+   ----------------
+   -- Is_Similar --
+   ----------------
+
+   overriding function Is_Similar
+     (T1, T2 : Ada_Subtype_Scalar) return Boolean
+   is
+   begin
+      return T1.Id = T2.Id
+        and then T1.Typ = T2.Typ;
    end Is_Similar;
 
    --------------------

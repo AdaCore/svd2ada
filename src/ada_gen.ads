@@ -74,6 +74,9 @@ package Ada_Gen is
    type Ada_Type_Scalar is new Ada_Type with private;
    --  A scalar type definition
 
+   type Ada_Subtype_Scalar is new Ada_Type with private;
+   --  A scalar subtype definition
+
    type Ada_Type_Array is new Ada_Type with private;
    --  An array type definition
 
@@ -153,6 +156,8 @@ package Ada_Gen is
    overriding function Is_Similar
      (T1, T2 : Ada_Type_Scalar) return Boolean;
    overriding function Is_Similar
+     (T1, T2 : Ada_Subtype_Scalar) return Boolean;
+   overriding function Is_Similar
      (T1, T2 : Ada_Type_Array) return Boolean;
    overriding function Is_Similar
      (T1, T2 : Ada_Type_Enum) return Boolean;
@@ -169,6 +174,11 @@ package Ada_Gen is
      (Id      : String;
       Size    : Unsigned;
       Comment : String := "") return Ada_Type_Scalar;
+
+   function New_Subype_Scalar
+     (Id      : String;
+      Typ     : String;
+      Comment : String := "") return Ada_Subtype_Scalar;
 
    ------------
    -- Arrays --
@@ -372,6 +382,14 @@ private
 
    overriding procedure Dump
      (Element : Ada_Type_Scalar;
+      File    : Ada.Text_IO.File_Type);
+
+   type Ada_Subtype_Scalar is new Ada_Type with record
+      Typ : Unbounded_String;
+   end record;
+
+   overriding procedure Dump
+     (Element : Ada_Subtype_Scalar;
       File    : Ada.Text_IO.File_Type);
 
    type Ada_Type_Array is new Ada_Type with record

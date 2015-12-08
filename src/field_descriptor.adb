@@ -176,6 +176,7 @@ package body Field_Descriptor is
 
    procedure Dump
      (Spec       : in out Ada_Gen.Ada_Spec;
+      Reg_Name   : String;
       Rec        : in out Ada_Gen.Ada_Type_Record;
       Reg_Fields : Field_Vectors.Vector;
       Properties : Register_Properties_T)
@@ -293,9 +294,27 @@ package body Field_Descriptor is
                      end loop;
 
                      Add (Spec, Enum_T);
+
                      Ada_Type := Id (Enum_T);
                   end;
                end loop;
+
+            else
+               --  We have a simple scalar value. Let's create a specific
+               --  subtype for it, so that programming conversion to this
+               --  field is allowed using FIELD_TYPE (Value).
+               declare
+                  Sub_T : Ada_Subtype_Scalar :=
+                            New_Subype_Scalar
+                              (Id  => Reg_Name &
+                                         "_" &
+                                         To_String (Fields (Index).Name) &
+                                         "_Field",
+                               Typ => To_String (Ada_Type));
+               begin
+                  Add (Spec, Sub_T);
+                  Ada_Type := Id (Sub_T);
+               end;
             end if;
 
             --  Check if it's an array, in which case it's easier

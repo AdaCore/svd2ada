@@ -427,7 +427,8 @@ package body Register_Descriptor is
             Add_Bit_Order_Aspect (Rec, System.Low_Order_First);
 
             Field_Descriptor.Dump
-              (Spec, Rec, Reg.Fields, Reg.Reg_Properties);
+              (Spec, To_String (Reg.Name),
+               Rec, Reg.Fields, Reg.Reg_Properties);
 
             Add (Spec, Rec);
             Reg.Ada_Type := Id (Rec);
