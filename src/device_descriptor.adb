@@ -176,11 +176,14 @@ package body Device_Descriptor is
       Interrupt_Sort.Sort (Interrupts);
 
       for Int of Interrupts loop
+         --  GNAT re-numbers the interrupt to add the Sys_Tick interrupt
+         --  which is a core interrupt. So we need to take this re-numbering
+         --  here by adding 2 to the constants extracted from the SVD
          Add (Spec,
               New_Constant_Value
                 (Id    => To_String (Int.Name) & "_Interrupt",
                  Typ   => "Interrupt_ID",
-                 Value => To_String (Integer (Int.Value))));
+                 Value => To_String (Integer (Int.Value) + 2)));
       end loop;
 
       Write_Spec (Spec, Output_Dir);
