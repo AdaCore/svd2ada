@@ -625,6 +625,19 @@ package body Ada_Gen is
 
       Ada.Text_IO.Create (F, Ada.Text_IO.Out_File,
                           F_Name);
+      Ada.Text_IO.Put_Line
+        (F,
+         "--  Automatically generated from CMSIS-SVD" &
+           " description file by SVD2Ada");
+      Ada.Text_IO.Put_Line
+        (F, "--  see https://github.com/AdaCore/svd2ada");
+      Ada.Text_IO.New_Line (F);
+
+      if Spec.Preelaborated then
+         Ada.Text_IO.Put_Line
+           (F, "pragma Restrictions (No_Elaboration_Code);");
+         Ada.Text_IO.New_Line (F);
+      end if;
 
       Curs := Spec.With_Clauses.First;
 
