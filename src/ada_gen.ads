@@ -234,6 +234,15 @@ package Ada_Gen is
       MSB         : Unsigned;
       Default     : Unsigned;
       Comment     : String := "");
+   procedure Add_Field
+     (Rec         : in out Ada_Type_Record'Class;
+      Id          : String;
+      Typ         : String;
+      Offset      : Unsigned;
+      LSB         : Unsigned;
+      MSB         : Unsigned;
+      Default     : Unbounded_String;
+      Comment     : String := "");
    --  Adds a new field to the record 'rec'
    --  Id : The ID of the field
    --  Typ : The base type
@@ -403,7 +412,7 @@ private
       LSB         : Unsigned;
       MSB         : Unsigned;
       Has_Default : Boolean;
-      Default     : Unsigned;
+      Default     : Unbounded_String;
       Comment     : Ada_Comment;
    end record;
 

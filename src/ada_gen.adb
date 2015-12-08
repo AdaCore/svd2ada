@@ -367,7 +367,7 @@ package body Ada_Gen is
          Ada.Text_IO.Put (File, Get_Id (F) & " : " & To_String (F.Typ));
 
          if F.Has_Default then
-            Ada.Text_IO.Put_Line (File, " := " & To_Hex (F.Default) & ";");
+            Ada.Text_IO.Put_Line (File, " := " & To_String (F.Default) & ";");
          else
             Ada.Text_IO.Put_Line (File, ";");
          end if;
@@ -1216,7 +1216,7 @@ package body Ada_Gen is
       LSB         : Unsigned;
       MSB         : Unsigned;
       Has_Default : Boolean;
-      Default     : Unsigned;
+      Default     : Unbounded_String;
       Comment     : String := "")
    is
       Low_Id : constant String := Ada.Characters.Handling.To_Lower (Id);
@@ -1334,7 +1334,7 @@ package body Ada_Gen is
          LSB         => LSB,
          MSB         => MSB,
          Has_Default => False,
-         Default     => 0,
+         Default     => Null_Unbounded_String,
          Comment     => Comment);
    end Add_Field;
 
@@ -1350,6 +1350,33 @@ package body Ada_Gen is
       LSB         : Unsigned;
       MSB         : Unsigned;
       Default     : Unsigned;
+      Comment     : String := "")
+   is
+   begin
+      Add_Field_Internal
+        (Rec,
+         Id          => Id,
+         Typ         => Typ,
+         Offset      => Offset,
+         LSB         => LSB,
+         MSB         => MSB,
+         Has_Default => True,
+         Default     => To_Unbounded_String (To_Hex (Default)),
+         Comment     => Comment);
+   end Add_Field;
+
+   ---------------
+   -- Add_Field --
+   ---------------
+
+   procedure Add_Field
+     (Rec         : in out Ada_Type_Record'Class;
+      Id          : String;
+      Typ         : String;
+      Offset      : Unsigned;
+      LSB         : Unsigned;
+      MSB         : Unsigned;
+      Default     : Unbounded_String;
       Comment     : String := "")
    is
    begin
@@ -1446,7 +1473,7 @@ package body Ada_Gen is
           LSB         => LSB,
           MSB         => MSB,
           Has_Default => False,
-          Default     => 0,
+          Default     => Null_Unbounded_String,
           Comment     => New_Comment (Comment)));
       Rec.Fields.Replace (Enum_Val, Fields);
    end Add_Field;

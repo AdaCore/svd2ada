@@ -188,6 +188,7 @@ package body Field_Descriptor is
       Length        : Unsigned;
       Prefix        : Natural;
       Default       : Unsigned;
+      Default_Id    : Unbounded_String;
       Mask          : Unsigned;
       Ada_Type      : Unbounded_String;
       Ada_Type_Size : Unsigned;
@@ -239,6 +240,20 @@ package body Field_Descriptor is
             Index    := Index + Length;
 
          else
+            --  Retrieve the reset value
+            if Properties.Reset_Value = 0 then
+               --  Most common case
+               Default := 0;
+            else
+               Default :=
+                 Shift_Right (Properties.Reset_Value, Natural (Index));
+               Mask := 0;
+               for J in 0 .. Fields (Index).Size - 1 loop
+                  Mask := Mask or 2 ** Natural (J);
+               end loop;
+               Default := Default and Mask;
+            end if;
+
             --  By default, the type of the field is a simple mod type
             Ada_Type_Size := Fields (Index).Size;
             Ada_Type :=
@@ -266,6 +281,10 @@ package body Field_Descriptor is
                      Add_Size_Aspect (Enum_T, Ada_Type_Size);
 
                      for Val of Enum.Values loop
+                        if Val.Value = Default then
+                           Default_Id := Val.Name;
+                        end if;
+
                         Add_Enum_Id
                           (Enum_T,
                            Id      => To_String (Val.Name),
@@ -359,18 +378,34 @@ package body Field_Descriptor is
                   Ada_Type := Id (Union_T);
                   Ada_Type_Size := Fields (Index).Size * Length;
                   Ada_Name := To_Unbounded_String (T_Name);
-
+                  Default_Id := To_Unbounded_String
+                    ("(As_Array => False, Val => " & To_Hex (Default) & ")");
                end;
             end if;
 
-            Add_Field
-              (Rec,
-               Id      => To_String (Ada_Name),
-               Typ     => To_String (Ada_Type),
-               Offset  => 0,
-               LSB     => Index,
-               MSB     => Index + Ada_Type_Size - 1,
-               Comment => To_String (Fields (Index).Description));
+            if Default_Id = Null_Unbounded_String then
+               Add_Field
+                 (Rec,
+                  Id      => To_String (Ada_Name),
+                  Typ     => To_String (Ada_Type),
+                  Offset  => 0,
+                  LSB     => Index,
+                  MSB     => Index + Ada_Type_Size - 1,
+                  Default => Default,
+                  Comment => To_String (Fields (Index).Description));
+            else
+               Add_Field
+                 (Rec,
+                  Id      => To_String (Ada_Name),
+                  Typ     => To_String (Ada_Type),
+                  Offset  => 0,
+                  LSB     => Index,
+                  MSB     => Index + Ada_Type_Size - 1,
+                  Default => Default_Id,
+                  Comment => To_String (Fields (Index).Description));
+            end if;
+
+            Default_Id := Null_Unbounded_String;
             Index   := Index + Ada_Type_Size;
          end if;
       end loop;
