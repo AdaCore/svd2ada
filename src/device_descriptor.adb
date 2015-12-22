@@ -146,13 +146,15 @@ package body Device_Descriptor is
       end loop;
 
       Add (Spec, New_Comment_Box ("Base addresses"));
+      Add (Spec, New_With_Clause ("System", True));
 
       for Periph of Device.Peripherals loop
          Add (Spec,
               New_Constant_Value
                 (Id    => To_String (Periph.Name) & "_Base",
-                 Typ   => "",
-                 Value => To_Hex (Periph.Base_Address)));
+                 Typ   => "System.Address",
+                 Value => "System'To_Address (" &
+                   To_Hex (Periph.Base_Address) & ")"));
       end loop;
 
       Ada_Gen.Write_Spec (Spec, Output_Dir);
