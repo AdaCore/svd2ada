@@ -21,6 +21,7 @@ with Ada.Strings.Unbounded;       use Ada.Strings.Unbounded;
 with Ada.Text_IO;
 
 with GNAT.Command_Line;
+with GNAT.Directory_Operations;
 
 with Input_Sources.File;          use Input_Sources.File;
 with Sax.Readers;
@@ -28,6 +29,7 @@ with Schema.Dom_Readers;          use Schema.Dom_Readers;
 with DOM.Core;                    use DOM.Core;
 with DOM.Core.Documents;
 
+with Ada_Gen;
 with Device_Descriptor;
 
 --  SVD Binding Generator: this tool is meant to handle
@@ -87,6 +89,8 @@ begin
       return 1;
    end if;
 
+   Ada_Gen.Set_Input_File_Name
+     (GNAT.Directory_Operations.Base_Name (To_String (SVD_File)));
    Input_Sources.File.Open (To_String (SVD_File), Input);
 
    Set_Feature (Reader, Sax.Readers.Schema_Validation_Feature, False);

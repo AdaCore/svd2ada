@@ -265,9 +265,10 @@ package body Peripheral_Descriptor is
       if Length (Peripheral.Version) > 0 then
          Add (Spec,
               New_Constant_Value
-                (Id    => "Version",
-                 Typ   => "String",
-                 Value => '"' & To_String (Peripheral.Version) & '"'));
+                (Id       => "Version",
+                 Align_Id => 0,
+                 Typ      => "String",
+                 Value    => '"' & To_String (Peripheral.Version) & '"'));
       end if;
 
       if not Register_Vectors.Is_Empty (Peripheral.Registers) then

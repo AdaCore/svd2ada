@@ -27,6 +27,22 @@ with GNAT.OS_Lib;
 package body Ada_Gen is
 
    Max_Width    : constant Natural := 79;
+   G_Input_File : Unbounded_String;
+   G_Empty_Line : Boolean := False;
+
+   function Is_Parent
+     (Spec        : Ada_Spec;
+      With_Clause : Ada_With_Clause) return Boolean;
+
+   -------------------------
+   -- Set_Input_File_Name --
+   -------------------------
+
+   procedure Set_Input_File_Name (FName : String)
+   is
+   begin
+      G_Input_File := To_Unbounded_String (FName);
+   end Set_Input_File_Name;
 
    --------------
    -- Is_Empty --
@@ -89,7 +105,7 @@ package body Ada_Gen is
    is
    begin
       Ada.Text_IO.Put_Line (File, "   --  " & To_String (Element.Comment));
-      Ada.Text_IO.New_Line (File);
+      G_Empty_Line := False;
    end Dump;
 
    ----------
@@ -103,10 +119,37 @@ package body Ada_Gen is
       Center : constant String := "-- " & To_String (Element.Comment) & " --";
       Top    : constant String (Center'Range) := (others => '-');
    begin
+      if not G_Empty_Line then
+         Ada.Text_IO.New_Line (File);
+      end if;
       Ada.Text_IO.Put_Line (File, "   " & Top);
       Ada.Text_IO.Put_Line (File, "   " & Center);
       Ada.Text_IO.Put_Line (File, "   " & Top);
       Ada.Text_IO.New_Line (File);
+      G_Empty_Line := True;
+   end Dump;
+
+   ----------
+   -- Dump --
+   ----------
+
+   overriding procedure Dump
+     (Element : Ada_Pragma;
+      File    : Ada.Text_IO.File_Type)
+   is
+   begin
+      if not G_Empty_Line then
+         Ada.Text_IO.New_Line (File);
+      end if;
+
+      if not Element.Comment.Is_Empty then
+         Dump (Element.Comment, File);
+      end if;
+
+      Ada.Text_IO.New_Line (File);
+      Ada.Text_IO.Put_Line (File, "   pragma " & To_String (Element.Id) & ";");
+      Ada.Text_IO.New_Line (File);
+      G_Empty_Line := True;
    end Dump;
 
    ------------------
@@ -146,6 +189,7 @@ package body Ada_Gen is
       end loop;
 
       Ada.Text_IO.Put_Line (File, ";");
+      G_Empty_Line := False;
    end Dump_Aspects;
 
    ----------
@@ -184,7 +228,7 @@ package body Ada_Gen is
          end if;
       end if;
 
-      Ada.Text_IO.New_Line (File);
+      G_Empty_Line := False;
    end Dump;
 
    ----------
@@ -207,7 +251,7 @@ package body Ada_Gen is
         (File, "   subtype " & To_String (Element.Id) & " is " &
            To_String (Element.Typ) & ";");
 
-      Ada.Text_IO.New_Line (File);
+      G_Empty_Line := False;
    end Dump;
 
    ----------
@@ -219,6 +263,10 @@ package body Ada_Gen is
       File    : Ada.Text_IO.File_Type)
    is
    begin
+      if not G_Empty_Line then
+         Ada.Text_IO.New_Line (File);
+      end if;
+
       if not Element.Comment.Is_Empty then
          Dump (Comment => Element.Comment,
                F       => File,
@@ -248,6 +296,7 @@ package body Ada_Gen is
       end if;
 
       Ada.Text_IO.New_Line (File);
+      G_Empty_Line := True;
    end Dump;
 
    ----------
@@ -263,6 +312,10 @@ package body Ada_Gen is
       Inline_Aspect : Boolean := False;
 
    begin
+      if not G_Empty_Line then
+         Ada.Text_IO.New_Line (File);
+      end if;
+
       if not Element.Comment.Is_Empty then
          Dump (Comment => Element.Comment,
                F       => File,
@@ -344,6 +397,7 @@ package body Ada_Gen is
       end if;
 
       Ada.Text_IO.New_Line (File);
+      G_Empty_Line := True;
    end Dump;
 
    ----------
@@ -364,6 +418,10 @@ package body Ada_Gen is
          return Id;
       end Get_Id;
    begin
+      if not G_Empty_Line then
+         Ada.Text_IO.New_Line (File);
+      end if;
+
       if not Element.Comment.Is_Empty then
          Dump (Comment => Element.Comment,
                F       => File,
@@ -415,6 +473,7 @@ package body Ada_Gen is
 
       Ada.Text_IO.Put_Line (File, "   end record;");
       Ada.Text_IO.New_Line (File);
+      G_Empty_Line := True;
    end Dump;
 
    ----------
@@ -487,6 +546,7 @@ package body Ada_Gen is
 
       Ada.Text_IO.Put_Line (File, "   end record;");
       Ada.Text_IO.New_Line (File);
+      G_Empty_Line := True;
    end Dump;
 
    ----------
@@ -505,14 +565,28 @@ package body Ada_Gen is
                Inline  => False);
       end if;
 
-      Ada.Text_IO.Put (File, "   " & To_String (Element.Id) & ": constant ");
+      Ada.Text_IO.Put (File, "   ");
+
+      if Element.Id_Size > Length (Element.Id) then
+         declare
+            Str : String (1 .. Element.Id_Size) := (others => ' ');
+            S   : constant String := To_String (Element.Id);
+         begin
+            Str (1 .. S'Length) := S;
+            Ada.Text_IO.Put (File, Str);
+         end;
+      else
+         Ada.Text_IO.Put (File, To_String (Element.Id));
+      end if;
+
+      Ada.Text_IO.Put (File, ": constant ");
 
       if Length (Element.Typ) > 0 then
          Ada.Text_IO.Put (File, To_String (Element.Typ) & " ");
       end if;
 
       Ada.Text_IO.Put_Line (File, ":= " & To_String (Element.Value) & ";");
-      Ada.Text_IO.New_Line (File);
+      G_Empty_Line := False;
    end Dump;
 
    ----------
@@ -524,6 +598,10 @@ package body Ada_Gen is
       File    : Ada.Text_IO.File_Type)
    is
    begin
+      if not G_Empty_Line then
+         Ada.Text_IO.New_Line (File);
+      end if;
+
       if not Element.Comment.Is_Empty then
          Dump (Comment => Element.Comment,
                F       => File,
@@ -547,6 +625,7 @@ package body Ada_Gen is
       end if;
 
       Ada.Text_IO.New_Line (File);
+      G_Empty_Line := True;
    end Dump;
 
    --------------
@@ -580,6 +659,19 @@ package body Ada_Gen is
       return New_Spec (Parent & "." & Name, Descr, Preelaborated);
    end New_Child_Spec;
 
+   -----------------------------
+   -- Is_Interfaces_Hierarchy --
+   -----------------------------
+
+   function Is_Interfaces_Hierarchy
+     (Spec : Ada_Spec) return Boolean
+   is
+   begin
+      return Length (Spec.Id) > 10
+        and then Ada.Characters.Handling.To_Lower
+          (Slice (Spec.Id, 1, 11)) = "interfaces.";
+   end Is_Interfaces_Hierarchy;
+
    ---------------
    -- File_Name --
    ---------------
@@ -596,6 +688,20 @@ package body Ada_Gen is
             Ada_Name (J) := '-';
          end if;
       end loop;
+
+      if Ada_Name = "ada-interrupts-names" then
+         return "a-intnam.ads";
+      end if;
+
+      if Ada_Name'Length >= 10
+        and then Ada_Name (1 .. 10) = "interfaces"
+        and then
+          (Ada_Name'Last = 10
+           or else Ada_Name (11) = '-')
+      then
+         return "i" & Ada_Name (11 .. Ada_Name'Last) & ".ads";
+      end if;
+
       return Ada_Name & ".ads";
    end File_Name;
 
@@ -627,8 +733,8 @@ package body Ada_Gen is
                           F_Name);
       Ada.Text_IO.Put_Line
         (F,
-         "--  Automatically generated from CMSIS-SVD" &
-           " description file by SVD2Ada");
+         "--  Automatically generated from " & To_String (G_Input_File) &
+           " by SVD2Ada");
       Ada.Text_IO.Put_Line
         (F, "--  see https://github.com/AdaCore/svd2ada");
       Ada.Text_IO.New_Line (F);
@@ -680,12 +786,13 @@ package body Ada_Gen is
       if Spec.Preelaborated then
          Ada.Text_IO.Put_Line (F, "   pragma Preelaborate;");
       end if;
-      Ada.Text_IO.New_Line (F);
+      G_Empty_Line := False;
 
       for Elt of Spec.Elements loop
          Dump (Elt, F);
       end loop;
 
+      Ada.Text_IO.New_Line (F);
       Ada.Text_IO.Put_Line (F, "end " & To_String (Spec.Id) & ";");
 
       Ada.Text_IO.Close (F);
@@ -701,6 +808,10 @@ package body Ada_Gen is
    is
       With_Pkg : String renames To_String (Elt.Pkg);
    begin
+      if Is_Parent (Spec, Elt) then
+         return;
+      end if;
+
       if Spec.With_Clauses.Contains (With_Pkg) then
          if Elt.Add_Use_Clause then
             -- Make sure we have use visibility for this package
@@ -725,6 +836,10 @@ package body Ada_Gen is
       Spec.Elements.Append (Elt);
       Elt.Added_In_Spec (Spec);
    end Add;
+
+   ------------------
+   -- Add_No_Check --
+   ------------------
 
    procedure Add_No_Check
      (Spec : in out Ada_Spec;
@@ -826,6 +941,19 @@ package body Ada_Gen is
       Elt.Added_In_Spec (Spec);
    end Add;
 
+   ---------
+   -- Add --
+   ---------
+
+   procedure Add
+     (Spec : in out Ada_Spec;
+      Elt  : Ada_Pragma)
+   is
+   begin
+      Spec.Elements.Append (Elt);
+      Elt.Added_In_Spec (Spec);
+   end Add;
+
    ---------------------
    -- New_With_Clause --
    ---------------------
@@ -838,6 +966,24 @@ package body Ada_Gen is
       return (Pkg            => To_Unbounded_String (Pkg),
               Add_Use_Clause => Use_Visible);
    end New_With_Clause;
+
+   ---------------
+   -- Is_Parent --
+   ---------------
+
+   function Is_Parent
+     (Spec        : Ada_Spec;
+      With_Clause : Ada_With_Clause) return Boolean
+   is
+      Spec_Lower : constant String :=
+                     Ada.Characters.Handling.To_Lower (To_String (Spec.Id));
+      With_Lower : constant String :=
+                     Ada.Characters.Handling.To_Lower
+                       (To_String (With_Clause.Pkg));
+   begin
+      return With_Lower'Length < Spec_Lower'Length
+        and then Spec_Lower (1 .. With_Lower'Length + 1) = (With_Lower & '.');
+   end Is_Parent;
 
    -----------------
    -- New_Comment --
@@ -887,6 +1033,21 @@ package body Ada_Gen is
    begin
       return (Comment => C.Comment);
    end New_Comment_Box;
+
+   ----------------
+   -- New_Pragma --
+   ----------------
+
+   function New_Pragma
+     (Identifier : String;
+      Comment    : String := "") return Ada_Pragma
+   is
+      C : constant Ada_Pragma :=
+            (Id      => To_Unbounded_String (Identifier),
+             Comment => New_Comment (Comment));
+   begin
+      return C;
+   end New_Pragma;
 
    --------
    -- Id --
@@ -1576,13 +1737,15 @@ package body Ada_Gen is
    ------------------------
 
    function New_Constant_Value
-     (Id      : String;
-      Typ     : String;
-      Value   : String;
-      Comment : String := "") return Ada_Constant_Value
+     (Id       : String;
+      Align_Id : Natural;
+      Typ      : String;
+      Value    : String;
+      Comment  : String := "") return Ada_Constant_Value
    is
    begin
       return (Id      => To_Unbounded_String (Id),
+              Id_Size => Align_Id,
               Typ     => To_Unbounded_String (Typ),
               Value   => To_Unbounded_String (Value),
               Comment => New_Comment (Comment));

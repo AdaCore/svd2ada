@@ -119,13 +119,16 @@ package body Device_Descriptor is
                       New_Spec (To_String (Device.Name),
                                 To_String (Device.Description),
                                 True);
+      Max_Len     : Natural := 0;
+
    begin
       if Length (Device.Version) > 0 then
          Add (Spec,
               New_Constant_Value
-                (Id    => "Version",
-                 Typ   => "String",
-                 Value => '"' & To_String (Device.Version) & '"'));
+                (Id       => "Version",
+                 Align_Id => 0,
+                 Typ      => "String",
+                 Value    => '"' & To_String (Device.Version) & '"'));
       end if;
 
       Add (Spec, New_Comment_Box ("Base type"));
@@ -151,18 +154,37 @@ package body Device_Descriptor is
       for Periph of Device.Peripherals loop
          Add (Spec,
               New_Constant_Value
-                (Id    => To_String (Periph.Name) & "_Base",
-                 Typ   => "System.Address",
-                 Value => "System'To_Address (" &
+                (Id       => To_String (Periph.Name) & "_Base",
+                 Align_Id => 0,
+                 Typ      => "System.Address",
+                 Value    => "System'To_Address (" &
                    To_Hex (Periph.Base_Address) & ")"));
       end loop;
 
       Ada_Gen.Write_Spec (Spec, Output_Dir);
 
-      Spec := New_Child_Spec ("Interrupts",
-                              To_String (Device.Name),
-                              "Definition of the device's interrupts",
-                              False);
+      if Is_Interfaces_Hierarchy (Spec) then
+         --  When generating stubs for the Interfaces run-time hierarchy, also
+         --  generate the Ada.Exceptions.Name file from the interrupts list
+         Spec := New_Spec ("Ada.Interrupts.Names",
+                           "This is a version automatically generated " &
+                             "from the SVD description file",
+                           False);
+         Add (Spec,
+              New_Pragma
+                ("Implentation_Defined",
+                 "All identifiers in this unit are implementation defined"));
+         Interrupts.Append
+           ((Name        => To_Unbounded_String ("Sys_Tick"),
+             Description => Null_Unbounded_String,
+             Value       => 1));
+
+      else
+         Spec := New_Child_Spec ("Interrupts",
+                                 To_String (Device.Name),
+                                 "Definition of the device's interrupts",
+                                 False);
+      end if;
 
       Add (Spec, New_Comment_Box ("Interrupts"));
       Add (Spec, New_With_Clause ("Ada.Interrupts", True));
@@ -170,7 +192,9 @@ package body Device_Descriptor is
       for Periph of Device.Peripherals loop
          for Int of Periph.Interrupts loop
             if not Interrupts.Contains (Int) then
+               Ada.Text_IO.Put_Line (To_String (Int.Name));
                Interrupts.Append (Int);
+               Max_Len := Natural'Max (Length (Int.Name), Max_Len);
             end if;
          end loop;
       end loop;
@@ -181,11 +205,23 @@ package body Device_Descriptor is
          --  GNAT re-numbers the interrupt to add the Sys_Tick interrupt
          --  which is a core interrupt. So we need to take this re-numbering
          --  here by adding 2 to the constants extracted from the SVD
-         Add (Spec,
-              New_Constant_Value
-                (Id    => To_String (Int.Name) & "_Interrupt",
-                 Typ   => "Interrupt_ID",
-                 Value => To_String (Integer (Int.Value) + 2)));
+         if Length (Int.Name) > 4
+           and then Slice (Int.Name, Length (Int.Name) - 3, Length (Int.Name)) = "_IRQ"
+         then
+            Add (Spec,
+                 New_Constant_Value
+                   (Id       => Slice (Int.Name, 1, Length (Int.Name) - 4) & "_Interrupt",
+                    Align_Id => Max_Len + 11,
+                    Typ      => "Interrupt_ID",
+                    Value    => To_String (Integer (Int.Value))));
+         else
+            Add (Spec,
+                 New_Constant_Value
+                   (Id       => To_String (Int.Name) & "_Interrupt",
+                    Align_Id => Max_Len + 11,
+                    Typ      => "Interrupt_ID",
+                    Value    => To_String (Integer (Int.Value))));
+         end if;
       end loop;
 
       Write_Spec (Spec, Output_Dir);

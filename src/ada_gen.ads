@@ -33,6 +33,8 @@ private with Ada.Strings.Hash_Case_Insensitive;
 --  This package is responsible for dumping the Ada specs.
 package Ada_Gen is
 
+   procedure Set_Input_File_Name (FName : String);
+
    type Ada_Spec is private;
 
    function New_Spec
@@ -45,6 +47,9 @@ package Ada_Gen is
       Parent        : String;
       Descr         : String;
       Preelaborated : Boolean) return Ada_Spec;
+
+   function Is_Interfaces_Hierarchy
+     (Spec : Ada_Spec) return Boolean;
 
    procedure Write_Spec
      (Spec       : Ada_Spec;
@@ -62,6 +67,8 @@ package Ada_Gen is
    -- -------------
    -- -- comment --
    -- -------------
+
+   type Ada_Pragma is private;
 
    type Ada_Type is abstract tagged private;
    --  Base type for type definition
@@ -101,6 +108,9 @@ package Ada_Gen is
    procedure Add
      (Spec : in out Ada_Spec;
       Elt  : Ada_Comment'Class);
+   procedure Add
+     (Spec : in out Ada_Spec;
+      Elt  : Ada_Pragma);
 
    procedure Add_No_Check
      (Spec : in out Ada_Spec;
@@ -132,6 +142,10 @@ package Ada_Gen is
 
    function New_Comment_Box
      (Comment : String) return Ada_Comment_Box;
+
+   function New_Pragma
+     (Identifier : String;
+      Comment    : String := "") return Ada_Pragma;
 
    -----------------------
    -- Type declarations --
@@ -286,10 +300,15 @@ package Ada_Gen is
    ---------------
 
    function New_Constant_Value
-     (Id      : String;
-      Typ     : String;
-      Value   : String;
-      Comment : String := "") return Ada_Constant_Value;
+     (Id       : String;
+      Align_Id : Natural;
+      Typ      : String;
+      Value    : String;
+      Comment  : String := "") return Ada_Constant_Value;
+   --  Generates "Id : constant Typ := Value";
+   --  If Align_Id is 0 or less than Id's length, then the semicolon is just
+   --  next to the constant identifier, else some space is left to align
+   --  declarations
 
    ---------------
    -- Instances --
@@ -357,6 +376,15 @@ private
 
    overriding procedure Dump
      (Element : Ada_Comment_Box;
+      File    : Ada.Text_IO.File_Type);
+
+   type Ada_Pragma is new Spec_Element with record
+      Id      : Unbounded_String;
+      Comment : Ada_Comment;
+   end record;
+
+   overriding procedure Dump
+     (Element : Ada_Pragma;
       File    : Ada.Text_IO.File_Type);
 
    package String_Vectors is new Ada.Containers.Indefinite_Vectors
@@ -471,6 +499,7 @@ private
 
    type Ada_Constant_Value is new Spec_Element with record
       Id      : Unbounded_String;
+      Id_Size : Natural;
       Typ     : Unbounded_String;
       Value   : Unbounded_String;
       Comment : Ada_Comment;

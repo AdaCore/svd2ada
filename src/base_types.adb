@@ -541,7 +541,9 @@ package body Base_Types is
       elsif Tag = "description" then
          Val.Description := Get_Value (Elt);
       elsif Tag = "value" then
-         Val.Value := Get_Value (Elt);
+         --  GNAT offsets the IRQ value +1 to allow room for 0 (reserved) and
+         --  1 (System Tick)
+         Val.Value := Get_Value (Elt) + 2;
       else
          raise Constraint_Error with "Unexpected interrupt tag " & Tag;
       end if;
