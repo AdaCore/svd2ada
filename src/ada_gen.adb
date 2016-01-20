@@ -559,6 +559,11 @@ package body Ada_Gen is
    is
    begin
       if not Element.Comment.Is_Empty then
+         if not G_Empty_Line then
+            Ada.Text_IO.New_Line (File);
+            G_Empty_Line := True;
+         end if;
+
          Dump (Comment => Element.Comment,
                F       => File,
                Indent  => 1,

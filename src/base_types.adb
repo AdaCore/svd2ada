@@ -541,8 +541,9 @@ package body Base_Types is
       elsif Tag = "description" then
          Val.Description := Get_Value (Elt);
       elsif Tag = "value" then
-         --  GNAT offsets the IRQ value +1 to allow room for 0 (reserved) and
-         --  1 (System Tick)
+         --  GNAT re-numbers the interrupt to add the Sys_Tick interrupt
+         --  which is a core interrupt. So we need to take this re-numbering
+         --  here by adding 2 to the constants extracted from the SVD
          Val.Value := Get_Value (Elt) + 2;
       else
          raise Constraint_Error with "Unexpected interrupt tag " & Tag;
