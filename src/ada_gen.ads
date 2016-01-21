@@ -48,12 +48,17 @@ package Ada_Gen is
       Descr         : String;
       Preelaborated : Boolean) return Ada_Spec;
 
+   function Id (Spec : Ada_Spec) return Unbounded_String;
+
    function Is_Interfaces_Hierarchy
      (Spec : Ada_Spec) return Boolean;
 
    procedure Write_Spec
      (Spec       : Ada_Spec;
       Output_Dir : String);
+
+   procedure Add_Global_With (Spec : Ada_Spec);
+   --  Adds a with/use clause to this Spec on all generated spec from now on.
 
    type Ada_With_Clause is private;
    --  with/use clauses

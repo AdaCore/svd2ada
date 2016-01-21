@@ -173,7 +173,7 @@ package body Device_Descriptor is
       --  Cortex ARMv7-m defined 16 first values
       Put_Line
         (ASM,
-         ASCII.HT, "/* Cortex-M core interrupts */");
+         ASCII.HT & "/* Cortex-M core interrupts */");
       Put_Line
         (ASM,
          ASCII.HT & ".word   0                    /* stack top address */");
@@ -225,7 +225,7 @@ package body Device_Descriptor is
 
       Put_Line
         (ASM,
-         ASCII.HT, "/* MCU interrupts */");
+         ASCII.HT & "/* MCU interrupts */");
 
       Curs := Ints.First;
 
@@ -294,6 +294,38 @@ package body Device_Descriptor is
                  Value    => '"' & To_String (Device.Version) & '"'));
       end if;
 
+      Add (Spec, New_Comment_Box ("Base addresses"));
+      Add (Spec, New_With_Clause ("System", False));
+
+      for Periph of Device.Peripherals loop
+         Add (Spec,
+              New_Constant_Value
+                (Id       => To_String (Periph.Name) & "_Base",
+                 Align_Id => 0,
+                 Typ      => "System.Address",
+                 Value    => "System'To_Address (" &
+                   To_Hex (Periph.Base_Address) & ")"));
+      end loop;
+
+      Ada_Gen.Write_Spec (Spec, Output_Dir);
+
+      ----------------------------
+      --  Base types definition --
+      ----------------------------
+
+      if Gen_RT_IRQ then
+         Spec := New_Spec
+           ("Interfaces.BB_Types",
+            "Base types used to describe register fields",
+            True);
+      else
+         Spec := New_Child_Spec
+           (To_String (Device.Name), "Types",
+            "Base types used to describe register fields",
+            True);
+      end if;
+      Base_Types.Base_Package := Id (Spec);
+
       Add (Spec, New_Comment_Box ("Base type"));
       Add_No_Check
         (Spec, New_Type_Scalar (Target_Type (Natural'(32), False), 32));
@@ -311,43 +343,34 @@ package body Device_Descriptor is
          end if;
       end loop;
 
-      Add (Spec, New_Comment_Box ("Base addresses"));
-      Add (Spec, New_With_Clause ("System", True));
-
-      for Periph of Device.Peripherals loop
-         Add (Spec,
-              New_Constant_Value
-                (Id       => To_String (Periph.Name) & "_Base",
-                 Align_Id => 0,
-                 Typ      => "System.Address",
-                 Value    => "System'To_Address (" &
-                   To_Hex (Periph.Base_Address) & ")"));
-      end loop;
-
       Ada_Gen.Write_Spec (Spec, Output_Dir);
+      Ada_Gen.Add_Global_With (Spec);
+
+      ----------------
+      -- Interrupts --
+      ----------------
 
       if Gen_RT_IRQ then
          --  When generating stubs for the Interfaces run-time hierarchy, also
          --  generate the Ada.Exceptions.Name file from the interrupts list
          Spec := New_Spec ("Ada.Interrupts.Names",
-                           "This is a version automatically generated " &
-                             "for the " & To_String (Device.Name) & " MCU",
+                           "This is a version for the " &
+                             To_String (Device.Description) & " MCU",
                            False);
          Add (Spec,
               New_Pragma
-                ("Implentation_Defined",
+                ("Implementation_Defined",
                  "All identifiers in this unit are implementation defined"));
          --  Add core interrupts
          Interrupts.Append
            ((Name        => To_Unbounded_String ("Sys_Tick"),
              Description => To_Unbounded_String
                ("The position of the interrupts are documented as starting " &
-                  "at 0. Unfortunately, Interrupt_ID 0 is reserved and the " &
+                  "at 0. Unfortunately, Interrupt_Id 0 is reserved and the " &
                   "SysTick interrupt (a core interrupt) is handled by the " &
-                  "runtime like other interrupts. So the first interrupt " &
-                  "(window watchdog) is numbered 2 while it is at position " &
-                  "0 in the manual. The offset of 2 is reflected in " &
-                  "s-bbbosu.adb by the First_IRQ constant."),
+                  "runtime like other interrupts. So IRQ 0 is numbered 2 " &
+                  "while it is at position 0 in the manual. The offset of 2 " &
+                  "is reflected in s-bbbosu.adb by the First_IRQ constant."),
              Value       => 1));
          Interrupts.Append
            ((Name        => To_Unbounded_String ("FPU"),
@@ -417,7 +440,8 @@ package body Device_Descriptor is
             Peripherals.Delete_First;
 
             if Ada.Strings.Unbounded.Length (P.Group_Name) = 0 then
-               Dump (P, Ada.Strings.Unbounded.To_String (Device.Name),
+               Dump (P,
+                     Ada.Strings.Unbounded.To_String (Device.Name),
                      Output_Dir);
             else
                Vec.Append (P);

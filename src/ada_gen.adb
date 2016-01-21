@@ -29,6 +29,7 @@ package body Ada_Gen is
    Max_Width    : constant Natural := 79;
    G_Input_File : Unbounded_String;
    G_Empty_Line : Boolean := False;
+   G_Withed_All : Unbounded_String := Null_Unbounded_String;
 
    function Is_Parent
      (Spec        : Ada_Spec;
@@ -78,7 +79,7 @@ package body Ada_Gen is
                Last_Space := J;
             end if;
 
-            if J - First + Pre'Length + 4 > Max_Width
+            if J - First + Pre'Length + 4 >= Max_Width
               and then Last_Space > 0
             then
                Ada.Text_IO.Put_Line
@@ -247,9 +248,20 @@ package body Ada_Gen is
                Inline  => False);
       end if;
 
-      Ada.Text_IO.Put_Line
-        (File, "   subtype " & To_String (Element.Id) & " is " &
-           To_String (Element.Typ) & ";");
+      declare
+         Subt_String : constant String :=
+                         "   subtype " & To_String (Element.Id) & " is";
+         Val         : constant String := To_String (Element.Typ);
+      begin
+         Ada.Text_IO.Put (File, Subt_String);
+
+         if Subt_String'Length + 2 + Val'Length > Max_Width then
+            Ada.Text_IO.New_Line (File);
+            Ada.Text_IO.Put_Line (File, "     " & Val & ";");
+         else
+            Ada.Text_IO.Put_Line  (File, " " & Val & ";");
+         end if;
+      end;
 
       G_Empty_Line := False;
    end Dump;
@@ -417,6 +429,7 @@ package body Ada_Gen is
 
          return Id;
       end Get_Id;
+
    begin
       if not G_Empty_Line then
          Ada.Text_IO.New_Line (File);
@@ -444,14 +457,31 @@ package body Ada_Gen is
                   Inline  => False);
          end if;
 
-         Ada.Text_IO.Put (File, (1 .. 6 => ' '));
-         Ada.Text_IO.Put (File, Get_Id (F) & " : " & To_String (F.Typ));
+         declare
+            Id   : constant String := Get_Id (F);
+            Line : constant String :=
+                     (1 .. 6 => ' ') & Id & " : " & To_String (F.Typ);
+         begin
+            Ada.Text_IO.Put (File, Line);
 
-         if F.Has_Default then
-            Ada.Text_IO.Put_Line (File, " := " & To_String (F.Default) & ";");
-         else
-            Ada.Text_IO.Put_Line (File, ";");
-         end if;
+            if F.Has_Default then
+               declare
+                  Val : constant String := To_String (F.Default);
+               begin
+                  if Line'Length + 5 + Val'Length >= Max_Width then
+                     Ada.Text_IO.Put_Line (File, " :=");
+                     Ada.Text_IO.Put_Line (File, (1 .. Id'Length + 9 => ' ') &
+                                             Val & ";");
+                  else
+                     Ada.Text_IO.Put_Line
+                       (File, " := " & To_String (F.Default) & ";");
+                  end if;
+               end;
+
+            else
+               Ada.Text_IO.Put_Line (File, ";");
+            end if;
+         end;
       end loop;
 
       Ada.Text_IO.Put_Line (File, "   end record");
@@ -494,11 +524,13 @@ package body Ada_Gen is
 
       Ada.Text_IO.Put_Line
         (File,
-         "   type " & To_String (Element.Id) &
-           " (" & To_String (Element.Disc_Name) &
+         "   type " & To_String (Element.Id));
+      Ada.Text_IO.Put_Line
+        (File, "     (" & To_String (Element.Disc_Name) &
            " : " & To_String (Element.Discriminent.Id) &
            " := " & To_String (Element.Discriminent.Values.First_Element.Id) &
-           ") is record");
+           ")");
+      Ada.Text_IO.Put_Line (File, "   is record");
 
       Ada.Text_IO.Put (File, (1 .. 2 * 3 => ' '));
       Ada.Text_IO.Put_Line
@@ -584,13 +616,22 @@ package body Ada_Gen is
          Ada.Text_IO.Put (File, To_String (Element.Id));
       end if;
 
-      Ada.Text_IO.Put (File, ": constant ");
+      Ada.Text_IO.Put (File, " : constant ");
 
       if Length (Element.Typ) > 0 then
          Ada.Text_IO.Put (File, To_String (Element.Typ) & " ");
       end if;
 
-      Ada.Text_IO.Put_Line (File, ":= " & To_String (Element.Value) & ";");
+      declare
+         Value : constant String := To_String (Element.Value);
+      begin
+         if Value'Length <= 4 then --  arbitrary
+            Ada.Text_IO.Put_Line (File, ":= " & Value & ";");
+         else
+            Ada.Text_IO.Put_Line (File, ":=");
+            Ada.Text_IO.Put_Line (File, "     " & Value & ";");
+         end if;
+      end;
       G_Empty_Line := False;
    end Dump;
 
@@ -647,6 +688,12 @@ package body Ada_Gen is
       Spec.Id := To_Unbounded_String (Name);
       Spec.Comment := New_Comment (Descr);
       Spec.Preelaborated := Preelaborated;
+
+      if Length (G_Withed_All) /= 0 then
+         Spec.With_Clauses.Insert
+           (To_STring (G_Withed_All), False);
+      end if;
+
       return Spec;
    end New_Spec;
 
@@ -664,6 +711,16 @@ package body Ada_Gen is
       return New_Spec (Parent & "." & Name, Descr, Preelaborated);
    end New_Child_Spec;
 
+   --------
+   -- Id --
+   --------
+
+   function Id (Spec : Ada_Spec) return Unbounded_String
+   is
+   begin
+      return Spec.Id;
+   end Id;
+
    -----------------------------
    -- Is_Interfaces_Hierarchy --
    -----------------------------
@@ -676,6 +733,16 @@ package body Ada_Gen is
         and then Ada.Characters.Handling.To_Lower
           (Slice (Spec.Id, 1, 11)) = "interfaces.";
    end Is_Interfaces_Hierarchy;
+
+   ---------------------
+   -- Add_Global_With --
+   ---------------------
+
+   procedure Add_Global_With (Spec : Ada_Spec)
+   is
+   begin
+      G_Withed_All := Spec.Id;
+   end Add_Global_With;
 
    ---------------
    -- File_Name --
@@ -748,6 +815,7 @@ package body Ada_Gen is
          Ada.Text_IO.Put_Line
            (F, "pragma Restrictions (No_Elaboration_Code);");
          Ada.Text_IO.New_Line (F);
+         G_Empty_Line := True;
       end if;
 
       Curs := Spec.With_Clauses.First;
@@ -778,11 +846,15 @@ package body Ada_Gen is
             end if;
 
             Ada.Text_IO.New_Line (F);
+            G_Empty_Line := False;
             With_maps.Next (Curs);
          end;
       end loop;
 
-      Ada.Text_IO.New_Line (F);
+      if not G_Empty_Line then
+         Ada.Text_IO.New_Line (F);
+      end if;
+
       if not Spec.Comment.Is_Empty then
          Spec.Comment.Dump (F, Indent => 0, Inline => False);
       end if;
@@ -797,7 +869,10 @@ package body Ada_Gen is
          Dump (Elt, F);
       end loop;
 
-      Ada.Text_IO.New_Line (F);
+      if not G_Empty_Line then
+         Ada.Text_IO.New_Line (F);
+      end if;
+
       Ada.Text_IO.Put_Line (F, "end " & To_String (Spec.Id) & ";");
 
       Ada.Text_IO.Close (F);
@@ -1783,7 +1858,7 @@ package body Ada_Gen is
       Address : Unsigned)
    is
    begin
-      Elt.Aspects.Append ("Address => System'To_Address(" &
+      Elt.Aspects.Append ("Address => System'To_Address (" &
                             To_Hex (Address) & ")");
    end Add_Address_Aspect;
 
