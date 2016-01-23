@@ -23,11 +23,11 @@ with DOM.Core;
 with Base_Types;                     use Base_Types;
 with Base_Types.Register_Properties;
 
-with Peripheral_Descriptor;          use Peripheral_Descriptor;
+with Descriptors.Peripheral;         use Descriptors.Peripheral;
 
 --  Decodes and dumps the <device> elements of the SVD file. This is the
 --  main entry point for decoding this file.
-package Device_Descriptor is
+package Descriptors.Device is
 
    type Device_T is record
       Name              : Unbounded.Unbounded_String;
@@ -53,4 +53,4 @@ package Device_Descriptor is
      (Device     : Device_T;
       Output_Dir : String);
 
-end Device_Descriptor;
+end Descriptors.Device;

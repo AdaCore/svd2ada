@@ -98,7 +98,7 @@ package Ada_Gen is
    type Ada_Type_Record is new Ada_Type with private;
    --  A record type definition
 
-   type Ada_Type_Union is new Ada_Type with private;
+   type Ada_Type_Union is new Ada_Type_Record with private;
    --  A union record definition
 
    type Ada_Constant_Value is private;
@@ -239,7 +239,7 @@ package Ada_Gen is
 
    function New_Type_Record
      (Id      : String;
-      Comment : String := "") return Ada_Type_Record;
+      Comment : String := "") return Ada_Type_Record'Class;
 
    procedure Add_Bit_Order_Aspect
      (Elt   : in out Ada_Type_Record'Class;
@@ -498,10 +498,10 @@ private
       Ada.Strings.Equal_Case_Insensitive,
       Record_Field_Vectors."=");
 
-   type Ada_Type_Union is new Ada_Type with record
+   type Ada_Type_Union is new Ada_Type_Record with record
       Disc_Name    : Unbounded_String;
       Discriminent : Ada_Type_Enum;
-      Fields       : Record_Field_Maps.Map;
+      Disc_Fields  : Record_Field_Maps.Map;
    end record;
 
    overriding procedure Dump

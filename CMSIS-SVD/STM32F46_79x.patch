@@ -1,0 +1,25 @@
+--- orig/STM32F46_79x.svd	2015-09-04 11:08:12.000000000 +0200
++++ STM32F46_79x.svd	2015-12-29 15:39:02.000000000 +0100
+@@ -58478,10 +58478,10 @@
+           <resetValue>0x00000000</resetValue>
+           <fields>
+             <field>
+-              <name>AAV</name>
+-              <description>AAV</description>
++              <name>AAW</name>
++              <description>AAW</description>
+               <bitOffset>16</bitOffset>
+-              <bitWidth>10</bitWidth>
++              <bitWidth>12</bitWidth>
+             </field>
+             <field>
+               <name>AAH</name>
+@@ -58507,7 +58507,7 @@
+               <description>Total Width (in units of pixel clock
+               period)</description>
+               <bitOffset>16</bitOffset>
+-              <bitWidth>10</bitWidth>
++              <bitWidth>12</bitWidth>
+             </field>
+             <field>
+               <name>TOTALH</name>

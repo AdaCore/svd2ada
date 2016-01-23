@@ -23,7 +23,7 @@ with DOM.Core;           use DOM.Core;
 with DOM.Core.Elements;  use DOM.Core.Elements;
 with DOM.Core.Nodes;
 
-package body Field_Descriptor is
+package body Descriptors.Field is
 
    function Similar_Field
      (F1, F2     : Field_T;
@@ -110,8 +110,8 @@ package body Field_Descriptor is
 
                elsif Tag = "enumeratedValues" then
                   declare
-                     Enum : constant Enumerate_Descriptor.Enumerate_T :=
-                              Enumerate_Descriptor.Read_Enumerate
+                     Enum : constant Descriptors.Enumerate.Enumerate_T :=
+                              Descriptors.Enumerate.Read_Enumerate
                                 (Child, Ret.Enums);
                   begin
                      Ret.Enums.Append (Enum);
@@ -148,7 +148,7 @@ package body Field_Descriptor is
      (F1, F2     : Field_T;
       Prefix_Idx : in out Natural) return Boolean
    is
-      use Unbounded, Enumerate_Descriptor.Enumerate_Vectors;
+      use Unbounded, Descriptors.Enumerate.Enumerate_Vectors;
       Prefix : Unbounded_String;
    begin
       if F1.Size /= F2.Size then
@@ -477,4 +477,4 @@ package body Field_Descriptor is
       end loop;
    end Dump;
 
-end Field_Descriptor;
+end Descriptors.Field;

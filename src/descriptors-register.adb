@@ -26,7 +26,7 @@ with DOM.Core.Nodes;
 
 with Ada_Gen;            use Ada_Gen;
 
-package body Register_Descriptor is
+package body Descriptors.Register is
 
    -------------------
    -- Read_Register --
@@ -178,14 +178,40 @@ package body Register_Descriptor is
    -- Find_Aliased --
    ------------------
 
-   procedure Find_Aliased (Reg_Set : Register_Vectors.Vector)
+   procedure Find_Aliased
+     (Reg_Set : Register_Vectors.Vector;
+      Resolve : Boolean)
    is
       use Unbounded;
    begin
+      if not Resolve then
+         --  In this case, the actual handling of the aliased registers is
+         --  performed by the peripheral helper. All we need here is to flag
+         --  the aliased registers.
+         For J in Reg_Set.First_Index .. Reg_Set.Last_Index - 1 loop
+            declare
+               Reg1 : Register_Access renames Reg_Set (J);
+            begin
+               for K in J + 1 .. Reg_Set.Last_Index loop
+                  declare
+                     Reg2 : Register_Access renames Reg_Set (K);
+                  begin
+                     if Reg1.Address_Offset = Reg2.Address_Offset then
+                        Reg_Set (J).Is_Overlapping := True;
+                        Reg_Set (K).Is_Overlapping := True;
+                     end if;
+                  end;
+               end loop;
+            end;
+         end loop;
+
+         return;
+      end if;
+
       for J in Reg_Set.First_Index .. Reg_Set.Last_Index - 1 loop
          --  Do not perform a second pass if the register has already been
          --  detected as aliased
-         if not Reg_Set (J).Is_Aliased then
+         if not Reg_Set (J).Is_Overlapping then
             declare
                Reg    : constant Register_Access := Reg_Set (J);
                Prefix : constant String := To_String (Reg.Name);
@@ -193,7 +219,7 @@ package body Register_Descriptor is
             begin
                for K in J + 1 .. Reg_Set.Last_Index loop
                   if Reg_Set (K).Address_Offset = Reg.Address_Offset then
-                     Reg.Is_Aliased := True;
+                     Reg.Is_Overlapping := True;
 
                      for J in 1 .. Last loop
                         if Prefix (J) /= Element (Reg_Set (K).Name, J) then
@@ -212,27 +238,27 @@ package body Register_Descriptor is
                   end if;
                end loop;
 
-               if Reg.Is_Aliased then
+               if Reg.Is_Overlapping then
                   if Prefix (Last) = '_'
                     or else Prefix (Last) = '-'
                   then
-                     Reg.Alias_Name :=
+                     Reg.Overlap_Name :=
                        To_Unbounded_String
                          (Prefix (Prefix'First .. Last - 1));
                   else
-                     Reg.Alias_Name :=
+                     Reg.Overlap_Name :=
                        To_Unbounded_String
                          (Prefix (Prefix'First .. Last));
                   end if;
 
                   if Last = Prefix'Last then
-                     Reg.Alias_Suffix := To_Unbounded_String ("Default");
+                     Reg.Overlap_Suffix := To_Unbounded_String ("Default");
                   else
-                     Reg.Alias_Suffix :=
+                     Reg.Overlap_Suffix :=
                        To_Unbounded_String (Prefix (Last + 1 .. Prefix'Last));
                   end if;
 
-                  Reg.First_Alias  := True;
+                  Reg.First_Overlap := True;
 
                   --  Now apply the type name to all aliased registers
                   for K in J + 1 .. Reg_Set.Last_Index loop
@@ -240,12 +266,12 @@ package body Register_Descriptor is
                         declare
                            Oth : Register_T renames Reg_Set (K).all;
                         begin
-                           Oth.Alias_Name  := Reg.Alias_Name;
-                           Oth.Is_Aliased  := True;
-                           Oth.First_Alias := False;
+                           Oth.Overlap_Name   := Reg.Overlap_Name;
+                           Oth.Is_Overlapping := True;
+                           Oth.First_Overlap  := False;
 
                            if Last = Length (Oth.Name) then
-                              Oth.Alias_Suffix :=
+                              Oth.Overlap_Suffix :=
                                 To_Unbounded_String ("Default");
                            else
                               declare
@@ -261,7 +287,7 @@ package body Register_Descriptor is
                                     First := First + 1;
                                  end loop;
 
-                                 Oth.Alias_Suffix :=
+                                 Oth.Overlap_Suffix :=
                                    To_Unbounded_String
                                      (Suffix (First .. Suffix'Last));
                               end;
@@ -420,11 +446,12 @@ package body Register_Descriptor is
          begin
             Add (Spec,
                  New_Comment_Box (To_String (Reg.Type_Name) & "_Register"));
-            Rec := New_Type_Record
-              (To_String (Reg.Type_Name) & "_Register",
-               To_String (Reg.Description));
+            Rec := Ada_Type_Record
+              (New_Type_Record
+                 (To_String (Reg.Type_Name) & "_Register",
+                  To_String (Reg.Description)));
 
-            Field_Descriptor.Dump
+            Descriptors.Field.Dump
               (Spec,
                To_String (Reg.Name),
                Rec,
@@ -475,39 +502,39 @@ package body Register_Descriptor is
 
    begin
       for Reg of Regs loop
-         if Reg.Is_Aliased
-           and then Reg.First_Alias
+         if Reg.Is_Overlapping
+           and then Reg.First_Overlap
            and then Reg.Type_Holder = null
          then
             declare
                Enum  : Ada_Type_Enum :=
                          New_Type_Enum
-                           (To_String (Reg.Alias_Name) & "_Discriminent");
+                           (To_String (Reg.Overlap_Name) & "_Discriminent");
                Union : Ada_Type_Union;
             begin
-               Add_Enum_Id (Enum, To_String (Reg.Alias_Suffix));
+               Add_Enum_Id (Enum, To_String (Reg.Overlap_Suffix));
                List.Delete_First;
 
                for Reg2 of Regs loop
                   if Reg2 /= Reg
-                    and then Reg2.Is_Aliased
-                    and then Reg2.Alias_Name = Reg.Alias_Name
+                    and then Reg2.Is_Overlapping
+                    and then Reg2.Overlap_Name = Reg.Overlap_Name
                   then
-                     Add_Enum_Id (Enum, To_String (Reg2.Alias_Suffix));
+                     Add_Enum_Id (Enum, To_String (Reg2.Overlap_Suffix));
                   end if;
                end loop;
 
                Add (Spec, Enum);
                Union := New_Type_Union
                  (Id        =>
-                    To_String (Reg.Alias_Name) & "_Aliased_Register",
+                    To_String (Reg.Overlap_Name) & "_Aliased_Register",
                   Disc_Name => "Disc",
                   Disc_Type => Enum);
 
                Add_Field
                  (Rec      => Union,
-                  Enum_Val => To_String (Reg.Alias_Suffix),
-                  Id       => To_String (Reg.Alias_Suffix),
+                  Enum_Val => To_String (Reg.Overlap_Suffix),
+                  Id       => To_String (Reg.Overlap_Suffix),
                   Typ      => Get_Ada_Type (Reg),
                   Offset   => 0,
                   LSB      => 0,
@@ -515,13 +542,13 @@ package body Register_Descriptor is
 
                for Reg2 of Regs loop
                   if Reg2 /= Reg
-                    and then Reg2.Is_Aliased
-                    and then Reg2.Alias_Name = Reg.Alias_Name
+                    and then Reg2.Is_Overlapping
+                    and then Reg2.Overlap_Name = Reg.Overlap_Name
                   then
                      Add_Field
                        (Rec      => Union,
-                        Enum_Val => To_String (Reg2.Alias_Suffix),
-                        Id       => To_String (Reg2.Alias_Suffix),
+                        Enum_Val => To_String (Reg2.Overlap_Suffix),
+                        Id       => To_String (Reg2.Overlap_Suffix),
                         Typ      => Get_Ada_Type (Reg2),
                         Offset   => 0,
                         LSB      => 0,
@@ -536,4 +563,4 @@ package body Register_Descriptor is
       end loop;
    end Dump_Aliased;
 
-end Register_Descriptor;
+end Descriptors.Register;

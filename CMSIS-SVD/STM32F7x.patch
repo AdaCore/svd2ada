@@ -1,0 +1,296 @@
+--- orig/STM32F7x.svd	2015-11-11 15:58:54.000000000 +0100
++++ STM32F7x.svd	2016-01-23 11:53:03.000000000 +0100
+@@ -3,7 +3,7 @@
+ xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
+   <name>STM32F7x</name>
+-  <version>1.1</version>
++  <version>1.1 AdaCore modified</version>
+   <description>STM32F7x</description>
+   <!--Bus Interface Properties-->
+   <!--Cortex-M3 is byte addressable-->
+@@ -9347,36 +9347,12 @@
+           <resetValue>0x24003010</resetValue>
+           <fields>
+             <field>
+-              <name>PLLQ3</name>
+-              <description>Main PLL (PLL) division factor for USB
+-              OTG FS, SDIO and random number generator
+-              clocks</description>
+-              <bitOffset>27</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLQ2</name>
+-              <description>Main PLL (PLL) division factor for USB
+-              OTG FS, SDIO and random number generator
+-              clocks</description>
+-              <bitOffset>26</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLQ1</name>
+-              <description>Main PLL (PLL) division factor for USB
+-              OTG FS, SDIO and random number generator
+-              clocks</description>
+-              <bitOffset>25</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLQ0</name>
++              <name>PLLQ</name>
+               <description>Main PLL (PLL) division factor for USB
+               OTG FS, SDIO and random number generator
+               clocks</description>
+               <bitOffset>24</bitOffset>
+-              <bitWidth>1</bitWidth>
++              <bitWidth>4</bitWidth>
+             </field>
+             <field>
+               <name>PLLSRC</name>
+@@ -9386,123 +9362,25 @@
+               <bitWidth>1</bitWidth>
+             </field>
+             <field>
+-              <name>PLLP1</name>
+-              <description>Main PLL (PLL) division factor for main
+-              system clock</description>
+-              <bitOffset>17</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLP0</name>
++              <name>PLLP</name>
+               <description>Main PLL (PLL) division factor for main
+               system clock</description>
+               <bitOffset>16</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLN8</name>
+-              <description>Main PLL (PLL) multiplication factor for
+-              VCO</description>
+-              <bitOffset>14</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLN7</name>
+-              <description>Main PLL (PLL) multiplication factor for
+-              VCO</description>
+-              <bitOffset>13</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLN6</name>
+-              <description>Main PLL (PLL) multiplication factor for
+-              VCO</description>
+-              <bitOffset>12</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLN5</name>
+-              <description>Main PLL (PLL) multiplication factor for
+-              VCO</description>
+-              <bitOffset>11</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLN4</name>
+-              <description>Main PLL (PLL) multiplication factor for
+-              VCO</description>
+-              <bitOffset>10</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLN3</name>
+-              <description>Main PLL (PLL) multiplication factor for
+-              VCO</description>
+-              <bitOffset>9</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLN2</name>
+-              <description>Main PLL (PLL) multiplication factor for
+-              VCO</description>
+-              <bitOffset>8</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLN1</name>
+-              <description>Main PLL (PLL) multiplication factor for
+-              VCO</description>
+-              <bitOffset>7</bitOffset>
+-              <bitWidth>1</bitWidth>
++              <bitWidth>2</bitWidth>
+             </field>
+             <field>
+-              <name>PLLN0</name>
++              <name>PLLN</name>
+               <description>Main PLL (PLL) multiplication factor for
+               VCO</description>
+               <bitOffset>6</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLM5</name>
+-              <description>Division factor for the main PLL (PLL)
+-              and audio PLL (PLLI2S) input clock</description>
+-              <bitOffset>5</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLM4</name>
+-              <description>Division factor for the main PLL (PLL)
+-              and audio PLL (PLLI2S) input clock</description>
+-              <bitOffset>4</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLM3</name>
+-              <description>Division factor for the main PLL (PLL)
+-              and audio PLL (PLLI2S) input clock</description>
+-              <bitOffset>3</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLM2</name>
+-              <description>Division factor for the main PLL (PLL)
+-              and audio PLL (PLLI2S) input clock</description>
+-              <bitOffset>2</bitOffset>
+-              <bitWidth>1</bitWidth>
+-            </field>
+-            <field>
+-              <name>PLLM1</name>
+-              <description>Division factor for the main PLL (PLL)
+-              and audio PLL (PLLI2S) input clock</description>
+-              <bitOffset>1</bitOffset>
+-              <bitWidth>1</bitWidth>
++              <bitWidth>9</bitWidth>
+             </field>
+             <field>
+-              <name>PLLM0</name>
++              <name>PLLM</name>
+               <description>Division factor for the main PLL (PLL)
+               and audio PLL (PLLI2S) input clock</description>
+               <bitOffset>0</bitOffset>
+-              <bitWidth>1</bitWidth>
++              <bitWidth>6</bitWidth>
+             </field>
+           </fields>
+         </register>
+@@ -9583,31 +9461,17 @@
+               <access>read-write</access>
+             </field>
+             <field>
+-              <name>SWS1</name>
+-              <description>System clock switch status</description>
+-              <bitOffset>3</bitOffset>
+-              <bitWidth>1</bitWidth>
+-              <access>read-only</access>
+-            </field>
+-            <field>
+-              <name>SWS0</name>
++              <name>SWS</name>
+               <description>System clock switch status</description>
+               <bitOffset>2</bitOffset>
+-              <bitWidth>1</bitWidth>
++              <bitWidth>2</bitWidth>
+               <access>read-only</access>
+             </field>
+             <field>
+-              <name>SW1</name>
+-              <description>System clock switch</description>
+-              <bitOffset>1</bitOffset>
+-              <bitWidth>1</bitWidth>
+-              <access>read-write</access>
+-            </field>
+-            <field>
+-              <name>SW0</name>
++              <name>SW</name>
+               <description>System clock switch</description>
+               <bitOffset>0</bitOffset>
+-              <bitWidth>1</bitWidth>
++              <bitWidth>2</bitWidth>
+               <access>read-write</access>
+             </field>
+           </fields>
+@@ -12133,8 +11997,8 @@
+           </fields>
+         </register>
+         <register>
+-          <name>GPIOB_OSPEEDR</name>
+-          <displayName>GPIOB_OSPEEDR</displayName>
++          <name>OSPEEDR</name>
++          <displayName>OSPEEDR</displayName>
+           <description>GPIO port output speed
+           register</description>
+           <addressOffset>0x8</addressOffset>
+@@ -13528,8 +13392,8 @@
+           </fields>
+         </register>
+         <register>
+-          <name>GPIOB_OSPEEDR</name>
+-          <displayName>GPIOB_OSPEEDR</displayName>
++          <name>OSPEEDR</name>
++          <displayName>OSPEEDR</displayName>
+           <description>GPIO port output speed
+           register</description>
+           <addressOffset>0x8</addressOffset>
+@@ -14891,8 +14755,8 @@
+           </fields>
+         </register>
+         <register>
+-          <name>GPIOB_OSPEEDR</name>
+-          <displayName>GPIOB_OSPEEDR</displayName>
++          <name>OSPEEDR</name>
++          <displayName>OSPEEDR</displayName>
+           <description>GPIO port output speed
+           register</description>
+           <addressOffset>0x8</addressOffset>
+@@ -41909,8 +41773,8 @@
+           <resetValue>0x00000000</resetValue>
+           <fields>
+             <field>
+-              <name>AAV</name>
+-              <description>AAV</description>
++              <name>AAW</name>
++              <description>AAW</description>
+               <bitOffset>16</bitOffset>
+               <bitWidth>10</bitWidth>
+             </field>
+@@ -67832,7 +67696,7 @@
+           <description>OTG_HS device endpoint transfer size
+           register</description>
+           <alternateRegister>OTG_HS_DIEPCTL5</alternateRegister>
+-          <addressOffset>0x1A0</addressOffset>
++          <addressOffset>0x1D0</addressOffset>
+           <size>32</size>
+           <access>read-write</access>
+           <resetValue>0x0</resetValue>
+@@ -67862,7 +67726,7 @@
+           <displayName>OTG_HS_DTXFSTS6</displayName>
+           <description>OTG_HS device IN endpoint transmit FIFO
+           status register</description>
+-          <addressOffset>0x1A4</addressOffset>
++          <addressOffset>0x1D8</addressOffset>
+           <size>32</size>
+           <access>read-write</access>
+           <resetValue>0x0</resetValue>
+@@ -67882,7 +67746,7 @@
+           <description>OTG_HS device endpoint transfer size
+           register</description>
+           <alternateRegister>OTG_HS_DIEPINT5</alternateRegister>
+-          <addressOffset>0x1A8</addressOffset>
++          <addressOffset>0x1F0</addressOffset>
+           <size>32</size>
+           <access>read-write</access>
+           <resetValue>0x0</resetValue>
+@@ -67912,7 +67776,7 @@
+           <displayName>OTG_HS_DTXFSTS7</displayName>
+           <description>OTG_HS device IN endpoint transmit FIFO
+           status register</description>
+-          <addressOffset>0x1AC</addressOffset>
++          <addressOffset>0x1F8</addressOffset>
+           <size>32</size>
+           <access>read-write</access>
+           <resetValue>0x0</resetValue>

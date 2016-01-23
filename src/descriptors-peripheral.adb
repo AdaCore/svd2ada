@@ -24,7 +24,7 @@ with DOM.Core.Nodes;
 
 with Ada_Gen;            use Ada_Gen;
 
-package body Peripheral_Descriptor is
+package body Descriptors.Peripheral is
 
    procedure Insert_Register (Periph : in out Peripheral_T;
                               Reg    : Register_Access);
@@ -95,6 +95,9 @@ package body Peripheral_Descriptor is
             begin
                if Tag = "name" then
                   Ret.Name := Get_Value (Child);
+                  Ret.Gen_Helper :=
+                    Get_Peripheral_Helper
+                      (Ada.Strings.Unbounded.To_String (Ret.Name));
 
                elsif Tag = "version" then
                   Ret.Version := Get_Value (Child);
@@ -160,7 +163,8 @@ package body Peripheral_Descriptor is
          end if;
       end loop;
 
-      Find_Aliased (Ret.Registers);
+      Find_Aliased (Ret.Registers,
+                    Resolve => Ret.Gen_Helper = Null_Helper);
 
       return Ret;
    end Read_Peripheral;
@@ -202,19 +206,65 @@ package body Peripheral_Descriptor is
       Type_Name  : String)
    is
       use Ada.Strings.Unbounded;
-      Rec          : Ada_Type_Record;
+
+      function Create_Record return Ada_Type_Record'Class;
+
+      function Create_Record return Ada_Type_Record'Class
+      is
+      begin
+         if Peripheral.Gen_Helper = Null_Helper then
+            return New_Type_Record
+              (Type_Name,
+               To_String (Peripheral.Description));
+         else
+            declare
+               Enum : Ada_Type_Enum :=
+                        Get_Discriminent_Type (Peripheral.Gen_Helper);
+            begin
+               Add (Spec, Enum);
+               return New_Type_Union
+                 (Type_Name,
+                  Get_Discriminent_Name (Peripheral.Gen_Helper),
+                  Enum,
+                  To_String (Peripheral.Description));
+            end;
+         end if;
+      end Create_Record;
+
+      Rec              : Ada_Type_Record'Class := Create_Record;
+      Overriding_Found : Boolean := False;
+
    begin
-      Rec := New_Type_Record
-        (Type_Name,
-         To_String (Peripheral.Description));
+
       Add_Aspect (Rec, "Volatile");
 
       for Reg of Peripheral.Registers loop
-         if Reg.Is_Aliased then
-            if Reg.First_Alias then
+         if Reg.Is_Overlapping then
+            if Peripheral.Gen_Helper /= Null_Helper then
+               Add_Field
+                 (Ada_Type_Union (Rec),
+                  Enum_Val =>
+                    Get_Discriminent_Value
+                      (Peripheral.Gen_Helper,
+                       To_String (Reg.Name)),
+                  Id       => To_String (Reg.Name),
+                  Typ      => Get_Ada_Type (Reg),
+                  Offset   => Reg.Address_Offset,
+                  LSB      => 0,
+                  MSB      => (if Reg.Dim = 0
+                           then Reg.Reg_Properties.Size - 1
+                           else Reg.Dim * Reg.Dim_Increment * 8 - 1),
+                  Comment  => To_String (Reg.Description));
+
+            elsif Reg.First_Overlap then
+               Ada.Text_IO.Put_Line
+                 ("... Found overlapping registers: " &
+                    To_String (Reg.Name));
+               Overriding_Found := True;
+
                Add_Field
                  (Rec,
-                  Id      => To_String (Reg.Alias_Name),
+                  Id      => To_String (Reg.Overlap_Name),
                   Typ     => Get_Ada_Type (Reg),
                   Offset  => Reg.Address_Offset,
                   LSB     => 0,
@@ -222,6 +272,10 @@ package body Peripheral_Descriptor is
                               then Reg.Reg_Properties.Size - 1
                               else Reg.Dim * Reg.Dim_Increment * 8 - 1),
                   Comment => To_String (Reg.Description));
+            else
+               Ada.Text_IO.Put_Line
+                 ("... Found overriding registers: " &
+                    To_String (Reg.Name));
             end if;
          else
             Add_Field
@@ -236,6 +290,12 @@ package body Peripheral_Descriptor is
                Comment => To_String (Reg.Description));
          end if;
       end loop;
+
+      if Overriding_Found then
+         Ada.Text_IO.Put_Line
+           ("... you may check the automatic generation for " &
+              "those registers");
+      end if;
 
       Add (Spec, Rec);
    end Dump_Periph_Type;
@@ -281,7 +341,9 @@ package body Peripheral_Descriptor is
          Dump (Spec, Reg);
       end loop;
 
-      Dump_Aliased (Spec, Peripheral.Registers);
+      if Peripheral.Gen_Helper = Null_Helper then
+         Dump_Aliased (Spec, Peripheral.Registers);
+      end if;
 
       Add (Spec, New_Comment_Box ("Peripherals"));
 
@@ -348,7 +410,9 @@ package body Peripheral_Descriptor is
       end loop;
 
       for Periph of Sorted loop
-         Dump_Aliased (Spec, Periph.Registers);
+         if Periph.Gen_Helper /= Null_Helper then
+            Dump_Aliased (Spec, Periph.Registers);
+         end if;
       end loop;
 
       Add (Spec, New_Comment_Box ("Peripherals"));
@@ -437,4 +501,4 @@ package body Peripheral_Descriptor is
       Write_Spec (Spec, Output_Dir);
    end Dump;
 
-end Peripheral_Descriptor;
+end Descriptors.Peripheral;

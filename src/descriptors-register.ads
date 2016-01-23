@@ -24,12 +24,12 @@ with DOM.Core;
 with Base_Types;                     use Base_Types;
 with Base_Types.Register_Properties; use Base_Types.Register_Properties;
 
-with Field_Descriptor;               use Field_Descriptor;
+with Descriptors.Field;               use Descriptors.Field;
 
 with Ada_Gen;
 
 --  Decodes and then dumps the <register> elements of the SVD file.
-package Register_Descriptor is
+package Descriptors.Register is
 
    type Register_T;
 
@@ -53,11 +53,11 @@ package Register_Descriptor is
       Type_Name        : Unbounded.Unbounded_String;
 
       --  When two registers are at the same location, we specify a shared
-      --  common union type name here to support this aliasing
-      Is_Aliased       : Boolean := False;
-      First_Alias      : Boolean := False;
-      Alias_Name       : Unbounded.Unbounded_String;
-      Alias_Suffix     : Unbounded.Unbounded_String;
+      --  common union type name here to support this overlapping
+      Is_Overlapping   : Boolean := False;
+      First_Overlap    : Boolean := False;
+      Overlap_Name     : Unbounded.Unbounded_String;
+      Overlap_Suffix   : Unbounded.Unbounded_String;
 
 
       --  When two registers are identical, the second register will not
@@ -83,7 +83,8 @@ package Register_Descriptor is
    package Register_Vectors is new Ada.Containers.Vectors
      (Positive, Register_Access, Equal);
 
-   procedure Find_Aliased (Reg_Set : Register_Vectors.Vector);
+   procedure Find_Aliased (Reg_Set : Register_Vectors.Vector;
+                           Resolve : Boolean);
 
    procedure Find_Common_Types (Reg_Set : Register_Vectors.Vector);
 
@@ -101,4 +102,4 @@ package Register_Descriptor is
      (Spec  : in out Ada_Gen.Ada_Spec;
       Regs  : Register_Vectors.Vector);
 
-end Register_Descriptor;
+end Descriptors.Register;

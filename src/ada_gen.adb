@@ -422,15 +422,18 @@ package body Ada_Gen is
       G_Empty_Line := True;
    end Dump;
 
-   ----------
-   -- Dump --
-   ----------
+   ------------------------
+   -- Dump_Record_Fields --
+   ------------------------
 
-   overriding procedure Dump
-     (Element : Ada_Type_Record;
+   procedure Dump_Record_Fields
+     (Element : Ada_Type_Record'Class;
+      Max_Id  : Natural;
       File    : Ada.Text_IO.File_Type)
    is
-      Max_Id  : Natural := 0;
+      ------------
+      -- Get_Id --
+      ------------
 
       function Get_Id (F : Record_Field) return String is
          Id : String (1 .. Max_Id) := (others => ' ');
@@ -441,24 +444,6 @@ package body Ada_Gen is
       end Get_Id;
 
    begin
-      if not G_Empty_Line then
-         Ada.Text_IO.New_Line (File);
-      end if;
-
-      if not Element.Comment.Is_Empty then
-         Dump (Comment => Element.Comment,
-               F       => File,
-               Indent  => 1,
-               Inline  => False);
-      end if;
-
-      Ada.Text_IO.Put_Line
-        (File, "   type " & To_String (Element.Id) & " is record");
-
-      for F of Element.Fields loop
-         Max_Id  := Natural'Max (Length (F.Id), Max_Id);
-      end loop;
-
       for F of Element.Fields loop
          if not F.Comment.Is_Empty then
             Dump (Comment => F.Comment,
@@ -493,6 +478,45 @@ package body Ada_Gen is
             end if;
          end;
       end loop;
+   end Dump_Record_Fields;
+
+   ----------
+   -- Dump --
+   ----------
+
+   overriding procedure Dump
+     (Element : Ada_Type_Record;
+      File    : Ada.Text_IO.File_Type)
+   is
+      Max_Id  : Natural := 0;
+
+      function Get_Id (F : Record_Field) return String is
+         Id : String (1 .. Max_Id) := (others => ' ');
+      begin
+         Id (1 .. Length (F.Id)) := To_String (F.Id);
+
+         return Id;
+      end Get_Id;
+   begin
+      if not G_Empty_Line then
+         Ada.Text_IO.New_Line (File);
+      end if;
+
+      if not Element.Comment.Is_Empty then
+         Dump (Comment => Element.Comment,
+               F       => File,
+               Indent  => 1,
+               Inline  => False);
+      end if;
+
+      Ada.Text_IO.Put_Line
+        (File, "   type " & To_String (Element.Id) & " is record");
+
+      for F of Element.Fields loop
+         Max_Id  := Natural'Max (Length (F.Id), Max_Id);
+      end loop;
+
+      Dump_Record_Fields (Element, Max_Id, File);
 
       Ada.Text_IO.Put_Line (File, "   end record");
       Dump_Aspects (Element.Aspects, File);
@@ -524,6 +548,16 @@ package body Ada_Gen is
      (Element : Ada_Type_Union;
       File    : Ada.Text_IO.File_Type)
    is
+      Max_Id : Natural := 0;
+
+      function Get_Id (F : Record_Field) return String is
+         Id : String (1 .. Max_Id) := (others => ' ');
+      begin
+         Id (1 .. Length (F.Id)) := To_String (F.Id);
+
+         return Id;
+      end Get_Id;
+
    begin
       if not Element.Comment.Is_Empty then
          Dump (Comment => Element.Comment,
@@ -542,6 +576,19 @@ package body Ada_Gen is
            ")");
       Ada.Text_IO.Put_Line (File, "   is record");
 
+      --  First dump the values that are common to all discriminent values
+      for F of Element.Fields loop
+         Max_Id  := Natural'Max (Length (F.Id), Max_Id);
+      end loop;
+
+      for Vect of Element.Disc_Fields loop
+         for F of Vect loop
+            Max_Id := Natural'Max (Length (F.Id), Max_Id);
+         end loop;
+      end loop;
+
+      Dump_Record_Fields (Element, Max_Id, File);
+
       Ada.Text_IO.Put (File, (1 .. 2 * 3 => ' '));
       Ada.Text_IO.Put_Line
         (File, "case " & To_String (Element.Disc_Name) & " is");
@@ -550,7 +597,7 @@ package body Ada_Gen is
          Ada.Text_IO.Put (File, (1 .. 3 * 3 => ' '));
          Ada.Text_IO.Put_Line (File, "when " & To_String (Val.Id) & " =>");
 
-         for F of Element.Fields (To_String (Val.Id)) loop
+         for F of Element.Disc_Fields (To_String (Val.Id)) loop
             if not F.Comment.Is_Empty then
                Dump (Comment => F.Comment,
                      F       => File,
@@ -574,12 +621,22 @@ package body Ada_Gen is
       Ada.Text_IO.Put_Line
         (File, "   for " & To_String (Element.Id) & " use record");
 
+      for F of Element.Fields loop
+         Ada.Text_IO.Put (File, (1 .. 6 => ' '));
+         Ada.Text_IO.Put_Line
+           (File,
+            Get_Id (F) &
+              " at " & To_String (F.Offset) &
+              " range " & To_String (F.LSB) & " .. " & To_String (F.MSB) &
+              ";");
+      end loop;
+
       for Val of Element.Discriminent.Values loop
-         for F of Element.Fields (To_String (Val.Id)) loop
+         for F of Element.Disc_Fields (To_String (Val.Id)) loop
             Ada.Text_IO.Put (File, (1 .. 6 => ' '));
             Ada.Text_IO.Put_Line
               (File,
-               To_String (F.Id) &
+               Get_Id (F) &
                  " at " & To_String (F.Offset) &
                  " range " & To_String (F.LSB) & " .. " & To_String (F.MSB) &
                  ";");
@@ -1476,14 +1533,15 @@ package body Ada_Gen is
 
    function New_Type_Record
      (Id      : String;
-      Comment : String := "") return Ada_Type_Record
+      Comment : String := "") return Ada_Type_Record'Class
    is
    begin
-      return (Id          => To_Unbounded_String (Id),
-              Comment     => New_Comment (Comment),
-              Aspects     => <>,
-              Fields      => <>,
-              Need_System => False);
+      return Ada_Type_Record'
+        (Id          => To_Unbounded_String (Id),
+         Comment     => New_Comment (Comment),
+         Aspects     => <>,
+         Fields      => <>,
+         Need_System => False);
    end New_Type_Record;
 
    --------------------------
@@ -1814,12 +1872,14 @@ package body Ada_Gen is
          Aspects      => <>,
          Disc_name    => To_Unbounded_String (Disc_Name),
          Discriminent => Ada_Type_Enum (Disc_Type),
-         Fields       => <>);
+         Fields       => <>,
+         Disc_Fields  => <>,
+         Need_System  => False);
       Add_Aspect (Ret, "Unchecked_Union");
 
       for Val of Disc_Type.Values loop
-         Ret.Fields.Insert (To_String (Val.Id),
-                            Record_Field_Vectors.Empty_Vector);
+         Ret.Disc_Fields.Insert (To_String (Val.Id),
+                                 Record_Field_Vectors.Empty_Vector);
       end loop;
 
       return Ret;
@@ -1839,10 +1899,8 @@ package body Ada_Gen is
       MSB         : Unsigned;
       Comment     : String := "")
    is
-      Fields : Record_Field_Vectors.Vector :=
-                 Rec.Fields.Element (Enum_Val);
    begin
-      Fields.Append
+      Rec.Disc_Fields (Enum_Val).Append
         ((Id          => To_Unbounded_String (Id),
           Typ         => To_Unbounded_String (Typ),
           Offset      => Offset,
@@ -1851,7 +1909,6 @@ package body Ada_Gen is
           Has_Default => False,
           Default     => Null_Unbounded_String,
           Comment     => New_Comment (Comment)));
-      Rec.Fields.Replace (Enum_Val, Fields);
    end Add_Field;
 
    ----------------
@@ -1864,6 +1921,7 @@ package body Ada_Gen is
       use type Record_Field_Vectors.Vector;
    begin
       if T1.Id /= T2.Id
+        or else T1.Fields /= T2.Fields
         or else T1.Disc_Name /= T2.Disc_Name
         or else not Is_Similar (T1.Discriminent, T2.Discriminent)
       then
@@ -1874,7 +1932,7 @@ package body Ada_Gen is
          declare
             Key_Str : String renames To_String (Key.Id);
          begin
-            if T1.Fields (Key_Str) /= T2.Fields (Key_Str) then
+            if T1.Disc_Fields (Key_Str) /= T2.Disc_Fields (Key_Str) then
                return False;
             end if;
          end;

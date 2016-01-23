@@ -22,7 +22,9 @@ with Ada.Text_IO;
 
 with GNAT.Command_Line;
 with GNAT.Directory_Operations;
+with GNAT.OS_Lib;
 
+--  XML dependencies
 with Input_Sources.File;          use Input_Sources.File;
 with Sax.Readers;
 with Schema.Dom_Readers;          use Schema.Dom_Readers;
@@ -30,7 +32,8 @@ with DOM.Core;                    use DOM.Core;
 with DOM.Core.Documents;
 
 with Ada_Gen;
-with Device_Descriptor;
+with Descriptors.Device;
+with Ada_Gen_Helpers;
 
 --  SVD Binding Generator: this tool is meant to handle
 --  A SVD file is an xml file representing a specific hardware device, and
@@ -65,7 +68,7 @@ is
    Input    : File_Input;
    Reader   : Tree_Reader;
    Doc      : Document;
-   Device   : Device_Descriptor.Device_T;
+   Device   : Descriptors.Device.Device_T;
    Pkg      : Unbounded_String;
    Out_Dir  : Unbounded_String;
    SVD_File : Unbounded_String;
@@ -99,10 +102,27 @@ begin
    Close (Input);
 
    Doc := Get_Tree (Reader);
-   Device := Device_Descriptor.Read_Device (Documents.Get_Element (Doc),
-                                            To_String (Pkg));
 
-   Device_Descriptor.Dump (Device, To_String (Out_Dir));
+   --  Check if we have some helper file to give us hints as to how generate
+   --  some structures. Rule: if we have both XXXX.svd and XXXX.svd2ada, then
+   --  the svd2ada file is our helper file
+   if GNAT.OS_Lib.Is_Regular_File (To_String (SVD_File) & "2ada") then
+      Ada_Gen.Set_Input_File_Name
+        (GNAT.Directory_Operations.Base_Name (To_String (SVD_File) & "2ada"));
+      Input_Sources.File.Open (To_String (SVD_File) & "2ada", Input);
+
+      Set_Feature (Reader, Sax.Readers.Schema_Validation_Feature, False);
+      Use_Basename_In_Error_Messages (Reader, True);
+      Reader.Parse (Input);
+      Close (Input);
+
+      Ada_Gen_Helpers.Read (Documents.Get_Element (Get_Tree (Reader)));
+   end if;
+
+   Device := Descriptors.Device.Read_Device (Documents.Get_Element (Doc),
+                                             To_String (Pkg));
+
+   Descriptors.Device.Dump (Device, To_String (Out_Dir));
 
    return 0;
 

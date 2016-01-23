@@ -24,10 +24,12 @@ with DOM.Core;
 with Base_Types;                     use Base_Types;
 with Base_Types.Register_Properties; use Base_Types.Register_Properties;
 
-with Register_Descriptor;            use Register_Descriptor;
+with Descriptors.Register;           use Descriptors.Register;
+
+with Ada_Gen_Helpers;                use Ada_Gen_Helpers;
 
 --  Decodes and then dumps the <peripheral> elements of the SVD file.
-package Peripheral_Descriptor is
+package Descriptors.Peripheral is
 
    type Peripheral_T is record
       Name            : Unbounded.Unbounded_String;
@@ -41,6 +43,7 @@ package Peripheral_Descriptor is
       Address_Blocks  : Address_Block_Vectors.Vector;
       Interrupts      : Interrupt_Vectors.Vector;
       Registers       : Register_Vectors.Vector;
+      Gen_Helper      : Peripheral_Helper;
    end record;
 
    package Peripheral_Vectors is new Ada.Containers.Vectors
@@ -61,4 +64,4 @@ package Peripheral_Descriptor is
       Dev_Name   : String;
       Output_Dir : String);
 
-end Peripheral_Descriptor;
+end Descriptors.Peripheral;

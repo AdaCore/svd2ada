@@ -22,7 +22,7 @@ with DOM.Core;
 
 with Base_Types;                     use Base_Types;
 
-package Enumerate_Descriptor is
+package Descriptors.Enumerate is
 
    type Enumerate_Value is record
       Name      : Unbounded.Unbounded_String;
@@ -47,4 +47,4 @@ package Enumerate_Descriptor is
      (Elt    : DOM.Core.Element;
       Vector : Enumerate_Vectors.Vector) return Enumerate_T;
 
-end Enumerate_Descriptor;
+end Descriptors.Enumerate;

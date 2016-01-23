@@ -21,7 +21,7 @@ with DOM.Core;           use DOM.Core;
 with DOM.Core.Elements;  use DOM.Core.Elements;
 with DOM.Core.Nodes;
 
-package body Enumerate_Descriptor is
+package body Descriptors.Enumerate is
 
    function Read_Value (Elt : DOM.Core.Element) return Enumerate_Value;
    --  Reads the enum value from the DOM element
@@ -128,4 +128,4 @@ package body Enumerate_Descriptor is
       return Ret;
    end Read_Enumerate;
 
-end Enumerate_Descriptor;
+end Descriptors.Enumerate;

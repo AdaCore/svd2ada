@@ -26,7 +26,7 @@ with DOM.Core.Nodes;
 
 with Ada_Gen;               use Ada_Gen;
 
-package body Device_Descriptor is
+package body Descriptors.Device is
 
    package Interrupt_Sort is new Interrupt_Vectors.Generic_Sorting
      (Base_Types."<");
@@ -463,4 +463,4 @@ package body Device_Descriptor is
       end loop;
    end Dump;
 
-end Device_Descriptor;
+end Descriptors.Device;
