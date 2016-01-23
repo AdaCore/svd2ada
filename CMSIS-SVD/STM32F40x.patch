@@ -1,6 +1,18 @@
 --- orig/STM32F40x.svd	2014-01-24 11:18:40.000000000 +0100
-+++ STM32F40x.svd	2016-01-23 08:31:12.000000000 +0100
-@@ -5142,36 +5142,12 @@
++++ STM32F40x.svd	2016-01-23 20:21:06.000000000 +0100
+@@ -25,6 +25,11 @@
+         <size>0x400</size>
+         <usage>registers</usage>
+       </addressBlock>
++      <interrupt>
++        <name>RNG_IRQ</name>
++        <description>Rng global interrupt</description>
++        <value>80</value>
++      </interrupt>
+       <registers>
+         <register>
+           <name>CR</name>
+@@ -5142,36 +5147,12 @@
            <resetValue>0x24003010</resetValue>
            <fields>
              <field>
@@ -39,7 +51,7 @@
              </field>
              <field>
                <name>PLLSRC</name>
-@@ -5181,123 +5157,25 @@
+@@ -5181,123 +5162,25 @@
                <bitWidth>1</bitWidth>
              </field>
              <field>
@@ -169,7 +181,7 @@
              </field>
            </fields>
          </register>
-@@ -5378,31 +5256,17 @@
+@@ -5378,31 +5261,17 @@
                <access>read-write</access>
              </field>
              <field>
@@ -205,7 +217,7 @@
                <access>read-write</access>
              </field>
            </fields>
-@@ -13969,6 +13833,12 @@
+@@ -13969,6 +13838,12 @@
            <resetValue>0x00000000</resetValue>
            <fields>
              <field>
@@ -218,7 +230,7 @@
                <name>FPDS</name>
                <description>Flash power down in Stop
                mode</description>
-@@ -34118,7 +33988,7 @@
+@@ -34118,7 +33993,7 @@
              </field>
            </fields>
  		</register>
