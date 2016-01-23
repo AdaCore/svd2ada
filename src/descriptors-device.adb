@@ -279,6 +279,7 @@ package body Descriptors.Device is
                       New_Spec (To_String (Device.Name),
                                 To_String (Device.Description),
                                 True);
+      Old_Spec    : Ada_Gen.Ada_Spec;
       Max_Len     : Natural := 0;
       Gen_RT_IRQ  : constant Boolean := Is_Interfaces_Hierarchy (Spec);
       --  Whether we generate Run-Time support files for IRQ handling
@@ -294,36 +295,18 @@ package body Descriptors.Device is
                  Value    => '"' & To_String (Device.Version) & '"'));
       end if;
 
-      Add (Spec, New_Comment_Box ("Base addresses"));
-      Add (Spec, New_With_Clause ("System", False));
-
-      for Periph of Device.Peripherals loop
-         Add (Spec,
-              New_Constant_Value
-                (Id       => To_String (Periph.Name) & "_Base",
-                 Align_Id => 0,
-                 Typ      => "System.Address",
-                 Value    => "System'To_Address (" &
-                   To_Hex (Periph.Base_Address) & ")"));
-      end loop;
-
-      Ada_Gen.Write_Spec (Spec, Output_Dir);
-
       ----------------------------
       --  Base types definition --
       ----------------------------
 
       if Gen_RT_IRQ then
+         Old_Spec := Spec;
          Spec := New_Spec
            ("Interfaces.BB_Types",
             "Base types used to describe register fields",
             True);
-      else
-         Spec := New_Child_Spec
-           (To_String (Device.Name), "Types",
-            "Base types used to describe register fields",
-            True);
       end if;
+
       Base_Types.Base_Package := Id (Spec);
 
       Add (Spec, New_Comment_Box ("Base type"));
@@ -345,6 +328,25 @@ package body Descriptors.Device is
 
       Ada_Gen.Write_Spec (Spec, Output_Dir);
       Ada_Gen.Add_Global_With (Spec);
+
+      if Gen_RT_IRQ then
+         Spec := Old_Spec;
+      end if;
+
+      Add (Spec, New_Comment_Box ("Base addresses"));
+      Add (Spec, New_With_Clause ("System", False));
+
+      for Periph of Device.Peripherals loop
+         Add (Spec,
+              New_Constant_Value
+                (Id       => To_String (Periph.Name) & "_Base",
+                 Align_Id => 0,
+                 Typ      => "System.Address",
+                 Value    => "System'To_Address (" &
+                   To_Hex (Periph.Base_Address) & ")"));
+      end loop;
+
+      Ada_Gen.Write_Spec (Spec, Output_Dir);
 
       ----------------
       -- Interrupts --
