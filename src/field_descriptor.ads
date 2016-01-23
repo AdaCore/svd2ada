@@ -58,10 +58,10 @@ package Field_Descriptor is
                         Vec : Field_Vectors.Vector) return Field_T;
 
    procedure Dump
-     (Spec       : in out Ada_Gen.Ada_Spec;
-      Reg_Name   : String;
-      Rec        : in out Ada_Gen.Ada_Type_Record;
-      Reg_Fields : Field_Vectors.Vector;
-      Properties : Register_Properties_T);
+     (Spec         : in out Ada_Gen.Ada_Spec;
+      Reg_Name     : String;
+      Rec          : in out Ada_Gen.Ada_Type_Record;
+      Reg_Fields   : Field_Vectors.Vector;
+      Properties   : Register_Properties_T);
 
 end Field_Descriptor;

@@ -415,23 +415,32 @@ package body Register_Descriptor is
 
       else
          declare
-            Rec      : Ada_Type_Record;
+            Rec             : Ada_Type_Record;
 
          begin
+            Add (Spec,
+                 New_Comment_Box (To_String (Reg.Type_Name) & "_Register"));
             Rec := New_Type_Record
               (To_String (Reg.Type_Name) & "_Register",
                To_String (Reg.Description));
+
+            Field_Descriptor.Dump
+              (Spec,
+               To_String (Reg.Name),
+               Rec,
+               Reg.Fields,
+               Reg.Reg_Properties);
 
             Add_Aspect (Rec, "Volatile_Full_Access");
             Add_Size_Aspect (Rec, Reg.Reg_Properties.Size);
             Add_Bit_Order_Aspect (Rec, System.Low_Order_First);
 
-            Field_Descriptor.Dump
-              (Spec, To_String (Reg.Name),
-               Rec, Reg.Fields, Reg.Reg_Properties);
-
-            Add (Spec, Rec);
-            Reg.Ada_Type := Id (Rec);
+            declare
+               Res : Ada_Type'Class := Simplify (Rec, Spec);
+            begin
+               Add (Spec, Res);
+               Reg.Ada_Type := Id (Res);
+            end;
          end;
       end if;
 

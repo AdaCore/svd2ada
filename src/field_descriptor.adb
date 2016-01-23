@@ -175,22 +175,50 @@ package body Field_Descriptor is
    ----------
 
    procedure Dump
-     (Spec       : in out Ada_Gen.Ada_Spec;
-      Reg_Name   : String;
-      Rec        : in out Ada_Gen.Ada_Type_Record;
-      Reg_Fields : Field_Vectors.Vector;
-      Properties : Register_Properties_T)
+     (Spec         : in out Ada_Gen.Ada_Spec;
+      Reg_Name     : String;
+      Rec          : in out Ada_Gen.Ada_Type_Record;
+      Reg_Fields   : Field_Vectors.Vector;
+      Properties   : Register_Properties_T)
    is
       use Unbounded, Ada_Gen;
+
+      function Get_Default (Index : Natural; Size : Natural) return Unsigned;
+      --  Retrieves the field default value from the Register's reset value
+
+      -----------------
+      -- Get_Default --
+      -----------------
+
+      function Get_Default (Index : Natural; Size : Natural) return Unsigned
+      is
+         Default : Unsigned;
+         Mask    : Unsigned;
+      begin
+         if Properties.Reset_Value = 0 then
+            --  Most common case
+            return 0;
+         else
+            Default :=
+              Shift_Right (Properties.Reset_Value, Index);
+            Mask := 0;
+
+            for J in 0 .. Size - 1 loop
+               Mask := Mask or 2 ** J;
+            end loop;
+
+            return Default and Mask;
+         end if;
+      end Get_Default;
+
       Fields        : array (0 .. Properties.Size - 1) of Field_T :=
                         (others => Null_Field);
-      Index         : Unsigned := 0;
+      Index         : Unsigned;
       Index2        : Unsigned;
       Length        : Unsigned;
       Prefix        : Natural;
       Default       : Unsigned;
       Default_Id    : Unbounded_String;
-      Mask          : Unsigned;
       Ada_Type      : Unbounded_String;
       Ada_Type_Size : Unsigned;
       Ada_Name      : Unbounded_String;
@@ -200,7 +228,11 @@ package body Field_Descriptor is
          Fields (Field.LSB) := Field;
       end loop;
 
+      Index        := 0;
+
       while Index < Properties.Size loop
+         Ada_Type := Null_Unbounded_String;
+
          if Fields (Index) = Null_Field then
             --  First look for undefined/reserved parts of the register
             Length := 1;
@@ -214,18 +246,7 @@ package body Field_Descriptor is
             end loop;
 
             --  Retrieve the reset value
-            if Properties.Reset_Value = 0 then
-               --  Most common case
-               Default := 0;
-            else
-               Default :=
-                 Shift_Right (Properties.Reset_Value, Natural (Index));
-               Mask := 0;
-               for J in 0 .. Length - 1 loop
-                  Mask := Mask or 2 ** Natural (J);
-               end loop;
-               Default := Default and Mask;
-            end if;
+            Default := Get_Default (Natural (Index), Natural (Length));
 
             Ada_Gen.Add_Field
               (Rec,
@@ -240,25 +261,13 @@ package body Field_Descriptor is
 
             Index    := Index + Length;
 
-         else
-            --  Retrieve the reset value
-            if Properties.Reset_Value = 0 then
-               --  Most common case
-               Default := 0;
-            else
-               Default :=
-                 Shift_Right (Properties.Reset_Value, Natural (Index));
-               Mask := 0;
-               for J in 0 .. Fields (Index).Size - 1 loop
-                  Mask := Mask or 2 ** Natural (J);
-               end loop;
-               Default := Default and Mask;
-            end if;
+         else --  Not a reserved field case:
 
-            --  By default, the type of the field is a simple mod type
+            --  Retrieve the reset value
+            Default :=
+              Get_Default (Natural (Index), Natural (Fields (Index).Size));
+
             Ada_Type_Size := Fields (Index).Size;
-            Ada_Type :=
-              To_Unbounded_String (Target_Type (Ada_Type_Size));
             Ada_Name := Fields (Index).Name;
 
             --  First check if some enumerate is defined for the field
@@ -298,23 +307,6 @@ package body Field_Descriptor is
                      Ada_Type := Id (Enum_T);
                   end;
                end loop;
-
-            else
-               --  We have a simple scalar value. Let's create a specific
-               --  subtype for it, so that programming conversion to this
-               --  field is allowed using FIELD_TYPE (Value).
-               declare
-                  Sub_T : Ada_Subtype_Scalar :=
-                            New_Subype_Scalar
-                              (Id  => Reg_Name &
-                                         "_" &
-                                         To_String (Fields (Index).Name) &
-                                         "_Field",
-                               Typ => To_String (Ada_Type));
-               begin
-                  Add (Spec, Sub_T);
-                  Ada_Type := Id (Sub_T);
-               end;
             end if;
 
             --  Check if it's an array, in which case it's easier
@@ -336,26 +328,85 @@ package body Field_Descriptor is
                Index2 := Index2 + Fields (Index).Size;
             end loop;
 
-            if Length > 1 then
+            if Length = 1 then
+               --  Simple field
+               if Ada_Type = Null_Unbounded_String then
+                  --  We have a simple scalar value. Let's create a specific
+                  --  subtype for it, so that programming conversion to this
+                  --  field is allowed using FIELD_TYPE (Value).
+                  Ada_Type :=
+                    To_Unbounded_String (Target_Type (Ada_Type_Size));
+
+                  declare
+                     Sub_T : Ada_Subtype_Scalar :=
+                               New_Subype_Scalar
+                                 (Id  => Reg_Name &
+                                         "_" &
+                                         To_String (Fields (Index).Name) &
+                                         "_Field",
+                                  Typ => To_String (Ada_Type));
+                  begin
+                     Add (Spec, Sub_T);
+                     Ada_Type := Id (Sub_T);
+                  end;
+               end if;
+               --  If Ada_Type is not Null_Unbounded_String, then the Field
+               --  type has already been generated
+
+            else
+               --  We have an array of values
                declare
-                  T_Name  : constant String :=
+                  F_Name  : constant String :=
                               Slice (Fields (Index).Name, 1, Prefix);
+                  T_Name  : constant String :=
+                              (if Reg_Name /= F_Name
+                               then Reg_Name & "_" & F_Name
+                               else F_Name);
+
                   Union_T : Ada_Type_Union :=
                               New_Type_Union
-                                (Id        => T_Name & "_Union",
+                                (Id        => T_Name & "_Field",
                                  Disc_Name => "As_Array",
                                  Disc_Type => Ada_Gen.Get_Boolean,
                                  Comment   =>
                                    "Type definition for " & T_Name);
-                  Array_T : Ada_Type_Array :=
-                              New_Type_Array
-                                (Id           => T_Name & "_Field_Array",
-                                 Index_Type   => "",
-                                 Index_First  => 0,
-                                 Index_Last   => Unsigned (Length - 1),
-                                 Element_Type => To_String (Ada_Type),
-                                 Comment      => "");
+                  Array_T  : Ada_Type_Array;
+
                begin
+                  if Index /= 0
+                    or else Fields (Index).Size * Length /= Properties.Size
+                  then
+                     --  Print a boxed comment only if there are more than
+                     --  one fields defined in the register. Else, this
+                     --  becomes a bit too verbose with one boxed comment to
+                     --  start the register definition, and one boxed comment
+                     --  for the unique register's field definition
+                     Add (Spec,
+                          New_Comment_Box (Reg_Name & "." & F_Name));
+                  end if;
+
+                  if Ada_Type = Null_Unbounded_String then
+                     declare
+                        Scalar_T : Ada_Subtype_Scalar :=
+                                     New_Subype_Scalar
+                                       (Id      => T_Name & "_Element",
+                                        Typ     => Target_Type (Ada_Type_Size),
+                                        Comment => T_Name & " array element");
+                     begin
+                        Add (Spec, Scalar_T);
+                        Ada_Type := Id (Scalar_T);
+                     end;
+                  end if;
+
+                  Array_T :=
+                    New_Type_Array
+                      (Id           => T_Name & "_Field_Array",
+                       Index_Type   => "",
+                       Index_First  => 0,
+                       Index_Last   => Unsigned (Length - 1),
+                       Element_Type => To_String (Ada_Type),
+                       Comment      => T_Name & " array");
+
                   Add_Aspect
                     (Array_T,
                      "Component_Size => " &
@@ -376,9 +427,7 @@ package body Field_Descriptor is
                      Offset   => 0,
                      LSB      => 0,
                      MSB      => Fields (Index).Size * Length - 1,
-                     Comment  =>
-                       "Array vision of " &
-                       To_String (Fields (Index).Name));
+                     Comment  => F_Name & " as an array");
                   Add_Field
                     (Rec      => Union_T,
                      Enum_Val => "False",
@@ -388,15 +437,13 @@ package body Field_Descriptor is
                      Offset   => 0,
                      LSB      => 0,
                      MSB      => Fields (Index).Size * Length - 1,
-                     Comment  =>
-                       "Value vision of " &
-                       To_String (Fields (Index).Name));
+                     Comment  => F_Name & " as a value");
 
                   Add (Spec, Union_T);
 
                   Ada_Type := Id (Union_T);
                   Ada_Type_Size := Fields (Index).Size * Length;
-                  Ada_Name := To_Unbounded_String (T_Name);
+                  Ada_Name := To_Unbounded_String (F_Name);
                   Default_Id := To_Unbounded_String
                     ("(As_Array => False, Val => " & To_Hex (Default) & ")");
                end;
@@ -425,7 +472,7 @@ package body Field_Descriptor is
             end if;
 
             Default_Id := Null_Unbounded_String;
-            Index   := Index + Ada_Type_Size;
+            Index      := Index + Ada_Type_Size;
          end if;
       end loop;
    end Dump;

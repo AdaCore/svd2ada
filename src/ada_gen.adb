@@ -274,6 +274,9 @@ package body Ada_Gen is
      (Element : Ada_Type_Array;
       File    : Ada.Text_IO.File_Type)
    is
+      Line  : Unbounded_String;
+      Line2 : Unbounded_String;
+
    begin
       if not G_Empty_Line then
          Ada.Text_IO.New_Line (File);
@@ -286,19 +289,26 @@ package body Ada_Gen is
                Inline  => False);
       end if;
 
-      Ada.Text_IO.Put (File, (1 .. 3 => ' '));
-      Ada.Text_IO.Put
-        (File, "type " & To_String (Element.Id) & " is array (");
+      Line := To_Unbounded_String (String'(1 .. 3 => ' ')) &
+        "type " & Element.Id & " is array (";
 
       if Length (Element.Index_Type) > 0 then
-         Ada.Text_IO.Put (File, To_String (Element.Index_Type) & " range ");
+         Append (Line, Element.Index_Type & " range ");
       end if;
 
-      Ada.Text_IO.Put
-        (File,
-         To_String (Element.Index_First) & " .. " &
-           To_String (Element.Index_Last) & ") of " &
-           To_String (Element.Element_Type));
+      Append (Line,
+              To_String (Element.Index_First) & " .. " &
+                  To_String (Element.Index_Last) & ")");
+
+      Line2 := To_Unbounded_String (" of ") & Element.Element_Type;
+
+      if Length (Line) + Length (Line2) + 1 < Max_Width then
+         Append (Line, Line2);
+         Ada.Text_IO.Put (File, To_String (Line));
+      else
+         Ada.Text_IO.Put_Line (File, To_String (Line));
+         Ada.Text_IO.Put (File, (1 .. 4 => ' ') & To_String (Line2));
+      end if;
 
       if Element.Aspects.Is_Empty then
          Ada.Text_IO.Put_Line (File, ";");
@@ -470,7 +480,7 @@ package body Ada_Gen is
                begin
                   if Line'Length + 5 + Val'Length >= Max_Width then
                      Ada.Text_IO.Put_Line (File, " :=");
-                     Ada.Text_IO.Put_Line (File, (1 .. Id'Length + 9 => ' ') &
+                     Ada.Text_IO.Put_Line (File, (1 .. Id'Length + 10 => ' ') &
                                              Val & ";");
                   else
                      Ada.Text_IO.Put_Line
@@ -1508,6 +1518,67 @@ package body Ada_Gen is
          Add (Spec, New_With_Clause ("System"));
       end if;
    end Added_In_Spec;
+
+   --------------
+   -- Simplify --
+   --------------
+
+   function Simplify
+     (Elt  : Ada_Type_Record;
+      Spec : in out Ada_Spec)
+      return Ada_Type'Class
+   is
+      function Find (Typ : Unbounded_String) return Ada_Type'Class;
+
+      ----------
+      -- Find --
+      ----------
+
+      function Find (Typ : Unbounded_String) return Ada_Type'Class
+      is
+         Curs : Element_Vectors.Cursor := Spec.Elements.First;
+         use Element_Vectors;
+      begin
+         while Has_Element (Curs) loop
+            if Element (Curs) in Ada_Type'Class
+              and then Ada_Type'Class (Element (Curs)).Id = Typ
+            then
+               declare
+                  Ret : constant Ada_Type'Class :=
+                          Ada_Type'Class (Element (Curs));
+               begin
+                  Spec.Elements.Delete (Curs);
+                  return Ret;
+               end;
+            end if;
+
+            Next (Curs);
+         end loop;
+
+         raise Constraint_Error with "Cannot find type " & To_String (Typ);
+      end Find;
+
+      use type Ada.Containers.Count_Type;
+
+   begin
+      if Elt.Fields.Length /= 1 then
+         return Elt;
+      end if;
+
+      declare
+         Typ : Ada_Type'Class := Find (Elt.Fields.First_Element.Typ);
+      begin
+         Typ.Id      := Elt.Id;
+         for Aspect of Elt.Aspects loop
+            if not Typ.Aspects.Contains (Aspect) then
+               Typ.Aspects.Append (Aspect);
+            end if;
+         end loop;
+         Typ.Comment := Elt.Comment;
+
+         return Typ;
+      end;
+   end Simplify;
 
    ------------------------
    -- Add_Field_Internal --

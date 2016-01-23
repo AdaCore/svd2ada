@@ -245,6 +245,12 @@ package Ada_Gen is
      (Elt   : in out Ada_Type_Record'Class;
       Order : System.Bit_Order);
 
+   function Simplify
+     (Elt  : Ada_Type_Record;
+      Spec : in out Ada_Spec) return Ada_Type'Class;
+   --  If the record has just one field, then this returns the field with
+   --  the type name substituted with Elt's type name
+
    procedure Add_Field
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;

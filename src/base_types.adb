@@ -599,14 +599,13 @@ package body Base_Types is
          exit when Element (Name1, J) not in '0' .. '9';
       end loop;
 
-      for J in 1 .. Prefix loop
-         if J > Length (Name2) then
-            return Null_Unbounded_String;
+      if Prefix > Length (Name2) then
+         return Null_Unbounded_String;
+      end if;
 
-         elsif Element (Name1, J) /= Element (Name2, J) then
-            return Null_Unbounded_String;
-         end if;
-      end loop;
+      if Slice (Name1, 1, Prefix) /= Slice (Name2, 1, Prefix) then
+         return Null_Unbounded_String;
+      end if;
 
       for J in Prefix + 1 .. Length (Name2) loop
          if Element (Name2, J) not in '0' .. '9' then
