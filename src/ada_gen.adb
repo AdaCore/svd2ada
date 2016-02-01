@@ -35,6 +35,99 @@ package body Ada_Gen is
      (Spec        : Ada_Spec;
       With_Clause : Ada_With_Clause) return Boolean;
 
+   function Protect_Keywords
+     (S : String) return Unbounded_String;
+
+   ----------------------
+   -- Protect_Keywords --
+   ----------------------
+
+   function Protect_Keywords
+     (S : String) return Unbounded_String
+   is
+      Low_Id : constant String := Ada.Characters.Handling.To_Lower (S);
+
+   begin
+      if Low_Id = "abort"
+        or else Low_Id = "abs"
+        or else Low_Id = "abstract"
+        or else Low_Id = "accept"
+        or else Low_Id = "access"
+        or else Low_Id = "aliased"
+        or else Low_Id = "all"
+        or else Low_Id = "and"
+        or else Low_Id = "array"
+        or else Low_Id = "at"
+        or else Low_Id = "begin"
+        or else Low_Id = "body"
+        or else Low_Id = "case"
+        or else Low_Id = "constant"
+        or else Low_Id = "declare"
+        or else Low_Id = "delay"
+        or else Low_Id = "delta"
+        or else Low_Id = "digits"
+        or else Low_Id = "do"
+        or else Low_Id = "else"
+        or else Low_Id = "elsif"
+        or else Low_Id = "end"
+        or else Low_Id = "entry"
+        or else Low_Id = "exception"
+        or else Low_Id = "exit"
+        or else Low_Id = "for"
+        or else Low_Id = "function"
+        or else Low_Id = "generic"
+        or else Low_Id = "goto"
+        or else Low_Id = "if"
+        or else Low_Id = "in"
+        or else Low_Id = "interface"
+        or else Low_Id = "is"
+        or else Low_Id = "limited"
+        or else Low_Id = "loop"
+        or else Low_Id = "mod"
+        or else Low_Id = "new"
+        or else Low_Id = "not"
+        or else Low_Id = "null"
+        or else Low_Id = "of"
+        or else Low_Id = "or"
+        or else Low_Id = "others"
+        or else Low_Id = "out"
+        or else Low_Id = "overriding"
+        or else Low_Id = "package"
+        or else Low_Id = "pragma"
+        or else Low_Id = "private"
+        or else Low_Id = "procedure"
+        or else Low_Id = "protected"
+        or else Low_Id = "raise"
+        or else Low_Id = "range"
+        or else Low_Id = "record"
+        or else Low_Id = "rem"
+        or else Low_Id = "renames"
+        or else Low_Id = "requeue"
+        or else Low_Id = "return"
+        or else Low_Id = "reverse"
+        or else Low_Id = "select"
+        or else Low_Id = "separate"
+        or else Low_Id = "some"
+        or else Low_Id = "subtype"
+        or else Low_Id = "synchronized"
+        or else Low_Id = "tagged"
+        or else Low_Id = "task"
+        or else Low_Id = "terminate"
+        or else Low_Id = "then"
+        or else Low_Id = "type"
+        or else Low_Id = "until"
+        or else Low_Id = "use"
+        or else Low_Id = "when"
+        or else Low_Id = "while"
+        or else Low_Id = "with"
+        or else Low_Id = "xor"
+      then
+         return To_Unbounded_String (S & "_k");
+      else
+         return To_Unbounded_String (S);
+      end if;
+   end Protect_Keywords;
+
    -------------------------
    -- Set_Input_File_Name --
    -------------------------
@@ -752,7 +845,7 @@ package body Ada_Gen is
    is
       Spec : Ada_Spec;
    begin
-      Spec.Id := To_Unbounded_String (Name);
+      Spec.Id := Protect_Keywords (Name);
       Spec.Comment := New_Comment (Descr);
       Spec.Preelaborated := Preelaborated;
 
@@ -775,7 +868,9 @@ package body Ada_Gen is
       Preelaborated : Boolean) return Ada_Spec
    is
    begin
-      return New_Spec (Parent & "." & Name, Descr, Preelaborated);
+      return New_Spec
+        (Parent & "." & To_String (Protect_Keywords (Name)),
+         Descr, Preelaborated);
    end New_Child_Spec;
 
    --------
@@ -1286,7 +1381,7 @@ package body Ada_Gen is
    is
       Ret : Ada_Type_Scalar;
    begin
-      Ret.Id      := To_Unbounded_String (Id);
+      Ret.Id      := Protect_Keywords (Id);
       Ret.Comment := New_Comment (Comment);
       Ret.Size    := Size;
       Add_Size_Aspect (Ret, Size);
@@ -1303,7 +1398,7 @@ package body Ada_Gen is
       Comment : String := "") return Ada_Subtype_Scalar
    is
    begin
-      return (Id      => To_Unbounded_String (Id),
+      return (Id      => Protect_Keywords (Id),
               Comment => New_Comment (Comment),
               Typ     => To_Unbounded_String (Typ),
               others  => <>);
@@ -1364,7 +1459,7 @@ package body Ada_Gen is
       Comment      : String := "") return Ada_Type_Array
    is
    begin
-      return (Id           => To_Unbounded_String (Id),
+      return (Id           => Protect_Keywords (Id),
               Comment      => New_Comment (Comment),
               Aspects      => <>,
               Index_Type   => To_Unbounded_String (Index_Type),
@@ -1415,7 +1510,7 @@ package body Ada_Gen is
    is
       Ret : Ada_Type_Enum;
    begin
-      Ret := (Id      => To_Unbounded_String (Id),
+      Ret := (Id      => Protect_Keywords (Id),
               Comment => New_Comment (Comment),
               Aspects => <>,
               Values  => <>);
@@ -1438,7 +1533,7 @@ package body Ada_Gen is
       Comment  : String := "")
    is
       Enum_Value : Ada_Enum_Value;
-      Camel_C    : String := Id;
+      Camel_C    : String := To_String (Protect_Keywords (Id));
       First      : Boolean := True;
 
    begin
@@ -1537,7 +1632,7 @@ package body Ada_Gen is
    is
    begin
       return Ada_Type_Record'
-        (Id          => To_Unbounded_String (Id),
+        (Id          => Protect_Keywords (Id),
          Comment     => New_Comment (Comment),
          Aspects     => <>,
          Fields      => <>,
@@ -1653,90 +1748,9 @@ package body Ada_Gen is
       Default     : Unbounded_String;
       Comment     : String := "")
    is
-      Low_Id : constant String := Ada.Characters.Handling.To_Lower (Id);
-      Unb_Id : Unbounded_String;
    begin
-      if Low_Id = "abort"
-        or else Low_Id = "abs"
-        or else Low_Id = "abstract"
-        or else Low_Id = "accept"
-        or else Low_Id = "access"
-        or else Low_Id = "aliased"
-        or else Low_Id = "all"
-        or else Low_Id = "and"
-        or else Low_Id = "array"
-        or else Low_Id = "at"
-        or else Low_Id = "begin"
-        or else Low_Id = "body"
-        or else Low_Id = "case"
-        or else Low_Id = "constant"
-        or else Low_Id = "declare"
-        or else Low_Id = "delay"
-        or else Low_Id = "delta"
-        or else Low_Id = "digits"
-        or else Low_Id = "do"
-        or else Low_Id = "else"
-        or else Low_Id = "elsif"
-        or else Low_Id = "end"
-        or else Low_Id = "entry"
-        or else Low_Id = "exception"
-        or else Low_Id = "exit"
-        or else Low_Id = "for"
-        or else Low_Id = "function"
-        or else Low_Id = "generic"
-        or else Low_Id = "goto"
-        or else Low_Id = "if"
-        or else Low_Id = "in"
-        or else Low_Id = "interface"
-        or else Low_Id = "is"
-        or else Low_Id = "limited"
-        or else Low_Id = "loop"
-        or else Low_Id = "mod"
-        or else Low_Id = "new"
-        or else Low_Id = "not"
-        or else Low_Id = "null"
-        or else Low_Id = "of"
-        or else Low_Id = "or"
-        or else Low_Id = "others"
-        or else Low_Id = "out"
-        or else Low_Id = "overriding"
-        or else Low_Id = "package"
-        or else Low_Id = "pragma"
-        or else Low_Id = "private"
-        or else Low_Id = "procedure"
-        or else Low_Id = "protected"
-        or else Low_Id = "raise"
-        or else Low_Id = "range"
-        or else Low_Id = "record"
-        or else Low_Id = "rem"
-        or else Low_Id = "renames"
-        or else Low_Id = "requeue"
-        or else Low_Id = "return"
-        or else Low_Id = "reverse"
-        or else Low_Id = "select"
-        or else Low_Id = "separate"
-        or else Low_Id = "some"
-        or else Low_Id = "subtype"
-        or else Low_Id = "synchronized"
-        or else Low_Id = "tagged"
-        or else Low_Id = "task"
-        or else Low_Id = "terminate"
-        or else Low_Id = "then"
-        or else Low_Id = "type"
-        or else Low_Id = "until"
-        or else Low_Id = "use"
-        or else Low_Id = "when"
-        or else Low_Id = "while"
-        or else Low_Id = "with"
-        or else Low_Id = "xor"
-      then
-         Unb_Id := To_Unbounded_String (Id & "_k");
-      else
-         Unb_Id := To_Unbounded_String (Id);
-      end if;
-
       Rec.Fields.Append
-        ((Id          => Unb_Id,
+        ((Id          => Protect_Keywords (Id),
           Typ         => To_Unbounded_String (Typ),
           Offset      => Offset,
           LSB         => LSB,
@@ -1867,7 +1881,7 @@ package body Ada_Gen is
       Ret : Ada_Type_Union;
    begin
       Ret :=
-        (Id           => To_Unbounded_String (Id),
+        (Id           => Protect_Keywords (Id),
          Comment      => New_Comment (Comment),
          Aspects      => <>,
          Disc_name    => To_Unbounded_String (Disc_Name),
@@ -1953,7 +1967,7 @@ package body Ada_Gen is
       Comment  : String := "") return Ada_Constant_Value
    is
    begin
-      return (Id      => To_Unbounded_String (Id),
+      return (Id      => Protect_Keywords (Id),
               Id_Size => Align_Id,
               Typ     => To_Unbounded_String (Typ),
               Value   => To_Unbounded_String (Value),
@@ -1971,7 +1985,7 @@ package body Ada_Gen is
       Comment      : String := "") return Ada_Instance
    is
    begin
-      return (Id      => To_Unbounded_String (Id),
+      return (Id      => Protect_Keywords (Id),
               Typ     => To_Unbounded_String (Typ),
               Aliasd  => Aliased_Inst,
               Comment => New_Comment (Comment),
