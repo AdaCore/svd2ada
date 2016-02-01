@@ -218,7 +218,7 @@ package body Base_Types is
       elsif Value'Length > 1
         and then Value (1) = '#'
       then
-         return Unsigned'Value (Value (2 .. Last)) * Multiplier;
+         return Unsigned'Value ("2#" & Value (2 .. Last) & "#") * Multiplier;
       else
          return Unsigned'Value (Value (1 .. Last)) * Multiplier;
       end if;
