@@ -206,6 +206,8 @@ package body Base_Types is
       elsif Value (Value'Last) = 't' or else Value (Value'Last) = 'T' then
          Multiplier := 1024 ** 4;
          Last := Last - 1;
+      else
+         Multiplier := 1;
       end if;
 
       --  we check if the value is expressed in hexa
@@ -213,6 +215,10 @@ package body Base_Types is
         and then (Value (1 .. 2) = "0x" or else Value (1 .. 2) = "0X")
       then
          return Unsigned'Value ("16#" & Value (3 .. Last) & "#") * Multiplier;
+      elsif Value'Length > 1
+        and then Value (1) = '#'
+      then
+         return Unsigned'Value (Value (2 .. Last)) * Multiplier;
       else
          return Unsigned'Value (Value (1 .. Last)) * Multiplier;
       end if;
