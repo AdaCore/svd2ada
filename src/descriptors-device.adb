@@ -435,7 +435,7 @@ package body Descriptors.Device is
 
       while not Peripherals.Is_Empty loop
          declare
-            P     : constant Peripheral_T := Peripherals.First_Element;
+            P     : Peripheral_T := Peripherals.First_Element;
             Vec   : Peripheral_Vectors.Vector;
             Index : Natural;
          begin

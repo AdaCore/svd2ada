@@ -189,6 +189,7 @@ package body Ada_Gen_Helpers is
      (Helper : Peripheral_Helper) return Ada_Type_Enum
    is
       Ret : Ada_Type_Enum;
+      Dead : Ada_Enum_Value with Unreferenced;
       use Ada.Strings.Unbounded;
    begin
       Ret := New_Type_Enum
@@ -196,7 +197,7 @@ package body Ada_Gen_Helpers is
          Size => 0);
 
       for Val of Helper.Disc.Values loop
-         Add_Enum_Id (Ret, Val);
+         Dead := Add_Enum_Id (Ret, Val);
       end loop;
 
       return Ret;

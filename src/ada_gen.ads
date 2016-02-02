@@ -95,6 +95,8 @@ package Ada_Gen is
    type Ada_Type_Enum is new Ada_Type with private;
    --  An enum type definition
 
+   type Ada_Enum_Value is private;
+
    type Ada_Type_Record is new Ada_Type with private;
    --  A record type definition
 
@@ -222,16 +224,18 @@ package Ada_Gen is
       Size    : Unsigned := 0;
       Comment : String := "") return Ada_Type_Enum;
 
-   procedure Add_Enum_Id
+   function Add_Enum_Id
      (Enum    : in out Ada_Type_Enum;
       Id      : String;
-      Comment : String := "");
+      Comment : String := "") return Ada_Enum_Value;
 
-   procedure Add_Enum_Id
+   function Add_Enum_Id
      (Enum    : in out Ada_Type_Enum;
       Id      : String;
       Repr    : Unsigned;
-      Comment : String := "");
+      Comment : String := "") return Ada_Enum_Value;
+
+   function Id (Elt : Ada_Enum_Value) return Unbounded_String;
 
    ------------
    -- Record --

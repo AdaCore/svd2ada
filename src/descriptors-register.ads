@@ -100,6 +100,6 @@ package Descriptors.Register is
 
    procedure Dump_Aliased
      (Spec  : in out Ada_Gen.Ada_Spec;
-      Regs  : Register_Vectors.Vector);
+      Regs  : in out Register_Vectors.Vector);
 
 end Descriptors.Register;

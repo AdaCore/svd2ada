@@ -287,19 +287,22 @@ package body Descriptors.Field is
                                       Comment =>
                                         To_String
                                           (Fields (Index).Description));
+                     Enum_Val  : Ada_Enum_Value;
+
                   begin
                      Add_Size_Aspect (Enum_T, Ada_Type_Size);
 
                      for Val of Enum.Values loop
-                        if Val.Value = Default then
-                           Default_Id := Val.Name;
-                        end if;
-
-                        Add_Enum_Id
+                        Enum_Val := Add_Enum_Id
                           (Enum_T,
                            Id      => To_String (Val.Name),
                            Repr    => Val.Value,
                            Comment => To_String (Val.Descr));
+
+                        if Val.Value = Default then
+                           Default_Id := Id (Enum_Val);
+                        end if;
+
                      end loop;
 
                      Add (Spec, Enum_T);

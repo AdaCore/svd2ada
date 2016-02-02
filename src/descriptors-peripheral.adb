@@ -305,7 +305,7 @@ package body Descriptors.Peripheral is
    ----------
 
    procedure Dump
-     (Peripheral : Peripheral_T;
+     (Peripheral : in out Peripheral_T;
       Dev_Name   : String;
       Output_Dir : String)
    is

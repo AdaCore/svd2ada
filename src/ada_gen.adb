@@ -1488,14 +1488,15 @@ package body Ada_Gen is
 
    function Get_Boolean return Ada_Type_Enum
    is
-      Ret : Ada_Type_Enum;
+      Ret  : Ada_Type_Enum;
+      Dead : Ada_Enum_Value with Unreferenced;
    begin
       Ret := (Id      => To_Unbounded_String ("Boolean"),
               Comment => New_Comment (""),
               Aspects => <>,
               Values  => <>);
-      Add_Enum_Id (Ret, "False", 0);
-      Add_Enum_Id (Ret, "True", 0);
+      Dead := Add_Enum_Id (Ret, "False", 0);
+      Dead := Add_Enum_Id (Ret, "True", 0);
       return Ret;
    end Get_Boolean;
 
@@ -1525,15 +1526,15 @@ package body Ada_Gen is
    -- Add_Enum_Id_Internal --
    --------------------------
 
-   procedure Add_Enum_Id_Internal
+   function Add_Enum_Id_Internal
      (Enum     : in out Ada_Type_Enum;
       Id       : String;
       Has_Repr : Boolean;
       Repr     : Unsigned;
-      Comment  : String := "")
+      Comment  : String := "")  return Ada_Enum_Value
    is
       Enum_Value : Ada_Enum_Value;
-      Camel_C    : String := To_String (Protect_Keywords (Id));
+      Camel_C    : String := Id;
       First      : Boolean := True;
 
    begin
@@ -1562,40 +1563,52 @@ package body Ada_Gen is
             Comment  => New_Comment (Comment));
       else
          Enum_Value :=
-           (Id       => To_Unbounded_String (Camel_C),
+           (Id       => Protect_Keywords (Camel_C),
             Has_Repr => Has_Repr,
             Repr     => Repr,
             Comment  => New_Comment (Comment));
       end if;
       Enum.Values.Append (Enum_Value);
+
+      return Enum_Value;
    end Add_Enum_Id_Internal;
 
    -----------------
    -- Add_Enum_Id --
    -----------------
 
-   procedure Add_Enum_Id
+   function Add_Enum_Id
      (Enum    : in out Ada_Type_Enum;
       Id      : String;
-      Comment : String := "")
+      Comment : String := "") return Ada_Enum_Value
    is
    begin
-      Add_Enum_Id_Internal (Enum, Id, False, 0, Comment);
+      return Add_Enum_Id_Internal (Enum, Id, False, 0, Comment);
    end Add_Enum_Id;
 
    -----------------
    -- Add_Enum_Id --
    -----------------
 
-   procedure Add_Enum_Id
+   function Add_Enum_Id
      (Enum    : in out Ada_Type_Enum;
       Id      : String;
       Repr    : Unsigned;
-      Comment : String := "")
+      Comment : String := "") return Ada_Enum_Value
    is
    begin
-      Add_Enum_Id_Internal (Enum, Id, True, Repr, Comment);
+      return Add_Enum_Id_Internal (Enum, Id, True, Repr, Comment);
    end Add_Enum_Id;
+
+   --------
+   -- Id --
+   --------
+
+   function Id (Elt : Ada_Enum_Value) return Unbounded_String
+   is
+   begin
+      return Elt.Id;
+   end id;
 
    ---------
    -- "=" --

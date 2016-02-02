@@ -495,7 +495,7 @@ package body Descriptors.Register is
 
    procedure Dump_Aliased
      (Spec  : in out Ada_Gen.Ada_Spec;
-      Regs  : Register_Vectors.Vector)
+      Regs  : in out Register_Vectors.Vector)
    is
       use Ada.Strings.Unbounded;
       List : Register_Vectors.Vector := Regs;
@@ -510,9 +510,11 @@ package body Descriptors.Register is
                Enum  : Ada_Type_Enum :=
                          New_Type_Enum
                            (To_String (Reg.Overlap_Name) & "_Discriminent");
+               Val   : Ada_Enum_Value;
                Union : Ada_Type_Union;
             begin
-               Add_Enum_Id (Enum, To_String (Reg.Overlap_Suffix));
+               Val := Add_Enum_Id (Enum, To_String (Reg.Overlap_Suffix));
+               Reg.Overlap_Suffix := Id (Val);
                List.Delete_First;
 
                for Reg2 of Regs loop
@@ -520,7 +522,9 @@ package body Descriptors.Register is
                     and then Reg2.Is_Overlapping
                     and then Reg2.Overlap_Name = Reg.Overlap_Name
                   then
-                     Add_Enum_Id (Enum, To_String (Reg2.Overlap_Suffix));
+                     Val :=
+                       Add_Enum_Id (Enum, To_String (Reg2.Overlap_Suffix));
+                     Reg2.Overlap_Suffix := Id (Val);
                   end if;
                end loop;
 
