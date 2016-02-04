@@ -274,20 +274,28 @@ package body Descriptors.Field is
             if not Fields (Index).Enums.Is_Empty then
                for Enum of Fields (Index).Enums loop
                   declare
-                     Enum_Name : constant String :=
-                                   (if Unbounded.Length (Enum.Name) > 0
-                                    then To_String (Enum.Name)
-                                    else To_String (Fields (Index).Name) &
-                                      "_Field");
+                     Enum_Name   : constant String :=
+                                     (if Unbounded.Length (Enum.Name) > 0
+                                      then To_String (Enum.Name)
+                                      else To_String (Fields (Index).Name) &
+                                        "_Field");
 
-                     Enum_T    : Ada_Type_Enum :=
-                                   New_Type_Enum
-                                     (Id      => Enum_Name,
-                                      Size    => Ada_Type_Size,
-                                      Comment =>
-                                        To_String
-                                          (Fields (Index).Description));
-                     Enum_Val  : Ada_Enum_Value;
+                     Enum_T      : Ada_Type_Enum :=
+                                     New_Type_Enum
+                                       (Id      => Enum_Name,
+                                        Size    => Ada_Type_Size,
+                                        Comment =>
+                                          To_String
+                                            (Fields (Index).Description));
+                     Enum_Val    : Ada_Enum_Value;
+                     Has_Default : Boolean :=
+                                     Properties.Reg_Access = Read_Only;
+                     --  True when the enumerate contains the default field
+                     --  value. Set to true by default in case of read-only
+                     --  registers as in this case the notion of default value
+                     --  (e.g. reset value) has no sense.
+                     --  In case the enumerate does not contain the reset
+                     --  value, we add it manually.
 
                   begin
                      Add_Size_Aspect (Enum_T, Ada_Type_Size);
@@ -301,9 +309,19 @@ package body Descriptors.Field is
 
                         if Val.Value = Default then
                            Default_Id := Id (Enum_Val);
+                           Has_Default := True;
                         end if;
 
                      end loop;
+
+                     if not Has_Default then
+                        Enum_Val := Add_Enum_Id
+                          (Enum_T,
+                           Id      => Enum_Name & "_Reset",
+                           Repr    => Default,
+                           Comment => "Reset value for the field");
+                        Default_Id := Id (Enum_Val);
+                     end if;
 
                      Add (Spec, Enum_T);
 

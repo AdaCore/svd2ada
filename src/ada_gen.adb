@@ -1568,6 +1568,18 @@ package body Ada_Gen is
             Repr     => Repr,
             Comment  => New_Comment (Comment));
       end if;
+
+      --  Insert the value as an ordered list, as mandated by Ada
+      if Has_Repr then
+         for J in Enum.Values.First_Index .. Enum.Values.Last_Index loop
+            --  simple search here, we don't really care about the bad perfs
+            if Enum.Values (J).Repr > Repr then
+               Enum.Values.Insert (J, Enum_Value);
+               return Enum_Value;
+            end if;
+         end loop;
+      end if;
+
       Enum.Values.Append (Enum_Value);
 
       return Enum_Value;
