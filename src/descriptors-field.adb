@@ -246,26 +246,40 @@ package body Descriptors.Field is
             end loop;
 
             --  Retrieve the reset value
-            Default := Get_Default (Natural (Index), Natural (Length));
+            if Properties.Reg_Access /= Read_Only then
+               Default := Get_Default (Natural (Index), Natural (Length));
 
-            Ada_Gen.Add_Field
-              (Rec,
-               "Reserved_" & To_String (Index) &
-                 "_" & To_String (Index + Length - 1),
-               Target_Type (Length),
-               Offset      => 0,
-               LSB         => Index,
-               MSB         => Index + Length - 1,
-               Default     => Default,
-               Comment     => "unspecified");
+               Ada_Gen.Add_Field
+                 (Rec,
+                  "Reserved_" & To_String (Index) &
+                    "_" & To_String (Index + Length - 1),
+                  Target_Type (Length),
+                  Offset      => 0,
+                  LSB         => Index,
+                  MSB         => Index + Length - 1,
+                  Default     => Default,
+                  Comment     => "unspecified");
+            else
+               Ada_Gen.Add_Field
+                 (Rec,
+                  "Reserved_" & To_String (Index) &
+                    "_" & To_String (Index + Length - 1),
+                  Target_Type (Length),
+                  Offset      => 0,
+                  LSB         => Index,
+                  MSB         => Index + Length - 1,
+                  Comment     => "unspecified");
+            end if;
 
             Index    := Index + Length;
 
          else --  Not a reserved field case:
 
             --  Retrieve the reset value
-            Default :=
-              Get_Default (Natural (Index), Natural (Fields (Index).Size));
+            if Properties.Reg_Access /= Read_Only then
+               Default :=
+                 Get_Default (Natural (Index), Natural (Fields (Index).Size));
+            end if;
 
             Ada_Type_Size := Fields (Index).Size;
             Ada_Name := Fields (Index).Name;
@@ -307,7 +321,9 @@ package body Descriptors.Field is
                            Repr    => Val.Value,
                            Comment => To_String (Val.Descr));
 
-                        if Val.Value = Default then
+                        if Properties.Reg_Access /= Read_Only
+                          and then Val.Value = Default
+                        then
                            Default_Id := Id (Enum_Val);
                            Has_Default := True;
                         end if;
@@ -470,7 +486,17 @@ package body Descriptors.Field is
                end;
             end if;
 
-            if Default_Id = Null_Unbounded_String then
+            if Properties.Reg_Access = Read_Only then
+               Add_Field
+                 (Rec,
+                  Id      => To_String (Ada_Name),
+                  Typ     => To_String (Ada_Type),
+                  Offset  => 0,
+                  LSB     => Index,
+                  MSB     => Index + Ada_Type_Size - 1,
+                  Comment => To_String (Fields (Index).Description));
+
+            elsif Default_Id = Null_Unbounded_String then
                Add_Field
                  (Rec,
                   Id      => To_String (Ada_Name),
@@ -480,6 +506,7 @@ package body Descriptors.Field is
                   MSB     => Index + Ada_Type_Size - 1,
                   Default => Default,
                   Comment => To_String (Fields (Index).Description));
+
             else
                Add_Field
                  (Rec,
