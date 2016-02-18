@@ -25,6 +25,7 @@ with DOM.Core.Elements;  use DOM.Core.Elements;
 with DOM.Core.Nodes;
 
 with Ada_Gen;            use Ada_Gen;
+with SVD2Ada_Options;
 
 package body Descriptors.Register is
 
@@ -458,7 +459,11 @@ package body Descriptors.Register is
                Reg.Fields,
                Reg.Reg_Properties);
 
-            Add_Aspect (Rec, "Volatile_Full_Access");
+            if SVD2Ada_Options.Use_Standard_Volatile_Aspect then
+               Add_Aspect (Rec, "Volatile");
+            else
+               Add_Aspect (Rec, "Volatile_Full_Access");
+            end if;
             Add_Size_Aspect (Rec, Reg.Reg_Properties.Size);
             Add_Bit_Order_Aspect (Rec, System.Low_Order_First);
 

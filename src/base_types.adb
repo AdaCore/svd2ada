@@ -21,6 +21,8 @@ with DOM.Core.Elements;
 
 with Ada.Text_IO;
 
+with SVD2Ada_Options;
+
 package body Base_Types is
 
    package Unsigned_IO is new Ada.Text_IO.Modular_IO (Unsigned);
@@ -547,10 +549,10 @@ package body Base_Types is
       elsif Tag = "description" then
          Val.Description := Get_Value (Elt);
       elsif Tag = "value" then
-         --  GNAT re-numbers the interrupt to add the Sys_Tick interrupt
-         --  which is a core interrupt. So we need to take this re-numbering
-         --  here by adding 2 to the constants extracted from the SVD
-         Val.Value := Get_Value (Elt) + 2;
+         --  GNAT re-numbers the interrupt to add the Sys_Tick
+         --  interrupt which is a core interrupt. Use the command-line
+         --  option to do this if necessary.
+         Val.Value := Get_Value (Elt) + SVD2Ada_Options.Use_IRQ_Offset;
       else
          raise Constraint_Error with "Unexpected interrupt tag " & Tag;
       end if;

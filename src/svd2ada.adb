@@ -32,8 +32,10 @@ with DOM.Core;                    use DOM.Core;
 with DOM.Core.Documents;
 
 with Ada_Gen;
+with Base_Types;
 with Descriptors.Device;
 with Ada_Gen_Helpers;
+with SVD2Ada_Options;
 
 --  SVD Binding Generator: this tool is meant to handle
 --  A SVD file is an xml file representing a specific hardware device, and
@@ -55,42 +57,78 @@ with Ada_Gen_Helpers;
 --    for the field, and use this enum as type of the field.
 function SVD2Ada return Integer
 is
-   procedure Usage;
-
-   procedure Usage is
-   begin
-      Ada.Text_IO.Put_Line
-        ("Usage: svd2ada file.svd [-p pkg_name] -o output_dir");
-      Ada.Text_IO.Put_Line
-        ("   where OPTIONS can be:");
-   end Usage;
-
-   Input    : File_Input;
-   Reader   : Tree_Reader;
-   Doc      : Document;
-   Device   : Descriptors.Device.Device_T;
-   Pkg      : Unbounded_String;
-   Out_Dir  : Unbounded_String;
-   SVD_File : Unbounded_String;
+   Input               : File_Input;
+   Reader              : Tree_Reader;
+   Doc                 : Document;
+   Device              : Descriptors.Device.Device_T;
+   Pkg                 : Unbounded_String;
+   Out_Dir             : Unbounded_String;
+   SVD_File            : Unbounded_String;
 
 begin
-   while GNAT.Command_Line.Getopt ("* o= p=") /= ASCII.NUL loop
-      if GNAT.Command_Line.Full_Switch = "p" then
-         Pkg := To_Unbounded_String (GNAT.Command_Line.Parameter);
-      elsif GNAT.Command_Line.Full_Switch = "o" then
-         Out_Dir := To_Unbounded_String (GNAT.Command_Line.Parameter);
-      else
-         SVD_File := To_Unbounded_String (GNAT.Command_Line.Full_Switch);
-      end if;
-   end loop;
+   declare
+      procedure Switch_Handler (Switch : String;
+                                Parameter : String;
+                                Section : String);
+      procedure Switch_Handler (Switch : String;
+                                Parameter : String;
+                                Section : String) is
+         pragma Unreferenced (Section);
+      begin
+         if Switch = "-i" or Switch = "--irq-offset" then
+            SVD2Ada_Options.Use_IRQ_Offset
+              := Base_Types.Unsigned'Value (Parameter);
+         elsif Switch = "-p" or Switch = "--package" then
+            Pkg := To_Unbounded_String (Parameter);
+         elsif Switch = "-s" or Switch = "--standard-volatile" then
+            SVD2Ada_Options.Use_Standard_Volatile_Aspect := True;
+         end if;
+      end Switch_Handler;
+      use GNAT.Command_Line;
+      Cfg : Command_Line_Configuration;
+   begin
+      Set_Usage
+        (Cfg,
+         Usage => "[switches] svd-file output-dir",
+         Help => "Converts a System View Definition file to Ada packages.");
+      Define_Switch (Cfg,
+                     Switch => "-i=",
+                     Long_Switch => "--irq-offset=",
+                     Help => "Offset to be applied to IRQ numbers (default 2)");
+      Define_Switch (Cfg,
+                     Switch => "-p=",
+                     Long_Switch => "--package=",
+                     Help => "Top-level package name (default svd-file name)");
+      Define_Switch (Cfg,
+                     Switch => "-s",
+                     Long_Switch => "--standard-volatile",
+                     Help => "Use standard Volatile aspect");
+      Getopt (Cfg,
+              Callback => Switch_Handler'Unrestricted_Access,
+              Concatenate => False);
 
+      --  First argument: SVD file
+      declare
+         Arg : constant String := Get_Argument;
+      begin
+         if Arg = "" then
+            GNAT.Command_Line.Try_Help;
+            raise GNAT.Command_Line.Exit_From_Command_Line;
+         end if;
+         SVD_File := To_Unbounded_String (Arg);
+      end;
 
-   if SVD_File = Null_Unbounded_String
-     or else Out_Dir = Null_Unbounded_String
-   then
-      Usage;
-      return 1;
-   end if;
+      --  Second argument: output directory
+      declare
+         Arg : constant String := Get_Argument;
+      begin
+         if Arg = "" then
+            GNAT.Command_Line.Try_Help;
+            raise GNAT.Command_Line.Exit_From_Command_Line;
+         end if;
+         Out_Dir := To_Unbounded_String (Arg);
+      end;
+   end;
 
    Ada_Gen.Set_Input_File_Name
      (GNAT.Directory_Operations.Base_Name (To_String (SVD_File)));
@@ -127,6 +165,9 @@ begin
    return 0;
 
 exception
+   when GNAT.Command_Line.Exit_From_Command_Line |
+     GNAT.Command_Line.Invalid_Switch =>
+      return 1; -- error information already reported
    when E : Sax.Readers.XML_Fatal_Error =>
       Close (Input);
       Ada.Text_IO.Put_Line ("Fatal error when parsing the svd file:");
