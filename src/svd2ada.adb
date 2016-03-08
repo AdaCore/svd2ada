@@ -28,12 +28,16 @@ with GNAT.OS_Lib;
 with Input_Sources.File;          use Input_Sources.File;
 with Sax.Readers;
 with Schema.Dom_Readers;          use Schema.Dom_Readers;
+with Schema.Schema_Readers;       use Schema.Schema_Readers;
+with Schema.Validators;           use Schema.Validators;
 with DOM.Core;                    use DOM.Core;
 with DOM.Core.Documents;
 
 with Ada_Gen;
-with Descriptors.Device;
 with Ada_Gen_Helpers;
+with Base_Types;
+with Descriptors.Device;
+with SVD2Ada_Utils;
 
 --  SVD Binding Generator: this tool is meant to handle
 --  A SVD file is an xml file representing a specific hardware device, and
@@ -65,13 +69,20 @@ is
         ("   where OPTIONS can be:");
    end Usage;
 
-   Input    : File_Input;
-   Reader   : Tree_Reader;
-   Doc      : Document;
-   Device   : Descriptors.Device.Device_T;
-   Pkg      : Unbounded_String;
-   Out_Dir  : Unbounded_String;
-   SVD_File : Unbounded_String;
+   Input     : File_Input;
+   Reader    : Tree_Reader;
+   Sc_Reader : Schema_Reader;
+   Grammar   : XML_Grammar;
+   Doc       : Document;
+
+   Device    : Descriptors.Device.Device_T;
+   Pkg       : Unbounded_String;
+   Out_Dir   : Unbounded_String;
+   SVD_File  : Unbounded_String;
+   Schema    : constant String :=
+                 GNAT.OS_Lib.Normalize_Pathname
+                   (SVD2Ada_Utils.Executable_Location &
+                                  "/schema/CMSIS-SVD_Schema_1_1.xsd");
 
 begin
    while GNAT.Command_Line.Getopt ("* o= p=") /= ASCII.NUL loop
@@ -84,7 +95,6 @@ begin
       end if;
    end loop;
 
-
    if SVD_File = Null_Unbounded_String
      or else Out_Dir = Null_Unbounded_String
    then
@@ -94,10 +104,19 @@ begin
 
    Ada_Gen.Set_Input_File_Name
      (GNAT.Directory_Operations.Base_Name (To_String (SVD_File)));
-   Input_Sources.File.Open (To_String (SVD_File), Input);
 
+   --  Open the schema file
+   Input_Sources.File.Open (Schema, Input);
+   Sc_Reader.Parse (Input);
+   Close (Input);
+   Grammar := Get_Grammar (Sc_Reader);
+
+   --  tell the reader to use the schema to validate the SVD file
+   Reader.Set_Grammar (Grammar);
    Set_Feature (Reader, Sax.Readers.Schema_Validation_Feature, False);
    Use_Basename_In_Error_Messages (Reader, True);
+
+   Input_Sources.File.Open (To_String (SVD_File), Input);
    Reader.Parse (Input);
    Close (Input);
 
@@ -107,8 +126,6 @@ begin
    --  some structures. Rule: if we have both XXXX.svd and XXXX.svd2ada, then
    --  the svd2ada file is our helper file
    if GNAT.OS_Lib.Is_Regular_File (To_String (SVD_File) & "2ada") then
-      Ada_Gen.Set_Input_File_Name
-        (GNAT.Directory_Operations.Base_Name (To_String (SVD_File) & "2ada"));
       Input_Sources.File.Open (To_String (SVD_File) & "2ada", Input);
 
       Set_Feature (Reader, Sax.Readers.Schema_Validation_Feature, False);
@@ -127,6 +144,11 @@ begin
    return 0;
 
 exception
+   when XML_Validation_Error =>
+      Close (Input);
+      Ada.Text_IO.Put_Line ("Non-valid SVD file:");
+      Ada.Text_IO.Put_Line (Reader.Get_Error_Message);
+      return 2;
    when E : Sax.Readers.XML_Fatal_Error =>
       Close (Input);
       Ada.Text_IO.Put_Line ("Fatal error when parsing the svd file:");
