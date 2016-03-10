@@ -18,6 +18,7 @@
 
 with Interfaces; use Interfaces;
 
+with Ada.Calendar;
 with Ada.Characters.Handling;
 with Ada.Tags;
 
@@ -947,6 +948,19 @@ package body Ada_Gen is
      (Spec       : Ada_Spec;
       Output_Dir : String)
    is
+      function Spec_Id_Starts_With (Ptrn : String) return Boolean;
+
+      -----------------
+      -- Starts_With --
+      -----------------
+
+      function Spec_Id_Starts_With (Ptrn : String) return Boolean
+      is
+      begin
+         return Length (Spec.Id) > Ptrn'Length
+           and then Slice (Spec.Id, 1, Ptrn'Length) = Ptrn;
+      end Spec_Id_Starts_With;
+
       Full      : constant String :=
                     GNAT.OS_Lib.Normalize_Pathname (Output_Dir);
       F_Name    : constant String :=
@@ -965,17 +979,32 @@ package body Ada_Gen is
 
       Ada.Text_IO.Create (F, Ada.Text_IO.Out_File,
                           F_Name);
+
+      if Spec_Id_Starts_With ("Interfaces.")
+        or else Spec_Id_Starts_With ("Ada.")
+      then
+         --  Add the AdaCore copyright notice to the spec.
+         Ada.Text_IO.Put_Line
+           (F, "--");
+         Ada.Text_IO.Put_Line
+           (F, "--  Copyright (C)" &
+              Ada.Calendar.Year (Ada.Calendar.Clock)'Img &
+              ", AdaCore");
+         Ada.Text_IO.Put_Line
+           (F, "--");
+         Ada.Text_IO.New_Line (F);
+      end if;
+
       Ada.Text_IO.Put_Line
         (F,
-         "--  Automatically generated from " & To_String (G_Input_File) &
-           " by SVD2Ada");
-      Ada.Text_IO.Put_Line
-        (F, "--  see https://github.com/AdaCore/svd2ada");
+         "--  This spec has been automatically generated from " &
+           To_String (G_Input_File));
       Ada.Text_IO.New_Line (F);
+      G_Empty_Line := True;
 
       if Spec.Preelaborated then
          Ada.Text_IO.Put_Line
-           (F, "pragma Restrictions (No_Elaboration_Code);");
+           (F, "pragma Ada_2012;");
          Ada.Text_IO.New_Line (F);
          G_Empty_Line := True;
       end if;
@@ -1023,7 +1052,10 @@ package body Ada_Gen is
 
       Ada.Text_IO.Put_Line (F, "package " & To_String (Spec.Id) & " is");
       if Spec.Preelaborated then
-         Ada.Text_IO.Put_Line (F, "   pragma Preelaborate;");
+         Ada.Text_IO.Put_Line
+           (F, "   pragma Preelaborate;");
+         Ada.Text_IO.Put_Line
+           (F, "   pragma No_Elaboration_Code_All;");
       end if;
       G_Empty_Line := False;
 
