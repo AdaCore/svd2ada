@@ -116,9 +116,9 @@ begin
      (Cmd_Line_Cfg,
       Output      => Use_Old_Types'Access,
       Long_Switch => "--old",
-      Help        => "declare field's base types in the main package." &
-        " By default use Interfaces.Bit_Types (available from " &
-        "GNAT GPL 2017)",
+      Help        => "maintain compatibility with GNAT GPL 2015. Take " &
+        "advantage of the new features of GPL 2016 or GNAT Pro 17 " &
+        "otherwise.",
       Value       => True);
    GNAT.Command_Line.Getopt
      (Config => Cmd_Line_Cfg);
