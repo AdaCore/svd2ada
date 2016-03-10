@@ -425,7 +425,6 @@ package body Ada_Gen is
    is
       Has_Repr : Boolean := False;
       Value    : Ada_Enum_Value;
-      Inline_Aspect : Boolean := False;
 
    begin
       if not G_Empty_Line then
@@ -446,35 +445,23 @@ package body Ada_Gen is
          Value := Element.Values (J);
 
          if J = Element.Values.First_Index then
-            Ada.Text_IO.Put (File, (1 .. 5 => ' ') & '(');
-         else
-            Ada.Text_IO.Put (File, (1 .. 6 => ' '));
+            Ada.Text_IO.Put_Line (File, (1 .. 5 => ' ') & '(');
          end if;
 
-         Ada.Text_IO.Put (File, To_String (Value.Id));
+         if not Is_Empty (Value.Comment) then
+            Dump
+              (Value.Comment,
+               F      => File,
+               Indent => 2,
+               Inline => False);
+         end if;
+
+         Ada.Text_IO.Put (File, (1 .. 6 => ' ') & To_String (Value.Id));
 
          if J < Element.Values.Last_Index then
-            if Is_Empty (Value.Comment) then
-               Ada.Text_IO.Put_Line (File, ",");
-            else
-               Ada.Text_IO.Put (File, ", ");
-               Dump (Value.Comment,
-                     F      => File,
-                     Indent => 0,
-                     Inline => True);
-            end if;
+            Ada.Text_IO.Put_Line (File, ",");
          else
-            if Is_Empty (Value.Comment) then
-               Ada.Text_IO.Put (File, ")");
-            else
-               Ada.Text_IO.Put (File, " ");
-               Dump (Value.Comment,
-                     F      => File,
-                     Indent => 0,
-                     Inline => True);
-               Ada.Text_IO.Put (File, (1 .. 5 => ' ') & ")");
-               Inline_Aspect := True;
-            end if;
+            Ada.Text_IO.Put (File, ")");
          end if;
 
          if Value.Has_Repr then
@@ -485,11 +472,8 @@ package body Ada_Gen is
       if Element.Aspects.Is_Empty then
          Ada.Text_IO.Put_Line (File, ";");
       else
-         if not Inline_Aspect then
-            Ada.Text_IO.New_Line (File);
-         end if;
-
-         Dump_Aspects (Element.Aspects, File, Inline_Aspect);
+         Ada.Text_IO.New_Line (File);
+         Dump_Aspects (Element.Aspects, File, False);
       end if;
 
       if Has_Repr then
