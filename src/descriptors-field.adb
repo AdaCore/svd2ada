@@ -36,8 +36,10 @@ package body Descriptors.Field is
    ----------------
 
    function Read_Field
-     (Elt : DOM.Core.Element;
-      Vec : Field_Vectors.Vector)
+     (Elt            : DOM.Core.Element;
+      Vec            : Field_Vectors.Vector;
+      Default_Access : Access_Type;
+      Default_Read   : Read_Action_Type)
       return Field_T
    is
       List         : constant Node_List := Nodes.Child_Nodes (Elt);
@@ -46,6 +48,9 @@ package body Descriptors.Field is
                        Elements.Get_Attribute (Elt, "derivedFrom");
 
    begin
+      Ret.Acc := Default_Access;
+      Ret.Read_Action := Default_Read;
+
       if Derived_From /= "" then
          declare
             Found : Boolean := False;
@@ -109,6 +114,9 @@ package body Descriptors.Field is
 
                elsif Tag = "modifiedWriteValues" then
                   Ret.Mod_Write_Values := Get_Value (Child);
+
+               elsif Tag = "readAction" then
+                  Ret.Read_Action := Get_Value (Child);
 
                elsif Tag = "enumeratedValues" then
                   declare
@@ -524,6 +532,31 @@ package body Descriptors.Field is
             end if;
 
             Description := Fields (Index).Description;
+
+            case Fields (Index).Read_Action is
+               when Undefined_Read_Action =>
+                  null;
+               when Clear =>
+                  Description :=
+                    To_Unbounded_String
+                      ("*** This field is cleared (set to zero) following a" &
+                         " read operation ***. ") & Description;
+               when Set =>
+                  Description :=
+                    To_Unbounded_String
+                      ("*** This field is set (set to one) following a" &
+                         " read operation ***. ") & Description;
+               when Modify =>
+                  Description :=
+                    To_Unbounded_String
+                      ("*** This field is modified following a" &
+                         " read operation ***. ") & Description;
+               when Modify_Exernal =>
+                  Description :=
+                    To_Unbounded_String
+                      ("*** Reading this field has side effects on other " &
+                         "resources ***. ") & Description;
+            end case;
 
             case Fields (Index).Acc is
                when Read_Write =>

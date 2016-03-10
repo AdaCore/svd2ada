@@ -73,8 +73,7 @@ package Base_Types is
 
    --  Access_Type specfies the pre-defined tokens for the available accesses
    type Access_Type is
-     (Undefined_Access,
-      Read_Only,
+     (Read_Only,
       Write_Only,
       Read_Write,
       Write_Once,
@@ -83,8 +82,7 @@ package Base_Types is
    --  Modified_Write_Values_Type specifies the pre-defined tokens for the
    --  write side effects
    type Modified_Write_Values_Type is
-     (Undefined_Modified_Write_Value,
-      One_To_Clear,
+     (One_To_Clear,
       One_To_Set,
       One_To_Toggle,
       Zero_To_Clear,

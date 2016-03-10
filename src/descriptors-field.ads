@@ -36,9 +36,10 @@ package Descriptors.Field is
       Description      : Unbounded.Unbounded_String;
       LSB              : Unsigned;
       Size             : Unsigned;
-      Acc              : Access_Type := Undefined_Access;
+      Acc              : Access_Type;
       Mod_Write_Values : Modified_Write_Values_Type :=
-                           Undefined_Modified_Write_Value;
+                           Modify;
+      Read_Action      : Read_Action_Type := Undefined_Read_Action;
       Enums            : Descriptors.Enumerate.Enumerate_Vectors.Vector;
    end record;
 
@@ -55,8 +56,12 @@ package Descriptors.Field is
    package Field_Vectors is new Ada.Containers.Vectors
      (Positive, Field_T);
 
-   function Read_Field (Elt : DOM.Core.Element;
-                        Vec : Field_Vectors.Vector) return Field_T;
+   function Read_Field
+     (Elt            : DOM.Core.Element;
+      Vec            : Field_Vectors.Vector;
+      Default_Access : Access_Type;
+      Default_Read   : Read_Action_Type)
+      return Field_T;
 
    procedure Dump
      (Spec         : in out Ada_Gen.Ada_Spec;

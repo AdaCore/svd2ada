@@ -43,8 +43,7 @@ package Descriptors.Register is
       Alternate_Reg    : Unbounded.Unbounded_String;
       Address_Offset   : Unsigned;
       Reg_Properties   : Register_Properties_T;
-      Mod_Write_Values : Modified_Write_Values_Type :=
-                           Undefined_Modified_Write_Value;
+      Mod_Write_Values : Modified_Write_Values_Type := Modify;
       Read_Action      : Read_Action_Type := Undefined_Read_Action;
       Fields           : Field_Vectors.Vector;
 

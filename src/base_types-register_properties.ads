@@ -32,7 +32,7 @@ package Base_Types.Register_Properties is
 
    Null_Register_Property : constant Register_Properties_T :=
                               (Size        => 0,
-                               Reg_Access  => Undefined_Access,
+                               Reg_Access  => Read_Write,
                                Protection  => Undefined_Protection,
                                Reset_Value => 0,
                                Reset_Mask  => 0);

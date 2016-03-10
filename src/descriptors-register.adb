@@ -131,7 +131,9 @@ package body Descriptors.Register is
                            Field :=
                              Read_Field
                                (Element (Nodes.Item (Child_List, K)),
-                                Ret.Fields);
+                                Ret.Fields,
+                                Ret.Reg_Properties.Reg_Access,
+                                Ret.Read_Action);
                            if not Ret.Fields.Contains (Field) then
                               Ret.Fields.Append (Field);
                            end if;
