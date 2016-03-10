@@ -383,7 +383,9 @@ package body Descriptors.Device is
       --  Base types definition --
       ----------------------------
 
-      if SVD2Ada_Utils.Use_Bit_Types then
+      if not SVD2Ada_Utils.Gen_GNAT15 then
+         --  From GNAT GPL 2016 and GNAT Pro 17, Interfaces.Bit_Types is
+         --  defined
          Ada_Gen.Add_Global_With ("Interfaces.Bit_Types");
       else
          Add (Spec, New_Comment_Box ("Base type"));

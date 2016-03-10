@@ -78,8 +78,8 @@ is
    Cmd_Line_Cfg  : GNAT.Command_Line.Command_Line_Configuration;
    Pkg           : aliased GNAT.Strings.String_Access;
    Out_Dir       : aliased GNAT.Strings.String_Access;
-   Use_Old_Types : aliased Boolean;
-   Gen_Booleans  : aliased Boolean;
+   Use_Old_Types : aliased Boolean := False;
+   Gen_Booleans  : aliased Boolean := False;
 
    use type GNAT.Strings.String_Access;
 
@@ -111,7 +111,7 @@ begin
       Long_Switch => "--boolean",
       Help        => "treat bit fields as boolean. Ignored if an enumerate " &
         "is defined for the field",
-      Value       => False);
+      Value       => True);
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
       Output      => Use_Old_Types'Access,
@@ -119,7 +119,7 @@ begin
       Help        => "declare field's base types in the main package." &
         " By default use Interfaces.Bit_Types (available from " &
         "GNAT GPL 2017)",
-      Value       => False);
+      Value       => True);
    GNAT.Command_Line.Getopt
      (Config => Cmd_Line_Cfg);
 
@@ -135,7 +135,7 @@ begin
    end;
 
    SVD2Ada_Utils.Set_Use_Boolean_For_Bit (Gen_Booleans);
-   SVD2Ada_Utils.Set_Use_Bit_Types (not Use_Old_Types);
+   SVD2Ada_Utils.Set_Gen_GNAT15 (Use_Old_Types);
 
    Ada_Gen.Set_Input_File_Name
      (GNAT.Directory_Operations.Base_Name (To_String (SVD_File)));
