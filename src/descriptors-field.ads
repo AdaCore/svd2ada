@@ -25,6 +25,7 @@ with Ada_Gen;
 with Base_Types;                     use Base_Types;
 with Base_Types.Register_Properties; use Base_Types.Register_Properties;
 
+limited with Descriptors.Register;
 with Descriptors.Enumerate;
 
 --  Decodes the <field> elements of the SVD file.
@@ -48,9 +49,8 @@ package Descriptors.Field is
                    Unbounded.Null_Unbounded_String,
                    0,
                    0,
-                   Undefined_Access,
-                   Undefined_Modified_Write_Value,
-                   Descriptors.Enumerate.Enumerate_Vectors.Empty_Vector);
+                   Read_Write,
+                   others => <>);
 
    package Field_Vectors is new Ada.Containers.Vectors
      (Positive, Field_T);
@@ -60,7 +60,7 @@ package Descriptors.Field is
 
    procedure Dump
      (Spec         : in out Ada_Gen.Ada_Spec;
-      Reg_Name     : String;
+      Reg          : Descriptors.Register.Register_Access;
       Rec          : in out Ada_Gen.Ada_Type_Record;
       Reg_Fields   : Field_Vectors.Vector;
       Properties   : Register_Properties_T);

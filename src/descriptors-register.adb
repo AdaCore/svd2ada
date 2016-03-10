@@ -410,7 +410,9 @@ package body Descriptors.Register is
    -- Dump --
    ----------
 
-   procedure Dump (Spec : in out Ada_Gen.Ada_Spec; Reg : Register_Access)
+   procedure Dump
+     (Spec : in out Ada_Gen.Ada_Spec;
+      Reg  : Register_Access)
    is
       use Ada.Strings.Unbounded;
       use type Ada.Containers.Count_Type;
@@ -420,24 +422,20 @@ package body Descriptors.Register is
          return;
       end if;
 
-      if Field_Vectors.Length (Reg.Fields) = 1
-        and then Reg.Fields.First_Element.Size = Reg.Reg_Properties.Size
+      if (Reg.Fields.Length = 1
+          and then Reg.Fields.First_Element.Size = Reg.Reg_Properties.Size)
+        or else Reg.Fields.Is_Empty
       then
          --  Don't generate anything here: we use a base type
          Reg.Ada_type :=
            To_Unbounded_String
-             (Target_Type (Integer (Reg.Reg_Properties.Size)));
+             (Target_Type (Reg.Reg_Properties.Size));
 
          if Reg.Dim > 0 then
             --  Just generate a comment to document the array that's going
             --  to be generated
             Add (Spec, New_Comment (To_String (Reg.Description)));
          end if;
-
-      elsif Reg.Fields.Is_Empty then
-         Reg.Ada_type :=
-           To_Unbounded_String
-             (Target_Type (Integer (Reg.Reg_Properties.Size)));
 
       else
          declare
@@ -453,7 +451,7 @@ package body Descriptors.Register is
 
             Descriptors.Field.Dump
               (Spec,
-               To_String (Reg.Name),
+               Reg,
                Rec,
                Reg.Fields,
                Reg.Reg_Properties);

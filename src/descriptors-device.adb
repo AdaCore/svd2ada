@@ -286,73 +286,12 @@ package body Descriptors.Device is
       --  This is activated when generating in the Interfaces hierarchy
 
    begin
-      if Length (Device.Version) > 0 then
-         Add (Spec,
-              New_Constant_Value
-                (Id       => "Version",
-                 Align_Id => 0,
-                 Typ      => "String",
-                 Value    => '"' & To_String (Device.Version) & '"'));
-      end if;
-
-      ----------------------------
-      --  Base types definition --
-      ----------------------------
-
-      if Gen_RT_IRQ then
-         Old_Spec := Spec;
-         Spec := New_Spec
-           ("Interfaces.BB_Types",
-            "Base types used to describe register fields",
-            True);
-      end if;
-
-      Base_Types.Base_Package := Id (Spec);
-
-      Add (Spec, New_Comment_Box ("Base type"));
-      Add_No_Check
-        (Spec, New_Type_Scalar (Target_Type (Natural'(32), False), 32));
-      Add_No_Check
-        (Spec, New_Type_Scalar (Target_Type (Natural'(16), False), 16));
-      Add_No_Check
-        (Spec, New_Type_Scalar (Target_Type (Natural'(8), False), 8));
-      Add_No_Check
-        (Spec, New_Type_Scalar (Target_Type (Natural'(1), False), 1));
-
-      for J in 2 .. Device.Width loop
-         if J /= 8 and then J /= 16 and then J /= 32 then
-            Add_No_Check
-              (Spec, New_Type_Scalar (Target_Type (J, False), J));
-         end if;
-      end loop;
-
-      Ada_Gen.Write_Spec (Spec, Output_Dir);
-      Ada_Gen.Add_Global_With (Spec);
-
-      if Gen_RT_IRQ then
-         Spec := Old_Spec;
-      end if;
-
-      Add (Spec, New_Comment_Box ("Base addresses"));
-      Add (Spec, New_With_Clause ("System", False));
-
-      for Periph of Device.Peripherals loop
-         Add (Spec,
-              New_Constant_Value
-                (Id       => To_String (Periph.Name) & "_Base",
-                 Align_Id => 0,
-                 Typ      => "System.Address",
-                 Value    => "System'To_Address (" &
-                   To_Hex (Periph.Base_Address) & ")"));
-      end loop;
-
-      Ada_Gen.Write_Spec (Spec, Output_Dir);
-
       ----------------
       -- Interrupts --
       ----------------
 
       if Gen_RT_IRQ then
+         Old_Spec := Spec;
          --  When generating stubs for the Interfaces run-time hierarchy, also
          --  generate the Ada.Exceptions.Name file from the interrupts list
          Spec := New_Spec ("Ada.Interrupts.Names",
@@ -363,6 +302,7 @@ package body Descriptors.Device is
               New_Pragma
                 ("Implementation_Defined",
                  "All identifiers in this unit are implementation defined"));
+
          --  Add core interrupts
          Interrupts.Append
            ((Name        => To_Unbounded_String ("Sys_Tick"),
@@ -374,21 +314,24 @@ package body Descriptors.Device is
                   "while it is at position 0 in the manual. The offset of 2 " &
                   "is reflected in s-bbbosu.adb by the First_IRQ constant."),
              Value       => 1));
-         Interrupts.Append
-           ((Name        => To_Unbounded_String ("FPU"),
-             Description => To_Unbounded_String
-               ("Floating Point Unit interrupt"),
-             Value       => 83));
+         if Slice (Device.Description, 1, 5) = "STM32" then
+            Interrupts.Append
+              ((Name        => To_Unbounded_String ("FPU"),
+                Description => To_Unbounded_String
+                  ("FPU global interrupt"),
+                Value       => 83));
+         end if;
 
       else
+         Old_Spec := Spec;
          Spec := New_Child_Spec ("Interrupts",
                                  To_String (Device.Name),
                                  "Definition of the device's interrupts",
                                  False);
+         Add (Spec, New_With_Clause ("Ada.Interrupts", True));
       end if;
 
       Add (Spec, New_Comment_Box ("Interrupts"));
-      Add (Spec, New_With_Clause ("Ada.Interrupts", True));
 
       for Periph of Device.Peripherals loop
          for Int of Periph.Interrupts loop
@@ -425,11 +368,58 @@ package body Descriptors.Device is
          end if;
       end loop;
 
-      Write_Spec (Spec, Output_Dir);
-
       if Gen_RT_IRQ then
+         Ada_Gen.Write_Spec (Spec, Output_Dir);
          Dump_Handler_ASM (Device, Interrupts, Output_Dir);
       end if;
+
+      Spec := Old_Spec;
+
+      ----------------------------
+      --  Base types definition --
+      ----------------------------
+
+      if Base_Types.Use_Bit_Types then
+         Ada_Gen.Add_Global_With ("Interfaces.Bit_Types");
+      else
+         Add (Spec, New_Comment_Box ("Base type"));
+         Add_No_Check
+           (Spec, New_Type_Scalar (Target_Type (Natural'(32)), 32));
+         Add_No_Check
+           (Spec, New_Type_Scalar (Target_Type (Natural'(16)), 16));
+         Add_No_Check
+           (Spec, New_Type_Scalar (Target_Type (Natural'(8)), 8));
+         Add_No_Check
+           (Spec, New_Type_Scalar (Target_Type (Natural'(1)), 1));
+
+         for J in 2 .. Device.Width loop
+            if J /= 8 and then J /= 16 and then J /= 32 then
+               Add_No_Check
+                 (Spec, New_Type_Scalar (Target_Type (J), J));
+            end if;
+         end loop;
+      end if;
+
+      -----------------------------------------
+      --  Base addresses for the peripherals --
+      -----------------------------------------
+
+      Add (Spec, New_Comment_Box ("Base addresses"));
+      Add (Spec, New_With_Clause ("System", False));
+
+      for Periph of Device.Peripherals loop
+         Add (Spec,
+              New_Constant_Value
+                (Id       => To_String (Periph.Name) & "_Base",
+                 Align_Id => 0,
+                 Typ      => "System.Address",
+                 Value    => "System'To_Address (" &
+                   To_Hex (Periph.Base_Address) & ")"));
+      end loop;
+
+      Ada_Gen.Write_Spec (Spec, Output_Dir);
+
+      Write_Spec (Spec, Output_Dir);
 
       Peripherals := Device.Peripherals;
 

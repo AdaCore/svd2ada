@@ -168,12 +168,16 @@ package Base_Types is
    function To_String (Val : Integer) return String;
    function To_String (Val : Unsigned) return String;
 
+   procedure Set_Use_Boolean_For_Bit (Value : Boolean);
+   function Use_Boolean_For_Bit return Boolean;
+
+   procedure Set_Use_Bit_Types (Value : Boolean);
+   function Use_Bit_Types return Boolean;
+
    function Target_Type
-     (Size      : Integer;
-      Full_Name : Boolean := True) return String;
+     (Size : Integer) return String;
    function Target_Type
-     (Size      : Unsigned;
-      Full_Name : Boolean := True) return String;
+     (Size : Unsigned) return String;
    --  Returns the name of the type on the target given the size of the int
 
    function Get_Value (Elt : DOM.Core.Element) return String;

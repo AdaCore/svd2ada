@@ -64,9 +64,20 @@ is
    procedure Usage is
    begin
       Ada.Text_IO.Put_Line
-        ("Usage: svd2ada file.svd [-p pkg_name] -o output_dir");
+        ("Usage: svd2ada file.svd [-p pkg_name] [-boolean] [-gnat17] " &
+           "-o output_dir");
       Ada.Text_IO.Put_Line
-        ("   where OPTIONS can be:");
+        ("   with:");
+      Ada.Text_IO.Put_Line
+        ("   -p pkg_name: use pkg_name as main package name for " &
+           "the generated spec hierarchy");
+      Ada.Text_IO.Put_Line
+        ("   -boolean: treat bits as boolean. Ignored if an enumerate is" &
+           " defined for the field");
+      Ada.Text_IO.Put_Line
+        ("   -old: define the base types for fields in the main package. " &
+           "Else, use Interfaces.Bit_Types for those that is " &
+           "only available from GNAt GPL 2017.");
    end Usage;
 
    Input     : File_Input;
@@ -85,11 +96,15 @@ is
                                   "/schema/CMSIS-SVD_Schema_1_1.xsd");
 
 begin
-   while GNAT.Command_Line.Getopt ("* o= p=") /= ASCII.NUL loop
+   while GNAT.Command_Line.Getopt ("* o= p= boolean old") /= ASCII.NUL loop
       if GNAT.Command_Line.Full_Switch = "p" then
          Pkg := To_Unbounded_String (GNAT.Command_Line.Parameter);
       elsif GNAT.Command_Line.Full_Switch = "o" then
          Out_Dir := To_Unbounded_String (GNAT.Command_Line.Parameter);
+      elsif GNAT.Command_Line.Full_Switch = "boolean" then
+         Base_Types.Set_Use_Boolean_For_Bit (True);
+      elsif GNAT.Command_Line.Full_Switch = "old" then
+         Base_Types.Set_Use_Bit_Types (False);
       else
          SVD_File := To_Unbounded_String (GNAT.Command_Line.Full_Switch);
       end if;
