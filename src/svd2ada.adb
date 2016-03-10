@@ -86,7 +86,7 @@ is
 begin
    GNAT.Command_Line.Set_Usage
      (Cmd_Line_Cfg,
-      Usage => "[options] svd-file",
+      Usage => "[options] -o DIR svd-file",
       Help  => "Generate Ada bindings from CMSIS-SVD Cortex-M hardware " &
         "description files");
    GNAT.Command_Line.Define_Switch
@@ -94,7 +94,7 @@ begin
       Output      => Out_Dir'Access,
       Switch      => "-o=",
       Long_Switch => "--output=",
-      Help        => "[mandatory] the destination directory used to " &
+      Help        => "the destination directory used to " &
         "generate the binding",
       Argument    => "DIR");
    GNAT.Command_Line.Define_Switch
@@ -127,6 +127,9 @@ begin
       SVD : constant String := GNAT.Command_Line.Get_Argument;
    begin
       if SVD = "" or else Out_Dir = null or else Out_Dir.all = "" then
+         Ada.Text_IO.Put_Line
+           (Ada.Text_IO.Standard_Error,
+            "Error: missing arguments");
          GNAT.Command_Line.Try_Help;
          return 1;
       end if;
