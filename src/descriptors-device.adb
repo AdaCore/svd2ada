@@ -25,6 +25,7 @@ with DOM.Core.Elements;     use DOM.Core.Elements;
 with DOM.Core.Nodes;
 
 with Ada_Gen;               use Ada_Gen;
+with SVD2Ada_Utils;
 
 package body Descriptors.Device is
 
@@ -382,7 +383,7 @@ package body Descriptors.Device is
       --  Base types definition --
       ----------------------------
 
-      if Base_Types.Use_Bit_Types then
+      if SVD2Ada_Utils.Use_Bit_Types then
          Ada_Gen.Add_Global_With ("Interfaces.Bit_Types");
       else
          Add (Spec, New_Comment_Box ("Base type"));

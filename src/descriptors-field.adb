@@ -25,6 +25,8 @@ with DOM.Core.Nodes;
 
 with Descriptors.Register;
 
+with SVD2Ada_Utils;
+
 package body Descriptors.Field is
 
    function Similar_Field
@@ -289,7 +291,7 @@ package body Descriptors.Field is
          else --  Not a reserved field case:
 
             --  Whether to use a Boolean for bit fields
-            As_Boolean := Use_Boolean_For_Bit;
+            As_Boolean := SVD2Ada_Utils.Use_Boolean_For_Bit;
 
             Has_Default := Fields (Index).Acc /= Read_Only;
 

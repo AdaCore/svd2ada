@@ -23,6 +23,7 @@ with Ada.Text_IO;
 with GNAT.Command_Line;
 with GNAT.Directory_Operations;
 with GNAT.OS_Lib;
+with GNAT.Strings;
 
 --  XML dependencies
 with Input_Sources.File;          use Input_Sources.File;
@@ -35,7 +36,6 @@ with DOM.Core.Documents;
 
 with Ada_Gen;
 with Ada_Gen_Helpers;
-with Base_Types;
 with Descriptors.Device;
 with SVD2Ada_Utils;
 
@@ -59,63 +59,83 @@ with SVD2Ada_Utils;
 --    for the field, and use this enum as type of the field.
 function SVD2Ada return Integer
 is
-   procedure Usage;
+   --  Local variables used for XML parsing
+   Input         : File_Input;
+   Reader        : Tree_Reader;
+   Sc_Reader     : Schema_Reader;
+   Grammar       : XML_Grammar;
+   Doc           : Document;
+   Schema        : constant String :=
+                     GNAT.OS_Lib.Normalize_Pathname
+                       (SVD2Ada_Utils.Executable_Location &
+                                          "/schema/CMSIS-SVD_Schema_1_1.xsd");
 
-   procedure Usage is
-   begin
-      Ada.Text_IO.Put_Line
-        ("Usage: svd2ada file.svd [-p pkg_name] [-boolean] [-gnat17] " &
-           "-o output_dir");
-      Ada.Text_IO.Put_Line
-        ("   with:");
-      Ada.Text_IO.Put_Line
-        ("   -p pkg_name: use pkg_name as main package name for " &
-           "the generated spec hierarchy");
-      Ada.Text_IO.Put_Line
-        ("   -boolean: treat bits as boolean. Ignored if an enumerate is" &
-           " defined for the field");
-      Ada.Text_IO.Put_Line
-        ("   -old: define the base types for fields in the main package. " &
-           "Else, use Interfaces.Bit_Types for those that is " &
-           "only available from GNAt GPL 2017.");
-   end Usage;
+   --  The produced Device
+   Device        : Descriptors.Device.Device_T;
+   SVD_File      : Unbounded_String;
 
-   Input     : File_Input;
-   Reader    : Tree_Reader;
-   Sc_Reader : Schema_Reader;
-   Grammar   : XML_Grammar;
-   Doc       : Document;
+   --  Command line parser
+   Cmd_Line_Cfg  : GNAT.Command_Line.Command_Line_Configuration;
+   Pkg           : aliased GNAT.Strings.String_Access;
+   Out_Dir       : aliased GNAT.Strings.String_Access;
+   Use_Old_Types : aliased Boolean;
+   Gen_Booleans  : aliased Boolean;
 
-   Device    : Descriptors.Device.Device_T;
-   Pkg       : Unbounded_String;
-   Out_Dir   : Unbounded_String;
-   SVD_File  : Unbounded_String;
-   Schema    : constant String :=
-                 GNAT.OS_Lib.Normalize_Pathname
-                   (SVD2Ada_Utils.Executable_Location &
-                                  "/schema/CMSIS-SVD_Schema_1_1.xsd");
+   use type GNAT.Strings.String_Access;
 
 begin
-   while GNAT.Command_Line.Getopt ("* o= p= boolean old") /= ASCII.NUL loop
-      if GNAT.Command_Line.Full_Switch = "p" then
-         Pkg := To_Unbounded_String (GNAT.Command_Line.Parameter);
-      elsif GNAT.Command_Line.Full_Switch = "o" then
-         Out_Dir := To_Unbounded_String (GNAT.Command_Line.Parameter);
-      elsif GNAT.Command_Line.Full_Switch = "boolean" then
-         Base_Types.Set_Use_Boolean_For_Bit (True);
-      elsif GNAT.Command_Line.Full_Switch = "old" then
-         Base_Types.Set_Use_Bit_Types (False);
-      else
-         SVD_File := To_Unbounded_String (GNAT.Command_Line.Full_Switch);
-      end if;
-   end loop;
+   GNAT.Command_Line.Set_Usage
+     (Cmd_Line_Cfg,
+      Usage => "[options] svd-file",
+      Help  => "Generate Ada bindings from CMSIS-SVD Cortex-M hardware " &
+        "description files");
+   GNAT.Command_Line.Define_Switch
+     (Cmd_Line_Cfg,
+      Output      => Out_Dir'Access,
+      Switch      => "-o=",
+      Long_Switch => "--output=",
+      Help        => "[mandatory] the destination directory used to " &
+        "generate the binding",
+      Argument    => "DIR");
+   GNAT.Command_Line.Define_Switch
+     (Cmd_Line_Cfg,
+      Output      => Pkg'Access,
+      Switch      => "-p=",
+      Long_Switch => "--package=",
+      Help        => "use pkg_name as main package name for the generated " &
+        "spec hierarchy",
+      Argument    => "Pkg_Name");
+   GNAT.Command_Line.Define_Switch
+     (Cmd_Line_Cfg,
+      Output      => Gen_Booleans'Access,
+      Long_Switch => "--boolean",
+      Help        => "treat bit fields as boolean. Ignored if an enumerate " &
+        "is defined for the field",
+      Value       => False);
+   GNAT.Command_Line.Define_Switch
+     (Cmd_Line_Cfg,
+      Output      => Use_Old_Types'Access,
+      Long_Switch => "--old",
+      Help        => "declare field's base types in the main package." &
+        " By default use Interfaces.Bit_Types (available from " &
+        "GNAT GPL 2017)",
+      Value       => False);
+   GNAT.Command_Line.Getopt
+     (Config => Cmd_Line_Cfg);
 
-   if SVD_File = Null_Unbounded_String
-     or else Out_Dir = Null_Unbounded_String
-   then
-      Usage;
-      return 1;
-   end if;
+   declare
+      SVD : constant String := GNAT.Command_Line.Get_Argument;
+   begin
+      if SVD = "" or else Out_Dir = null or else Out_Dir.all = "" then
+         GNAT.Command_Line.Try_Help;
+         return 1;
+      end if;
+
+      SVD_File := To_Unbounded_String (GNAT.OS_Lib.Normalize_Pathname (SVD));
+   end;
+
+   SVD2Ada_Utils.Set_Use_Boolean_For_Bit (Gen_Booleans);
+   SVD2Ada_Utils.Set_Use_Bit_Types (not Use_Old_Types);
 
    Ada_Gen.Set_Input_File_Name
      (GNAT.Directory_Operations.Base_Name (To_String (SVD_File)));
@@ -151,14 +171,19 @@ begin
       Ada_Gen_Helpers.Read (Documents.Get_Element (Get_Tree (Reader)));
    end if;
 
-   Device := Descriptors.Device.Read_Device (Documents.Get_Element (Doc),
-                                             To_String (Pkg));
+   Device := Descriptors.Device.Read_Device
+     (Documents.Get_Element (Doc),
+      (if Pkg = null then "" else Pkg.all));
 
-   Descriptors.Device.Dump (Device, To_String (Out_Dir));
+   Descriptors.Device.Dump (Device, Out_Dir.all);
 
    return 0;
 
 exception
+   when GNAT.Command_Line.Invalid_Switch |
+        GNAT.Command_Line.Invalid_Parameter |
+        GNAT.Command_Line.Exit_From_Command_Line =>
+      return 1;
    when XML_Validation_Error =>
       Close (Input);
       Ada.Text_IO.Put_Line ("Non-valid SVD file:");

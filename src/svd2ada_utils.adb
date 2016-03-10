@@ -26,6 +26,9 @@ with GNAT.OS_Lib;       use GNAT.OS_Lib;
 
 package body SVD2Ada_Utils is
 
+   G_Use_Boolean : Boolean := False;
+   G_Use_Bit_Types : Boolean := True;
+
    -------------------------
    -- Executable_Location --
    -------------------------
@@ -108,5 +111,45 @@ package body SVD2Ada_Utils is
          return Dir;
       end;
    end Executable_Location;
+
+   -----------------------------
+   -- Set_Use_Boolean_For_Bit --
+   -----------------------------
+
+   procedure Set_Use_Boolean_For_Bit (Value : Boolean)
+   is
+   begin
+      G_Use_Boolean := Value;
+   end Set_Use_Boolean_For_Bit;
+
+   -------------------------
+   -- Use_Boolean_For_Bit --
+   -------------------------
+
+   function Use_Boolean_For_Bit return Boolean
+   is
+   begin
+      return G_Use_Boolean;
+   end Use_Boolean_For_Bit;
+
+   -----------------------
+   -- Set_Use_Bit_Types --
+   -----------------------
+
+   procedure Set_Use_Bit_Types (Value : Boolean)
+   is
+   begin
+      G_Use_Bit_Types := Value;
+   end Set_Use_Bit_Types;
+
+   -------------------
+   -- Use_Bit_Types --
+   -------------------
+
+   function Use_Bit_Types return Boolean
+   is
+   begin
+      return G_Use_Bit_Types;
+   end Use_Bit_Types;
 
 end SVD2Ada_Utils;

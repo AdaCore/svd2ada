@@ -166,12 +166,6 @@ package Base_Types is
    function To_String (Val : Integer) return String;
    function To_String (Val : Unsigned) return String;
 
-   procedure Set_Use_Boolean_For_Bit (Value : Boolean);
-   function Use_Boolean_For_Bit return Boolean;
-
-   procedure Set_Use_Bit_Types (Value : Boolean);
-   function Use_Bit_Types return Boolean;
-
    function Target_Type
      (Size : Integer) return String;
    function Target_Type

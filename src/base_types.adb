@@ -23,50 +23,7 @@ with Ada.Text_IO;
 
 package body Base_Types is
 
-   G_Use_Boolean : Boolean := False;
-   G_Use_Bit_Types : Boolean := True;
-
    package Unsigned_IO is new Ada.Text_IO.Modular_IO (Unsigned);
-
-   -----------------------------
-   -- Set_Use_Boolean_For_Bit --
-   -----------------------------
-
-   procedure Set_Use_Boolean_For_Bit (Value : Boolean)
-   is
-   begin
-      G_Use_Boolean := Value;
-   end Set_Use_Boolean_For_Bit;
-
-   -------------------------
-   -- Use_Boolean_For_Bit --
-   -------------------------
-
-   function Use_Boolean_For_Bit return Boolean
-   is
-   begin
-      return G_Use_Boolean;
-   end Use_Boolean_For_Bit;
-
-   -----------------------
-   -- Set_Use_Bit_Types --
-   -----------------------
-
-   procedure Set_Use_Bit_Types (Value : Boolean)
-   is
-   begin
-      G_Use_Bit_Types := Value;
-   end Set_Use_Bit_Types;
-
-   -------------------
-   -- Use_Bit_Types --
-   -------------------
-
-   function Use_Bit_Types return Boolean
-   is
-   begin
-      return G_Use_Bit_Types;
-   end Use_Bit_Types;
 
    -----------------
    -- Target_Type --
