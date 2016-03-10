@@ -1,23 +1,21 @@
 ------------------------------------------------------------------------------
---                             G N A T C O L L                              --
 --                                                                          --
---                     Copyright (C) 2008-2016, AdaCore                     --
+--                          SVD Binding Generator                           --
 --                                                                          --
--- This library is free software;  you can redistribute it and/or modify it --
--- under terms of the  GNU General Public License  as published by the Free --
--- Software  Foundation;  either version 3,  or (at your  option) any later --
--- version. This library is distributed in the hope that it will be useful, --
--- but WITHOUT ANY WARRANTY;  without even the implied warranty of MERCHAN- --
--- TABILITY or FITNESS FOR A PARTICULAR PURPOSE.                            --
+--                    Copyright (C) 2015-2016, AdaCore                      --
 --                                                                          --
--- You should have received a copy of the GNU General Public License and    --
--- a copy of the GCC Runtime Library Exception along with this program;     --
--- see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see    --
--- <http://www.gnu.org/licenses/>.                                          --
+-- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
+-- under terms of the  GNU General Public License as published  by the Free --
+-- Software  Foundation;  either version 3,  or (at your option) any later  --
+-- version.  SVD2Ada is distributed in the hope that it will be useful, but --
+-- WITHOUT ANY WARRANTY;  without even the  implied warranty of MERCHANTA-  --
+-- BILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public  --
+-- License for  more details.  You should have  received  a copy of the GNU --
+-- General Public License  distributed with SVD2Ada; see file COPYING3.  If --
+-- not, go to http://www.gnu.org/licenses for a complete copy of the        --
+-- license.                                                                 --
 --                                                                          --
 ------------------------------------------------------------------------------
-
---  This file is extracted from gnatcoll
 
 with Ada.Command_Line;
 
@@ -33,6 +31,7 @@ package body SVD2Ada_Utils is
    -- Executable_Location --
    -------------------------
 
+   --  Executable_Location is extracted from the gnatcoll library
    function Executable_Location return String
    is
       Exec_Name : constant String := Ada.Command_Line.Command_Name;
