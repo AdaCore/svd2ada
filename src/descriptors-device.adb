@@ -158,17 +158,19 @@ package body Descriptors.Device is
       --  so on, + the IRQs
       --  Removing 2 from the GNAT IRQ IDs to obtain the actual number of
       --  IRQs (the GNAT ID includes Systick, 0 being reserved).
-      Tab_Size := 16 + Natural (Ints.Last_Element.Value) - 2;
+      Tab_Size := (16 + Natural (Ints.Last_Element.Value) - 2) * 4;
       --  Now essie the proper alignment directive: the table needs to be
       --  aligned on a power of 2.
       Put_Line (ASM, ASCII.HT & ".text");
       Put_Line (ASM, ASCII.HT & ".globl __vectors");
+
       for J in 5 .. 16 loop
          if 2 ** J >= Tab_Size then
             Put_Line (ASM, ASCII.HT & ".p2align" & J'Img);
             exit;
          end if;
       end loop;
+
       Put_Line (ASM, "__vectors:");
       --  Cortex ARMv7-m defined 16 first values
       Put_Line
@@ -179,49 +181,50 @@ package body Descriptors.Device is
          ASCII.HT & ".word   0                    /* stack top address */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 1 Reset */");
+         ASCII.HT & ".word   fault                /* 1 Reset.  */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 2 NMI */");
+         ASCII.HT & ".word   fault                /* 2 NMI. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 3 Hard fault */");
+         ASCII.HT & ".word   fault                /* 3 Hard fault. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 4 Mem manage */");
+         ASCII.HT & ".word   fault                /* 4 Mem manage. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 5 Bus fault */");
+         ASCII.HT & ".word   fault                /* 5 Bus fault. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 6 Usage fault */");
+         ASCII.HT & ".word   fault                /* 6 Usage fault. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 7 reserved */");
+         ASCII.HT & ".word   fault                /* 7 reserved. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 8 reserved */");
+         ASCII.HT & ".word   fault                /* 8 reserved. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 9 reserved */");
+         ASCII.HT & ".word   fault                /* 9 reserved. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 10 reserved */");
+         ASCII.HT & ".word   fault                /* 10 reserved. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   __gnat_sv_call_trap  /* 11 SVCall */");
+         ASCII.HT & ".word   __gnat_sv_call_trap  /* 11 SVCall. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 12 Reserved for debug*/");
+         ASCII.HT &
+           ".word   fault                /* 12 reserved for debug. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 13 reserved */");
+         ASCII.HT & ".word   fault                /* 13 reserved. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   __gnat_pend_sv_trap  /* 14 PendSV */");
+         ASCII.HT & ".word   __gnat_pend_sv_trap  /* 14 PendSV. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   __gnat_sys_tick_trap /* 15 Systick */");
+         ASCII.HT & ".word   __gnat_sys_tick_trap /* 15 Systick. */");
 
       Put_Line
         (ASM,
@@ -245,7 +248,7 @@ package body Descriptors.Device is
                  " */");
          else
             Put_Line
-              (ASM, "IRQ" & Unsigned'Image (J - 2) & " */");
+              (ASM, "IRQ" & Unsigned'Image (J - 2) & ". */");
          end if;
       end loop;
 
