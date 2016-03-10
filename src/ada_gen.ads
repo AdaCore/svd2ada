@@ -60,6 +60,9 @@ package Ada_Gen is
    procedure Add_Global_With (Spec : Ada_Spec);
    --  Adds a with/use clause to this Spec on all generated spec from now on.
 
+   procedure Add_Global_With (Spec : String);
+   --  Adds a with/use clause to this Spec on all generated spec from now on.
+
    type Ada_With_Clause is private;
    --  with/use clauses
 
@@ -338,6 +341,10 @@ package Ada_Gen is
    procedure Add_Address_Aspect
      (Elt     : in out Ada_Instance;
       Address : Unsigned);
+
+   procedure Add_Address_Aspect
+     (Elt : in out Ada_Instance;
+      Val : String);
 
    procedure Add_Aspect
      (Elt    : in out Ada_Instance;

@@ -852,7 +852,7 @@ package body Ada_Gen is
 
       if Length (G_Withed_All) /= 0 then
          Spec.With_Clauses.Insert
-           (To_STring (G_Withed_All), False);
+           (To_STring (G_Withed_All), True);
       end if;
 
       return Spec;
@@ -905,6 +905,16 @@ package body Ada_Gen is
    is
    begin
       G_Withed_All := Spec.Id;
+   end Add_Global_With;
+
+   ---------------------
+   -- Add_Global_With --
+   ---------------------
+
+   procedure Add_Global_With (Spec : String)
+   is
+   begin
+      G_Withed_All := To_Unbounded_String (Spec);
    end Add_Global_With;
 
    ---------------
@@ -2060,6 +2070,18 @@ package body Ada_Gen is
    begin
       Elt.Aspects.Append ("Address => System'To_Address (" &
                             To_Hex (Address) & ")");
+   end Add_Address_Aspect;
+
+   ------------------------
+   -- Add_Address_Aspect --
+   ------------------------
+
+   procedure Add_Address_Aspect
+     (Elt : in out Ada_Instance;
+      Val : String)
+   is
+   begin
+      Elt.Aspects.Append ("Address => " & Val);
    end Add_Address_Aspect;
 
    ----------------
