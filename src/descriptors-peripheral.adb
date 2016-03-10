@@ -322,15 +322,6 @@ package body Descriptors.Peripheral is
          Descr         => To_String (Peripheral.Description),
          Preelaborated => True);
 
-      if Length (Peripheral.Version) > 0 then
-         Add (Spec,
-              New_Constant_Value
-                (Id       => "Version",
-                 Align_Id => 0,
-                 Typ      => "String",
-                 Value    => '"' & To_String (Peripheral.Version) & '"'));
-      end if;
-
       if not Register_Vectors.Is_Empty (Peripheral.Registers) then
          Add (Spec, New_Comment_Box ("Registers"));
       end if;
@@ -359,7 +350,7 @@ package body Descriptors.Peripheral is
                      To_String (Peripheral.Description));
       begin
          Add_Aspect (Inst, "Import");
-         Add_Address_Aspect (Inst, Peripheral.Base_Address);
+         Add_Address_Aspect (Inst, To_String (Peripheral.Name) & "_Base");
          Add (Spec, Inst);
       end;
 
@@ -452,7 +443,7 @@ package body Descriptors.Peripheral is
                               To_String (First.Description));
                begin
                   Add_Aspect (Inst, "Import");
-                  Add_Address_Aspect (Inst, First.Base_Address);
+                  Add_Address_Aspect (Inst, To_String (First.Name) & "_Base");
                   Add (Spec, Inst);
                end;
 
@@ -470,7 +461,8 @@ package body Descriptors.Peripheral is
                                  To_String (Periph.Description));
                   begin
                      Add_Aspect (Inst, "Import");
-                     Add_Address_Aspect (Inst, Periph.Base_Address);
+                     Add_Address_Aspect
+                       (Inst, To_String (Periph.Name) & "_Base");
                      Add (Spec, Inst);
                   end;
                end loop;
@@ -490,7 +482,8 @@ package body Descriptors.Peripheral is
                                  To_String (Periph.Description));
                   begin
                      Add_Aspect (Inst, "Import");
-                     Add_Address_Aspect (Inst, Periph.Base_Address);
+                     Add_Address_Aspect
+                       (Inst, To_String (Periph.Name) & "_Base");
                      Add (Spec, Inst);
                   end;
                end loop;
