@@ -26197,6 +26197,10 @@
         <size>0x200</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>SMC</name>
+        <value>10</value>
+      </interrupt>
       <registers>
         <register>
           <name>SETUP0</name>
@@ -31537,7 +31541,7 @@
         <usage>registers</usage>
       </addressBlock>
       <interrupt>
-        <name>EFC0</name>
+        <name>EEFC0</name>
         <value>6</value>
       </interrupt>
       <registers>
@@ -31800,7 +31804,7 @@
         <usage>registers</usage>
       </addressBlock>
       <interrupt>
-        <name>EFC1</name>
+        <name>EEFC1</name>
         <value>7</value>
       </interrupt>
       <registers>
@@ -63833,6 +63837,10 @@
         <size>0x200</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>RSTC</name>
+        <value>1</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -63961,6 +63969,10 @@
         <size>0x200</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>SUPC</name>
+        <value>0</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -65527,6 +65539,10 @@
         <size>0x200</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>RTT</name>
+        <value>3</value>
+      </interrupt>
       <registers>
         <register>
           <name>MR</name>
@@ -65652,6 +65668,10 @@
         <size>0x200</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>WDT</name>
+        <value>4</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -65780,6 +65800,10 @@
         <size>0x200</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>RTC</name>
+        <value>2</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
