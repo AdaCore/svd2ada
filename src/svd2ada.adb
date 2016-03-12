@@ -68,8 +68,8 @@ is
    Doc           : Document;
    Schema        : constant String :=
                      GNAT.OS_Lib.Normalize_Pathname
-                       (SVD2Ada_Utils.Executable_Location &
-                                          "/schema/CMSIS-SVD_Schema_1_1.xsd");
+                       ("schema/CMSIS-SVD_Schema_1_3_1.xsd",
+                        SVD2Ada_Utils.Executable_Location);
 
    --  The produced Device
    Device        : Descriptors.Device.Device_T;

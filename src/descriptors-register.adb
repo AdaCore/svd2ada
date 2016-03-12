@@ -44,6 +44,44 @@ package body Descriptors.Register is
       Derived_From : constant String :=
                        Elements.Get_Attribute (Elt, "derivedFrom");
 
+      function Compute_Name return Unbounded.Unbounded_String is
+      begin
+         if Ret.Dim = 0 then
+            return Ret.Xml_Id;
+         else
+            declare
+               Name : constant String := Unbounded.To_String (Ret.Xml_Id);
+            begin
+               if Name'Length > 4
+                 and then Name (Name'Last - 3 .. Name'Last) = "[%s]"
+               then
+                  return Unbounded.To_Unbounded_String
+                      (Name (Name'First .. Name'Last - 4));
+
+               elsif Name'Length > 3
+                 and then Name (Name'Last - 2 .. Name'Last) = "_%s"
+               then
+                  return Unbounded.To_Unbounded_String
+                      (Name (Name'First .. Name'Last - 3));
+
+               elsif Name'Length > 2
+                 and then Name (Name'Last - 1 .. Name'Last) = "%s"
+               then
+                  return Unbounded.To_Unbounded_String
+                      (Name (Name'First .. Name'Last - 2));
+
+               elsif Name'Length > 0 then
+                  Ada.Text_IO.Put_Line
+                    ("*** WARNING: Unsupported register " &
+                       "array naming schema: " & Name);
+                  return Ret.Xml_Id;
+               else
+                  return Ret.Xml_Id;
+               end if;
+            end;
+         end if;
+      end Compute_Name;
+
    begin
       Ret.Reg_Properties := Reg_Properties;
 
@@ -52,8 +90,9 @@ package body Descriptors.Register is
             Found : Boolean := False;
          begin
             for Oth of Vec loop
-               if Unbounded.To_String (Oth.Name) = Derived_From then
+               if Unbounded.To_String (Oth.Xml_Id) = Derived_From then
                   Ret := Oth.all;
+                  Ret.Name := Unbounded.Null_Unbounded_String;
                   Found := True;
                   exit;
                end if;
@@ -73,26 +112,8 @@ package body Descriptors.Register is
                Tag   : String renames Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
-                  if Ret.Dim = 0 then
-                     Ret.Name := Get_Value (Child);
-                  else
-                     declare
-                        Name : String renames Get_Value (Child);
-                     begin
-                        if Name'Length > 4
-                          and then Name (Name'Last - 3 .. Name'Last) = "[%s]"
-                        then
-                           Ret.Name :=
-                             Unbounded.To_Unbounded_String
-                               (Name (Name'First .. Name'Last - 4));
-                        elsif Name'Length > 0 then
-                           Ada.Text_IO.Put_Line
-                             ("*** WARNING: Unsupported register " &
-                                "naming schema: " & Name);
-                        end if;
-                     end;
-                  end if;
-
+                  Ret.Xml_Id := Get_Value (Child);
+                  Ret.Name := Compute_Name;
                   Ret.Type_Name := Ret.Name;
 
                elsif Tag = "displayName" then
@@ -144,21 +165,7 @@ package body Descriptors.Register is
 
                elsif Tag = "dim" then
                   Ret.Dim := Get_Value (Child);
-                  declare
-                     Name : String renames Unbounded.To_String (Ret.Name);
-                  begin
-                     if Name'Length > 4
-                       and then Name (Name'Last - 3 .. Name'Last) = "[%s]"
-                     then
-                        Ret.Name :=
-                          Unbounded.To_Unbounded_String
-                            (Name (Name'First .. Name'Last - 4));
-                     elsif Name'Length > 0 then
-                        Ada.Text_IO.Put_Line
-                          ("*** WARNING: Unsupported register naming schema: "
-                           & Name);
-                     end if;
-                  end;
+                  Ret.Name := Compute_Name;
 
                elsif Tag = "dimIncrement" then
                   Ret.Dim_Increment := Get_Value (Child);

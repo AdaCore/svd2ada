@@ -37,6 +37,7 @@ package Descriptors.Register is
    type Register_Access is access all Register_T;
 
    type Register_T is record
+      Xml_Id           : Unbounded.Unbounded_String;
       Name             : Unbounded.Unbounded_String;
       Display_Name     : Unbounded.Unbounded_String;
       Description      : Unbounded.Unbounded_String;
