@@ -27,6 +27,6 @@ package SVD2Ada_Options is
    Use_IRQ_Offset : Base_Types.Unsigned := 2;
 
    -- If False, use the non-standard Volatile_Full_Access aspect.
-   Use_Standard_Volatile_Aspect : Boolean := False;
+   Use_Standard_Volatile_Aspect : aliased Boolean := False;
 
 end SVD2Ada_Options;

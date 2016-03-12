@@ -1,19 +1,20 @@
 ------------------------------------------------------------------------------
---                              SVD Binding Generator                       --
 --                                                                          --
---                         Copyright (C) 2015, AdaCore                      --
+--                          SVD Binding Generator                           --
 --                                                                          --
---  This tool is free software;  you can redistribute it and/or modify      --
---  it under terms of the  GNU General Public License  as published by the  --
---  Free Software  Foundation;  either version 3,  or (at your  option) any --
---  later version. This library is distributed in the hope that it will be  --
---  useful, but WITHOUT ANY WARRANTY;  without even the implied warranty of --
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                    --
+--                    Copyright (C) 2015-2016, AdaCore                      --
 --                                                                          --
---  You should have received a copy of the GNU General Public License and   --
---  a copy of the GCC Runtime Library Exception along with this program;    --
---  see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see   --
---  <http://www.gnu.org/licenses/>.                                         --
+-- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
+-- under terms of the  GNU General Public License as published  by the Free --
+-- Software  Foundation;  either version 3,  or (at your option) any later  --
+-- version.  SVD2Ada is distributed in the hope that it will be useful, but --
+-- WITHOUT ANY WARRANTY;  without even the  implied warranty of MERCHANTA-  --
+-- BILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public  --
+-- License for  more details.  You should have  received  a copy of the GNU --
+-- General Public License  distributed with SVD2Ada; see file COPYING3.  If --
+-- not, go to http://www.gnu.org/licenses for a complete copy of the        --
+-- license.                                                                 --
+--                                                                          --
 ------------------------------------------------------------------------------
 
 with System;
@@ -58,6 +59,9 @@ package Ada_Gen is
       Output_Dir : String);
 
    procedure Add_Global_With (Spec : Ada_Spec);
+   --  Adds a with/use clause to this Spec on all generated spec from now on.
+
+   procedure Add_Global_With (Spec : String);
    --  Adds a with/use clause to this Spec on all generated spec from now on.
 
    type Ada_With_Clause is private;
@@ -338,6 +342,10 @@ package Ada_Gen is
    procedure Add_Address_Aspect
      (Elt     : in out Ada_Instance;
       Address : Unsigned);
+
+   procedure Add_Address_Aspect
+     (Elt : in out Ada_Instance;
+      Val : String);
 
    procedure Add_Aspect
      (Elt    : in out Ada_Instance;

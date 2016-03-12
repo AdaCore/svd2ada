@@ -17,41 +17,16 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Strings.Unbounded;          use Ada.Strings;
+package SVD2Ada_Utils is
 
-with DOM.Core;
+   function Executable_Location return String;
 
-with Base_Types;                     use Base_Types;
-with Base_Types.Register_Properties;
+   procedure Set_Use_Boolean_For_Bit (Value : Boolean);
+   function Use_Boolean_For_Bit return Boolean;
 
-with Descriptors.Peripheral;         use Descriptors.Peripheral;
+   procedure Set_Gen_GNAT15 (Value : Boolean);
+   --  Code generation for GNAT GPL 2015
 
---  Decodes and dumps the <device> elements of the SVD file. This is the
---  main entry point for decoding this file.
-package Descriptors.Device is
+   function Gen_GNAT15 return Boolean;
 
-   type Device_T is record
-      Name              : Unbounded.Unbounded_String;
-      Version           : Unbounded.Unbounded_String;
-      Description       : Unbounded.Unbounded_String;
-
-      --  BUS interface properties:
-      --  adressable unit
-      Address_Unit_Bits : Unsigned := 0;
-      --  maximum data bit width accessbile within a single transfer
-      Width             : Unsigned := 0;
-
-      --  REGISTERS properties
-      Reg_Properties    : Register_Properties.Register_Properties_T;
-
-      Peripherals       : Peripheral_Vectors.Vector;
-   end record;
-
-   function Read_Device (Elt      : DOM.Core.Element;
-                         Pkg_Name : String) return Device_T;
-
-   procedure Dump
-     (Device     : Device_T;
-      Output_Dir : String);
-
-end Descriptors.Device;
+end SVD2Ada_Utils;

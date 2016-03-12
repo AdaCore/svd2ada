@@ -1,19 +1,20 @@
 ------------------------------------------------------------------------------
---                              SVD Binding Generator                       --
 --                                                                          --
---                         Copyright (C) 2015, AdaCore                      --
+--                          SVD Binding Generator                           --
 --                                                                          --
---  This tool is free software;  you can redistribute it and/or modify      --
---  it under terms of the  GNU General Public License  as published by the  --
---  Free Software  Foundation;  either version 3,  or (at your  option) any --
---  later version. This library is distributed in the hope that it will be  --
---  useful, but WITHOUT ANY WARRANTY;  without even the implied warranty of --
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                    --
+--                    Copyright (C) 2015-2016, AdaCore                      --
 --                                                                          --
---  You should have received a copy of the GNU General Public License and   --
---  a copy of the GCC Runtime Library Exception along with this program;    --
---  see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see   --
---  <http://www.gnu.org/licenses/>.                                         --
+-- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
+-- under terms of the  GNU General Public License as published  by the Free --
+-- Software  Foundation;  either version 3,  or (at your option) any later  --
+-- version.  SVD2Ada is distributed in the hope that it will be useful, but --
+-- WITHOUT ANY WARRANTY;  without even the  implied warranty of MERCHANTA-  --
+-- BILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public  --
+-- License for  more details.  You should have  received  a copy of the GNU --
+-- General Public License  distributed with SVD2Ada; see file COPYING3.  If --
+-- not, go to http://www.gnu.org/licenses for a complete copy of the        --
+-- license.                                                                 --
+--                                                                          --
 ------------------------------------------------------------------------------
 
 with Interfaces; use Interfaces;
@@ -73,8 +74,7 @@ package Base_Types is
 
    --  Access_Type specfies the pre-defined tokens for the available accesses
    type Access_Type is
-     (Undefined_Access,
-      Read_Only,
+     (Read_Only,
       Write_Only,
       Read_Write,
       Write_Once,
@@ -83,8 +83,7 @@ package Base_Types is
    --  Modified_Write_Values_Type specifies the pre-defined tokens for the
    --  write side effects
    type Modified_Write_Values_Type is
-     (Undefined_Modified_Write_Value,
-      One_To_Clear,
+     (One_To_Clear,
       One_To_Set,
       One_To_Toggle,
       Zero_To_Clear,
@@ -169,11 +168,9 @@ package Base_Types is
    function To_String (Val : Unsigned) return String;
 
    function Target_Type
-     (Size      : Integer;
-      Full_Name : Boolean := True) return String;
+     (Size : Integer) return String;
    function Target_Type
-     (Size      : Unsigned;
-      Full_Name : Boolean := True) return String;
+     (Size : Unsigned) return String;
    --  Returns the name of the type on the target given the size of the int
 
    function Get_Value (Elt : DOM.Core.Element) return String;

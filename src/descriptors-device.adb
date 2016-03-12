@@ -1,19 +1,20 @@
 ------------------------------------------------------------------------------
---                              SVD Binding Generator                       --
 --                                                                          --
---                         Copyright (C) 2015, AdaCore                      --
+--                          SVD Binding Generator                           --
 --                                                                          --
---  This tool is free software;  you can redistribute it and/or modify      --
---  it under terms of the  GNU General Public License  as published by the  --
---  Free Software  Foundation;  either version 3,  or (at your  option) any --
---  later version. This library is distributed in the hope that it will be  --
---  useful, but WITHOUT ANY WARRANTY;  without even the implied warranty of --
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                    --
+--                    Copyright (C) 2015-2016, AdaCore                      --
 --                                                                          --
---  You should have received a copy of the GNU General Public License and   --
---  a copy of the GCC Runtime Library Exception along with this program;    --
---  see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see   --
---  <http://www.gnu.org/licenses/>.                                         --
+-- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
+-- under terms of the  GNU General Public License as published  by the Free --
+-- Software  Foundation;  either version 3,  or (at your option) any later  --
+-- version.  SVD2Ada is distributed in the hope that it will be useful, but --
+-- WITHOUT ANY WARRANTY;  without even the  implied warranty of MERCHANTA-  --
+-- BILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public  --
+-- License for  more details.  You should have  received  a copy of the GNU --
+-- General Public License  distributed with SVD2Ada; see file COPYING3.  If --
+-- not, go to http://www.gnu.org/licenses for a complete copy of the        --
+-- license.                                                                 --
+--                                                                          --
 ------------------------------------------------------------------------------
 
 with Interfaces;            use Interfaces;
@@ -25,6 +26,7 @@ with DOM.Core.Elements;     use DOM.Core.Elements;
 with DOM.Core.Nodes;
 
 with Ada_Gen;               use Ada_Gen;
+with SVD2Ada_Utils;
 
 package body Descriptors.Device is
 
@@ -158,17 +160,19 @@ package body Descriptors.Device is
       --  so on, + the IRQs
       --  Removing 2 from the GNAT IRQ IDs to obtain the actual number of
       --  IRQs (the GNAT ID includes Systick, 0 being reserved).
-      Tab_Size := 16 + Natural (Ints.Last_Element.Value) - 2;
+      Tab_Size := (16 + Natural (Ints.Last_Element.Value) - 2) * 4;
       --  Now essie the proper alignment directive: the table needs to be
       --  aligned on a power of 2.
       Put_Line (ASM, ASCII.HT & ".text");
       Put_Line (ASM, ASCII.HT & ".globl __vectors");
+
       for J in 5 .. 16 loop
          if 2 ** J >= Tab_Size then
             Put_Line (ASM, ASCII.HT & ".p2align" & J'Img);
             exit;
          end if;
       end loop;
+
       Put_Line (ASM, "__vectors:");
       --  Cortex ARMv7-m defined 16 first values
       Put_Line
@@ -179,49 +183,50 @@ package body Descriptors.Device is
          ASCII.HT & ".word   0                    /* stack top address */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 1 Reset */");
+         ASCII.HT & ".word   fault                /* 1 Reset.  */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 2 NMI */");
+         ASCII.HT & ".word   fault                /* 2 NMI. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 3 Hard fault */");
+         ASCII.HT & ".word   fault                /* 3 Hard fault. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 4 Mem manage */");
+         ASCII.HT & ".word   fault                /* 4 Mem manage. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 5 Bus fault */");
+         ASCII.HT & ".word   fault                /* 5 Bus fault. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 6 Usage fault */");
+         ASCII.HT & ".word   fault                /* 6 Usage fault. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 7 reserved */");
+         ASCII.HT & ".word   fault                /* 7 reserved. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 8 reserved */");
+         ASCII.HT & ".word   fault                /* 8 reserved. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 9 reserved */");
+         ASCII.HT & ".word   fault                /* 9 reserved. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 10 reserved */");
+         ASCII.HT & ".word   fault                /* 10 reserved. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   __gnat_sv_call_trap  /* 11 SVCall */");
+         ASCII.HT & ".word   __gnat_sv_call_trap  /* 11 SVCall. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 12 Reserved for debug*/");
+         ASCII.HT &
+           ".word   fault                /* 12 reserved for debug. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   fault                /* 13 reserved */");
+         ASCII.HT & ".word   fault                /* 13 reserved. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   __gnat_pend_sv_trap  /* 14 PendSV */");
+         ASCII.HT & ".word   __gnat_pend_sv_trap  /* 14 PendSV. */");
       Put_Line
         (ASM,
-         ASCII.HT & ".word   __gnat_sys_tick_trap /* 15 Systick */");
+         ASCII.HT & ".word   __gnat_sys_tick_trap /* 15 Systick. */");
 
       Put_Line
         (ASM,
@@ -245,7 +250,7 @@ package body Descriptors.Device is
                  " */");
          else
             Put_Line
-              (ASM, "IRQ" & Unsigned'Image (J - 2) & " */");
+              (ASM, "IRQ" & Unsigned'Image (J - 2) & ". */");
          end if;
       end loop;
 
@@ -286,72 +291,13 @@ package body Descriptors.Device is
       --  This is activated when generating in the Interfaces hierarchy
 
    begin
-      if Length (Device.Version) > 0 then
-         Add (Spec,
-              New_Constant_Value
-                (Id       => "Version",
-                 Align_Id => 0,
-                 Typ      => "String",
-                 Value    => '"' & To_String (Device.Version) & '"'));
-      end if;
-
-      ----------------------------
-      --  Base types definition --
-      ----------------------------
-
-      if Gen_RT_IRQ then
-         Old_Spec := Spec;
-         Spec := New_Spec
-           ("Interfaces.BB_Types",
-            "Base types used to describe register fields",
-            True);
-      end if;
-
-      Base_Types.Base_Package := Id (Spec);
-
-      Add (Spec, New_Comment_Box ("Base type"));
-      Add_No_Check
-        (Spec, New_Type_Scalar (Target_Type (Natural'(32), False), 32));
-      Add_No_Check
-        (Spec, New_Type_Scalar (Target_Type (Natural'(16), False), 16));
-      Add_No_Check
-        (Spec, New_Type_Scalar (Target_Type (Natural'(8), False), 8));
-      Add_No_Check
-        (Spec, New_Type_Scalar (Target_Type (Natural'(1), False), 1));
-
-      for J in 2 .. Device.Width loop
-         if J /= 8 and then J /= 16 and then J /= 32 then
-            Add_No_Check
-              (Spec, New_Type_Scalar (Target_Type (J, False), J));
-         end if;
-      end loop;
-
-      Ada_Gen.Write_Spec (Spec, Output_Dir);
-
-      if Gen_RT_IRQ then
-         Spec := Old_Spec;
-      end if;
-
-      Add (Spec, New_Comment_Box ("Base addresses"));
-      Add (Spec, New_With_Clause ("System", False));
-
-      for Periph of Device.Peripherals loop
-         Add (Spec,
-              New_Constant_Value
-                (Id       => To_String (Periph.Name) & "_Base",
-                 Align_Id => 0,
-                 Typ      => "System.Address",
-                 Value    => "System'To_Address (" &
-                   To_Hex (Periph.Base_Address) & ")"));
-      end loop;
-
-      Ada_Gen.Write_Spec (Spec, Output_Dir);
 
       ----------------
       -- Interrupts --
       ----------------
 
       if Gen_RT_IRQ then
+         Old_Spec := Spec;
          --  When generating stubs for the Interfaces run-time hierarchy, also
          --  generate the Ada.Exceptions.Name file from the interrupts list
          Spec := New_Spec ("Ada.Interrupts.Names",
@@ -362,6 +308,7 @@ package body Descriptors.Device is
               New_Pragma
                 ("Implementation_Defined",
                  "All identifiers in this unit are implementation defined"));
+
          --  Add core interrupts
          Interrupts.Append
            ((Name        => To_Unbounded_String ("Sys_Tick"),
@@ -373,21 +320,24 @@ package body Descriptors.Device is
                   "while it is at position 0 in the manual. The offset of 2 " &
                   "is reflected in s-bbbosu.adb by the First_IRQ constant."),
              Value       => 1));
-         Interrupts.Append
-           ((Name        => To_Unbounded_String ("FPU"),
-             Description => To_Unbounded_String
-               ("Floating Point Unit interrupt"),
-             Value       => 83));
+         if Slice (Device.Description, 1, 5) = "STM32" then
+            Interrupts.Append
+              ((Name        => To_Unbounded_String ("FPU"),
+                Description => To_Unbounded_String
+                  ("FPU global interrupt"),
+                Value       => 83));
+         end if;
 
       else
+         Old_Spec := Spec;
          Spec := New_Child_Spec ("Interrupts",
                                  To_String (Device.Name),
                                  "Definition of the device's interrupts",
                                  False);
+         Add (Spec, New_With_Clause ("Ada.Interrupts", True));
       end if;
 
       Add (Spec, New_Comment_Box ("Interrupts"));
-      Add (Spec, New_With_Clause ("Ada.Interrupts", True));
 
       for Periph of Device.Peripherals loop
          for Int of Periph.Interrupts loop
@@ -424,11 +374,60 @@ package body Descriptors.Device is
          end if;
       end loop;
 
-      Write_Spec (Spec, Output_Dir);
-
       if Gen_RT_IRQ then
+         Ada_Gen.Write_Spec (Spec, Output_Dir);
          Dump_Handler_ASM (Device, Interrupts, Output_Dir);
       end if;
+
+      Spec := Old_Spec;
+
+      ----------------------------
+      --  Base types definition --
+      ----------------------------
+
+      if not SVD2Ada_Utils.Gen_GNAT15 then
+         --  From GNAT GPL 2016 and GNAT Pro 17, Interfaces.Bit_Types is
+         --  defined
+         Ada_Gen.Add_Global_With ("Interfaces.Bit_Types");
+      else
+         Add (Spec, New_Comment_Box ("Base type"));
+         Add_No_Check
+           (Spec, New_Type_Scalar (Target_Type (Natural'(32)), 32));
+         Add_No_Check
+           (Spec, New_Type_Scalar (Target_Type (Natural'(16)), 16));
+         Add_No_Check
+           (Spec, New_Type_Scalar (Target_Type (Natural'(8)), 8));
+         Add_No_Check
+           (Spec, New_Type_Scalar (Target_Type (Natural'(1)), 1));
+
+         for J in 2 .. Device.Width loop
+            if J /= 8 and then J /= 16 and then J /= 32 then
+               Add_No_Check
+                 (Spec, New_Type_Scalar (Target_Type (J), J));
+            end if;
+         end loop;
+      end if;
+
+      -----------------------------------------
+      --  Base addresses for the peripherals --
+      -----------------------------------------
+
+      Add (Spec, New_Comment_Box ("Base addresses"));
+      Add (Spec, New_With_Clause ("System", False));
+
+      for Periph of Device.Peripherals loop
+         Add (Spec,
+              New_Constant_Value
+                (Id       => To_String (Periph.Name) & "_Base",
+                 Align_Id => 0,
+                 Typ      => "System.Address",
+                 Value    => "System'To_Address (" &
+                   To_Hex (Periph.Base_Address) & ")"));
+      end loop;
+
+      Ada_Gen.Write_Spec (Spec, Output_Dir);
+
+      Write_Spec (Spec, Output_Dir);
 
       Peripherals := Device.Peripherals;
 

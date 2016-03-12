@@ -1,28 +1,32 @@
 ------------------------------------------------------------------------------
---                              SVD Binding Generator                       --
 --                                                                          --
---                         Copyright (C) 2015, AdaCore                      --
+--                          SVD Binding Generator                           --
 --                                                                          --
---  This tool is free software;  you can redistribute it and/or modify      --
---  it under terms of the  GNU General Public License  as published by the  --
---  Free Software  Foundation;  either version 3,  or (at your  option) any --
---  later version. This library is distributed in the hope that it will be  --
---  useful, but WITHOUT ANY WARRANTY;  without even the implied warranty of --
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                    --
+--                    Copyright (C) 2015-2016, AdaCore                      --
 --                                                                          --
---  You should have received a copy of the GNU General Public License and   --
---  a copy of the GCC Runtime Library Exception along with this program;    --
---  see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see   --
---  <http://www.gnu.org/licenses/>.                                         --
+-- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
+-- under terms of the  GNU General Public License as published  by the Free --
+-- Software  Foundation;  either version 3,  or (at your option) any later  --
+-- version.  SVD2Ada is distributed in the hope that it will be useful, but --
+-- WITHOUT ANY WARRANTY;  without even the  implied warranty of MERCHANTA-  --
+-- BILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public  --
+-- License for  more details.  You should have  received  a copy of the GNU --
+-- General Public License  distributed with SVD2Ada; see file COPYING3.  If --
+-- not, go to http://www.gnu.org/licenses for a complete copy of the        --
+-- license.                                                                 --
+--                                                                          --
 ------------------------------------------------------------------------------
 
 with Interfaces; use Interfaces;
 
+with Ada.Calendar;
 with Ada.Characters.Handling;
 with Ada.Tags;
 
 with GNAT.Directory_Operations;
 with GNAT.OS_Lib;
+
+with SVD2Ada_Utils;
 
 package body Ada_Gen is
 
@@ -424,7 +428,6 @@ package body Ada_Gen is
    is
       Has_Repr : Boolean := False;
       Value    : Ada_Enum_Value;
-      Inline_Aspect : Boolean := False;
 
    begin
       if not G_Empty_Line then
@@ -445,35 +448,23 @@ package body Ada_Gen is
          Value := Element.Values (J);
 
          if J = Element.Values.First_Index then
-            Ada.Text_IO.Put (File, (1 .. 5 => ' ') & '(');
-         else
-            Ada.Text_IO.Put (File, (1 .. 6 => ' '));
+            Ada.Text_IO.Put_Line (File, (1 .. 5 => ' ') & '(');
          end if;
 
-         Ada.Text_IO.Put (File, To_String (Value.Id));
+         if not Is_Empty (Value.Comment) then
+            Dump
+              (Value.Comment,
+               F      => File,
+               Indent => 2,
+               Inline => False);
+         end if;
+
+         Ada.Text_IO.Put (File, (1 .. 6 => ' ') & To_String (Value.Id));
 
          if J < Element.Values.Last_Index then
-            if Is_Empty (Value.Comment) then
-               Ada.Text_IO.Put_Line (File, ",");
-            else
-               Ada.Text_IO.Put (File, ", ");
-               Dump (Value.Comment,
-                     F      => File,
-                     Indent => 0,
-                     Inline => True);
-            end if;
+            Ada.Text_IO.Put_Line (File, ",");
          else
-            if Is_Empty (Value.Comment) then
-               Ada.Text_IO.Put (File, ")");
-            else
-               Ada.Text_IO.Put (File, " ");
-               Dump (Value.Comment,
-                     F      => File,
-                     Indent => 0,
-                     Inline => True);
-               Ada.Text_IO.Put (File, (1 .. 5 => ' ') & ")");
-               Inline_Aspect := True;
-            end if;
+            Ada.Text_IO.Put (File, ")");
          end if;
 
          if Value.Has_Repr then
@@ -484,11 +475,8 @@ package body Ada_Gen is
       if Element.Aspects.Is_Empty then
          Ada.Text_IO.Put_Line (File, ";");
       else
-         if not Inline_Aspect then
-            Ada.Text_IO.New_Line (File);
-         end if;
-
-         Dump_Aspects (Element.Aspects, File, Inline_Aspect);
+         Ada.Text_IO.New_Line (File);
+         Dump_Aspects (Element.Aspects, File, False);
       end if;
 
       if Has_Repr then
@@ -851,7 +839,7 @@ package body Ada_Gen is
 
       if Length (G_Withed_All) /= 0 then
          Spec.With_Clauses.Insert
-           (To_STring (G_Withed_All), False);
+           (To_STring (G_Withed_All), True);
       end if;
 
       return Spec;
@@ -906,6 +894,16 @@ package body Ada_Gen is
       G_Withed_All := Spec.Id;
    end Add_Global_With;
 
+   ---------------------
+   -- Add_Global_With --
+   ---------------------
+
+   procedure Add_Global_With (Spec : String)
+   is
+   begin
+      G_Withed_All := To_Unbounded_String (Spec);
+   end Add_Global_With;
+
    ---------------
    -- File_Name --
    ---------------
@@ -947,6 +945,19 @@ package body Ada_Gen is
      (Spec       : Ada_Spec;
       Output_Dir : String)
    is
+      function Spec_Id_Starts_With (Ptrn : String) return Boolean;
+
+      -----------------
+      -- Starts_With --
+      -----------------
+
+      function Spec_Id_Starts_With (Ptrn : String) return Boolean
+      is
+      begin
+         return Length (Spec.Id) > Ptrn'Length
+           and then Slice (Spec.Id, 1, Ptrn'Length) = Ptrn;
+      end Spec_Id_Starts_With;
+
       Full      : constant String :=
                     GNAT.OS_Lib.Normalize_Pathname (Output_Dir);
       F_Name    : constant String :=
@@ -965,17 +976,43 @@ package body Ada_Gen is
 
       Ada.Text_IO.Create (F, Ada.Text_IO.Out_File,
                           F_Name);
+
+      if Spec_Id_Starts_With ("Interfaces.")
+        or else Spec_Id_Starts_With ("Ada.")
+      then
+         --  Add the AdaCore copyright notice to the spec.
+         Ada.Text_IO.Put_Line
+           (F, "--");
+         Ada.Text_IO.Put_Line
+           (F, "--  Copyright (C)" &
+              Ada.Calendar.Year (Ada.Calendar.Clock)'Img &
+              ", AdaCore");
+         Ada.Text_IO.Put_Line
+           (F, "--");
+         Ada.Text_IO.New_Line (F);
+      end if;
+
       Ada.Text_IO.Put_Line
         (F,
-         "--  Automatically generated from " & To_String (G_Input_File) &
-           " by SVD2Ada");
+         "--  This spec has been automatically generated from " &
+           To_String (G_Input_File));
       Ada.Text_IO.Put_Line
         (F, "--  see https://github.com/simonjwright/svd2ada");
       Ada.Text_IO.New_Line (F);
+      G_Empty_Line := True;
 
       if Spec.Preelaborated then
+         if SVD2Ada_Utils.Gen_GNAT15 then
+            --  In GNAT GPL 2015 or GNAT Pro 7.4, using the pragma
+            --  No_Elaboration_Code_All will not work because of dependencies
+            --  over System.Unsigned_Types. So we stick with the restriction
+            --  No_Elaboration_Code here.
+            Ada.Text_IO.Put_Line
+              (F, "pragma Restrictions (No_Elaboration_Code);");
+         end if;
+
          Ada.Text_IO.Put_Line
-           (F, "pragma Restrictions (No_Elaboration_Code);");
+           (F, "pragma Ada_2012;");
          Ada.Text_IO.New_Line (F);
          G_Empty_Line := True;
       end if;
@@ -1023,7 +1060,15 @@ package body Ada_Gen is
 
       Ada.Text_IO.Put_Line (F, "package " & To_String (Spec.Id) & " is");
       if Spec.Preelaborated then
-         Ada.Text_IO.Put_Line (F, "   pragma Preelaborate;");
+         Ada.Text_IO.Put_Line
+           (F, "   pragma Preelaborate;");
+         if not SVD2Ada_Utils.Gen_GNAT15 then
+            --  See above: from GNAT GPL 2016 or GNAT Pro 17, we can now use
+            --  pragma No_Elaboration_Code_All to ensure that we don't rely
+            --  on runtime intiialization when using the generated packages.
+            Ada.Text_IO.Put_Line
+              (F, "   pragma No_Elaboration_Code_All;");
+         end if;
       end if;
       G_Empty_Line := False;
 
@@ -2028,6 +2073,18 @@ package body Ada_Gen is
    begin
       Elt.Aspects.Append ("Address => System'To_Address (" &
                             To_Hex (Address) & ")");
+   end Add_Address_Aspect;
+
+   ------------------------
+   -- Add_Address_Aspect --
+   ------------------------
+
+   procedure Add_Address_Aspect
+     (Elt : in out Ada_Instance;
+      Val : String)
+   is
+   begin
+      Elt.Aspects.Append ("Address => " & Val);
    end Add_Address_Aspect;
 
    ----------------

@@ -1,19 +1,20 @@
 ------------------------------------------------------------------------------
---                              SVD Binding Generator                       --
 --                                                                          --
---                         Copyright (C) 2015, AdaCore                      --
+--                          SVD Binding Generator                           --
 --                                                                          --
---  This tool is free software;  you can redistribute it and/or modify      --
---  it under terms of the  GNU General Public License  as published by the  --
---  Free Software  Foundation;  either version 3,  or (at your  option) any --
---  later version. This library is distributed in the hope that it will be  --
---  useful, but WITHOUT ANY WARRANTY;  without even the implied warranty of --
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                    --
+--                    Copyright (C) 2015-2016, AdaCore                      --
 --                                                                          --
---  You should have received a copy of the GNU General Public License and   --
---  a copy of the GCC Runtime Library Exception along with this program;    --
---  see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see   --
---  <http://www.gnu.org/licenses/>.                                         --
+-- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
+-- under terms of the  GNU General Public License as published  by the Free --
+-- Software  Foundation;  either version 3,  or (at your option) any later  --
+-- version.  SVD2Ada is distributed in the hope that it will be useful, but --
+-- WITHOUT ANY WARRANTY;  without even the  implied warranty of MERCHANTA-  --
+-- BILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public  --
+-- License for  more details.  You should have  received  a copy of the GNU --
+-- General Public License  distributed with SVD2Ada; see file COPYING3.  If --
+-- not, go to http://www.gnu.org/licenses for a complete copy of the        --
+-- license.                                                                 --
+--                                                                          --
 ------------------------------------------------------------------------------
 
 with Interfaces;         use Interfaces;
@@ -44,6 +45,44 @@ package body Descriptors.Register is
       Derived_From : constant String :=
                        Elements.Get_Attribute (Elt, "derivedFrom");
 
+      function Compute_Name return Unbounded.Unbounded_String is
+      begin
+         if Ret.Dim = 0 then
+            return Ret.Xml_Id;
+         else
+            declare
+               Name : constant String := Unbounded.To_String (Ret.Xml_Id);
+            begin
+               if Name'Length > 4
+                 and then Name (Name'Last - 3 .. Name'Last) = "[%s]"
+               then
+                  return Unbounded.To_Unbounded_String
+                      (Name (Name'First .. Name'Last - 4));
+
+               elsif Name'Length > 3
+                 and then Name (Name'Last - 2 .. Name'Last) = "_%s"
+               then
+                  return Unbounded.To_Unbounded_String
+                      (Name (Name'First .. Name'Last - 3));
+
+               elsif Name'Length > 2
+                 and then Name (Name'Last - 1 .. Name'Last) = "%s"
+               then
+                  return Unbounded.To_Unbounded_String
+                      (Name (Name'First .. Name'Last - 2));
+
+               elsif Name'Length > 0 then
+                  Ada.Text_IO.Put_Line
+                    ("*** WARNING: Unsupported register " &
+                       "array naming schema: " & Name);
+                  return Ret.Xml_Id;
+               else
+                  return Ret.Xml_Id;
+               end if;
+            end;
+         end if;
+      end Compute_Name;
+
    begin
       Ret.Reg_Properties := Reg_Properties;
 
@@ -52,8 +91,9 @@ package body Descriptors.Register is
             Found : Boolean := False;
          begin
             for Oth of Vec loop
-               if Unbounded.To_String (Oth.Name) = Derived_From then
+               if Unbounded.To_String (Oth.Xml_Id) = Derived_From then
                   Ret := Oth.all;
+                  Ret.Name := Unbounded.Null_Unbounded_String;
                   Found := True;
                   exit;
                end if;
@@ -73,26 +113,8 @@ package body Descriptors.Register is
                Tag   : String renames Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
-                  if Ret.Dim = 0 then
-                     Ret.Name := Get_Value (Child);
-                  else
-                     declare
-                        Name : String renames Get_Value (Child);
-                     begin
-                        if Name'Length > 4
-                          and then Name (Name'Last - 3 .. Name'Last) = "[%s]"
-                        then
-                           Ret.Name :=
-                             Unbounded.To_Unbounded_String
-                               (Name (Name'First .. Name'Last - 4));
-                        elsif Name'Length > 0 then
-                           Ada.Text_IO.Put_Line
-                             ("*** WARNING: Unsupported register " &
-                                "naming schema: " & Name);
-                        end if;
-                     end;
-                  end if;
-
+                  Ret.Xml_Id := Get_Value (Child);
+                  Ret.Name := Compute_Name;
                   Ret.Type_Name := Ret.Name;
 
                elsif Tag = "displayName" then
@@ -132,7 +154,9 @@ package body Descriptors.Register is
                            Field :=
                              Read_Field
                                (Element (Nodes.Item (Child_List, K)),
-                                Ret.Fields);
+                                Ret.Fields,
+                                Ret.Reg_Properties.Reg_Access,
+                                Ret.Read_Action);
                            if not Ret.Fields.Contains (Field) then
                               Ret.Fields.Append (Field);
                            end if;
@@ -142,21 +166,7 @@ package body Descriptors.Register is
 
                elsif Tag = "dim" then
                   Ret.Dim := Get_Value (Child);
-                  declare
-                     Name : String renames Unbounded.To_String (Ret.Name);
-                  begin
-                     if Name'Length > 4
-                       and then Name (Name'Last - 3 .. Name'Last) = "[%s]"
-                     then
-                        Ret.Name :=
-                          Unbounded.To_Unbounded_String
-                            (Name (Name'First .. Name'Last - 4));
-                     elsif Name'Length > 0 then
-                        Ada.Text_IO.Put_Line
-                          ("*** WARNING: Unsupported register naming schema: "
-                           & Name);
-                     end if;
-                  end;
+                  Ret.Name := Compute_Name;
 
                elsif Tag = "dimIncrement" then
                   Ret.Dim_Increment := Get_Value (Child);
@@ -411,7 +421,9 @@ package body Descriptors.Register is
    -- Dump --
    ----------
 
-   procedure Dump (Spec : in out Ada_Gen.Ada_Spec; Reg : Register_Access)
+   procedure Dump
+     (Spec : in out Ada_Gen.Ada_Spec;
+      Reg  : Register_Access)
    is
       use Ada.Strings.Unbounded;
       use type Ada.Containers.Count_Type;
@@ -421,24 +433,20 @@ package body Descriptors.Register is
          return;
       end if;
 
-      if Field_Vectors.Length (Reg.Fields) = 1
-        and then Reg.Fields.First_Element.Size = Reg.Reg_Properties.Size
+      if (Reg.Fields.Length = 1
+          and then Reg.Fields.First_Element.Size = Reg.Reg_Properties.Size)
+        or else Reg.Fields.Is_Empty
       then
          --  Don't generate anything here: we use a base type
          Reg.Ada_type :=
            To_Unbounded_String
-             (Target_Type (Integer (Reg.Reg_Properties.Size)));
+             (Target_Type (Reg.Reg_Properties.Size));
 
          if Reg.Dim > 0 then
             --  Just generate a comment to document the array that's going
             --  to be generated
             Add (Spec, New_Comment (To_String (Reg.Description)));
          end if;
-
-      elsif Reg.Fields.Is_Empty then
-         Reg.Ada_type :=
-           To_Unbounded_String
-             (Target_Type (Integer (Reg.Reg_Properties.Size)));
 
       else
          declare
@@ -454,7 +462,7 @@ package body Descriptors.Register is
 
             Descriptors.Field.Dump
               (Spec,
-               To_String (Reg.Name),
+               Reg,
                Rec,
                Reg.Fields,
                Reg.Reg_Properties);

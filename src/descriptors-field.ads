@@ -1,19 +1,20 @@
 ------------------------------------------------------------------------------
---                              SVD Binding Generator                       --
 --                                                                          --
---                         Copyright (C) 2015, AdaCore                      --
+--                          SVD Binding Generator                           --
 --                                                                          --
---  This tool is free software;  you can redistribute it and/or modify      --
---  it under terms of the  GNU General Public License  as published by the  --
---  Free Software  Foundation;  either version 3,  or (at your  option) any --
---  later version. This library is distributed in the hope that it will be  --
---  useful, but WITHOUT ANY WARRANTY;  without even the implied warranty of --
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                    --
+--                    Copyright (C) 2015-2016, AdaCore                      --
 --                                                                          --
---  You should have received a copy of the GNU General Public License and   --
---  a copy of the GCC Runtime Library Exception along with this program;    --
---  see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see   --
---  <http://www.gnu.org/licenses/>.                                         --
+-- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
+-- under terms of the  GNU General Public License as published  by the Free --
+-- Software  Foundation;  either version 3,  or (at your option) any later  --
+-- version.  SVD2Ada is distributed in the hope that it will be useful, but --
+-- WITHOUT ANY WARRANTY;  without even the  implied warranty of MERCHANTA-  --
+-- BILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public  --
+-- License for  more details.  You should have  received  a copy of the GNU --
+-- General Public License  distributed with SVD2Ada; see file COPYING3.  If --
+-- not, go to http://www.gnu.org/licenses for a complete copy of the        --
+-- license.                                                                 --
+--                                                                          --
 ------------------------------------------------------------------------------
 
 with Ada.Containers.Vectors;
@@ -25,6 +26,7 @@ with Ada_Gen;
 with Base_Types;                     use Base_Types;
 with Base_Types.Register_Properties; use Base_Types.Register_Properties;
 
+limited with Descriptors.Register;
 with Descriptors.Enumerate;
 
 --  Decodes the <field> elements of the SVD file.
@@ -35,9 +37,10 @@ package Descriptors.Field is
       Description      : Unbounded.Unbounded_String;
       LSB              : Unsigned;
       Size             : Unsigned;
-      Acc              : Access_Type := Undefined_Access;
+      Acc              : Access_Type;
       Mod_Write_Values : Modified_Write_Values_Type :=
-                           Undefined_Modified_Write_Value;
+                           Modify;
+      Read_Action      : Read_Action_Type := Undefined_Read_Action;
       Enums            : Descriptors.Enumerate.Enumerate_Vectors.Vector;
    end record;
 
@@ -48,19 +51,22 @@ package Descriptors.Field is
                    Unbounded.Null_Unbounded_String,
                    0,
                    0,
-                   Undefined_Access,
-                   Undefined_Modified_Write_Value,
-                   Descriptors.Enumerate.Enumerate_Vectors.Empty_Vector);
+                   Read_Write,
+                   others => <>);
 
    package Field_Vectors is new Ada.Containers.Vectors
      (Positive, Field_T);
 
-   function Read_Field (Elt : DOM.Core.Element;
-                        Vec : Field_Vectors.Vector) return Field_T;
+   function Read_Field
+     (Elt            : DOM.Core.Element;
+      Vec            : Field_Vectors.Vector;
+      Default_Access : Access_Type;
+      Default_Read   : Read_Action_Type)
+      return Field_T;
 
    procedure Dump
      (Spec         : in out Ada_Gen.Ada_Spec;
-      Reg_Name     : String;
+      Reg          : Descriptors.Register.Register_Access;
       Rec          : in out Ada_Gen.Ada_Type_Record;
       Reg_Fields   : Field_Vectors.Vector;
       Properties   : Register_Properties_T);
