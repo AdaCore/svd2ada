@@ -970,7 +970,7 @@ package body Ada_Gen is
          "--  Automatically generated from " & To_String (G_Input_File) &
            " by SVD2Ada");
       Ada.Text_IO.Put_Line
-        (F, "--  see https://github.com/AdaCore/svd2ada");
+        (F, "--  see https://github.com/simonjwright/svd2ada");
       Ada.Text_IO.New_Line (F);
 
       if Spec.Preelaborated then

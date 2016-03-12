@@ -327,7 +327,6 @@ package body Descriptors.Device is
       end loop;
 
       Ada_Gen.Write_Spec (Spec, Output_Dir);
-      Ada_Gen.Add_Global_With (Spec);
 
       if Gen_RT_IRQ then
          Spec := Old_Spec;
