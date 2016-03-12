@@ -21,6 +21,7 @@ with Interfaces; use Interfaces;
 
 with Ada.Calendar;
 with Ada.Characters.Handling;
+with Ada.Strings.Fixed;
 with Ada.Tags;
 
 with GNAT.Directory_Operations;
@@ -1304,7 +1305,9 @@ package body Ada_Gen is
          return Ret (Ret'First .. Idx - 1);
       end Strip_String;
    begin
-      return (Comment => To_Unbounded_String (Strip_String (Comment)));
+      return (Comment => To_Unbounded_String
+              (Strip_String
+                 (Ada.Strings.Fixed.Trim (Comment, Ada.Strings.Both))));
    end New_Comment;
 
    ---------------------
