@@ -406,7 +406,7 @@ package body Descriptors.Device is
          for J in 2 .. Device.Width loop
             if J /= 8 and then J /= 16 and then J /= 32 then
                Add_No_Check
-                 (Spec, New_Type_Scalar (Target_Type (J), J));
+                 (Spec, New_Type_Scalar (Target_Type (J, False), J));
             end if;
          end loop;
       end if;
