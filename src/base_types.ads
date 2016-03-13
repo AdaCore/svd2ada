@@ -168,9 +168,8 @@ package Base_Types is
    function To_String (Val : Unsigned) return String;
 
    function Target_Type
-     (Size : Integer) return String;
-   function Target_Type
-     (Size : Unsigned) return String;
+     (Size            : Unsigned;
+      Fully_Qualified : Boolean := True) return String;
    --  Returns the name of the type on the target given the size of the int
 
    function Get_Value (Elt : DOM.Core.Element) return String;
