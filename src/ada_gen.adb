@@ -1280,18 +1280,18 @@ package body Ada_Gen is
    is
       function Strip_String (Str : String) return String
       is
-         Ret     : String := Str;
-         Idx     : Natural := Str'First;
+         Ret     : String (Str'Range);
+         Idx     : Natural := Ret'First;
          Prev    : character := ' ';
          Current : Character := ' ';
       begin
-         for J in Comment'Range loop
-            if Comment (J) = ASCII.CR then
-               null;
-            elsif Comment (J) = ASCII.LF then
+         for J in Str'Range loop
+            if Str (J) = ASCII.CR
+              or else Str (J) = ASCII.LF
+            then
                Current := ' ';
             else
-               Current := Comment (J);
+               Current := Str (J);
             end if;
 
             if Current /= ' ' or else Prev /= ' ' then
