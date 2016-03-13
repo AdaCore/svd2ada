@@ -889,16 +889,6 @@ package body Ada_Gen is
    -- Add_Global_With --
    ---------------------
 
-   procedure Add_Global_With (Spec : Ada_Spec)
-   is
-   begin
-      G_Withed_All := Spec.Id;
-   end Add_Global_With;
-
-   ---------------------
-   -- Add_Global_With --
-   ---------------------
-
    procedure Add_Global_With (Spec : String)
    is
    begin
