@@ -45,6 +45,12 @@ package body Descriptors.Device is
       Ret  : Device_T;
 
    begin
+      if Pkg_Name'Length > 0 then
+         Ret.Name :=
+           Ada.Strings.Unbounded.To_Unbounded_String (Pkg_Name);
+         Base_Types.Base_Package := Ret.Name;
+      end if;
+
       for J in 0 .. Nodes.Length (List) - 1 loop
          if Nodes.Node_Type (Nodes.Item (List, J)) = Element_Node then
             declare
@@ -52,12 +58,10 @@ package body Descriptors.Device is
                Tag   : String renames Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
-                  if Pkg_Name'Length > 0 then
-                     Ret.Name :=
-                       Ada.Strings.Unbounded.To_Unbounded_String (Pkg_Name);
-                  else
+                  if Ada.Strings.Unbounded.Length (Ret.Name) = 0 then
                      Ret.Name := Get_Value (Child);
                   end if;
+
                   Base_Types.Base_Package := Ret.Name;
 
                elsif Tag = "version" then
