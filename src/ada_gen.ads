@@ -58,9 +58,6 @@ package Ada_Gen is
      (Spec       : Ada_Spec;
       Output_Dir : String);
 
-   procedure Add_Global_With (Spec : Ada_Spec);
-   --  Adds a with/use clause to this Spec on all generated spec from now on.
-
    procedure Add_Global_With (Spec : String);
    --  Adds a with/use clause to this Spec on all generated spec from now on.
 
