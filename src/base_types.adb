@@ -33,36 +33,27 @@ package body Base_Types is
    -----------------
 
    function Target_Type
-     (Size : Integer) return String
+     (Size            : Unsigned;
+      Fully_Qualified : Boolean := True) return String
    is
       Pkg : constant String :=
-              (if SVD2Ada_Utils.Gen_GNAT15
-               then Ada.Strings.Unbounded.To_String (Base_Package)
-               else "Interfaces.Bit_Types");
+              (if not Fully_Qualified then ""
+               elsif SVD2Ada_Utils.Gen_GNAT15
+               then Ada.Strings.Unbounded.To_String (Base_Package) & "."
+               else "Interfaces.Bit_Types.");
 
    begin
       if Size = 1 then
-         return Pkg & ".Bit";
+         return Pkg & "Bit";
       elsif Size = 8 then
-         return Pkg & ".Byte";
+         return Pkg & "Byte";
       elsif Size = 16 then
-         return Pkg & ".Short";
+         return Pkg & "Short";
       elsif Size = 32 then
-         return Pkg & ".Word";
+         return Pkg & "Word";
       else
-         return Pkg & ".UInt" & To_String (Size);
+         return Pkg & "UInt" & To_String (Size);
       end if;
-   end Target_Type;
-
-   -----------------
-   -- Target_Type --
-   -----------------
-
-   function Target_Type
-     (Size : Unsigned) return String
-   is
-   begin
-      return Target_Type (Integer (Size));
    end Target_Type;
 
    ---------

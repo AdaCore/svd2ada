@@ -395,13 +395,13 @@ package body Descriptors.Device is
       else
          Add (Spec, New_Comment_Box ("Base type"));
          Add_No_Check
-           (Spec, New_Type_Scalar (Target_Type (Natural'(32)), 32));
+           (Spec, New_Type_Scalar (Target_Type (32, False), 32));
          Add_No_Check
-           (Spec, New_Type_Scalar (Target_Type (Natural'(16)), 16));
+           (Spec, New_Type_Scalar (Target_Type (16, False), 16));
          Add_No_Check
-           (Spec, New_Type_Scalar (Target_Type (Natural'(8)), 8));
+           (Spec, New_Type_Scalar (Target_Type (8, False), 8));
          Add_No_Check
-           (Spec, New_Type_Scalar (Target_Type (Natural'(1)), 1));
+           (Spec, New_Type_Scalar (Target_Type (1, False), 1));
 
          for J in 2 .. Device.Width loop
             if J /= 8 and then J /= 16 and then J /= 32 then
