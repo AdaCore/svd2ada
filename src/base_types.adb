@@ -22,6 +22,8 @@ with DOM.Core.Elements;
 
 with Ada.Text_IO;
 
+with SVD2Ada_Utils;
+
 package body Base_Types is
 
    package Unsigned_IO is new Ada.Text_IO.Modular_IO (Unsigned);
@@ -33,17 +35,22 @@ package body Base_Types is
    function Target_Type
      (Size : Integer) return String
    is
+      Pkg : constant String :=
+              (if SVD2Ada_Utils.Gen_GNAT15
+               then Ada.Strings.Unbounded.To_String (Base_Package)
+               else "Interfaces.Bit_Types");
+
    begin
       if Size = 1 then
-         return "Bit";
+         return Pkg & ".Bit";
       elsif Size = 8 then
-         return "Byte";
+         return Pkg & ".Byte";
       elsif Size = 16 then
-         return "Short";
+         return Pkg & ".Short";
       elsif Size = 32 then
-         return "Word";
+         return Pkg & ".Word";
       else
-         return "UInt" & To_String (Size);
+         return Pkg & ".UInt" & To_String (Size);
       end if;
    end Target_Type;
 

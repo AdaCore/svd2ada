@@ -840,7 +840,7 @@ package body Ada_Gen is
 
       if Length (G_Withed_All) /= 0 then
          Spec.With_Clauses.Insert
-           (To_STring (G_Withed_All), True);
+           (To_STring (G_Withed_All), False);
       end if;
 
       return Spec;
@@ -1597,6 +1597,7 @@ package body Ada_Gen is
             Has_Repr => Has_Repr,
             Repr     => Repr,
             Comment  => New_Comment (Comment));
+
       else
          Enum_Value :=
            (Id       => Protect_Keywords (Camel_C),
