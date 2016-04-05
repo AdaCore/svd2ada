@@ -333,7 +333,8 @@ package body Descriptors.Register is
         and then R1.Address_Offset = R2.Address_Offset
         and then R1.Reg_Properties.Size = R2.Reg_Properties.Size
         and then R1.Dim = R2.Dim
-        and then R1.Dim_Increment = R2.Dim_Increment;
+        and then R1.Dim_Increment = R2.Dim_Increment
+        and then R1.Fields = R2.Fields;
    end Equal;
 
    -----------------------
@@ -390,7 +391,7 @@ package body Descriptors.Register is
       end if;
 
       for J in R1.Fields.First_Index .. R1.Fields.Last_Index loop
-         if Field_T'(R1.Fields (J)) /= R2.Fields (J) then
+         if R1.Fields.Element (J) /= R2.Fields.Element (J) then
             return Unbounded.Null_Unbounded_String;
          end if;
       end loop;
