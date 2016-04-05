@@ -35,49 +35,49 @@ package body Descriptors.Register is
 
    function Read_Register
      (Elt            : DOM.Core.Element;
+      Prepend        : Unbounded.Unbounded_String;
+      Append         : Unbounded.Unbounded_String;
       Reg_Properties : Register_Properties_T;
       Vec            : in out Register_Vectors.Vector) return Register_Access
    is
       use DOM.Core;
+      use type Unbounded.Unbounded_String;
       List         : constant Node_List := Nodes.Child_Nodes (Elt);
       Ret          : Register_T;
       Derived_From : constant String :=
                        Elements.Get_Attribute (Elt, "derivedFrom");
 
-      function Compute_Name return Unbounded.Unbounded_String is
+      function Compute_Name return Unbounded.Unbounded_String
+      is
       begin
          if Ret.Dim = 0 then
             return Ret.Xml_Id;
          else
             declare
                Name : constant String := Unbounded.To_String (Ret.Xml_Id);
+               Ret  : String (Name'Range);
+               Idx  : Natural;
             begin
-               if Name'Length > 4
-                 and then Name (Name'Last - 3 .. Name'Last) = "[%s]"
-               then
-                  return Unbounded.To_Unbounded_String
-                      (Name (Name'First .. Name'Last - 4));
+               Idx := Ret'First - 1;
 
-               elsif Name'Length > 3
-                 and then Name (Name'Last - 2 .. Name'Last) = "_%s"
-               then
-                  return Unbounded.To_Unbounded_String
-                      (Name (Name'First .. Name'Last - 3));
+               for J in Name'Range loop
+                  if Name (J) = '['
+                    or else Name (J) = ']'
+                  then
+                     null;
+                  elsif J < Name'Last and then Name (J .. J + 1) = "%s" then
+                     null;
+                  else
+                     Idx := Idx + 1;
+                     Ret (Idx) := Name (J);
+                  end if;
+               end loop;
 
-               elsif Name'Length > 2
-                 and then Name (Name'Last - 1 .. Name'Last) = "%s"
-               then
-                  return Unbounded.To_Unbounded_String
-                      (Name (Name'First .. Name'Last - 2));
-
-               elsif Name'Length > 0 then
-                  Ada.Text_IO.Put_Line
-                    ("*** WARNING: Unsupported register " &
-                       "array naming schema: " & Name);
-                  return Ret.Xml_Id;
-               else
-                  return Ret.Xml_Id;
+               if Idx in Ret'Range and then Ret (Idx) = '_' then
+                  Idx := Idx - 1;
                end if;
+
+               return Unbounded.To_Unbounded_String (Ret (Ret'First .. Idx));
             end;
          end if;
       end Compute_Name;
@@ -165,7 +165,10 @@ package body Descriptors.Register is
 
                elsif Tag = "dim" then
                   Ret.Dim := Get_Value (Child);
-                  Ret.Name := Compute_Name;
+
+                  if Unbounded.Length (Ret.Xml_Id) > 0 then
+                     Ret.Name := Compute_Name;
+                  end if;
 
                elsif Tag = "dimIncrement" then
                   Ret.Dim_Increment := Get_Value (Child);
