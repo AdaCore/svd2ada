@@ -28415,6 +28415,13 @@
               <bitOffset>16</bitOffset>
               <bitWidth>8</bitWidth>
               <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>PASSWD</name>
+                  <description>Writing any other value in this field aborts the write operation.Always reads as 0.</description>
+                  <value>0x37</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>MOSCSEL</name>
