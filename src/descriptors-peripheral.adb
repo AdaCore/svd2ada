@@ -149,6 +149,8 @@ package body Descriptors.Peripheral is
                            Register :=
                              Read_Register
                                (Element (Nodes.Item (Child_List, K)),
+                                Ret.Prepend_To_Name,
+                                Ret.Append_To_Name,
                                 Ret.Reg_Properties,
                                 Ret.Registers);
                            Insert_Register (Ret, Register);

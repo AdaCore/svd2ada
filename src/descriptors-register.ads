@@ -91,6 +91,8 @@ package Descriptors.Register is
 
    function Read_Register
      (Elt            : DOM.Core.Element;
+      Prepend        : Unbounded.Unbounded_String;
+      Append         : Unbounded.Unbounded_String;
       Reg_Properties : Register_Properties_T;
       Vec            : in out Register_Vectors.Vector)
       return Register_Access;

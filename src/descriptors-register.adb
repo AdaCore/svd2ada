@@ -114,7 +114,7 @@ package body Descriptors.Register is
                if Tag = "name" then
                   Ret.Xml_Id := Get_Value (Child);
                   Ret.Name := Compute_Name;
-                  Ret.Type_Name := Ret.Name;
+                  Ret.Type_Name := Prepend & Ret.Name & Append;
 
                elsif Tag = "displayName" then
                   Ret.Display_Name := Get_Value (Child);
