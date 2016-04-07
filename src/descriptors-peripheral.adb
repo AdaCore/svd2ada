@@ -357,7 +357,6 @@ package body Descriptors.Peripheral is
          Add (Spec, Inst);
       end;
 
-      Ada.Text_IO.Put_Line ("Write to " & Output_Dir);
       Write_Spec (Spec, Output_Dir);
    end Dump;
 

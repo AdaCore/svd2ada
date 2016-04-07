@@ -332,7 +332,10 @@ package body Descriptors.Device is
                   "while it is at position 0 in the manual. The offset of 2 " &
                   "is reflected in s-bbbosu.adb by the First_IRQ constant."),
              Value       => 1));
+
          if Slice (Device.Description, 1, 5) = "STM32" then
+            --  ??? Workaround for the STM32F* svd files that do not define the
+            --  FPU Interrupt
             Interrupts.Append
               ((Name        => To_Unbounded_String ("FPU"),
                 Description => To_Unbounded_String
