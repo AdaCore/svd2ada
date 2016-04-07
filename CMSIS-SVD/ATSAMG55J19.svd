@@ -55568,8 +55568,9 @@
           <dim>6</dim>
           <dimIncrement>4</dimIncrement>
           <dimIndex>0-5</dimIndex>
-          <name>CSR[%s]</name>
+          <name>CSR_CONTROL_BULK[%s]</name>
           <description>Endpoint Control and Status Register</description>
+          <alternateGroup>CONTROL_BULK</alternateGroup>
           <addressOffset>0x00000030</addressOffset>
           <size>32</size>
           <access>read-write</access>
@@ -55698,7 +55699,10 @@
           </fields>
         </register>
         <register>
-          <name>CSR0_ISOCHRONOUS</name>
+          <dim>6</dim>
+          <dimIncrement>4</dimIncrement>
+          <dimIndex>0-5</dimIndex>
+          <name>CSR_ISOCHRONOUS[%s]</name>
           <description>Endpoint Control and Status Register</description>
           <alternateGroup>ISOCHRONOUS</alternateGroup>
           <addressOffset>0x00000030</addressOffset>
