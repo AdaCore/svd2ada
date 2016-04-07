@@ -80,6 +80,15 @@ package body Descriptors.Device is
                   Register_Properties.Read_Register_Property
                     (Child, Ret.Reg_Properties);
 
+               elsif Tag = "vendor" then
+                  null; --  No need to decode, at least for now
+
+               elsif Tag = "series" then
+                  null; --  No need to decode, at least for now
+
+               elsif Tag = "cpu" then
+                  null; --  No need to decode, at least for now
+
                elsif Tag = "peripherals" then
                   declare
                      Child_List : constant Node_List :=
