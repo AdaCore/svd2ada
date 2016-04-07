@@ -4661,6 +4661,10 @@
         <size>0x200</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>SPI5</name>
+        <value>21</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -5707,6 +5711,10 @@
         <size>0x200</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>TWI5</name>
+        <value>21</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -9928,6 +9936,10 @@
         <size>0x128</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>SPI0</name>
+        <value>8</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -10974,6 +10986,10 @@
         <size>0x128</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>USART0</name>
+        <value>8</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -22419,6 +22435,10 @@
         <size>0x4000</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>SPI3</name>
+        <value>19</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -23465,6 +23485,10 @@
         <size>0x4000</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>TWI3</name>
+        <value>19</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -27686,6 +27710,10 @@
         <size>0x4000</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>SPI4</name>
+        <value>20</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -28732,6 +28760,10 @@
         <size>0x4000</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>TWI4</name>
+        <value>20</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -32953,6 +32985,10 @@
         <size>0x4000</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>SPI1</name>
+        <value>9</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -33999,6 +34035,10 @@
         <size>0x4000</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>TWI1</name>
+        <value>9</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -38220,6 +38260,10 @@
         <size>0x4000</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>SPI2</name>
+        <value>14</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -39266,6 +39310,10 @@
         <size>0x4000</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>TWI2</name>
+        <value>14</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -45029,6 +45077,10 @@
         <size>0x128</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>SPI7</name>
+        <value>7</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -46075,6 +46127,10 @@
         <size>0x128</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>TWI7</name>
+        <value>7</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -52465,6 +52521,10 @@
         <size>0x128</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>SPI6</name>
+        <value>22</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -53511,6 +53571,10 @@
         <size>0x128</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>TWI6</name>
+        <value>22</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -84556,6 +84620,10 @@
         <size>0x10</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>FPU</name>
+        <value>30</value>
+      </interrupt>
       <registers>
         <register>
           <name>FPCCR</name>
@@ -87870,10 +87938,6 @@
         <size>0xD38</size>
         <usage>registers</usage>
       </addressBlock>
-      <interrupt>
-        <name>FPU</name>
-        <value>30</value>
-      </interrupt>
       <!--interrupt>
         <name>INT_Hard_Fault</name>
         <value>3</value>
