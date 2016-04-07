@@ -46,6 +46,10 @@ package body Descriptors.Register is
       Derived_From : constant String :=
                        Elements.Get_Attribute (Elt, "derivedFrom");
 
+      ------------------
+      -- Compute_Name --
+      ------------------
+
       function Compute_Name return Unbounded.Unbounded_String
       is
       begin
@@ -56,16 +60,23 @@ package body Descriptors.Register is
                Name : constant String := Unbounded.To_String (Ret.Xml_Id);
                Ret  : String (Name'Range);
                Idx  : Natural;
+               Skip : Boolean := False;
             begin
                Idx := Ret'First - 1;
 
                for J in Name'Range loop
-                  if Name (J) = '['
+                  if Skip then
+                     Skip := False;
+
+                  elsif Name (J) = '['
                     or else Name (J) = ']'
                   then
                      null;
+
                   elsif J < Name'Last and then Name (J .. J + 1) = "%s" then
-                     null;
+                     --  Skip the next character (e.g. 's')
+                     Skip := True;
+
                   else
                      Idx := Idx + 1;
                      Ret (Idx) := Name (J);
