@@ -73,8 +73,11 @@ package body Base_Types is
 
    function "<" (I1, I2 : Interrupt_Type) return Boolean
    is
+      use Unbounded;
    begin
-      return I1.Value < I2.Value;
+      return (if I1.Value = I2.Value
+              then To_String (I1.Name) < To_String (I2.Name)
+              else I1.Value < I2.Value);
    end "<";
 
    ------------
