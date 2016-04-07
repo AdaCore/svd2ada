@@ -404,7 +404,7 @@ package body Descriptors.Peripheral is
       end loop;
 
       for Periph of Sorted loop
-         if Periph.Gen_Helper /= Null_Helper then
+         if Periph.Gen_Helper = Null_Helper then
             Dump_Aliased (Spec, Periph.Registers);
          end if;
       end loop;

@@ -230,6 +230,9 @@ package body Descriptors.Register is
                Prefix : constant String := To_String (Reg.Name);
                Last   : Natural := Prefix'Last;
             begin
+               --  First loop: look of another register at the same offset
+               --  If found, mark the current register as overlapping, and find
+               --  a prefix common to all overlapping registers.
                for K in J + 1 .. Reg_Set.Last_Index loop
                   if Reg_Set (K).Address_Offset = Reg.Address_Offset then
                      Reg.Is_Overlapping := True;
@@ -251,6 +254,9 @@ package body Descriptors.Register is
                   end if;
                end loop;
 
+               --  Second loop: if we found overlapping registers, then mark
+               --  all with the Is_Overlapping flag, and assign them an enum
+               --  value
                if Reg.Is_Overlapping then
                   if Prefix (Last) = '_'
                     or else Prefix (Last) = '-'
@@ -271,6 +277,7 @@ package body Descriptors.Register is
                        To_Unbounded_String (Prefix (Last + 1 .. Prefix'Last));
                   end if;
 
+                  --  Current register is the first found
                   Reg.First_Overlap := True;
 
                   --  Now apply the type name to all aliased registers
@@ -510,7 +517,6 @@ package body Descriptors.Register is
       Regs  : in out Register_Vectors.Vector)
    is
       use Ada.Strings.Unbounded;
-      List : Register_Vectors.Vector := Regs;
 
    begin
       for Reg of Regs loop
@@ -524,14 +530,10 @@ package body Descriptors.Register is
                            (To_String (Reg.Overlap_Name) & "_Discriminent");
                Val   : Ada_Enum_Value;
                Union : Ada_Type_Union;
-            begin
-               Val := Add_Enum_Id (Enum, To_String (Reg.Overlap_Suffix));
-               Reg.Overlap_Suffix := Id (Val);
-               List.Delete_First;
 
+            begin
                for Reg2 of Regs loop
-                  if Reg2 /= Reg
-                    and then Reg2.Is_Overlapping
+                  if Reg2.Is_Overlapping
                     and then Reg2.Overlap_Name = Reg.Overlap_Name
                   then
                      Val :=
@@ -547,18 +549,8 @@ package body Descriptors.Register is
                   Disc_Name => "Disc",
                   Disc_Type => Enum);
 
-               Add_Field
-                 (Rec      => Union,
-                  Enum_Val => To_String (Reg.Overlap_Suffix),
-                  Id       => To_String (Reg.Overlap_Suffix),
-                  Typ      => Get_Ada_Type (Reg),
-                  Offset   => 0,
-                  LSB      => 0,
-                  MSB      => Reg.Reg_Properties.Size - 1);
-
                for Reg2 of Regs loop
-                  if Reg2 /= Reg
-                    and then Reg2.Is_Overlapping
+                  if Reg2.Is_Overlapping
                     and then Reg2.Overlap_Name = Reg.Overlap_Name
                   then
                      Add_Field
