@@ -163,12 +163,13 @@ package Base_Types is
      (Elt : DOM.Core.Element;
       Obj : in out T);
 
+   function To_Hex (Val : Natural) return String;
    function To_Hex (Val : Unsigned) return String;
    function To_String (Val : Integer) return String;
    function To_String (Val : Unsigned) return String;
 
    function Target_Type
-     (Size            : Unsigned;
+     (Size            : Natural;
       Fully_Qualified : Boolean := True) return String;
    --  Returns the name of the type on the target given the size of the int
 

@@ -190,7 +190,7 @@ package body Ada_Gen_Helpers is
      (Helper : Peripheral_Helper) return Ada_Type_Enum
    is
       Ret : Ada_Type_Enum;
-      Dead : Ada_Enum_Value with Unreferenced;
+      Dead : Ada_Enum_Value;
       use Ada.Strings.Unbounded;
    begin
       Ret := New_Type_Enum

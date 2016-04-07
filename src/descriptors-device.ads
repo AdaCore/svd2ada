@@ -39,7 +39,7 @@ package Descriptors.Device is
       --  adressable unit
       Address_Unit_Bits : Unsigned := 0;
       --  maximum data bit width accessbile within a single transfer
-      Width             : Unsigned := 0;
+      Width             : Natural := 0;
 
       --  REGISTERS properties
       Reg_Properties    : Register_Properties.Register_Properties_T;

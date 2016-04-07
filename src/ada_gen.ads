@@ -164,7 +164,7 @@ package Ada_Gen is
 
    procedure Add_Size_Aspect
      (Elt  : in out Ada_Type'Class;
-      Size : Unsigned);
+      Size : Natural);
    --  Generates a 'with Sixe => value' aspect
 
    function Get_Size_Aspect (Elt  : Ada_Type'Class) return Unsigned;
@@ -194,7 +194,7 @@ package Ada_Gen is
 
    function New_Type_Scalar
      (Id      : String;
-      Size    : Unsigned;
+      Size    : Natural;
       Comment : String := "") return Ada_Type_Scalar;
 
    function New_Subype_Scalar
@@ -209,8 +209,8 @@ package Ada_Gen is
    function New_Type_Array
      (Id           : String;
       Index_Type   : String;
-      Index_First  : Unsigned;
-      Index_Last   : Unsigned;
+      Index_First  : Natural;
+      Index_Last   : Natural;
       Element_Type : String;
       Comment      : String := "") return Ada_Type_Array;
 
@@ -222,7 +222,7 @@ package Ada_Gen is
 
    function New_Type_Enum
      (Id      : String;
-      Size    : Unsigned := 0;
+      Size    : Natural := 0;
       Comment : String := "") return Ada_Type_Enum;
 
    function Add_Enum_Id
@@ -260,27 +260,27 @@ package Ada_Gen is
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
       Typ         : String;
-      Offset      : Unsigned;
-      LSB         : Unsigned;
-      MSB         : Unsigned;
+      Offset      : Natural;
+      LSB         : Natural;
+      MSB         : Natural;
       Comment     : String := "");
 
    procedure Add_Field
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
       Typ         : String;
-      Offset      : Unsigned;
-      LSB         : Unsigned;
-      MSB         : Unsigned;
+      Offset      : Natural;
+      LSB         : Natural;
+      MSB         : Natural;
       Default     : Unsigned;
       Comment     : String := "");
    procedure Add_Field
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
       Typ         : String;
-      Offset      : Unsigned;
-      LSB         : Unsigned;
-      MSB         : Unsigned;
+      Offset      : Natural;
+      LSB         : Natural;
+      MSB         : Natural;
       Default     : Unbounded_String;
       Comment     : String := "");
    --  Adds a new field to the record 'rec'
@@ -306,9 +306,9 @@ package Ada_Gen is
       Enum_Val    : String;
       Id          : String;
       Typ         : String;
-      Offset      : Unsigned;
-      LSB         : Unsigned;
-      MSB         : Unsigned;
+      Offset      : Natural;
+      LSB         : Natural;
+      MSB         : Natural;
       Comment     : String := "");
 
    ---------------
@@ -421,7 +421,7 @@ private
       File    : Ada.Text_IO.File_Type) is null;
 
    type Ada_Type_Scalar is new Ada_Type with record
-      Size : Unsigned;
+      Size : Natural;
    end record;
 
    overriding procedure Added_In_Spec
@@ -442,8 +442,8 @@ private
 
    type Ada_Type_Array is new Ada_Type with record
       Index_Type   : Unbounded_String;
-      Index_First  : Unsigned;
-      Index_Last   : Unsigned;
+      Index_First  : Natural;
+      Index_Last   : Natural;
       Element_Type : Unbounded_String;
    end record;
 
@@ -474,9 +474,9 @@ private
    type Record_Field is record
       Id          : Unbounded_String;
       Typ         : Unbounded_String;
-      Offset      : Unsigned;
-      LSB         : Unsigned;
-      MSB         : Unsigned;
+      Offset      : Natural;
+      LSB         : Natural;
+      MSB         : Natural;
       Has_Default : Boolean;
       Default     : Unbounded_String;
       Comment     : Ada_Comment;

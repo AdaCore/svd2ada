@@ -33,7 +33,7 @@ package body Base_Types is
    -----------------
 
    function Target_Type
-     (Size            : Unsigned;
+     (Size            : Natural;
       Fully_Qualified : Boolean := True) return String
    is
       Pkg : constant String :=
@@ -76,6 +76,16 @@ package body Base_Types is
    begin
       return I1.Value < I2.Value;
    end "<";
+
+   ------------
+   -- To_Hex --
+   ------------
+
+   function To_Hex (Val : Natural) return String
+   is
+   begin
+      return To_Hex (Unsigned (Val));
+   end To_Hex;
 
    ------------
    -- To_Hex --
@@ -174,9 +184,9 @@ package body Base_Types is
    function Get_Value
      (Elt : DOM.Core.Element) return Natural
    is
-      Value : String renames Get_Value (Elt);
+      U : constant Unsigned := Get_Value (Elt);
    begin
-      return Natural'Value (Value);
+      return Natural (U);
    end Get_Value;
 
    ---------------

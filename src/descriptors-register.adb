@@ -17,7 +17,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces;         use Interfaces;
 with System;
 with Ada.Text_IO;
 

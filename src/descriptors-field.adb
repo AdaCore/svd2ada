@@ -32,7 +32,11 @@ package body Descriptors.Field is
 
    function Similar_Field
      (F1, F2     : Field_T;
-      Prefix_Idx : in out Natural) return Boolean;
+      Prefix_Idx : in out Natural;
+      First      : in out Natural) return Boolean;
+   --  Checks if two fields are similar (Identical type and similar prefix,
+   --  e.g. names only differing by a number suffix). Returns the lowest
+   --  number as 'First'
 
    ----------------
    -- Read_Field --
@@ -105,9 +109,9 @@ package body Descriptors.Field is
                      for K in Val'Range loop
                         if Val(K) = ':' then
                            Ret.LSB :=
-                             Unsigned'Value (Val (K + 1 .. Val'Last - 1));
+                             Natural'Value (Val (K + 1 .. Val'Last - 1));
                            Ret.Size :=
-                             Unsigned'Value (Val (2 .. K - 1)) - Ret.LSB + 1;
+                             Natural'Value (Val (2 .. K - 1)) - Ret.LSB + 1;
                         end if;
                      end loop;
                   end;
@@ -159,10 +163,13 @@ package body Descriptors.Field is
 
    function Similar_Field
      (F1, F2     : Field_T;
-      Prefix_Idx : in out Natural) return Boolean
+      Prefix_Idx : in out Natural;
+      First      : in out Natural) return Boolean
    is
       use Unbounded, Descriptors.Enumerate.Enumerate_Vectors;
       Prefix : Unbounded_String;
+      N      : Natural;
+
    begin
       if F1.Size /= F2.Size then
          return False;
@@ -179,6 +186,37 @@ package body Descriptors.Field is
       end if;
 
       Prefix_Idx := Length (Prefix);
+
+      for J in reverse 1 .. Length (F1.Name) loop
+         if Unbounded.Element (F1.Name, J) not in '0' .. '9' then
+            if J = Length (F1.Name) then
+               N := 1;
+            else
+               N := Natural'Value (Slice (F1.Name, J + 1, Length (F1.Name)));
+            end if;
+            if N < First then
+               First := N;
+            end if;
+
+            exit;
+         end if;
+      end loop;
+
+      for J in reverse 1 .. Length (F2.Name) loop
+         if Unbounded.Element (F2.Name, J) not in '0' .. '9' then
+            if J = Length (F1.Name) then
+               N := 1;
+            else
+               N := Natural'Value (Slice (F2.Name, J + 1, Length (F2.Name)));
+            end if;
+
+            if N < First then
+               First := N;
+            end if;
+
+            exit;
+         end if;
+      end loop;
 
       return True;
    end Similar_Field;
@@ -226,14 +264,15 @@ package body Descriptors.Field is
 
       Fields        : array (0 .. Properties.Size - 1) of Field_T :=
                         (others => Null_Field);
-      Index         : Unsigned;
-      Index2        : Unsigned;
-      Length        : Unsigned;
+      Index         : Natural;
+      Index2        : Natural;
+      Length        : Natural;
+      First         : Natural;
       Prefix        : Natural;
       Default       : Unsigned;
       Default_Id    : Unbounded_String;
       Ada_Type      : Unbounded_String;
-      Ada_Type_Size : Unsigned;
+      Ada_Type_Size : Natural;
       Ada_Name      : Unbounded_String;
       As_Boolean    : Boolean;
       Description   : Unbounded_String;
@@ -262,7 +301,7 @@ package body Descriptors.Field is
 
             --  Retrieve the reset value
             if Properties.Reg_Access /= Read_Only then
-               Default := Get_Default (Natural (Index), Natural (Length));
+               Default := Get_Default (Index, Length);
 
                Ada_Gen.Add_Field
                  (Rec,
@@ -295,7 +334,7 @@ package body Descriptors.Field is
 
             --  Retrieve the reset value
             Default :=
-              Get_Default (Natural (Index), Natural (Fields (Index).Size));
+              Get_Default (Index, Fields (Index).Size);
             Default_Id := Null_Unbounded_String;
 
             Ada_Type_Size := Fields (Index).Size;
@@ -368,12 +407,13 @@ package body Descriptors.Field is
             --  to handle them as such.
 
             Length := 1;
+            First  := Natural'Last;
             Prefix := Unbounded.Length (Fields (Index).Name);
 
             Index2 := Index + Fields (Index).Size;
             while Index2 < Properties.Size loop
                if Similar_Field
-                 (Fields (Index), Fields (Index2), Prefix)
+                 (Fields (Index), Fields (Index2), Prefix, First)
                then
                   Length := Length + 1;
                else
@@ -475,8 +515,8 @@ package body Descriptors.Field is
                     New_Type_Array
                       (Id           => T_Name & "_Field_Array",
                        Index_Type   => "",
-                       Index_First  => 0,
-                       Index_Last   => Unsigned (Length - 1),
+                       Index_First  => First,
+                       Index_Last   => First + Length - 1,
                        Element_Type => To_String (Ada_Type),
                        Comment      => T_Name & " array");
 

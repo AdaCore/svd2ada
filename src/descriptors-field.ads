@@ -35,8 +35,8 @@ package Descriptors.Field is
    type Field_T is record
       Name             : Unbounded.Unbounded_String;
       Description      : Unbounded.Unbounded_String;
-      LSB              : Unsigned;
-      Size             : Unsigned;
+      LSB              : Natural;
+      Size             : Natural;
       Acc              : Access_Type;
       Mod_Write_Values : Modified_Write_Values_Type :=
                            Modify;

@@ -43,7 +43,7 @@ package Descriptors.Register is
       Description      : Unbounded.Unbounded_String;
       Alternate_Group  : Unbounded.Unbounded_String;
       Alternate_Reg    : Unbounded.Unbounded_String;
-      Address_Offset   : Unsigned;
+      Address_Offset   : Natural;
       Reg_Properties   : Register_Properties_T;
       Mod_Write_Values : Modified_Write_Values_Type := Modify;
       Read_Action      : Read_Action_Type := Undefined_Read_Action;
@@ -69,8 +69,8 @@ package Descriptors.Register is
       --  Only available when Type_Holder is null.
       Ada_Type         : Unbounded.Unbounded_String;
 
-      Dim              : Unsigned := 0;
-      Dim_Increment    : Unsigned := 0;
+      Dim              : Natural := 0;
+      Dim_Increment    : Natural := 0;
       Dim_Index        : Unbounded.Unbounded_String;
    end record;
 

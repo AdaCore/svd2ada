@@ -1349,7 +1349,7 @@ package body Ada_Gen is
 
    procedure Add_Size_Aspect
      (Elt  : in out Ada_Type'Class;
-      Size : Unsigned)
+      Size : Natural)
    is
       Size_Str : String renames To_String (Size);
    begin
@@ -1412,7 +1412,7 @@ package body Ada_Gen is
 
    function New_Type_Scalar
      (Id      : String;
-      Size    : Unsigned;
+      Size    : Natural;
       Comment : String := "") return Ada_Type_Scalar
    is
       Ret : Ada_Type_Scalar;
@@ -1489,8 +1489,8 @@ package body Ada_Gen is
    function New_Type_Array
      (Id           : String;
       Index_Type   : String;
-      Index_First  : Unsigned;
-      Index_Last   : Unsigned;
+      Index_First  : Natural;
+      Index_Last   : Natural;
       Element_Type : String;
       Comment      : String := "") return Ada_Type_Array
    is
@@ -1525,7 +1525,7 @@ package body Ada_Gen is
    function Get_Boolean return Ada_Type_Enum
    is
       Ret  : Ada_Type_Enum;
-      Dead : Ada_Enum_Value with Unreferenced;
+      Dead : Ada_Enum_Value;
    begin
       Ret := (Id      => To_Unbounded_String ("Boolean"),
               Comment => New_Comment (""),
@@ -1542,7 +1542,7 @@ package body Ada_Gen is
 
    function New_Type_Enum
      (Id      : String;
-      Size    : Unsigned := 0;
+      Size    : Natural := 0;
       Comment : String := "") return Ada_Type_Enum
    is
       Ret : Ada_Type_Enum;
@@ -1803,9 +1803,9 @@ package body Ada_Gen is
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
       Typ         : String;
-      Offset      : Unsigned;
-      LSB         : Unsigned;
-      MSB         : Unsigned;
+      Offset      : Natural;
+      LSB         : Natural;
+      MSB         : Natural;
       Has_Default : Boolean;
       Default     : Unbounded_String;
       Comment     : String := "")
@@ -1830,9 +1830,9 @@ package body Ada_Gen is
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
       Typ         : String;
-      Offset      : Unsigned;
-      LSB         : Unsigned;
-      MSB         : Unsigned;
+      Offset      : Natural;
+      LSB         : Natural;
+      MSB         : Natural;
       Comment     : String := "")
    is
    begin
@@ -1856,9 +1856,9 @@ package body Ada_Gen is
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
       Typ         : String;
-      Offset      : Unsigned;
-      LSB         : Unsigned;
-      MSB         : Unsigned;
+      Offset      : Natural;
+      LSB         : Natural;
+      MSB         : Natural;
       Default     : Unsigned;
       Comment     : String := "")
    is
@@ -1883,9 +1883,9 @@ package body Ada_Gen is
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
       Typ         : String;
-      Offset      : Unsigned;
-      LSB         : Unsigned;
-      MSB         : Unsigned;
+      Offset      : Natural;
+      LSB         : Natural;
+      MSB         : Natural;
       Default     : Unbounded_String;
       Comment     : String := "")
    is
@@ -1970,9 +1970,9 @@ package body Ada_Gen is
       Enum_Val    : String;
       Id          : String;
       Typ         : String;
-      Offset      : Unsigned;
-      LSB         : Unsigned;
-      MSB         : Unsigned;
+      Offset      : Natural;
+      LSB         : Natural;
+      MSB         : Natural;
       Comment     : String := "")
    is
    begin

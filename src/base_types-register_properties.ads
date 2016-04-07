@@ -24,7 +24,7 @@ with DOM.Core; use DOM.Core;
 package Base_Types.Register_Properties is
 
    type Register_Properties_T is record
-      Size        : Unsigned;
+      Size        : Natural;
       Reg_Access  : Access_Type;
       Protection  : Protection_Type;
       Reset_Value : Unsigned;
