@@ -36,8 +36,11 @@ with DOM.Core;                    use DOM.Core;
 with DOM.Core.Documents;
 
 with Ada_Gen;
+
 with Ada_Gen_Helpers;
+with Base_Types;
 with Descriptors.Device;
+with SVD2Ada_Options;
 with SVD2Ada_Utils;
 
 --  SVD Binding Generator: this tool is meant to handle
@@ -87,8 +90,8 @@ is
 begin
    GNAT.Command_Line.Set_Usage
      (Cmd_Line_Cfg,
-      Usage => "[options] -o DIR svd-file",
-      Help  => "Generate Ada bindings from CMSIS-SVD Cortex-M hardware " &
+      Usage       => "[options] -o DIR svd-file",
+      Help        => "Generate Ada bindings from CMSIS-SVD Cortex-M hardware " &
         "description files");
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
@@ -121,8 +124,13 @@ begin
         "advantage of the new features of GPL 2016 or GNAT Pro 17 " &
         "otherwise.",
       Value       => True);
+   GNAT.Command_Line.Define_Switch
+     (Cmd_Line_Cfg,
+      Output      => SVD2Ada_Options.Use_Standard_Volatile_Aspect'Access,
+      Long_Switch => "--standard-volatile",
+      Help        => "Use standard Volatile aspect");
    GNAT.Command_Line.Getopt
-     (Config => Cmd_Line_Cfg);
+     (Config      => Cmd_Line_Cfg);
 
    declare
       SVD : constant String := GNAT.Command_Line.Get_Argument;
@@ -184,18 +192,12 @@ begin
    return 0;
 
 exception
-   when GNAT.Command_Line.Invalid_Switch |
-        GNAT.Command_Line.Invalid_Parameter |
-        GNAT.Command_Line.Exit_From_Command_Line =>
-      return 1;
+   when GNAT.Command_Line.Exit_From_Command_Line |
+     GNAT.Command_Line.Invalid_Switch =>
+      return 1; -- error information already reported
    when XML_Validation_Error =>
       Close (Input);
       Ada.Text_IO.Put_Line ("Non-valid SVD file:");
       Ada.Text_IO.Put_Line (Reader.Get_Error_Message);
-      return 2;
-   when E : Sax.Readers.XML_Fatal_Error =>
-      Close (Input);
-      Ada.Text_IO.Put_Line ("Fatal error when parsing the svd file:");
-      Ada.Text_IO.Put_Line (Ada.Exceptions.Exception_Message (E));
       return 2;
 end SVD2Ada;

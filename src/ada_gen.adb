@@ -987,6 +987,8 @@ package body Ada_Gen is
         (F,
          "--  This spec has been automatically generated from " &
            To_String (G_Input_File));
+      Ada.Text_IO.Put_Line
+        (F, "--  see https://github.com/simonjwright/svd2ada");
       Ada.Text_IO.New_Line (F);
       G_Empty_Line := True;
 

@@ -304,6 +304,7 @@ package body Descriptors.Device is
       --  This is activated when generating in the Interfaces hierarchy
 
    begin
+
       ----------------
       -- Interrupts --
       ----------------
