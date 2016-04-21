@@ -16190,10 +16190,22 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <bitWidth>1</bitWidth>
             </field>
             <field>
-              <name>DFF</name>
-              <description>Data frame format</description>
+              <name>CRCL</name>
+              <description>CRC length</description>
               <bitOffset>11</bitOffset>
               <bitWidth>1</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>CRC_8BIT</name>
+                  <description>8-bit CRC length.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CRC_16BIT</name>
+                  <description>16-bit CRC length.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>RXONLY</name>
@@ -16261,6 +16273,120 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           <resetValue>0x0000</resetValue>
           <fields>
             <field>
+              <name>LDMA_TX</name>
+              <description>Last DMA transfer for transmission</description>
+              <bitOffset>14</bitOffset>
+              <bitWidth>1</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Even</name>
+                  <description>Number of data to transfer is even.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Odd</name>
+                  <description>Number of data is odd.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>LDMA_RX</name>
+              <description>Last DMA transfer for reception</description>
+              <bitOffset>13</bitOffset>
+              <bitWidth>1</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Even</name>
+                  <description>Number of data to transfer is even.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Odd</name>
+                  <description>Number of data is odd.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>FRXTH</name>
+              <description>FIFO reception threshold</description>
+              <bitOffset>12</bitOffset>
+              <bitWidth>1</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Half</name>
+                  <description>RXNE event is generated if the FIFO level is greater than or equal to 1/2 (16-bit).</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Quarter</name>
+                  <description>RXNE event is generated if the FIFO level is greater than or equal to 1/4 (8-bit).</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DS</name>
+              <description>Data size</description>
+              <bitOffset>8</bitOffset>
+              <bitWidth>4</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>SIZE_4BIT</name>
+                  <value>3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>SIZE_5BIT</name>
+                  <value>4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>SIZE_6BIT</name>
+                  <value>5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>SIZE_7BIT</name>
+                  <value>6</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>SIZE_8BIT</name>
+                  <value>7</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>SIZE_9BIT</name>
+                  <value>8</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>SIZE_10BIT</name>
+                  <value>9</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>SIZE_11BIT</name>
+                  <value>10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>SIZE_12BIT</name>
+                  <value>11</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>SIZE_13BIT</name>
+                  <value>12</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>SIZE_14BIT</name>
+                  <value>13</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>SIZE_15BIT</name>
+                  <value>14</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>SIZE_16BIT</name>
+                  <value>15</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
               <name>TXEIE</name>
               <description>Tx buffer empty interrupt
               enable</description>
@@ -16284,6 +16410,12 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <name>FRF</name>
               <description>Frame format</description>
               <bitOffset>4</bitOffset>
+              <bitWidth>1</bitWidth>
+            </field>
+            <field>
+              <name>NSSP</name>
+              <description>NSS pulse management</description>
+              <bitOffset>3</bitOffset>
               <bitWidth>1</bitWidth>
             </field>
             <field>
@@ -16314,6 +16446,64 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           <size>0x20</size>
           <resetValue>0x0002</resetValue>
           <fields>
+            <field>
+              <name>FTLVL</name>
+              <description>FIFO transmission level</description>
+              <bitOffset>11</bitOffset>
+              <bitWidth>2</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>FIFO_EMPTY</name>
+                  <description>FIFO is empty.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>FIFO_QUARTER</name>
+                  <description>1/4 FIFO.</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>FIFO_HALF</name>
+                  <description>1/2 FIFO.</description>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>FIFO_FULL</name>
+                  <description>FIFO full.</description>
+                  <value>3</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>FRLVL</name>
+              <description>FIFO reception level</description>
+              <bitOffset>9</bitOffset>
+              <bitWidth>2</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>FIFO_EMPTY</name>
+                  <description>FIFO is empty.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>FIFO_QUARTER</name>
+                  <description>1/4 FIFO.</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>FIFO_HALF</name>
+                  <description>1/2 FIFO.</description>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>FIFO_FULL</name>
+                  <description>FIFO full.</description>
+                  <value>3</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
             <field>
               <name>TIFRFE</name>
               <description>TI frame format error</description>
@@ -16456,6 +16646,12 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           <access>read-write</access>
           <resetValue>0x0000</resetValue>
           <fields>
+            <field>
+              <name>ASTRTEN</name>
+              <description>Asynchronous start enable</description>
+              <bitOffset>12</bitOffset>
+              <bitWidth>1</bitWidth>
+            </field>
             <field>
               <name>I2SMOD</name>
               <description>I2S mode selection</description>
