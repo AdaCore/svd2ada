@@ -48,7 +48,6 @@ package body Descriptors.Device is
       if Pkg_Name'Length > 0 then
          Ret.Name :=
            Ada.Strings.Unbounded.To_Unbounded_String (Pkg_Name);
-         Base_Types.Base_Package := Ret.Name;
       end if;
 
       for J in 0 .. Nodes.Length (List) - 1 loop
@@ -62,7 +61,8 @@ package body Descriptors.Device is
                      Ret.Name := Get_Value (Child);
                   end if;
 
-                  Base_Types.Base_Package := Ret.Name;
+                  SVD2Ada_Utils.Set_Root_Package
+                    (Ada.Strings.Unbounded.To_String (Ret.Name));
 
                elsif Tag = "version" then
                   Ret.Version := Get_Value (Child);

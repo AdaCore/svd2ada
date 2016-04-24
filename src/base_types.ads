@@ -28,8 +28,6 @@ with DOM.Core;
 --  file.
 package Base_Types is
 
-   Base_Package : Unbounded.Unbounded_String;
-
    subtype Unsigned is Unsigned_64;
    --  We have to use a 64-bit type here, as the analyzed board can manipulate
    --  potentially 64-bit addresses.

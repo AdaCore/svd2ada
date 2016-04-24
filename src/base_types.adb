@@ -39,7 +39,7 @@ package body Base_Types is
       Pkg : constant String :=
               (if not Fully_Qualified then ""
                elsif not SVD2Ada_Utils.External_Base_Types_Package
-               then Ada.Strings.Unbounded.To_String (Base_Package) & "."
+               then SVD2Ada_Utils.Root_Package & "."
                else SVD2Ada_Utils.Base_Types_Package & ".");
 
    begin

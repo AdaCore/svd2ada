@@ -27,6 +27,7 @@ package body SVD2Ada_Utils is
 
    G_Use_Boolean : Boolean := False;
    G_Types_Pkg   : Unbounded_String := Null_Unbounded_String;
+   G_Root_Pkg    : Unbounded_String := Null_Unbounded_String;
 
    -------------------------
    -- Executable_Location --
@@ -162,5 +163,43 @@ package body SVD2Ada_Utils is
    begin
       return G_Types_Pkg /= Null_Unbounded_String;
    end External_Base_Types_Package;
+
+   ----------------------
+   -- Set_Root_Package --
+   ----------------------
+
+   procedure Set_Root_Package (Value : String)
+   is
+   begin
+      G_Root_Pkg := To_Unbounded_String (Value);
+   end Set_Root_Package;
+
+   ------------------
+   -- Root_Package --
+   ------------------
+
+   function Root_Package return String
+   is
+   begin
+      return To_String (G_Root_Pkg);
+   end Root_Package;
+
+   ----------------
+   -- In_Runtime --
+   ----------------
+
+   function In_Runtime return Boolean
+   is
+      Intf : constant String := "Interfaces.";
+      Root : constant String := Root_Package;
+   begin
+      if Root'Length <= Intf'Length then
+         return False;
+      elsif Root (Root'First .. Root'First + Intf'Length - 1) /= Intf then
+         return False;
+      else
+         return True;
+      end if;
+   end In_Runtime;
 
 end SVD2Ada_Utils;

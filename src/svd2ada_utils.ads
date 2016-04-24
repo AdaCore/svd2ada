@@ -28,4 +28,8 @@ package SVD2Ada_Utils is
    function Base_Types_Package return String;
    function External_Base_Types_Package return Boolean;
 
+   procedure Set_Root_Package (Value : String);
+   function Root_Package return String;
+   function In_Runtime return Boolean;
+
 end SVD2Ada_Utils;
