@@ -24,9 +24,8 @@ package SVD2Ada_Utils is
    procedure Set_Use_Boolean_For_Bit (Value : Boolean);
    function Use_Boolean_For_Bit return Boolean;
 
-   procedure Set_Gen_GNAT15 (Value : Boolean);
-   --  Code generation for GNAT GPL 2015
-
-   function Gen_GNAT15 return Boolean;
+   procedure Set_Base_Types_Package (Value : String);
+   function Base_Types_Package return String;
+   function External_Base_Types_Package return Boolean;
 
 end SVD2Ada_Utils;

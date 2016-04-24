@@ -38,9 +38,9 @@ package body Base_Types is
    is
       Pkg : constant String :=
               (if not Fully_Qualified then ""
-               elsif SVD2Ada_Utils.Gen_GNAT15
+               elsif not SVD2Ada_Utils.External_Base_Types_Package
                then Ada.Strings.Unbounded.To_String (Base_Package) & "."
-               else "Interfaces.Bit_Types.");
+               else SVD2Ada_Utils.Base_Types_Package & ".");
 
    begin
       if Size = 1 then

@@ -76,11 +76,11 @@ is
    SVD_File      : Unbounded_String;
 
    --  Command line parser
-   Cmd_Line_Cfg  : GNAT.Command_Line.Command_Line_Configuration;
-   Pkg           : aliased GNAT.Strings.String_Access;
-   Out_Dir       : aliased GNAT.Strings.String_Access;
-   Use_Old_Types : aliased Boolean := False;
-   Gen_Booleans  : aliased Boolean := False;
+   Cmd_Line_Cfg   : GNAT.Command_Line.Command_Line_Configuration;
+   Pkg            : aliased GNAT.Strings.String_Access;
+   Out_Dir        : aliased GNAT.Strings.String_Access;
+   Base_Types_Pkg : aliased GNAT.Strings.String_Access;
+   Gen_Booleans   : aliased Boolean := False;
 
    use type GNAT.Strings.String_Access;
 
@@ -115,12 +115,11 @@ begin
       Value       => True);
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
-      Output      => Use_Old_Types'Access,
-      Long_Switch => "--old",
-      Help        => "maintain compatibility with GNAT GPL 2015. Take " &
-        "advantage of the new features of GPL 2016 or GNAT Pro 17 " &
-        "otherwise.",
-      Value       => True);
+      Output      => Base_Types_Pkg'Access,
+      Long_Switch => "--base-types-package=",
+      Help        => "the name of the package containing the low level types" &
+        "definitions. If undefined, those types will be specified in the" &
+        "root package.");
    GNAT.Command_Line.Getopt
      (Config => Cmd_Line_Cfg);
 
@@ -139,7 +138,10 @@ begin
    end;
 
    SVD2Ada_Utils.Set_Use_Boolean_For_Bit (Gen_Booleans);
-   SVD2Ada_Utils.Set_Gen_GNAT15 (Use_Old_Types);
+
+   if Base_Types_Pkg.all /= "" then
+      SVD2Ada_Utils.Set_Base_Types_Package (Base_Types_Pkg.all);
+   end if;
 
    Ada_Gen.Set_Input_File_Name
      (GNAT.Directory_Operations.Base_Name (To_String (SVD_File)));

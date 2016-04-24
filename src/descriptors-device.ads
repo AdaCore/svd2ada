@@ -41,6 +41,8 @@ package Descriptors.Device is
       --  maximum data bit width accessbile within a single transfer
       Width             : Natural := 0;
 
+      Has_FPU           : Boolean := True;
+
       --  REGISTERS properties
       Reg_Properties    : Register_Properties.Register_Properties_T;
 

@@ -27,8 +27,6 @@ with Ada.Tags;
 with GNAT.Directory_Operations;
 with GNAT.OS_Lib;
 
-with SVD2Ada_Utils;
-
 package body Ada_Gen is
 
    Max_Width    : constant Natural := 79;
@@ -991,14 +989,8 @@ package body Ada_Gen is
       G_Empty_Line := True;
 
       if Spec.Preelaborated then
-         if SVD2Ada_Utils.Gen_GNAT15 then
-            --  In GNAT GPL 2015 or GNAT Pro 7.4, using the pragma
-            --  No_Elaboration_Code_All will not work because of dependencies
-            --  over System.Unsigned_Types. So we stick with the restriction
-            --  No_Elaboration_Code here.
-            Ada.Text_IO.Put_Line
-              (F, "pragma Restrictions (No_Elaboration_Code);");
-         end if;
+         Ada.Text_IO.Put_Line
+           (F, "pragma Restrictions (No_Elaboration_Code);");
 
          Ada.Text_IO.Put_Line
            (F, "pragma Ada_2012;");
@@ -1051,13 +1043,6 @@ package body Ada_Gen is
       if Spec.Preelaborated then
          Ada.Text_IO.Put_Line
            (F, "   pragma Preelaborate;");
-         if not SVD2Ada_Utils.Gen_GNAT15 then
-            --  See above: from GNAT GPL 2016 or GNAT Pro 17, we can now use
-            --  pragma No_Elaboration_Code_All to ensure that we don't rely
-            --  on runtime intiialization when using the generated packages.
-            Ada.Text_IO.Put_Line
-              (F, "   pragma No_Elaboration_Code_All;");
-         end if;
       end if;
       G_Empty_Line := False;
 

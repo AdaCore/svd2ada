@@ -18,14 +18,15 @@
 ------------------------------------------------------------------------------
 
 with Ada.Command_Line;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 with GNAT.Case_Util;
-with GNAT.OS_Lib;       use GNAT.OS_Lib;
+with GNAT.OS_Lib;           use GNAT.OS_Lib;
 
 package body SVD2Ada_Utils is
 
    G_Use_Boolean : Boolean := False;
-   G_GPL_2015    : Boolean := False;
+   G_Types_Pkg   : Unbounded_String := Null_Unbounded_String;
 
    -------------------------
    -- Executable_Location --
@@ -103,7 +104,8 @@ package body SVD2Ada_Utils is
       --  found by the shell.
 
       declare
-         Ex  : String_Access := GNAT.OS_Lib.Locate_Exec_On_Path (Exec_Name);
+         Ex  : GNAT.OS_Lib.String_Access :=
+                 GNAT.OS_Lib.Locate_Exec_On_Path (Exec_Name);
          Dir : constant String := Get_Install_Dir (Ex.all);
       begin
          Free (Ex);
@@ -131,24 +133,34 @@ package body SVD2Ada_Utils is
       return G_Use_Boolean;
    end Use_Boolean_For_Bit;
 
-   --------------------
-   -- Set_Gen_GNAT15 --
-   --------------------
+   ----------------------------
+   -- Set_Base_Types_Package --
+   ----------------------------
 
-   procedure Set_Gen_GNAT15 (Value : Boolean)
+   procedure Set_Base_Types_Package (Value : String)
    is
    begin
-      G_GPL_2015 := Value;
-   end Set_Gen_GNAT15;
+      G_Types_Pkg := To_Unbounded_String (Value);
+   end Set_Base_Types_Package;
 
-   ----------------
-   -- Gen_GNAT15 --
-   ----------------
+   ------------------------
+   -- Base_Types_Package --
+   ------------------------
 
-   function Gen_GNAT15 return Boolean
+   function Base_Types_Package return String
    is
    begin
-      return G_GPL_2015;
-   end Gen_GNAT15;
+      return To_String (G_Types_Pkg);
+   end Base_Types_Package;
+
+   ---------------------------------
+   -- External_Base_Types_Package --
+   ---------------------------------
+
+   function External_Base_Types_Package return Boolean
+   is
+   begin
+      return G_Types_Pkg /= Null_Unbounded_String;
+   end External_Base_Types_Package;
 
 end SVD2Ada_Utils;
