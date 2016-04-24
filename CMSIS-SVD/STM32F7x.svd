@@ -16190,11 +16190,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <bitWidth>1</bitWidth>
             </field>
             <field>
-              <name>CRCL</name>
+              <name>DFF</name>
               <description>CRC length</description>
               <bitOffset>11</bitOffset>
               <bitWidth>1</bitWidth>
-              <enumeratedValues>
+              <!--enumeratedValues>
                 <enumeratedValue>
                   <name>CRC_8BIT</name>
                   <description>8-bit CRC length.</description>
@@ -16205,7 +16205,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
                   <description>16-bit CRC length.</description>
                   <value>1</value>
                 </enumeratedValue>
-              </enumeratedValues>
+              </enumeratedValues-->
             </field>
             <field>
               <name>RXONLY</name>
