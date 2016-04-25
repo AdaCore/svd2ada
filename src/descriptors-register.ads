@@ -69,8 +69,8 @@ package Descriptors.Register is
       --  Only available when Type_Holder is null.
       Ada_Type         : Unbounded.Unbounded_String;
 
-      Dim              : Natural := 0;
-      Dim_Increment    : Natural := 0;
+      Dim              : Positive := 1;
+      Dim_Increment    : Natural := 4;
       Dim_Index        : Unbounded.Unbounded_String;
    end record;
 

@@ -254,9 +254,9 @@ package body Descriptors.Peripheral is
                   Typ      => Get_Ada_Type (Reg),
                   Offset   => Reg.Address_Offset,
                   LSB      => 0,
-                  MSB      => (if Reg.Dim <= 1
-                           then Reg.Reg_Properties.Size - 1
-                           else Reg.Dim * Reg.Dim_Increment * 8 - 1),
+                  MSB      => (if Reg.Dim = 1
+                               then Reg.Reg_Properties.Size - 1
+                               else Reg.Dim * Reg.Dim_Increment * 8 - 1),
                   Comment  => To_String (Reg.Description));
 
             elsif Reg.First_Overlap then
@@ -271,7 +271,7 @@ package body Descriptors.Peripheral is
                   Typ     => Get_Ada_Type (Reg),
                   Offset  => Reg.Address_Offset,
                   LSB     => 0,
-                  MSB     => (if Reg.Dim <= 1
+                  MSB     => (if Reg.Dim = 1
                               then Reg.Reg_Properties.Size - 1
                               else Reg.Dim * Reg.Dim_Increment * 8 - 1),
                   Comment => To_String (Reg.Description));
@@ -287,7 +287,7 @@ package body Descriptors.Peripheral is
                Typ     => Get_Ada_Type (Reg),
                Offset  => Reg.Address_Offset,
                LSB     => 0,
-               MSB     => (if Reg.Dim <= 1
+               MSB     => (if Reg.Dim = 1
                            then Reg.Reg_Properties.Size - 1
                            else Reg.Dim * Reg.Dim_Increment * 8 - 1),
                Comment => To_String (Reg.Description));

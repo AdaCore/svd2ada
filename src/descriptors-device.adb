@@ -404,6 +404,7 @@ package body Descriptors.Device is
          --  From GNAT GPL 2016 and GNAT Pro 17, Interfaces.Bit_Types is
          --  defined
          Ada_Gen.Add_Global_With (SVD2Ada_Utils.Base_Types_Package);
+
       else
          Add (Spec, New_Comment_Box ("Base type"));
          Add_No_Check

@@ -53,7 +53,7 @@ package body Descriptors.Register is
       function Compute_Name return Unbounded.Unbounded_String
       is
       begin
-         if Ret.Dim = 0 then
+         if Ret.Dim = 1 then
             return Ret.Xml_Id;
          else
             declare
@@ -462,7 +462,7 @@ package body Descriptors.Register is
            To_Unbounded_String
              (Target_Type (Reg.Reg_Properties.Size));
 
-         if Reg.Dim > 0 then
+         if Reg.Dim > 1 then
             --  Just generate a comment to document the array that's going
             --  to be generated
             Add (Spec, New_Comment (To_String (Reg.Description)));
@@ -500,7 +500,7 @@ package body Descriptors.Register is
          end;
       end if;
 
-      if Reg.Dim > 0 then
+      if Reg.Dim > 1 then
          declare
             Array_T : Ada_Type_Array :=
                         New_Type_Array
@@ -570,7 +570,10 @@ package body Descriptors.Register is
                         Typ      => Get_Ada_Type (Reg2),
                         Offset   => 0,
                         LSB      => 0,
-                        MSB      => Reg2.Reg_Properties.Size - 1);
+                        MSB      =>
+                          (if Reg.Dim = 1
+                           then Reg.Reg_Properties.Size - 1
+                           else Reg.Dim * Reg.Dim_Increment * 8 - 1));
                   end if;
                end loop;
 

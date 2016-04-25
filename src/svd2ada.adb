@@ -139,8 +139,14 @@ begin
 
    SVD2Ada_Utils.Set_Use_Boolean_For_Bit (Gen_Booleans);
 
+   if Pkg.all /= "" then
+      SVD2Ada_Utils.Set_Root_Package (Pkg.all);
+   end if;
+
    if Base_Types_Pkg.all /= "" then
       SVD2Ada_Utils.Set_Base_Types_Package (Base_Types_Pkg.all);
+   elsif SVD2Ada_Utils.In_Runtime then
+      SVD2Ada_Utils.Set_Base_Types_Package ("Interfaces.Bit_Types");
    end if;
 
    Ada_Gen.Set_Input_File_Name
