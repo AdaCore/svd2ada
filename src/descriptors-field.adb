@@ -276,6 +276,7 @@ package body Descriptors.Field is
       Ada_Name      : Unbounded_String;
       As_Boolean    : Boolean;
       Description   : Unbounded_String;
+      All_RO        : Boolean := True;
 
    begin
       for Field of Reg_Fields loop
@@ -283,7 +284,18 @@ package body Descriptors.Field is
       end loop;
 
       Index        := 0;
+      while Index < Properties.Size loop
+         if Fields (Index) /= Null_Field
+           and then Fields (Index).Acc /= Read_Only
+         then
+            All_RO := False;
+            exit;
+         end if;
 
+         Index := Index + 1;
+      end loop;
+
+      Index        := 0;
       while Index < Properties.Size loop
          Ada_Type := Null_Unbounded_String;
 
@@ -300,9 +312,9 @@ package body Descriptors.Field is
             end loop;
 
             --  Retrieve the reset value
-            if Properties.Reg_Access /= Read_Only then
-               Default := Get_Default (Index, Length);
+            Default := Get_Default (Index, Length);
 
+            if not All_RO then
                Ada_Gen.Add_Field
                  (Rec,
                   "Reserved_" & To_String (Index) &
@@ -332,10 +344,12 @@ package body Descriptors.Field is
             --  Whether to use a Boolean for bit fields
             As_Boolean := SVD2Ada_Utils.Use_Boolean_For_Bit;
 
-            --  Retrieve the reset value
-            Default :=
-              Get_Default (Index, Fields (Index).Size);
-            Default_Id := Null_Unbounded_String;
+            if not All_RO then
+               --  Retrieve the reset value
+               Default :=
+                 Get_Default (Index, Fields (Index).Size);
+               Default_Id := Null_Unbounded_String;
+            end if;
 
             Ada_Type_Size := Fields (Index).Size;
             Ada_Name := Fields (Index).Name;
@@ -376,7 +390,8 @@ package body Descriptors.Field is
                            Repr    => Val.Value,
                            Comment => To_String (Val.Descr));
 
-                        if not Found_Default
+                        if not All_RO
+                          and then not Found_Default
                           and then Val.Value = Default
                         then
                            Default_Id := Id (Enum_Val);
@@ -385,7 +400,7 @@ package body Descriptors.Field is
 
                      end loop;
 
-                     if not Found_Default then
+                     if not All_RO and then not Found_Default then
                         --  Reset value not found in the enumerate.
                         --  Let's create an enumerate value for it
                         Enum_Val := Add_Enum_Id
@@ -429,10 +444,12 @@ package body Descriptors.Field is
                   if Ada_Type = Null_Unbounded_String then
                      Ada_Type := To_Unbounded_String ("Boolean");
 
-                     if Default = 0 then
-                        Default_Id := To_Unbounded_String ("False");
-                     else
-                        Default_Id := To_Unbounded_String ("True");
+                     if not All_RO then
+                        if Default = 0 then
+                           Default_Id := To_Unbounded_String ("False");
+                        else
+                           Default_Id := To_Unbounded_String ("True");
+                        end if;
                      end if;
                   end if;
 
@@ -558,9 +575,11 @@ package body Descriptors.Field is
                   Ada_Type_Size := Fields (Index).Size * Length;
                   Ada_Name := To_Unbounded_String (F_Name);
 
-                  Default_Id := To_Unbounded_String
-                    ("(As_Array => False, Val => " &
-                       To_Hex (Default) & ")");
+                  if not All_RO then
+                     Default_Id := To_Unbounded_String
+                       ("(As_Array => False, Val => " &
+                          To_Hex (Default) & ")");
+                  end if;
                end;
             end if;
 
@@ -645,7 +664,17 @@ package body Descriptors.Field is
                   null;
             end case;
 
-            if Default_Id = Null_Unbounded_String then
+            if All_RO then
+               Add_Field
+                 (Rec,
+                  Id      => To_String (Ada_Name),
+                  Typ     => To_String (Ada_Type),
+                  Offset  => 0,
+                  LSB     => Index,
+                  MSB     => Index + Ada_Type_Size - 1,
+                  Comment => To_String (Description));
+
+            elsif Default_Id = Null_Unbounded_String then
                Add_Field
                  (Rec,
                   Id      => To_String (Ada_Name),

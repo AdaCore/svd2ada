@@ -470,7 +470,7 @@ package body Descriptors.Register is
 
       else
          declare
-            Rec             : Ada_Type_Record;
+            Rec : Ada_Type_Record;
 
          begin
             Add (Spec,
