@@ -154,7 +154,8 @@ package body Descriptors.Field is
       use Unbounded;
    begin
       return F1.LSB = F2.LSB
-        and then F1.Size = F2.Size;
+        and then F1.Size = F2.Size
+        and then F1.Name = F2.Name;
    end "=";
 
    ------------------------
@@ -284,6 +285,7 @@ package body Descriptors.Field is
       end loop;
 
       Index        := 0;
+
       while Index < Properties.Size loop
          if Fields (Index) /= Null_Field
            and then Fields (Index).Acc /= Read_Only
