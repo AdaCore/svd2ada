@@ -27,8 +27,6 @@ with Base_Types.Register_Properties; use Base_Types.Register_Properties;
 
 with Descriptors.Register;           use Descriptors.Register;
 
-with Ada_Gen_Helpers;                use Ada_Gen_Helpers;
-
 --  Decodes and then dumps the <peripheral> elements of the SVD file.
 package Descriptors.Peripheral is
 
@@ -44,7 +42,6 @@ package Descriptors.Peripheral is
       Address_Blocks  : Address_Block_Vectors.Vector;
       Interrupts      : Interrupt_Vectors.Vector;
       Registers       : Register_Vectors.Vector;
-      Gen_Helper      : Peripheral_Helper;
    end record;
 
    package Peripheral_Vectors is new Ada.Containers.Vectors

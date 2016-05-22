@@ -36,7 +36,6 @@ with DOM.Core;                    use DOM.Core;
 with DOM.Core.Documents;
 
 with Ada_Gen;
-with Ada_Gen_Helpers;
 with Descriptors.Device;
 with SVD2Ada_Utils;
 
@@ -179,8 +178,6 @@ begin
       Use_Basename_In_Error_Messages (Reader, True);
       Reader.Parse (Input);
       Close (Input);
-
-      Ada_Gen_Helpers.Read (Documents.Get_Element (Get_Tree (Reader)));
    end if;
 
    Device := Descriptors.Device.Read_Device

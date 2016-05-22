@@ -56,8 +56,6 @@ package Descriptors.Register is
       --  When two registers are at the same location, we specify a shared
       --  common union type name here to support this overlapping
       Is_Overlapping   : Boolean := False;
-      First_Overlap    : Boolean := False;
-      Overlap_Name     : Unbounded.Unbounded_String;
       Overlap_Suffix   : Unbounded.Unbounded_String;
 
 
@@ -84,9 +82,6 @@ package Descriptors.Register is
    package Register_Vectors is new Ada.Containers.Vectors
      (Positive, Register_Access, Equal);
 
-   procedure Find_Aliased (Reg_Set : Register_Vectors.Vector;
-                           Resolve : Boolean);
-
    procedure Find_Common_Types (Reg_Set : Register_Vectors.Vector);
 
    function Read_Register
@@ -100,9 +95,5 @@ package Descriptors.Register is
    function Get_Ada_Type (Reg : Register_Access) return String;
 
    procedure Dump (Spec : in out Ada_Gen.Ada_Spec; Reg : Register_Access);
-
-   procedure Dump_Aliased
-     (Spec  : in out Ada_Gen.Ada_Spec;
-      Regs  : in out Register_Vectors.Vector);
 
 end Descriptors.Register;
