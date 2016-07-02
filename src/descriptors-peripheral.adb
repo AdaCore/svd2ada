@@ -261,14 +261,16 @@ package body Descriptors.Peripheral is
                Prefix : constant String := To_String (Reg.Name);
             begin
                Last := Prefix'Last;
-               --  First loop: look of another register at the same offset
+               --  First loop: look at another register at the same offset
                --  If found, mark the current register as overlapping, and find
                --  a prefix common to all overlapping registers.
                for K in Idx + 1 .. Reg_Set.Last_Index loop
                   exit when Reg_Set (K).Address_Offset /= Reg.Address_Offset;
 
                   for J in 1 .. Last loop
-                     if Prefix (J) /= Element (Reg_Set (K).Name, J) then
+                     if J > Length (Reg_Set (K).Name)
+                       or else Prefix (J) /= Element (Reg_Set (K).Name, J)
+                     then
                         if Last /= 0 then
                            Last := J - 1;
                         end if;
@@ -303,8 +305,18 @@ package body Descriptors.Peripheral is
                      Reg.Overlap_Suffix := To_Unbounded_String ("Default");
 
                   else
-                     Reg.Overlap_Suffix :=
-                       To_Unbounded_String (Prefix (Last + 1 .. Prefix'Last));
+                     --  If we have names like "CMR0",
+                     --  "CMR0_WAVE_EQ_1", the suffix for the second must
+                     --  skip the '_'.
+                     declare
+                        Skip : Positive := Last + 1;
+                     begin
+                        while Prefix (Skip) = '_' loop
+                           Skip := Skip + 1;
+                        end loop;
+                        Reg.Overlap_Suffix :=
+                          To_Unbounded_String (Prefix (Skip .. Prefix'Last));
+                     end;
                   end if;
 
                   Idx := Idx + 1;

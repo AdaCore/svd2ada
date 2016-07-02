@@ -614,16 +614,16 @@ package body Base_Types is
          exit when Element (Name1, J) not in '0' .. '9';
       end loop;
 
+      if Prefix > Length (Name2) then
+         return Null_Unbounded_String;
+      end if;
+
       if Element (Name1, Prefix) = '_'
         and then Element (Name2, Prefix) = '_'
       then
          --  We have names of the form PREFIX_XXXX
          --  In this case, we also strip the '_' character
          Prefix := Prefix - 1;
-      end if;
-
-      if Prefix > Length (Name2) then
-         return Null_Unbounded_String;
       end if;
 
       if Slice (Name1, 1, Prefix) /= Slice (Name2, 1, Prefix) then
