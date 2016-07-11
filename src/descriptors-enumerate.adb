@@ -17,7 +17,9 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Ada.Text_IO;
+with Interfaces;
 
 with DOM.Core;           use DOM.Core;
 with DOM.Core.Elements;  use DOM.Core.Elements;
@@ -25,22 +27,57 @@ with DOM.Core.Nodes;
 
 package body Descriptors.Enumerate is
 
-   function Read_Value (Elt : DOM.Core.Element) return Enumerate_Value;
+   procedure Read_Value
+     (Elt        : DOM.Core.Element;
+      Write_Only : Boolean;
+      Values     : in out Enumerate_Values_Vectors.Vector);
    --  Reads the enum value from the DOM element
 
    ----------------
    -- Read_Value --
    ----------------
 
-   function Read_Value (Elt : DOM.Core.Element) return Enumerate_Value
+   procedure Read_Value
+     (Elt        : DOM.Core.Element;
+      Write_Only : Boolean;
+      Values     : in out Enumerate_Values_Vectors.Vector)
    is
-      List : constant Node_List := Nodes.Child_Nodes (Elt);
-      Ret  : Enumerate_Value;
+      procedure Read_Value
+        (Val  : String;
+         Name : String);
+
+      List  : constant Node_List := Nodes.Child_Nodes (Elt);
+      Ret   : Enumerate_Value;
+      Has_X : Boolean := False;
+
+      procedure Read_Value
+        (Val  : String;
+         Name : String)
+      is
+      begin
+         for J in Val'Range loop
+            if Val (J) = 'x' then
+               Read_Value
+                 (Val (Val'First .. J - 1) & "0" & Val (J + 1 .. Val'Last),
+                  Name & "0");
+               Read_Value
+                 (Val (Val'First .. J - 1) & "1" & Val (J + 1 .. Val'Last),
+                  Name & "1");
+               return;
+            end if;
+         end loop;
+
+         Ret.Name := To_Unbounded_String (Name);
+         Ret.Value := Interfaces.Unsigned_64'Value ("2" & Val & "#");
+         Values.Append (Ret);
+      end Read_Value;
+
    begin
       for J in 0 .. Nodes.Length (List) - 1 loop
          if Nodes.Node_Type (Nodes.Item (List, J)) = Element_Node then
             declare
-               Child : constant Element := Element (Nodes.Item (List, J));
+               Child : constant DOM.Core.Element :=
+                         DOM.Core.Element (Nodes.Item (List, J));
                Tag   : String renames Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
@@ -50,7 +87,38 @@ package body Descriptors.Enumerate is
                   Ret.Descr := Get_Value (Child);
 
                elsif Tag = "value" then
-                  Ret.Value := Get_Value (Child);
+                  declare
+                     S : String := Get_Value (Child);
+                  begin
+                     if S'Length >= 2
+                       and then S (S'First) = '#'
+                     then
+                        Has_X := False;
+
+                        for J in S'Range loop
+                           if S (J) = 'x' or else S (J) = 'X' then
+                              if Write_Only then
+                                 --  Easy case: we just fill with '0'
+                                 S (J) := '0';
+                              else
+                                 Has_X := True;
+                              end if;
+                           end if;
+                        end loop;
+
+                        if not Has_X then
+                           Ret.Value :=
+                             Interfaces.Unsigned_64'Value
+                               ("2#" & S (S'First + 1 .. S'Last) & "#");
+                        else
+                           Read_Value (S, To_String (Ret.Name));
+                        end if;
+                     else
+
+                        Ret.Value := Get_Value (Child);
+                     end if;
+                  end;
+
                   Ret.IsDefault := False;
 
                elsif Tag = "isDefault" then
@@ -65,7 +133,9 @@ package body Descriptors.Enumerate is
          end if;
       end loop;
 
-      return Ret;
+      if not Has_X then
+         Values.Append (Ret);
+      end if;
    end Read_Value;
 
 
@@ -74,8 +144,9 @@ package body Descriptors.Enumerate is
    --------------------
 
    function Read_Enumerate
-     (Elt    : DOM.Core.Element;
-      Vector : Enumerate_Vectors.Vector)
+     (Elt        : DOM.Core.Element;
+      Vector     : Enumerate_Vectors.Vector;
+      Write_Only : Boolean)
       return Enumerate_T
    is
       List         : constant Node_List := Nodes.Child_Nodes (Elt);
@@ -106,7 +177,8 @@ package body Descriptors.Enumerate is
       for J in 0 .. Nodes.Length (List) - 1 loop
          if Nodes.Node_Type (Nodes.Item (List, J)) = Element_Node then
             declare
-               Child : constant Element := Element (Nodes.Item (List, J));
+               Child : constant DOM.Core.Element :=
+                         DOM.Core.Element (Nodes.Item (List, J));
                Tag   : String renames Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
@@ -116,7 +188,7 @@ package body Descriptors.Enumerate is
                   Ret.Usage := Get_Value (Child);
 
                elsif Tag = "enumeratedValue" then
-                  Ret.Values.Append (Read_Value (Child));
+                  Read_Value (Child, Write_Only, Ret.Values);
 
                else
                   Ada.Text_IO.Put_Line

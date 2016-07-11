@@ -129,7 +129,7 @@ package body Descriptors.Field is
                   declare
                      Enum : constant Descriptors.Enumerate.Enumerate_T :=
                               Descriptors.Enumerate.Read_Enumerate
-                                (Child, Ret.Enums);
+                                (Child, Ret.Enums, Ret.Acc = Write_Only);
                   begin
                      Ret.Enums.Append (Enum);
                   end;

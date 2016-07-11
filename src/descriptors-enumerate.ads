@@ -46,7 +46,9 @@ package Descriptors.Enumerate is
      (Positive, Enumerate_T);
 
    function Read_Enumerate
-     (Elt    : DOM.Core.Element;
-      Vector : Enumerate_Vectors.Vector) return Enumerate_T;
+     (Elt        : DOM.Core.Element;
+      Vector     : Enumerate_Vectors.Vector;
+      Write_Only : Boolean)
+      return Enumerate_T;
 
 end Descriptors.Enumerate;
