@@ -1567,6 +1567,9 @@ package body Ada_Gen is
       Enum_Value : Ada_Enum_Value;
       Camel_C    : String := Id;
       First      : Boolean := True;
+      The_Id     : Unbounded_String;
+      Suffix     : Natural := 0;
+      Done       : Boolean;
 
    begin
       for J in Camel_C'Range loop
@@ -1587,19 +1590,41 @@ package body Ada_Gen is
       end loop;
 
       if Id (Id'First) in '0' .. '9' then
-         Enum_Value :=
-           (Id       => Enum.Id & "_" & Camel_C,
-            Has_Repr => Has_Repr,
-            Repr     => Repr,
-            Comment  => New_Comment (Comment));
-
+         The_Id := Enum.Id & "_" & Camel_C;
       else
-         Enum_Value :=
-           (Id       => Protect_Keywords (Camel_C),
-            Has_Repr => Has_Repr,
-            Repr     => Repr,
-            Comment  => New_Comment (Comment));
+         The_Id := Protect_Keywords (Camel_C);
       end if;
+
+      --  Check duplicated names
+      Suffix := 0;
+      Enum_Value :=
+        (Id       => The_Id,
+         Has_Repr => Has_Repr,
+         Repr     => Repr,
+         Comment  => New_Comment (Comment));
+
+      loop
+         Done   := True;
+
+         for J in Enum.Values.First_Index .. Enum.Values.Last_Index loop
+            if Enum.Values (J).Id = The_Id then
+               Suffix := Suffix + 1;
+               Done   := False;
+
+               declare
+                  S : constant String := Suffix'Img;
+               begin
+                  The_Id := Enum_Value.Id & "_" & S (S'First + 1 .. S'Last);
+               end;
+
+               exit;
+            end if;
+         end loop;
+
+         exit when Done;
+      end loop;
+
+      Enum_Value.Id := The_Id;
 
       --  Insert the value as an ordered list, as mandated by Ada
       if Has_Repr then
@@ -1612,6 +1637,7 @@ package body Ada_Gen is
          end loop;
       end if;
 
+      --  List is empty for now, just append it
       Enum.Values.Append (Enum_Value);
 
       return Enum_Value;
