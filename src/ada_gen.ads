@@ -199,8 +199,12 @@ package Ada_Gen is
 
    function New_Subype_Scalar
      (Id      : String;
-      Typ     : String;
+      Typ     : Ada_Type'Class;
       Comment : String := "") return Ada_Subtype_Scalar;
+
+   function Target_Type
+     (Size            : Natural;
+      Fully_Qualified : Boolean := True) return Ada_Type'Class;
 
    ------------
    -- Arrays --
@@ -211,7 +215,7 @@ package Ada_Gen is
       Index_Type   : String;
       Index_First  : Natural;
       Index_Last   : Natural;
-      Element_Type : String;
+      Element_Type : Ada_Type'Class;
       Comment      : String := "") return Ada_Type_Array;
 
    -----------
@@ -226,12 +230,14 @@ package Ada_Gen is
       Comment : String := "") return Ada_Type_Enum;
 
    function Add_Enum_Id
-     (Enum    : in out Ada_Type_Enum;
+     (Spec    : Ada_Spec;
+      Enum    : in out Ada_Type_Enum;
       Id      : String;
       Comment : String := "") return Ada_Enum_Value;
 
    function Add_Enum_Id
-     (Enum    : in out Ada_Type_Enum;
+     (Spec    : Ada_Spec;
+      Enum    : in out Ada_Type_Enum;
       Id      : String;
       Repr    : Unsigned;
       Comment : String := "") return Ada_Enum_Value;
@@ -259,7 +265,7 @@ package Ada_Gen is
    procedure Add_Field
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
-      Typ         : String;
+      Typ         : Ada_Type'Class;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -268,7 +274,7 @@ package Ada_Gen is
    procedure Add_Field
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
-      Typ         : String;
+      Typ         : Ada_Type'Class;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -277,7 +283,7 @@ package Ada_Gen is
    procedure Add_Field
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
-      Typ         : String;
+      Typ         : Ada_Type'Class;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -305,7 +311,7 @@ package Ada_Gen is
      (Rec         : in out Ada_Type_Union'Class;
       Enum_Val    : String;
       Id          : String;
-      Typ         : String;
+      Typ         : Ada_Type'Class;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;

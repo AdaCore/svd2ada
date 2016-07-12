@@ -18,7 +18,8 @@
 ------------------------------------------------------------------------------
 
 with Ada.Containers.Vectors;
-with Ada.Strings.Unbounded;          use Ada.Strings;
+with Ada.Containers.Indefinite_Holders;
+with Ada.Strings.Unbounded;             use Ada.Strings;
 
 with DOM.Core;
 
@@ -35,6 +36,13 @@ package Descriptors.Register is
    type Register_T;
 
    type Register_Access is access all Register_T;
+
+   package Type_Holders is new Ada.Containers.Indefinite_Holders
+     (Ada_Gen.Ada_Type'Class, Ada_Gen."=");
+   function "-" (Holder : Type_Holders.Holder) return Ada_Gen.Ada_Type'Class
+     is (Type_Holders.Element (Holder));
+   function "-" (Typ : Ada_Gen.Ada_Type'Class) return Type_Holders.Holder
+     is (Type_Holders.To_Holder (Typ));
 
    type Register_T is record
       Xml_Id           : Unbounded.Unbounded_String;
@@ -65,7 +73,7 @@ package Descriptors.Register is
       Type_Holder      : Register_Access := null;
       --  This holds the Ada type as generated in the spec file.
       --  Only available when Type_Holder is null.
-      Ada_Type         : Unbounded.Unbounded_String;
+      Ada_Type         : Type_Holders.Holder;
 
       Dim              : Positive := 1;
       Dim_Increment    : Natural := 4;
@@ -92,7 +100,7 @@ package Descriptors.Register is
       Vec            : in out Register_Vectors.Vector)
       return Register_Access;
 
-   function Get_Ada_Type (Reg : Register_Access) return String;
+   function Get_Ada_Type (Reg : Register_Access) return Ada_Gen.Ada_Type'Class;
 
    procedure Dump (Spec : in out Ada_Gen.Ada_Spec; Reg : Register_Access);
 

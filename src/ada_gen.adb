@@ -22,6 +22,7 @@ with Interfaces; use Interfaces;
 with Ada.Calendar;
 with Ada.Characters.Handling;
 with Ada.Strings.Fixed;
+with Ada.Strings.Unbounded.Equal_Case_Insensitive;
 with Ada.Tags;
 
 with GNAT.Directory_Operations;
@@ -40,19 +41,37 @@ package body Ada_Gen is
      (Spec        : Ada_Spec;
       With_Clause : Ada_With_Clause) return Boolean;
 
-   function Protect_Keywords
-     (S : String) return Unbounded_String;
+   function Ada_Identifier
+     (S            : String;
+      Container_Id : String) return Unbounded_String;
 
    ----------------------
    -- Protect_Keywords --
    ----------------------
 
-   function Protect_Keywords
-     (S : String) return Unbounded_String
+   function Ada_Identifier
+     (S            : String;
+      Container_Id : String) return Unbounded_String
    is
       Low_Id : constant String := Ada.Characters.Handling.To_Lower (S);
 
    begin
+      --  If the last character is an underscore, remove it
+      if S (S'Last) = '_' then
+         return Ada_Identifier (S (S'First .. S'Last - 1), Container_Id);
+      --  Same for the first character
+      elsif S (S'First) = '_' then
+         return Ada_Identifier (S (S'First + 1 .. S'Last), Container_Id);
+      else
+         for J in S'First + 1 .. S'Last loop
+            if S (J) = '_' and then S (J - 1) = '_' then
+               return Ada_Identifier
+                 (S (S'First .. J - 1) & S (J + 1 .. S'Last), Container_Id);
+            end if;
+         end loop;
+      end if;
+
+      --  Now check that the identifier is not a keyword
       if Low_Id = "abort"
         or else Low_Id = "abs"
         or else Low_Id = "abstract"
@@ -128,10 +147,15 @@ package body Ada_Gen is
         or else Low_Id = "xor"
       then
          return To_Unbounded_String (S & "_k");
-      else
-         return To_Unbounded_String (S);
       end if;
-   end Protect_Keywords;
+
+      --  Now check that the first character is a letter
+      if Low_Id (Low_Id'First) not in 'a' .. 'z' then
+         return To_Unbounded_String (Container_Id & "_" & S);
+      end if;
+
+      return To_Unbounded_String (S);
+   end Ada_Identifier;
 
    -------------------------
    -- Set_Input_File_Name --
@@ -834,7 +858,7 @@ package body Ada_Gen is
    is
       Spec : Ada_Spec;
    begin
-      Spec.Id := Protect_Keywords (Name);
+      Spec.Id := Ada_Identifier (Name, "");
       Spec.Comment := New_Comment (Descr);
       Spec.Preelaborated := Preelaborated;
 
@@ -858,7 +882,7 @@ package body Ada_Gen is
    is
    begin
       return New_Spec
-        (Parent & "." & To_String (Protect_Keywords (Name)),
+        (Parent & "." & To_String (Ada_Identifier (Name, Parent)),
          Descr, Preelaborated);
    end New_Child_Spec;
 
@@ -1151,25 +1175,23 @@ package body Ada_Gen is
       use type Ada.Tags.Tag;
       Retry     : Boolean := True;
       Idx       : Natural := 0;
-      Name_Orig : Unbounded_String;
+      Name_Orig : constant Unbounded_String := Elt.Id;
 
    begin
       while Retry loop
          Retry := False;
 
          for Prev of Spec.Elements loop
-            if Prev'Tag = Elt'Tag then
+            if Prev in Ada_Type'Class then
                declare
                   Prev_T : constant Ada_Type'Class := Ada_Type'Class (Prev);
                begin
                   if Prev_T.Id = Elt.Id then
-                     if Is_Similar (Elt, Prev_T) then
+                     if Elt'Tag = Prev_T'Tag
+                       and then Is_Similar (Elt, Prev_T)
+                     then
                         return;
                      else
-                        if Name_Orig = Null_Unbounded_String then
-                           Name_Orig := Elt.Id;
-                        end if;
-
                         Idx := Idx + 1;
                         Elt.Id := Name_Orig & "_" & To_String (Idx);
                         Retry := True;
@@ -1412,12 +1434,29 @@ package body Ada_Gen is
    is
       Ret : Ada_Type_Scalar;
    begin
-      Ret.Id      := Protect_Keywords (Id);
+      Ret.Id      := Ada_Identifier (Id, "Scalar");
       Ret.Comment := New_Comment (Comment);
       Ret.Size    := Size;
       Add_Size_Aspect (Ret, Size);
       return Ret;
    end New_Type_Scalar;
+
+   -----------------
+   -- Target_Type --
+   -----------------
+
+   function Target_Type
+     (Size            : Natural;
+      Fully_Qualified : Boolean := True) return Ada_Type'Class
+   is
+      Ret : Ada_Type_Scalar;
+   begin
+      Ret.Id   :=
+        To_Unbounded_String (Base_Types.Target_Type (Size, Fully_Qualified));
+      Ret.Size := Size;
+
+      return Ret;
+   end Target_Type;
 
    ---------------------
    -- New_Type_Scalar --
@@ -1425,13 +1464,13 @@ package body Ada_Gen is
 
    function New_Subype_Scalar
      (Id      : String;
-      Typ     : String;
+      Typ     : Ada_Type'Class;
       Comment : String := "") return Ada_Subtype_Scalar
    is
    begin
-      return (Id      => Protect_Keywords (Id),
+      return (Id      => Ada_Identifier (Id, "Scalar"),
               Comment => New_Comment (Comment),
-              Typ     => To_Unbounded_String (Typ),
+              Typ     => Typ.Id,
               others  => <>);
    end New_Subype_Scalar;
 
@@ -1486,17 +1525,17 @@ package body Ada_Gen is
       Index_Type   : String;
       Index_First  : Natural;
       Index_Last   : Natural;
-      Element_Type : String;
+      Element_Type : Ada_Type'Class;
       Comment      : String := "") return Ada_Type_Array
    is
    begin
-      return (Id           => Protect_Keywords (Id),
+      return (Id           => Ada_Identifier (Id, "Arr"),
               Comment      => New_Comment (Comment),
               Aspects      => <>,
               Index_Type   => To_Unbounded_String (Index_Type),
               Index_First  => Index_First,
               Index_Last   => Index_Last,
-              Element_Type => To_Unbounded_String (Element_Type));
+              Element_Type => Element_Type.Id);
    end New_Type_Array;
 
    ----------------
@@ -1519,15 +1558,16 @@ package body Ada_Gen is
 
    function Get_Boolean return Ada_Type_Enum
    is
-      Ret  : Ada_Type_Enum;
-      Dead : Ada_Enum_Value;
+      Ret   : Ada_Type_Enum;
+      Dead  : Ada_Enum_Value;
+      Dead2 : constant Ada_Spec := New_Spec ("Standard", "", False);
    begin
       Ret := (Id      => To_Unbounded_String ("Boolean"),
               Comment => New_Comment (""),
               Aspects => <>,
               Values  => <>);
-      Dead := Add_Enum_Id (Ret, "False", 0);
-      Dead := Add_Enum_Id (Ret, "True", 0);
+      Dead := Add_Enum_Id (Dead2, Ret, "False", 0);
+      Dead := Add_Enum_Id (Dead2, Ret, "True", 0);
       return Ret;
    end Get_Boolean;
 
@@ -1542,7 +1582,7 @@ package body Ada_Gen is
    is
       Ret : Ada_Type_Enum;
    begin
-      Ret := (Id      => Protect_Keywords (Id),
+      Ret := (Id      => Ada_Identifier (Id, "E"),
               Comment => New_Comment (Comment),
               Aspects => <>,
               Values  => <>);
@@ -1558,7 +1598,8 @@ package body Ada_Gen is
    --------------------------
 
    function Add_Enum_Id_Internal
-     (Enum     : in out Ada_Type_Enum;
+     (Spec     : Ada_Spec;
+      Enum     : in out Ada_Type_Enum;
       Id       : String;
       Has_Repr : Boolean;
       Repr     : Unsigned;
@@ -1589,11 +1630,7 @@ package body Ada_Gen is
          end if;
       end loop;
 
-      if Id (Id'First) in '0' .. '9' then
-         The_Id := Enum.Id & "_" & Camel_C;
-      else
-         The_Id := Protect_Keywords (Camel_C);
-      end if;
+      The_Id := Ada_Identifier (Camel_C, To_String (Enum.Id));
 
       --  Check duplicated names
       Suffix := 0;
@@ -1610,12 +1647,20 @@ package body Ada_Gen is
             if Enum.Values (J).Id = The_Id then
                Suffix := Suffix + 1;
                Done   := False;
+               The_Id := Enum_Value.Id & "_" & To_String (Suffix);
 
-               declare
-                  S : constant String := Suffix'Img;
-               begin
-                  The_Id := Enum_Value.Id & "_" & S (S'First + 1 .. S'Last);
-               end;
+               exit;
+            end if;
+         end loop;
+
+         for Elt of Spec.Elements loop
+            if Elt in Ada_Type'Class
+              and then Ada.Strings.Unbounded.Equal_Case_Insensitive
+                (The_Id, Ada_Type'Class (Elt).Id)
+            then
+               Done := False;
+               Suffix := Suffix + 1;
+               The_Id := Enum_Value.Id & "_" & To_String (Suffix);
 
                exit;
             end if;
@@ -1648,12 +1693,13 @@ package body Ada_Gen is
    -----------------
 
    function Add_Enum_Id
-     (Enum    : in out Ada_Type_Enum;
+     (Spec    : Ada_Spec;
+      Enum    : in out Ada_Type_Enum;
       Id      : String;
       Comment : String := "") return Ada_Enum_Value
    is
    begin
-      return Add_Enum_Id_Internal (Enum, Id, False, 0, Comment);
+      return Add_Enum_Id_Internal (Spec, Enum, Id, False, 0, Comment);
    end Add_Enum_Id;
 
    -----------------
@@ -1661,13 +1707,14 @@ package body Ada_Gen is
    -----------------
 
    function Add_Enum_Id
-     (Enum    : in out Ada_Type_Enum;
+     (Spec    : Ada_Spec;
+      Enum    : in out Ada_Type_Enum;
       Id      : String;
       Repr    : Unsigned;
       Comment : String := "") return Ada_Enum_Value
    is
    begin
-      return Add_Enum_Id_Internal (Enum, Id, True, Repr, Comment);
+      return Add_Enum_Id_Internal (Spec, Enum, Id, True, Repr, Comment);
    end Add_Enum_Id;
 
    --------
@@ -1715,7 +1762,7 @@ package body Ada_Gen is
    is
    begin
       return Ada_Type_Record'
-        (Id          => Protect_Keywords (Id),
+        (Id          => Ada_Identifier (Id, "Rec"),
          Comment     => New_Comment (Comment),
          Aspects     => <>,
          Fields      => <>,
@@ -1823,7 +1870,7 @@ package body Ada_Gen is
    procedure Add_Field_Internal
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
-      Typ         : String;
+      Typ         : Ada_Type'Class;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -1831,10 +1878,21 @@ package body Ada_Gen is
       Default     : Unbounded_String;
       Comment     : String := "")
    is
+      Idx     : Natural := 0;
+      The_Id  : constant Unbounded_String :=
+                  Ada_Identifier (Id, To_String (Rec.Id));
+      Current : Unbounded_String := The_Id;
    begin
+      for F of Rec.Fields loop
+         if F.Id = Current then
+            Idx := Idx + 1;
+            Current := The_Id & "_" & To_String (Idx);
+         end if;
+      end loop;
+
       Rec.Fields.Append
-        ((Id          => Protect_Keywords (Id),
-          Typ         => To_Unbounded_String (Typ),
+        ((Id          => Current,
+          Typ         => Typ.Id,
           Offset      => Offset,
           LSB         => LSB,
           MSB         => MSB,
@@ -1850,7 +1908,7 @@ package body Ada_Gen is
    procedure Add_Field
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
-      Typ         : String;
+      Typ         : Ada_Type'Class;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -1876,7 +1934,7 @@ package body Ada_Gen is
    procedure Add_Field
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
-      Typ         : String;
+      Typ         : Ada_Type'Class;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -1903,7 +1961,7 @@ package body Ada_Gen is
    procedure Add_Field
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
-      Typ         : String;
+      Typ         : Ada_Type'Class;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -1964,7 +2022,7 @@ package body Ada_Gen is
       Ret : Ada_Type_Union;
    begin
       Ret :=
-        (Id           => Protect_Keywords (Id),
+        (Id           => Ada_Identifier (Id, "Rec"),
          Comment      => New_Comment (Comment),
          Aspects      => <>,
          Disc_name    => To_Unbounded_String (Disc_Name),
@@ -1990,16 +2048,29 @@ package body Ada_Gen is
      (Rec         : in out Ada_Type_Union'Class;
       Enum_Val    : String;
       Id          : String;
-      Typ         : String;
+      Typ         : Ada_Type'Class;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
       Comment     : String := "")
    is
+      Idx     : Natural := 0;
+      The_Id  : constant Unbounded_String :=
+                  Ada_Identifier (Id, To_String (Rec.Id));
+      Current : Unbounded_String := The_Id;
    begin
+      for E of Rec.Disc_Fields loop
+         for F of E loop
+            if F.Id = Current then
+               Idx := Idx + 1;
+               Current := The_Id & "_" & To_String (Idx);
+            end if;
+         end loop;
+      end loop;
+
       Rec.Disc_Fields (Enum_Val).Append
-        ((Id          => To_Unbounded_String (Id),
-          Typ         => To_Unbounded_String (Typ),
+        ((Id          => Current,
+          Typ         => Typ.Id,
           Offset      => Offset,
           LSB         => LSB,
           MSB         => MSB,
@@ -2050,7 +2121,7 @@ package body Ada_Gen is
       Comment  : String := "") return Ada_Constant_Value
    is
    begin
-      return (Id      => Protect_Keywords (Id),
+      return (Id      => Ada_Identifier (Id, "Cst"),
               Id_Size => Align_Id,
               Typ     => To_Unbounded_String (Typ),
               Value   => To_Unbounded_String (Value),
@@ -2068,7 +2139,7 @@ package body Ada_Gen is
       Comment      : String := "") return Ada_Instance
    is
    begin
-      return (Id      => Protect_Keywords (Id),
+      return (Id      => Ada_Identifier (Id, "I"),
               Typ     => To_Unbounded_String (Typ),
               Aliasd  => Aliased_Inst,
               Comment => New_Comment (Comment),

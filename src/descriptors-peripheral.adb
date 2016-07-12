@@ -147,6 +147,8 @@ package body Descriptors.Peripheral is
                      Child_List : constant Node_List :=
                                     Nodes.Child_Nodes (Child);
                      Register   : Register_Access;
+                     Reg2       : Register_Access;
+                     use Ada.Strings.Unbounded;
                   begin
                      for K in 0 .. Nodes.Length (Child_List) - 1 loop
                         if Nodes.Node_Type (Nodes.Item (Child_List, K)) =
@@ -154,12 +156,32 @@ package body Descriptors.Peripheral is
                         then
                            Register :=
                              Read_Register
-                               (Element (Nodes.Item (Child_List, K)),
+                               (DOM.Core.Element (Nodes.Item (Child_List, K)),
                                 Ret.Prepend_To_Name,
                                 Ret.Append_To_Name,
                                 Ret.Reg_Properties,
                                 Ret.Registers);
-                           Insert_Register (Ret, Register);
+
+                           if Register.Dim > 1
+                             and then Register.Dim_Increment /=
+                               Register.Reg_Properties.Size / 8
+                           then
+                              --  in such case, this certainly indicates two
+                              --  intertwined arrays of registers, We need in
+                              --  this case to expand the erray into individual
+                              --  values
+                              for J in 0 .. Register.Dim - 1 loop
+                                 Reg2 := new Register_T'(Register.all);
+                                 Reg2.Dim := 1;
+                                 Reg2.Address_Offset :=
+                                   Register.Address_Offset +
+                                     J * Register.Dim_Increment;
+                                 Reg2.Name := Register.Name & To_String (J);
+                                 Insert_Register (Ret, Reg2);
+                              end loop;
+                           else
+                              Insert_Register (Ret, Register);
+                           end if;
                         end if;
                      end loop;
                   end;
@@ -369,7 +391,7 @@ package body Descriptors.Peripheral is
          end loop;
 
          for S of Values loop
-            Val := Add_Enum_Id (Ret, S);
+            Val := Add_Enum_Id (Spec, Ret, S);
 
             declare
                Actual : constant String := To_String (Id (Val));
@@ -434,6 +456,7 @@ package body Descriptors.Peripheral is
                             then Reg.Reg_Properties.Size - 1
                             else Reg.Dim * Reg.Dim_Increment * 8 - 1),
                Comment  => To_String (Reg.Description));
+
          else
             Add_Field
               (Rec,

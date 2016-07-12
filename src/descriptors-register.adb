@@ -286,7 +286,7 @@ package body Descriptors.Register is
    -- Get_Ada_Type --
    ------------------
 
-   function Get_Ada_Type (Reg : Register_Access) return String
+   function Get_Ada_Type (Reg : Register_Access) return Ada_Gen.Ada_Type'Class
    is
       use type Ada.Containers.Count_Type;
       use Unbounded;
@@ -294,8 +294,8 @@ package body Descriptors.Register is
       if Reg.Type_Holder /= null then
          return Get_Ada_Type (Reg.Type_Holder);
 
-      elsif Length (Reg.Ada_Type) > 0 then
-         return To_String (Reg.Ada_Type);
+      elsif not Reg.Ada_Type.Is_Empty then
+         return -Reg.Ada_Type;
 
       else
          raise Constraint_Error with "No ada type defined yet for " &
@@ -324,9 +324,7 @@ package body Descriptors.Register is
         or else Reg.Fields.Is_Empty
       then
          --  Don't generate anything here: we use a base type
-         Reg.Ada_type :=
-           To_Unbounded_String
-             (Target_Type (Reg.Reg_Properties.Size));
+         Reg.Ada_type := -Ada_Gen.Target_Type (Reg.Reg_Properties.Size);
 
          if Reg.Dim > 1 then
             --  Just generate a comment to document the array that's going
@@ -361,12 +359,14 @@ package body Descriptors.Register is
                Res : Ada_Type'Class := Simplify (Rec, Spec);
             begin
                Add (Spec, Res);
-               Reg.Ada_Type := Id (Res);
+               Reg.Ada_Type := -Res;
             end;
          end;
       end if;
 
-      if Reg.Dim > 1 then
+      if Reg.Dim > 1
+        and then Reg.Dim_Increment = Reg.Reg_Properties.Size / 8
+      then
          declare
             Array_T : Ada_Type_Array :=
                         New_Type_Array
@@ -375,11 +375,11 @@ package body Descriptors.Register is
                            Index_Type   => "",
                            Index_First  => 0,
                            Index_Last   => Reg.Dim - 1,
-                           Element_Type => Get_Ada_Type (reg),
+                           Element_Type => Get_Ada_Type (Reg),
                            Comment      => To_String (Reg.Description));
          begin
             Add (Spec, Array_T);
-            Reg.Ada_Type := Id (Array_T);
+            Reg.Ada_Type := -Array_T;
          end;
       end if;
    end Dump;

@@ -272,12 +272,13 @@ package body Descriptors.Field is
       Prefix        : Natural;
       Default       : Unsigned;
       Default_Id    : Unbounded_String;
-      Ada_Type      : Unbounded_String;
+      Ada_Type      : Descriptors.Register.Type_Holders.Holder;
       Ada_Type_Size : Natural;
       Ada_Name      : Unbounded_String;
       As_Boolean    : Boolean;
       Description   : Unbounded_String;
       All_RO        : Boolean := True;
+      use Descriptors.Register;
 
    begin
       for Field of Reg_Fields loop
@@ -299,7 +300,7 @@ package body Descriptors.Field is
 
       Index        := 0;
       while Index < Properties.Size loop
-         Ada_Type := Null_Unbounded_String;
+         Ada_Type := Type_Holders.Empty_Holder;
 
          if Fields (Index) = Null_Field then
             --  First look for undefined/reserved parts of the register
@@ -387,7 +388,8 @@ package body Descriptors.Field is
 
                      for Val of Enum.Values loop
                         Enum_Val := Add_Enum_Id
-                          (Enum_T,
+                          (Spec,
+                           Enum_T,
                            Id      => To_String (Val.Name),
                            Repr    => Val.Value,
                            Comment => To_String (Val.Descr));
@@ -396,7 +398,7 @@ package body Descriptors.Field is
                           and then not Found_Default
                           and then Val.Value = Default
                         then
-                           Default_Id := Id (Enum_Val);
+                           Default_Id := Id (Spec) & "." & Id (Enum_Val);
                            Found_Default := True;
                         end if;
 
@@ -406,7 +408,7 @@ package body Descriptors.Field is
                         --  Reset value not found in the enumerate.
                         --  Let's create an enumerate value for it
                         Enum_Val := Add_Enum_Id
-                          (Enum_T,
+                          (Spec, Enum_T,
                            Id      => Enum_Name & "_Reset",
                            Repr    => Default,
                            Comment => "Reset value for the field");
@@ -415,7 +417,7 @@ package body Descriptors.Field is
 
                      Add (Spec, Enum_T);
 
-                     Ada_Type := Id (Enum_T);
+                     Ada_Type := -Enum_T;
                   end;
                end loop;
             end if;
@@ -443,8 +445,8 @@ package body Descriptors.Field is
             if Length = 1 then
                --  Simple field
                if Ada_Type_Size = 1 and then As_Boolean then
-                  if Ada_Type = Null_Unbounded_String then
-                     Ada_Type := To_Unbounded_String ("Boolean");
+                  if Ada_Type.Is_Empty then
+                     Ada_Type := -Get_Boolean;
 
                      if not All_RO then
                         if Default = 0 then
@@ -455,12 +457,11 @@ package body Descriptors.Field is
                      end if;
                   end if;
 
-               elsif Ada_Type = Null_Unbounded_String then
+               elsif Ada_Type.Is_Empty then
                   --  We have a simple scalar value. Let's create a specific
                   --  subtype for it, so that programming conversion to this
                   --  field is allowed using FIELD_TYPE (Value).
-                  Ada_Type :=
-                    To_Unbounded_String (Target_Type (Ada_Type_Size));
+                  Ada_Type := -Ada_Gen.Target_Type (Ada_Type_Size);
 
                   declare
                      Sub_T : Ada_Subtype_Scalar :=
@@ -469,10 +470,10 @@ package body Descriptors.Field is
                                          "_" &
                                          To_String (Fields (Index).Name) &
                                          "_Field",
-                                  Typ => To_String (Ada_Type));
+                                  Typ => -Ada_Type);
                   begin
                      Add (Spec, Sub_T);
-                     Ada_Type := Id (Sub_T);
+                     Ada_Type := -Sub_T;
                   end;
                end if;
                --  If Ada_Type is not Null_Unbounded_String, then the Field
@@ -512,11 +513,11 @@ package body Descriptors.Field is
                   end if;
 
                   if Ada_Type_Size = 1 and then As_Boolean then
-                     if Ada_Type = Null_Unbounded_String then
-                        Ada_Type := To_Unbounded_String ("Boolean");
+                     if Ada_Type.Is_Empty then
+                        Ada_Type := -Get_Boolean;
                      end if;
 
-                  elsif Ada_Type = Null_Unbounded_String then
+                  elsif Ada_Type.Is_Empty then
                      declare
                         Scalar_T : Ada_Subtype_Scalar :=
                                      New_Subype_Scalar
@@ -526,7 +527,7 @@ package body Descriptors.Field is
                                         Comment => T_Name & " array element");
                      begin
                         Add (Spec, Scalar_T);
-                        Ada_Type := Id (Scalar_T);
+                        Ada_Type := -Scalar_T;
                      end;
                   end if;
 
@@ -536,7 +537,7 @@ package body Descriptors.Field is
                        Index_Type   => "",
                        Index_First  => First,
                        Index_Last   => First + Length - 1,
-                       Element_Type => To_String (Ada_Type),
+                       Element_Type => -Ada_Type,
                        Comment      => T_Name & " array");
 
                   Add_Aspect
@@ -555,7 +556,7 @@ package body Descriptors.Field is
                     (Rec      => Union_T,
                      Enum_Val => "True",
                      Id       => "Arr",
-                     Typ      => Id (Array_T),
+                     Typ      => Array_T,
                      Offset   => 0,
                      LSB      => 0,
                      MSB      => Fields (Index).Size * Length - 1,
@@ -573,7 +574,7 @@ package body Descriptors.Field is
 
                   Add (Spec, Union_T);
 
-                  Ada_Type := Id (Union_T);
+                  Ada_Type := -Union_T;
                   Ada_Type_Size := Fields (Index).Size * Length;
                   Ada_Name := To_Unbounded_String (F_Name);
 
@@ -670,7 +671,7 @@ package body Descriptors.Field is
                Add_Field
                  (Rec,
                   Id      => To_String (Ada_Name),
-                  Typ     => To_String (Ada_Type),
+                  Typ     => -Ada_Type,
                   Offset  => 0,
                   LSB     => Index,
                   MSB     => Index + Ada_Type_Size - 1,
@@ -680,7 +681,7 @@ package body Descriptors.Field is
                Add_Field
                  (Rec,
                   Id      => To_String (Ada_Name),
-                  Typ     => To_String (Ada_Type),
+                  Typ     => -Ada_Type,
                   Offset  => 0,
                   LSB     => Index,
                   MSB     => Index + Ada_Type_Size - 1,
@@ -691,7 +692,7 @@ package body Descriptors.Field is
                Add_Field
                  (Rec,
                   Id      => To_String (Ada_Name),
-                  Typ     => To_String (Ada_Type),
+                  Typ     => -Ada_Type,
                   Offset  => 0,
                   LSB     => Index,
                   MSB     => Index + Ada_Type_Size - 1,
