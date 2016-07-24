@@ -15309,6 +15309,31 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
+        <register>
+          <name>FLTR</name>
+          <displayName>FLTR</displayName>
+          <description>FLTR register</description>
+          <addressOffset>0x24</addressOffset>
+          <size>0x20</size>
+          <access>read-write</access>
+          <resetValue>0x0000</resetValue>
+          <fields>
+            <field>
+              <name>DNF</name>
+              <description>Digital Noise Filter.
+              0 to disable, or filtering capability
+              up to N * TPCLK1</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>4</bitWidth>
+            </field>
+            <field>
+              <name>ANOFF</name>
+              <description>Analog noise filter OFF</description>
+              <bitOffset>4</bitOffset>
+              <bitWidth>1</bitWidth>
+            </field>
+          </fields>
+        </register>
       </registers>
     </peripheral>
     <peripheral derivedFrom="I2C3">
