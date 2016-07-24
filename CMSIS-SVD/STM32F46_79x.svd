@@ -16145,6 +16145,18 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <description>PWRCTRL</description>
               <bitOffset>0</bitOffset>
               <bitWidth>2</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Power_OFF</name>
+                  <description>The clock to card is stopped.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Power_ON</name>
+                  <description>The card is clocked.</description>
+                  <value>3</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
           </fields>
         </register>
@@ -16169,12 +16181,41 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               bit</description>
               <bitOffset>13</bitOffset>
               <bitWidth>1</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Edge_Rising</name>
+                  <description>Cmd and Data changed on the SDMMCCLK falling edge succeeding the rising edge of SDMMC_CK.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Edge_Falling</name>
+                  <description>Cmd and Data changed on the SDMMC_CK falling edge.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>WIDBUS</name>
               <description>Wide bus mode enable bit</description>
               <bitOffset>11</bitOffset>
               <bitWidth>2</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Bus_Wide_1b</name>
+                  <description>Default bus mode: SDMMC_D0 is used.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Bus_Wide_4b</name>
+                  <description>4-wide bus mode: SDMMC_D[3:0] used.</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Bus_Wide_8b</name>
+                  <description>8-wide bus mode: SDMMC_D[7:0] used.</description>
+                  <value>2</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>BYPASS</name>
@@ -16280,6 +16321,23 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <description>Wait for response bits</description>
               <bitOffset>6</bitOffset>
               <bitWidth>2</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>No_Response</name>
+                  <description>No response, expect CMDSENT flag.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Short_Response</name>
+                  <description>Short response, expect CMDREND or CCRCFAIL flag.</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Long_Response</name>
+                  <description>Long response, expect CMDREND or CCRCFAIL flag.</description>
+                  <value>3</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>CMDINDEX</name>
@@ -16446,6 +16504,83 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <description>Data block size</description>
               <bitOffset>4</bitOffset>
               <bitWidth>4</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Block_1b</name>
+                  <description>Block length = 2**0 = 1 byte</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_2b</name>
+                  <description>Block length = 2**1 = 2 byte</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_4b</name>
+                  <description>Block length = 2**2 = 4 byte</description>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_8b</name>
+                  <description>Block length = 2**3 = 8 byte</description>
+                  <value>3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_16b</name>
+                  <description>Block length = 2**4 = 16 byte</description>
+                  <value>4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_32b</name>
+                  <description>Block length = 2**5 = 32 byte</description>
+                  <value>5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_64b</name>
+                  <description>Block length = 2**6 = 64 byte</description>
+                  <value>6</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_128b</name>
+                  <description>Block length = 2**7 = 128 byte</description>
+                  <value>7</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_256b</name>
+                  <description>Block length = 2**8 = 256 byte</description>
+                  <value>8</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_512b</name>
+                  <description>Block length = 2**9 = 512 byte</description>
+                  <value>9</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_1024b</name>
+                  <description>Block length = 2**10 = 1024 byte</description>
+                  <value>10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_2048b</name>
+                  <description>Block length = 2**11 = 2048 byte</description>
+                  <value>11</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_4096b</name>
+                  <description>Block length = 2**12 = 4096 byte</description>
+                  <value>12</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_8192b</name>
+                  <description>Block length = 2**13 = 8192 byte</description>
+                  <value>13</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_16384b</name>
+                  <description>Block length = 2**14 = 16384 byte</description>
+                  <value>14</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>DMAEN</name>
@@ -16459,6 +16594,18 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               or SDIO multibyte data transfer.</description>
               <bitOffset>2</bitOffset>
               <bitWidth>1</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Block</name>
+                  <description>Block data transfer</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Stream</name>
+                  <description>Stream or SDIO multibyte data transfer</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>DTDIR</name>
@@ -16466,6 +16613,18 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               selection</description>
               <bitOffset>1</bitOffset>
               <bitWidth>1</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Controller_To_Card</name>
+                  <description>Data is sent to the card</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Card_To_Controller</name>
+                  <description>Data is read from the card</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>DTEN</name>
@@ -61612,9 +61771,9 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
       </interrupt>
     </peripheral>
     <peripheral>
-      <name>DSIHOST</name>
+      <name>DSI</name>
       <description>DSI Host</description>
-      <groupName>DSIHOST</groupName>
+      <groupName>DSI</groupName>
       <baseAddress>0x40016C00</baseAddress>
       <addressBlock>
         <offset>0x0</offset>
@@ -61662,24 +61821,24 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DSIHSOT_CCR</name>
-          <displayName>DSIHSOT_CCR</displayName>
+          <name>DSI_CCR</name>
+          <displayName>DSI_CCR</displayName>
           <description>DSI HOST Clock Control
           Register</description>
           <addressOffset>0x8</addressOffset>
           <size>0x20</size>
           <access>read-write</access>
-          <resetValue>0x3133302A</resetValue>
+          <resetValue>0x00000000</resetValue>
           <fields>
             <field>
               <name>TOCKDIV</name>
-              <description>TOCKDIV</description>
+              <description>Timeout Clock Division</description>
               <bitOffset>8</bitOffset>
               <bitWidth>8</bitWidth>
             </field>
             <field>
               <name>TXECKDIV</name>
-              <description>TXECKDIV</description>
+              <description>TX Escape Clock Division</description>
               <bitOffset>0</bitOffset>
               <bitWidth>8</bitWidth>
             </field>
@@ -61914,7 +62073,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <bitWidth>1</bitWidth>
             </field>
             <field>
-              <name>LVAE</name>
+              <name>LPVAE</name>
               <description>Low-Power Vertical Active
               Enable</description>
               <bitOffset>11</bitOffset>
@@ -61963,7 +62122,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <name>VPSIZE</name>
               <description>Video Packet Size</description>
               <bitOffset>0</bitOffset>
-              <bitWidth>15</bitWidth>
+              <bitWidth>14</bitWidth>
             </field>
           </fields>
         </register>
@@ -61981,7 +62140,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <name>NUMC</name>
               <description>Number of Chunks</description>
               <bitOffset>0</bitOffset>
-              <bitWidth>14</bitWidth>
+              <bitWidth>13</bitWidth>
             </field>
           </fields>
         </register>
@@ -61999,7 +62158,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <name>NPSIZE</name>
               <description>Null Packet Size</description>
               <bitOffset>0</bitOffset>
-              <bitWidth>14</bitWidth>
+              <bitWidth>13</bitWidth>
             </field>
           </fields>
         </register>
@@ -62018,7 +62177,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <description>Horizontal Synchronism Active
               duration</description>
               <bitOffset>0</bitOffset>
-              <bitWidth>13</bitWidth>
+              <bitWidth>12</bitWidth>
             </field>
           </fields>
         </register>
@@ -62037,7 +62196,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <description>Horizontal Back-Porch
               duration</description>
               <bitOffset>0</bitOffset>
-              <bitWidth>13</bitWidth>
+              <bitWidth>12</bitWidth>
             </field>
           </fields>
         </register>
@@ -62339,59 +62498,58 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           Register</description>
           <addressOffset>0x74</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
-              <name>RCB</name>
-              <description>RCB</description>
-              <bitOffset>6</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PRDFF</name>
-              <description>PRDFF</description>
-              <bitOffset>5</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PRDFE</name>
-              <description>PRDFE</description>
-              <bitOffset>4</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PWRFF</name>
-              <description>PWRFF</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PWRFE</name>
-              <description>PWRFE</description>
-              <bitOffset>2</bitOffset>
+              <name>CMDFE</name>
+              <description>Command FIFO Empty</description>
+              <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
             </field>
             <field>
               <name>CMDFF</name>
-              <description>Acknowledge Request Enable</description>
+              <description>Command FIFO Full</description>
               <bitOffset>1</bitOffset>
               <bitWidth>1</bitWidth>
             </field>
             <field>
-              <name>CMDFE</name>
-              <description>Tearing Effect Acknowledge Request
-              Enable</description>
-              <bitOffset>0</bitOffset>
+              <name>PWRFE</name>
+              <description>Payload Write FIFO Empty</description>
+              <bitOffset>2</bitOffset>
               <bitWidth>1</bitWidth>
             </field>
+            <field>
+              <name>PWRFF</name>
+              <description>Payload Write FIFO Full</description>
+              <bitOffset>3</bitOffset>
+              <bitWidth>1</bitWidth>
+            </field>
+            <field>
+              <name>PRDFE</name>
+              <description>Payload Read FIFO Empty</description>
+              <bitOffset>4</bitOffset>
+              <bitWidth>1</bitWidth>
+            </field>
+            <field>
+              <name>PRDFF</name>
+              <description>Payload Read FIFO Full</description>
+              <bitOffset>5</bitOffset>
+              <bitWidth>1</bitWidth>
+            </field>
+            <field>
+              <name>RCB</name>
+              <description>Read Command Busy</description>
+              <bitOffset>6</bitOffset>
+              <bitWidth>1</bitWidth>
+           </field>
           </fields>
         </register>
         <register>
-          <name>DSI_TCCR1</name>
-          <displayName>DSI_TCCR1</displayName>
+          <name>DSI_TCCR0</name>
+          <displayName>DSI_TCCR0</displayName>
           <description>DSI Host Timeout Counter Configuration
-          Register1</description>
+          Register 0</description>
           <addressOffset>0x78</addressOffset>
           <size>0x20</size>
           <access>read-write</access>
@@ -62414,10 +62572,10 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DSI_TCCR2</name>
-          <displayName>DSI_TCCR2</displayName>
+          <name>DSI_TCCR1</name>
+          <displayName>DSI_TCCR1</displayName>
           <description>DSI Host Timeout Counter Configuration
-          Register2</description>
+          Register 1</description>
           <addressOffset>0x7C</addressOffset>
           <size>0x20</size>
           <access>read-write</access>
@@ -62433,10 +62591,10 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DSI_TCCR3</name>
-          <displayName>DSI_TCCR3</displayName>
+          <name>DSI_TCCR2</name>
+          <displayName>DSI_TCCR2</displayName>
           <description>DSI Host Timeout Counter Configuration
-          Register3</description>
+          Register 2</description>
           <addressOffset>0x80</addressOffset>
           <size>0x20</size>
           <access>read-write</access>
@@ -62452,10 +62610,10 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DSI_TCCR4</name>
-          <displayName>DSI_TCCR4</displayName>
+          <name>DSI_TCCR3</name>
+          <displayName>DSI_TCCR3</displayName>
           <description>DSI Host Timeout Counter Configuration
-          Register4</description>
+          Register 3</description>
           <addressOffset>0x84</addressOffset>
           <size>0x20</size>
           <access>read-write</access>
@@ -62477,10 +62635,10 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DSI_TCCR5</name>
-          <displayName>DSI_TCCR5</displayName>
+          <name>DSI_TCCR4</name>
+          <displayName>DSI_TCCR4</displayName>
           <description>DSI Host Timeout Counter Configuration
-          Register5</description>
+          Register 4</description>
           <addressOffset>0x88</addressOffset>
           <size>0x20</size>
           <access>read-write</access>
@@ -62496,10 +62654,10 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DSI_TCCR6</name>
-          <displayName>DSI_TCCR6</displayName>
+          <name>DSI_TCCR5</name>
+          <displayName>DSI_TCCR5</displayName>
           <description>DSI Host Timeout Counter Configuration
-          Register6</description>
+          Register 5</description>
           <addressOffset>0x8C</addressOffset>
           <size>0x20</size>
           <access>read-write</access>
@@ -62621,14 +62779,14 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           </fields>
         </register>
         <register>
-          <name>DSI_PCCONFR</name>
-          <displayName>DSI_PCCONFR</displayName>
+          <name>DSI_PCONFR</name>
+          <displayName>DSI_PCONFR</displayName>
           <description>DSI Host PHY Configuration
           Register</description>
           <addressOffset>0xA4</addressOffset>
           <size>0x20</size>
           <access>read-write</access>
-          <resetValue>0x3133302A</resetValue>
+          <resetValue>0x00000001</resetValue>
           <fields>
             <field>
               <name>SW_TIME</name>
@@ -62704,7 +62862,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           <description>DSI Host PHY Status Register</description>
           <addressOffset>0xB0</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00001528</resetValue>
           <fields>
             <field>
@@ -63259,7 +63417,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           0</description>
           <addressOffset>0xD8</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>write-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
@@ -63397,7 +63555,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           1</description>
           <addressOffset>0xDC</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>write-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
@@ -63519,7 +63677,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           Register</description>
           <addressOffset>0x10C</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
@@ -63537,7 +63695,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           Register</description>
           <addressOffset>0x110</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
@@ -63561,7 +63719,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           Configuration Register</description>
           <addressOffset>0x118</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
@@ -63585,62 +63743,62 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           Register</description>
           <addressOffset>0x138</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
               <name>LPCE</name>
               <description>Low-Power Command Enable</description>
-              <bitOffset>15</bitOffset>
+              <bitOffset>9</bitOffset>
               <bitWidth>1</bitWidth>
             </field>
             <field>
               <name>FBTAAE</name>
               <description>Frame BTA Acknowledge
               Enable</description>
-              <bitOffset>14</bitOffset>
+              <bitOffset>8</bitOffset>
               <bitWidth>1</bitWidth>
             </field>
             <field>
               <name>LPHFE</name>
               <description>Low-Power Horizontal Front-Porch
               Enable</description>
-              <bitOffset>13</bitOffset>
+              <bitOffset>7</bitOffset>
               <bitWidth>1</bitWidth>
             </field>
             <field>
               <name>LPHBPE</name>
               <description>Low-power Horizontal Back-Porch
               Enable</description>
-              <bitOffset>12</bitOffset>
+              <bitOffset>6</bitOffset>
               <bitWidth>1</bitWidth>
             </field>
             <field>
-              <name>LVAE</name>
+              <name>LPVAE</name>
               <description>Low-Power Vertical Active
               Enable</description>
-              <bitOffset>11</bitOffset>
+              <bitOffset>5</bitOffset>
               <bitWidth>1</bitWidth>
             </field>
             <field>
               <name>LPVFPE</name>
               <description>Low-power Vertical Front-Porch
               Enable</description>
-              <bitOffset>10</bitOffset>
+              <bitOffset>4</bitOffset>
               <bitWidth>1</bitWidth>
             </field>
             <field>
               <name>LPVBPE</name>
               <description>Low-power Vertical Back-Porch
               Enable</description>
-              <bitOffset>9</bitOffset>
+              <bitOffset>3</bitOffset>
               <bitWidth>1</bitWidth>
             </field>
             <field>
               <name>LPVSAE</name>
               <description>Low-Power Vertical Sync time
               Enable</description>
-              <bitOffset>8</bitOffset>
+              <bitOffset>2</bitOffset>
               <bitWidth>1</bitWidth>
             </field>
             <field>
@@ -63658,14 +63816,14 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           Register</description>
           <addressOffset>0x13C</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
               <name>VPSIZE</name>
               <description>Video Packet Size</description>
               <bitOffset>0</bitOffset>
-              <bitWidth>15</bitWidth>
+              <bitWidth>14</bitWidth>
             </field>
           </fields>
         </register>
@@ -63676,14 +63834,14 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           Register</description>
           <addressOffset>0x140</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
               <name>NUMC</name>
               <description>Number of Chunks</description>
               <bitOffset>0</bitOffset>
-              <bitWidth>14</bitWidth>
+              <bitWidth>13</bitWidth>
             </field>
           </fields>
         </register>
@@ -63694,14 +63852,14 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           Configuration Register</description>
           <addressOffset>0x144</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
               <name>NPSIZE</name>
               <description>Null Packet Size</description>
               <bitOffset>0</bitOffset>
-              <bitWidth>14</bitWidth>
+              <bitWidth>13</bitWidth>
             </field>
           </fields>
         </register>
@@ -63712,7 +63870,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           Register</description>
           <addressOffset>0x148</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
@@ -63720,7 +63878,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <description>Horizontal Synchronism Active
               duration</description>
               <bitOffset>0</bitOffset>
-              <bitWidth>13</bitWidth>
+              <bitWidth>12</bitWidth>
             </field>
           </fields>
         </register>
@@ -63731,7 +63889,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           Register</description>
           <addressOffset>0x14C</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
@@ -63739,7 +63897,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <description>Horizontal Back-Porch
               duration</description>
               <bitOffset>0</bitOffset>
-              <bitWidth>13</bitWidth>
+              <bitWidth>12</bitWidth>
             </field>
           </fields>
         </register>
@@ -63750,7 +63908,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           Register</description>
           <addressOffset>0x150</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
@@ -63768,7 +63926,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           Register</description>
           <addressOffset>0x154</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
@@ -63787,7 +63945,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           Register</description>
           <addressOffset>0x158</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
@@ -63806,7 +63964,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           Register</description>
           <addressOffset>0x15C</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
@@ -63825,7 +63983,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           Register</description>
           <addressOffset>0x160</addressOffset>
           <size>0x20</size>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>

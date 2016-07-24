@@ -7428,12 +7428,6 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <bitWidth>2</bitWidth>
             </field>
             <field>
-              <name>ACK</name>
-              <description>ACK</description>
-              <bitOffset>20</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
               <name>CT</name>
               <description>Current target (only in double buffer
               mode)</description>
@@ -16191,21 +16185,9 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
             <field>
               <name>DFF</name>
-              <description>CRC length</description>
+              <description>Data frame format</description>
               <bitOffset>11</bitOffset>
               <bitWidth>1</bitWidth>
-              <!--enumeratedValues>
-                <enumeratedValue>
-                  <name>CRC_8BIT</name>
-                  <description>8-bit CRC length.</description>
-                  <value>0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>CRC_16BIT</name>
-                  <description>16-bit CRC length.</description>
-                  <value>1</value>
-                </enumeratedValue>
-              </enumeratedValues-->
             </field>
             <field>
               <name>RXONLY</name>
@@ -16270,7 +16252,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           <addressOffset>0x4</addressOffset>
           <size>0x20</size>
           <access>read-write</access>
-          <resetValue>0x0000</resetValue>
+          <resetValue>0x0700</resetValue>
           <fields>
             <field>
               <name>LDMA_TX</name>
@@ -23032,6 +23014,12 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           <resetValue>0x0000</resetValue>
           <fields>
             <field>
+              <name>SMS_3</name>
+              <description>Slave mode selection</description>
+              <bitOffset>16</bitOffset>
+              <bitWidth>1</bitWidth>
+            </field>
+            <field>
               <name>MSM</name>
               <description>Master/Slave mode</description>
               <bitOffset>7</bitOffset>
@@ -23751,7 +23739,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
-              <name>SMS3</name>
+              <name>SMS_3</name>
               <description>Slave mode selection</description>
               <bitOffset>16</bitOffset>
               <bitWidth>1</bitWidth>
@@ -45785,7 +45773,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
       </registers>
     </peripheral>
     <peripheral>
-      <name>SDMMC1</name>
+      <name>SDMMC</name>
       <description>Secure digital input/output
       interface</description>
       <groupName>SDMMC</groupName>
@@ -45796,8 +45784,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <usage>registers</usage>
       </addressBlock>
       <interrupt>
-        <name>SDMMC1</name>
-        <description>SDMMC1 global interrupt</description>
+        <name>SDIO</name>
+        <description>SDIO global interrupt</description>
         <value>49</value>
       </interrupt>
       <registers>
@@ -45815,6 +45803,18 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <description>PWRCTRL</description>
               <bitOffset>0</bitOffset>
               <bitWidth>2</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Power_OFF</name>
+                  <description>The clock to card is stopped.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Power_ON</name>
+                  <description>The card is clocked.</description>
+                  <value>3</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
           </fields>
         </register>
@@ -45839,12 +45839,41 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               bit</description>
               <bitOffset>13</bitOffset>
               <bitWidth>1</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Edge_Rising</name>
+                  <description>Cmd and Data changed on the SDMMCCLK falling edge succeeding the rising edge of SDMMC_CK.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Edge_Falling</name>
+                  <description>Cmd and Data changed on the SDMMC_CK falling edge.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>WIDBUS</name>
               <description>Wide bus mode enable bit</description>
               <bitOffset>11</bitOffset>
               <bitWidth>2</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Bus_Wide_1b</name>
+                  <description>Default bus mode: SDMMC_D0 is used.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Bus_Wide_4b</name>
+                  <description>4-wide bus mode: SDMMC_D[3:0] used.</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Bus_Wide_8b</name>
+                  <description>8-wide bus mode: SDMMC_D[7:0] used.</description>
+                  <value>2</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>BYPASS</name>
@@ -45901,24 +45930,6 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           <resetValue>0x00000000</resetValue>
           <fields>
             <field>
-              <name>CE_ATACMD</name>
-              <description>CE-ATA command</description>
-              <bitOffset>14</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>nIEN</name>
-              <description>not Interrupt Enable</description>
-              <bitOffset>13</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>ENCMDcompl</name>
-              <description>Enable CMD completion</description>
-              <bitOffset>12</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
               <name>SDIOSuspend</name>
               <description>SD I/O suspend command</description>
               <bitOffset>11</bitOffset>
@@ -45950,6 +45961,23 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <description>Wait for response bits</description>
               <bitOffset>6</bitOffset>
               <bitWidth>2</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>No_Response</name>
+                  <description>No response, expect CMDSENT flag.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Short_Response</name>
+                  <description>Short response, expect CMDREND or CCRCFAIL flag.</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Long_Response</name>
+                  <description>Long response, expect CMDREND or CCRCFAIL flag.</description>
+                  <value>3</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>CMDINDEX</name>
@@ -46116,6 +46144,83 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <description>Data block size</description>
               <bitOffset>4</bitOffset>
               <bitWidth>4</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Block_1b</name>
+                  <description>Block length = 2**0 = 1 byte</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_2b</name>
+                  <description>Block length = 2**1 = 2 byte</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_4b</name>
+                  <description>Block length = 2**2 = 4 byte</description>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_8b</name>
+                  <description>Block length = 2**3 = 8 byte</description>
+                  <value>3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_16b</name>
+                  <description>Block length = 2**4 = 16 byte</description>
+                  <value>4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_32b</name>
+                  <description>Block length = 2**5 = 32 byte</description>
+                  <value>5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_64b</name>
+                  <description>Block length = 2**6 = 64 byte</description>
+                  <value>6</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_128b</name>
+                  <description>Block length = 2**7 = 128 byte</description>
+                  <value>7</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_256b</name>
+                  <description>Block length = 2**8 = 256 byte</description>
+                  <value>8</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_512b</name>
+                  <description>Block length = 2**9 = 512 byte</description>
+                  <value>9</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_1024b</name>
+                  <description>Block length = 2**10 = 1024 byte</description>
+                  <value>10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_2048b</name>
+                  <description>Block length = 2**11 = 2048 byte</description>
+                  <value>11</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_4096b</name>
+                  <description>Block length = 2**12 = 4096 byte</description>
+                  <value>12</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_8192b</name>
+                  <description>Block length = 2**13 = 8192 byte</description>
+                  <value>13</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Block_16384b</name>
+                  <description>Block length = 2**14 = 16384 byte</description>
+                  <value>14</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>DMAEN</name>
@@ -46129,6 +46234,18 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               or SDIO multibyte data transfer</description>
               <bitOffset>2</bitOffset>
               <bitWidth>1</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Block</name>
+                  <description>Block data transfer</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Stream</name>
+                  <description>Stream or SDIO multibyte data transfer</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>DTDIR</name>
@@ -46136,6 +46253,18 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               selection</description>
               <bitOffset>1</bitOffset>
               <bitWidth>1</bitWidth>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Controller_To_Card</name>
+                  <description>Data is sent to the card</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Card_To_Controller</name>
+                  <description>Data is read from the card</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>DTEN</name>
