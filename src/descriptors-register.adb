@@ -37,7 +37,8 @@ package body Descriptors.Register is
       Prepend        : Unbounded.Unbounded_String;
       Append         : Unbounded.Unbounded_String;
       Reg_Properties : Register_Properties_T;
-      Vec            : in out Register_Vectors.Vector) return Register_Access
+      Reg_Db         : Register_Db'Class)
+      return Register_Access
    is
       use DOM.Core;
       use type Unbounded.Unbounded_String;
@@ -52,44 +53,37 @@ package body Descriptors.Register is
 
       function Compute_Name return Unbounded.Unbounded_String
       is
+         Name : constant String := Unbounded.To_String (Ret.Xml_Id);
+         Ret  : String (Name'Range);
+         Idx  : Natural;
+         Skip : Boolean := False;
       begin
-         if Ret.Dim = 1 then
-            return Ret.Xml_Id;
-         else
-            declare
-               Name : constant String := Unbounded.To_String (Ret.Xml_Id);
-               Ret  : String (Name'Range);
-               Idx  : Natural;
-               Skip : Boolean := False;
-            begin
-               Idx := Ret'First - 1;
+         Idx := Ret'First - 1;
 
-               for J in Name'Range loop
-                  if Skip then
-                     Skip := False;
+         for J in Name'Range loop
+            if Skip then
+               Skip := False;
 
-                  elsif Name (J) = '['
-                    or else Name (J) = ']'
-                  then
-                     null;
+            elsif Name (J) = '['
+              or else Name (J) = ']'
+            then
+               null;
 
-                  elsif J < Name'Last and then Name (J .. J + 1) = "%s" then
-                     --  Skip the next character (e.g. 's')
-                     Skip := True;
+            elsif J < Name'Last and then Name (J .. J + 1) = "%s" then
+               --  Skip the next character (e.g. 's')
+               Skip := True;
 
-                  else
-                     Idx := Idx + 1;
-                     Ret (Idx) := Name (J);
-                  end if;
-               end loop;
+            else
+               Idx := Idx + 1;
+               Ret (Idx) := Name (J);
+            end if;
+         end loop;
 
-               if Idx in Ret'Range and then Ret (Idx) = '_' then
-                  Idx := Idx - 1;
-               end if;
-
-               return Unbounded.To_Unbounded_String (Ret (Ret'First .. Idx));
-            end;
+         if Idx in Ret'Range and then Ret (Idx) = '_' then
+            Idx := Idx - 1;
          end if;
+
+         return Unbounded.To_Unbounded_String (Ret (Ret'First .. Idx));
       end Compute_Name;
 
    begin
@@ -97,18 +91,13 @@ package body Descriptors.Register is
 
       if Derived_From /= "" then
          declare
-            Found : Boolean := False;
+            Oth : constant Register_Access :=
+                    Reg_Db.Get_Register (Derived_From);
          begin
-            for Oth of Vec loop
-               if Unbounded.To_String (Oth.Xml_Id) = Derived_From then
-                  Ret := Oth.all;
-                  Ret.Name := Unbounded.Null_Unbounded_String;
-                  Found := True;
-                  exit;
-               end if;
-            end loop;
-
-            if not Found then
+            if Oth /= null then
+               Ret := Oth.all;
+               Ret.Name := Unbounded.Null_Unbounded_String;
+            else
                raise Constraint_Error with
                  "register 'derivedFrom' is not known: " & Derived_From;
             end if;
@@ -220,40 +209,6 @@ package body Descriptors.Register is
         and then R1.Fields = R2.Fields;
    end Equal;
 
-   -----------------------
-   -- Find_Common_Types --
-   -----------------------
-
-   procedure Find_Common_Types (Reg_Set : Register_Vectors.Vector) is
-   begin
-      --  Look for fields with similar types, to use a single type definition
-      --  in such situation
-      for J in Reg_Set.First_Index .. Reg_Set.Last_Index - 1 loop
-         if Reg_Set (J).Type_Holder = null then
-            for K in J + 1 .. Reg_Set.Last_Index loop
-               if Equal (Reg_Set (J), Reg_Set (K)) then
-                  --  Simple case: two identical registers.
-                  Reg_Set (K).Type_Holder := Reg_Set (J);
-
-               else
-                  declare
-                     Prefix : constant Unbounded.Unbounded_String :=
-                                Similar_Type (Reg_Set (J), Reg_Set (K));
-                  begin
-                     if Unbounded.Length (Prefix) > 0 then
-                        --  We have similar types, but with different names.
-                        --  In such situation, it'd be nice to generate a
-                        --  common type definition.
-                        Reg_Set (J).Type_Name := Prefix;
-                        Reg_Set (K).Type_Holder := Reg_Set (J);
-                     end if;
-                  end;
-               end if;
-            end loop;
-         end if;
-      end loop;
-   end Find_Common_Types;
-
    -----------------
    -- Common_Type --
    -----------------
@@ -337,8 +292,6 @@ package body Descriptors.Register is
             Rec : Ada_Type_Record;
 
          begin
-            Add (Spec,
-                 New_Comment_Box (To_String (Reg.Type_Name) & "_Register"));
             Rec := Ada_Type_Record
               (New_Type_Record
                  (To_String (Reg.Type_Name) & "_Register",

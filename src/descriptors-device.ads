@@ -30,7 +30,7 @@ with Descriptors.Peripheral;         use Descriptors.Peripheral;
 --  main entry point for decoding this file.
 package Descriptors.Device is
 
-   type Device_T is record
+   type Device_T is new Peripheral_Db with record
       Name              : Unbounded.Unbounded_String;
       Version           : Unbounded.Unbounded_String;
       Description       : Unbounded.Unbounded_String;
@@ -51,6 +51,10 @@ package Descriptors.Device is
 
    function Read_Device (Elt      : DOM.Core.Element;
                          Pkg_Name : String) return Device_T;
+
+   overriding function Get_Peripheral
+     (Db     : Device_T;
+      XML_Id : String) return Peripheral_Access;
 
    procedure Dump
      (Device     : Device_T;

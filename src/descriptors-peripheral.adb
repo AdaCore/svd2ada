@@ -29,13 +29,11 @@ with Ada_Gen;            use Ada_Gen;
 
 package body Descriptors.Peripheral is
 
-   procedure Insert_Register (Periph : in out Peripheral_T;
-                              Reg    : Register_Access);
+   procedure Insert_Element
+     (Periph : in out Peripheral_T;
+      Elt    : Peripheral_Element);
 
-   function Find_Overlapping_Registers
-     (Reg_Set : Register_Vectors.Vector) return Boolean;
-
-   function Less (P1, P2 : Peripheral_T) return Boolean;
+   function Less (P1, P2 : Peripheral_Access) return Boolean;
 
    package Peripheral_Sort is new Peripheral_Vectors.Generic_Sorting
      (Less);
@@ -47,7 +45,7 @@ package body Descriptors.Peripheral is
    -- Less --
    ----------
 
-   function Less (P1, P2 : Peripheral_T) return Boolean
+   function Less (P1, P2 : Peripheral_Access) return Boolean
    is
    begin
       return P1.Base_Address < P2.Base_Address;
@@ -60,9 +58,11 @@ package body Descriptors.Peripheral is
    function Read_Peripheral
      (Elt            : DOM.Core.Element;
       Reg_Properties : Register_Properties_T;
-      Vector         : Peripheral_Vectors.Vector) return Peripheral_T
+      Periph_Db      : Peripheral_Db'Class) return Peripheral_T
    is
       use DOM.Core;
+      use type Ada.Strings.Unbounded.Unbounded_String;
+
       List         : constant Node_List := Nodes.Child_Nodes (Elt);
       Ret          : Peripheral_T;
       Derived_From : constant String :=
@@ -73,24 +73,24 @@ package body Descriptors.Peripheral is
 
       if Derived_From /= "" then
          declare
-            Found : Boolean := False;
+            Oth : constant Peripheral_Access :=
+                    Periph_Db.Get_Peripheral (Derived_From);
          begin
-            for P of Vector loop
-               if Unbounded.To_String (P.Name) = Derived_From then
-                  Found := True;
-                  Ret   := P;
-                  --  Deep copy of the registers list
-                  Ret.Registers.Clear;
-                  for Reg of P.Registers loop
-                     Ret.Registers.Append (new Register_T'(Reg.all));
-                  end loop;
-                  --  Do not inherit interrupts
-                  Ret.Interrupts.Clear;
-                  exit;
-               end if;
-            end loop;
+            if Oth /= null then
+--              for P of Vector loop
+--                 if Unbounded.To_String (P.Name) = Derived_From then
+               Ret   := Oth.all;
+               --  Deep copy of the registers list
+               Ret.Content.Clear;
 
-            if not Found then
+               for Elt of Oth.Content loop
+                  Ret.Content.Append (Deep_Copy (Elt));
+               end loop;
+
+               --  Do not inherit interrupts
+               Ret.Interrupts.Clear;
+
+            else
                raise Constraint_Error with
                  "peripheral 'derivedFrom' is not known: " & Derived_From;
             end if;
@@ -105,6 +105,13 @@ package body Descriptors.Peripheral is
             begin
                if Tag = "name" then
                   Ret.Name := Get_Value (Child);
+
+                  if Ada.Strings.Unbounded.Length (Ret.Type_Name) = 0 then
+                     Ret.Type_Name := Ret.Name;
+                  end if;
+
+               elsif Tag = "headerStructName" then
+                  Ret.Type_Name := Get_Value (Child);
 
                elsif Tag = "version" then
                   Ret.Version := Get_Value (Child);
@@ -147,6 +154,7 @@ package body Descriptors.Peripheral is
                      Child_List : constant Node_List :=
                                     Nodes.Child_Nodes (Child);
                      Register   : Register_Access;
+                     Cluster    : Cluster_Access;
                      Reg2       : Register_Access;
                      use Ada.Strings.Unbounded;
                   begin
@@ -154,34 +162,54 @@ package body Descriptors.Peripheral is
                         if Nodes.Node_Type (Nodes.Item (Child_List, K)) =
                           Element_Node
                         then
-                           Register :=
-                             Read_Register
-                               (DOM.Core.Element (Nodes.Item (Child_List, K)),
-                                Ret.Prepend_To_Name,
-                                Ret.Append_To_Name,
-                                Ret.Reg_Properties,
-                                Ret.Registers);
+                           declare
+                              C_Child : constant DOM.Core.Element :=
+                                          DOM.Core.Element
+                                            (Nodes.Item (Child_List, K));
+                              C_Tag : String renames
+                                        Elements.Get_Tag_Name (C_Child);
+                           begin
+                              if C_Tag = "register" then
+                                 Register := Read_Register
+                                   (C_Child,
+                                    Ret.Prepend_To_Name,
+                                    Ret.Append_To_Name,
+                                    Ret.Reg_Properties,
+                                    Ret);
 
-                           if Register.Dim > 1
-                             and then Register.Dim_Increment /=
-                               Register.Reg_Properties.Size / 8
-                           then
-                              --  in such case, this certainly indicates two
-                              --  intertwined arrays of registers, We need in
-                              --  this case to expand the erray into individual
-                              --  values
-                              for J in 0 .. Register.Dim - 1 loop
-                                 Reg2 := new Register_T'(Register.all);
-                                 Reg2.Dim := 1;
-                                 Reg2.Address_Offset :=
-                                   Register.Address_Offset +
-                                     J * Register.Dim_Increment;
-                                 Reg2.Name := Register.Name & To_String (J);
-                                 Insert_Register (Ret, Reg2);
-                              end loop;
-                           else
-                              Insert_Register (Ret, Register);
-                           end if;
+                                 if Register.Dim > 1
+                                   and then Register.Dim_Increment /=
+                                     Register.Reg_Properties.Size / 8
+                                 then
+                                    --  in such case, this certainly indicates
+                                    --  two intertwined arrays of registers, We
+                                    --  need in this case to expand the erray
+                                    --  into individual values
+                                    for J in 0 .. Register.Dim - 1 loop
+                                       Reg2 := new Register_T'(Register.all);
+                                       Reg2.Dim := 1;
+                                       Reg2.Address_Offset :=
+                                         Register.Address_Offset +
+                                           J * Register.Dim_Increment;
+                                       Reg2.Name :=
+                                         Register.Name & To_String (J);
+                                       Insert_Element (Ret, +Reg2);
+                                    end loop;
+                                 else
+                                    Insert_Element (Ret, +Register);
+                                 end if;
+
+                              elsif C_Tag = "cluster" then
+                                 Cluster := new Cluster_T'
+                                   (Read_Cluster
+                                      (C_Child,
+                                       Ret.Prepend_To_Name,
+                                       Ret.Append_To_Name,
+                                       Ret.Reg_Properties,
+                                       Ret));
+                                 Insert_Element (Ret, +Cluster);
+                              end if;
+                           end;
                         end if;
                      end loop;
                   end;
@@ -197,160 +225,91 @@ package body Descriptors.Peripheral is
       return Ret;
    end Read_Peripheral;
 
-   ---------------------
-   -- Insert_Register --
-   ---------------------
+   ------------------
+   -- Get_Register --
+   ------------------
 
-   procedure Insert_Register (Periph : in out Peripheral_T;
-                              Reg    : Register_Access)
+   overriding function Get_Register
+     (Db     : Peripheral_T;
+      XML_Id : String) return Register_Access
    is
-      Added : Boolean;
    begin
-      if Periph.Registers.Contains (Reg) then
+      for Elt of Db.Content loop
+         if Elt.Kind = Register_Element
+           and then Ada.Strings.Unbounded.To_String (Elt.Reg.XML_Id) = XML_Id
+         then
+            return Elt.Reg;
+         end if;
+      end loop;
+
+      return null;
+   end Get_Register;
+
+   -----------------
+   -- Get_Cluster --
+   -----------------
+
+   overriding function Get_Cluster
+     (Db     : Peripheral_T;
+      XML_Id : String) return Cluster_Access
+   is
+   begin
+      for Elt of Db.Content loop
+         if Elt.Kind = Cluster_Element
+           and then Unbounded.To_String (Elt.Cluster.Xml_Id) = XML_Id
+         then
+            return Elt.Cluster;
+         end if;
+      end loop;
+
+      return null;
+   end Get_Cluster;
+
+   --------------------
+   -- Insert_Element --
+   --------------------
+
+   procedure Insert_Element
+     (Periph : in out Peripheral_T;
+      Elt    : Peripheral_Element)
+   is
+      Added  : Boolean;
+      Offset : Natural;
+   begin
+      if Periph.Content.Contains (Elt) then
          return;
       end if;
 
+      case Elt.Kind is
+         when Register_Element =>
+            Offset := Elt.Reg.Address_Offset;
+         when Cluster_Element =>
+            Offset := Elt.Cluster.Address_Offset;
+      end case;
+
       Added := False;
-      for J in 1 .. Integer (Register_Vectors.Length (Periph.Registers)) loop
-         if Periph.Registers (J).Address_Offset > Reg.Address_Offset then
-            Periph.Registers.Insert (J, Reg);
-            Added := True;
-            exit;
-         end if;
+
+      for J in 1 .. Integer (Peripheral_Element_Vectors.Length (Periph.Content)) loop
+         case Periph.Content (J).Kind is
+            when Register_Element =>
+               if Periph.Content (J).Reg.Address_Offset > Offset then
+                  Periph.Content.Insert (J, Elt);
+                  Added := True;
+                  exit;
+               end if;
+            when Cluster_Element =>
+               if Periph.Content (J).Cluster.Address_Offset > Offset then
+                  Periph.Content.Insert (J, Elt);
+                  Added := True;
+                  exit;
+               end if;
+         end case;
       end loop;
 
       if not Added then
-         Periph.Registers.Append (Reg);
+         Periph.Content.Append (Elt);
       end if;
-   end Insert_Register;
-
-   --------------------------------
-   -- Find_Overlapping_Registers --
-   --------------------------------
-
-   function Find_Overlapping_Registers
-     (Reg_Set : Register_Vectors.Vector) return Boolean
-   is
-      use Unbounded;
-      Ret      : Boolean := False;
-      Idx      : Positive;
-      Off      : Natural;
-      Last     : Natural;
-      Enum_Idx : Natural;
-
-      function Image (N : Natural) return String;
-
-      -----------
-      -- Image --
-      -----------
-
-      function Image (N : Natural) return String
-      is
-         S : constant String := N'Img;
-      begin
-         return S (S'First + 1 .. S'Last);
-      end Image;
-
-   begin
-      For J in Reg_Set.First_Index .. Reg_Set.Last_Index - 1 loop
-         declare
-            Reg1 : Register_Access renames Reg_Set (J);
-         begin
-            for K in J + 1 .. Reg_Set.Last_Index loop
-               declare
-                  Reg2 : Register_Access renames Reg_Set (K);
-               begin
-                  exit when Reg1.Address_Offset /= Reg2.Address_Offset;
-                  Reg_Set (J).Is_Overlapping := True;
-                  Reg_Set (K).Is_Overlapping := True;
-                  Ret := True;
-               end;
-            end loop;
-         end;
-      end loop;
-
-      if not Ret then
-         return Ret;
-      end if;
-
-      Idx := Reg_Set.First_Index;
-      while Idx < Reg_Set.Last_Index loop
-         --  Do not perform a second pass if the register has already been
-         --  detected as aliased
-         if Reg_Set (Idx).Is_Overlapping then
-            declare
-               Reg    : constant Register_Access := Reg_Set (Idx);
-               Prefix : constant String := To_String (Reg.Name);
-            begin
-               Last := Prefix'Last;
-               --  First loop: look at another register at the same offset
-               --  If found, mark the current register as overlapping, and find
-               --  a prefix common to all overlapping registers.
-               for K in Idx + 1 .. Reg_Set.Last_Index loop
-                  exit when Reg_Set (K).Address_Offset /= Reg.Address_Offset;
-
-                  for J in 1 .. Last loop
-                     if J > Length (Reg_Set (K).Name)
-                       or else Prefix (J) /= Element (Reg_Set (K).Name, J)
-                     then
-                        if Last /= 0 then
-                           Last := J - 1;
-                        end if;
-
-                        exit;
-                     end if;
-                  end loop;
-               end loop;
-            end;
-
-            --  Second loop: find enum values for the registers
-            Off := Reg_Set (Idx).Address_Offset;
-            if Last = 0 then
-               Enum_Idx := 1;
-            end if;
-
-            loop
-               exit when Idx > Reg_Set.Last_Index;
-               exit when Reg_Set (Idx).Address_Offset /= Off;
-
-               declare
-                  Reg    : constant Register_Access := Reg_Set (Idx);
-                  Prefix : constant String := To_String (Reg.Name);
-               begin
-                  if Last = 0 then
-                     --  No common name found: let's imagine one
-                     Reg.Overlap_Suffix :=
-                       To_Unbounded_String ("Mode_" & Image (Enum_Idx));
-                     Enum_Idx := Enum_Idx + 1;
-
-                  elsif Last = Prefix'Last then
-                     Reg.Overlap_Suffix := To_Unbounded_String ("Default");
-
-                  else
-                     --  If we have names like "CMR0",
-                     --  "CMR0_WAVE_EQ_1", the suffix for the second must
-                     --  skip the '_'.
-                     declare
-                        Skip : Positive := Last + 1;
-                     begin
-                        while Prefix (Skip) = '_' loop
-                           Skip := Skip + 1;
-                        end loop;
-                        Reg.Overlap_Suffix :=
-                          To_Unbounded_String (Prefix (Skip .. Prefix'Last));
-                     end;
-                  end if;
-
-                  Idx := Idx + 1;
-               end;
-            end loop;
-         else
-            Idx := Idx + 1;
-         end if;
-      end loop;
-
-      return Ret;
-   end Find_Overlapping_Registers;
+   end Insert_Element;
 
    ----------------------
    -- Dump_Periph_Type --
@@ -365,52 +324,6 @@ package body Descriptors.Peripheral is
 
       function Create_Record return Ada_Type_Record'Class;
 
-      function Get_Discriminent_Type
-        (Reg_Set : Register_Vectors.Vector) return Ada_Type_Enum;
-
-      ---------------------------
-      -- Get_Discriminent_Type --
-      ---------------------------
-
-      function Get_Discriminent_Type
-        (Reg_Set : Register_Vectors.Vector) return Ada_Type_Enum
-      is
-         Ret    : Ada_Type_Enum :=
-                    New_Type_Enum
-                      (Id      => To_String (Peripheral.Name) & "_Disc");
-         Values : String_List.Vector;
-         Val    : Ada_Enum_Value;
-
-      begin
-         for Reg of Reg_Set loop
-            if Reg.Is_Overlapping
-              and then not Values.Contains (To_String (Reg.Overlap_Suffix))
-            then
-               Values.Append (To_String (Reg.Overlap_Suffix));
-            end if;
-         end loop;
-
-         for S of Values loop
-            Val := Add_Enum_Id (Spec, Ret, S);
-
-            declare
-               Actual : constant String := To_String (Id (Val));
-            begin
-               if Actual /= S then
-                  for Reg of Reg_Set loop
-                     if Reg.Is_Overlapping
-                       and then To_String (Reg.Overlap_Suffix) = S
-                     then
-                        Reg.Overlap_Suffix := Id (Val);
-                     end if;
-                  end loop;
-               end if;
-            end;
-         end loop;
-
-         return Ret;
-      end Get_Discriminent_Type;
-
       -------------------
       -- Create_Record --
       -------------------
@@ -418,10 +331,13 @@ package body Descriptors.Peripheral is
       function Create_Record return Ada_Type_Record'Class
       is
       begin
-         if Find_Overlapping_Registers (Peripheral.Registers) then
+         if Find_Overlapping_Registers (Peripheral.Content) then
             declare
                Enum : Ada_Type_Enum :=
-                        Get_Discriminent_Type (Peripheral.Registers);
+                        Get_Discriminent_Type
+                          (Peripheral.Content,
+                           Spec,
+                           To_String (Peripheral.Type_Name));
             begin
                Add (Spec, Enum);
                return New_Type_Union
@@ -443,31 +359,56 @@ package body Descriptors.Peripheral is
    begin
       Add_Aspect (Rec, "Volatile");
 
-      for Reg of Peripheral.Registers loop
-         if Reg.Is_Overlapping then
+      for Reg of Peripheral.Content loop
+         if Reg.Kind = Register_Element and then Reg.Reg.Is_Overlapping then
             Add_Field
               (Ada_Type_Union (Rec),
-               Enum_Val => To_String (Reg.Overlap_Suffix),
-               Id       => To_String (Reg.Name),
-               Typ      => Get_Ada_Type (Reg),
-               Offset   => Reg.Address_Offset,
+               Enum_Val => To_String (Reg.Reg.Overlap_Suffix),
+               Id       => To_String (Reg.Reg.Name),
+               Typ      => Get_Ada_Type (Reg.Reg),
+               Offset   => Reg.Reg.Address_Offset,
                LSB      => 0,
-               MSB      => (if Reg.Dim = 1
-                            then Reg.Reg_Properties.Size - 1
-                            else Reg.Dim * Reg.Dim_Increment * 8 - 1),
-               Comment  => To_String (Reg.Description));
+               MSB      => (if Reg.Reg.Dim = 1
+                            then Reg.Reg.Reg_Properties.Size - 1
+                            else Reg.Reg.Dim * Reg.Reg.Dim_Increment * 8 - 1),
+               Comment  => To_String (Reg.Reg.Description));
+
+         elsif Reg.Kind = Cluster_Element
+           and then Reg.Cluster.Is_Overlapping
+         then
+            Add_Field
+              (Ada_Type_Union (Rec),
+               Enum_Val => To_String (Reg.Cluster.Overlap_Suffix),
+               Id       => To_String (Reg.Cluster.Name),
+               Typ      => Type_Holders.Element (Reg.Cluster.Ada_Type),
+               Offset   => Reg.Cluster.Address_Offset,
+               LSB      => 0,
+               MSB      => Get_MSB (Reg.Cluster.all),
+               Comment  => To_String (Reg.Cluster.Description));
 
          else
-            Add_Field
-              (Rec,
-               Id      => To_String (Reg.Name),
-               Typ     => Get_Ada_Type (Reg),
-               Offset  => Reg.Address_Offset,
-               LSB     => 0,
-               MSB     => (if Reg.Dim = 1
-                           then Reg.Reg_Properties.Size - 1
-                           else Reg.Dim * Reg.Dim_Increment * 8 - 1),
-               Comment => To_String (Reg.Description));
+            case Reg.Kind is
+               when Register_Element =>
+                  Add_Field
+                    (Rec,
+                     Id      => To_String (Reg.Reg.Name),
+                     Typ     => Get_Ada_Type (Reg.Reg),
+                     Offset  => Reg.Reg.Address_Offset,
+                     LSB     => 0,
+                     MSB     => (if Reg.Reg.Dim = 1
+                                 then Reg.Reg.Reg_Properties.Size - 1
+                                 else Reg.Reg.Dim * Reg.Reg.Dim_Increment * 8 - 1),
+                     Comment => To_String (Reg.Reg.Description));
+               when Cluster_Element =>
+                  Add_Field
+                    (Rec,
+                     Id      => To_String (Reg.Cluster.Name),
+                     Typ     => Type_Holders.Element (Reg.Cluster.Ada_Type),
+                     Offset  => Reg.Cluster.Address_Offset,
+                     LSB     => 0,
+                     MSB     => Get_MSB (Reg.Cluster.all),
+                     Comment => To_String (Reg.Cluster.Description));
+            end case;
          end if;
       end loop;
 
@@ -488,39 +429,45 @@ package body Descriptors.Peripheral is
 
    begin
       Ada.Text_IO.Put_Line
-        ("Generate " & To_String (Peripheral.Name));
+        ("Generate " & To_String (Peripheral.Type_Name));
 
       Spec := New_Child_Spec
-        (To_String (Peripheral.Name),
+        (To_String (Peripheral.Type_Name),
          Parent        => Dev_Name,
          Descr         => To_String (Peripheral.Description),
          Preelaborated => True);
 
-      if not Register_Vectors.Is_Empty (Peripheral.Registers) then
+      if not Peripheral.Content.Is_Empty then
          Add (Spec, New_Comment_Box ("Registers"));
       end if;
 
-      Find_Common_Types (Peripheral.Registers);
+      Find_Common_Types (Peripheral.Content);
 
-      for Reg of Peripheral.Registers loop
-         Dump (Spec, Reg);
+      for Elt of Peripheral.Content loop
+         case Elt.Kind is
+            when Register_Element =>
+               Dump (Spec, Elt.Reg);
+            when Cluster_Element =>
+               Dump (Spec, Elt.Cluster);
+         end case;
       end loop;
 
       Add (Spec, New_Comment_Box ("Peripherals"));
 
       Dump_Periph_Type
-        (Spec, Peripheral, To_String (Peripheral.Name) & "_Peripheral");
+        (Spec, Peripheral, To_String (Peripheral.Type_Name) & "_Peripheral");
 
       declare
          Inst : Ada_Instance :=
                   New_Instance
                     (To_String (Peripheral.Name) & "_Periph",
-                     To_String (Peripheral.Name) & "_Peripheral",
+                     To_String (Peripheral.Type_Name) & "_Peripheral",
                      True,
                      To_String (Peripheral.Description));
       begin
          Add_Aspect (Inst, "Import");
-         Add_Address_Aspect (Inst, To_String (Peripheral.Name) & "_Base");
+         Add_Address_Aspect
+           (Inst, To_String (Peripheral.Name) & "_Base");
          Add (Spec, Inst);
       end;
 
@@ -537,9 +484,9 @@ package body Descriptors.Peripheral is
       Output_Dir : String)
    is
       use Ada.Strings.Unbounded;
-      use type Register_Vectors.Vector;
+      use type Peripheral_Element_Vectors.Vector;
       use type Ada.Containers.Count_Type;
-      Regs               : Register_Vectors.Vector;
+      Regs               : Peripheral_Element_Vectors.Vector;
       Sorted             : Peripheral_Vectors.Vector := Group;
       Partial_Similarity : Boolean := False;
       Spec               : Ada_Spec;
@@ -557,7 +504,7 @@ package body Descriptors.Peripheral is
       --  Registers
 
       for Periph of Sorted loop
-         Regs.Append (Periph.Registers);
+         Regs.Append (Periph.Content);
       end loop;
 
       if not Regs.Is_Empty then
@@ -566,8 +513,13 @@ package body Descriptors.Peripheral is
 
       Find_Common_Types (Regs);
 
-      for Reg of Regs loop
-         Dump (Spec, Reg);
+      for Elt of Regs loop
+         case Elt.Kind is
+            when Register_Element =>
+               Dump (Spec, Elt.Reg);
+            when Cluster_Element =>
+               Dump (Spec, Elt.Cluster);
+         end case;
       end loop;
 
       Add (Spec, New_Comment_Box ("Peripherals"));
@@ -577,7 +529,7 @@ package body Descriptors.Peripheral is
 
       while not Sorted.Is_Empty loop
          declare
-            First : constant Peripheral_T := Sorted.First_Element;
+            First : constant Peripheral_Access := Sorted.First_Element;
             List  : Peripheral_Vectors.Vector;
             Idx   : Natural;
          begin
@@ -586,7 +538,7 @@ package body Descriptors.Peripheral is
 
             Idx := Sorted.First_Index;
             while Idx <= Sorted.Last_Index loop
-               if Sorted (Idx).Registers = First.Registers then
+               if Sorted (Idx).Content = First.Content then
                   List.Append (Sorted (Idx));
                   Sorted.Delete (Idx);
                else
@@ -596,13 +548,14 @@ package body Descriptors.Peripheral is
 
             if List.Length = 1 then
                Dump_Periph_Type
-                 (Spec, First, To_String (First.Name) & "_Peripheral");
+                 (Spec, First.all,
+                  To_String (First.Type_Name) & "_Peripheral");
 
                declare
                   Inst : Ada_Instance :=
                            New_Instance
                              (To_String (First.Name) & "_Periph",
-                              To_String (First.Name) & "_Peripheral",
+                              To_String (First.Type_Name) & "_Peripheral",
                               True,
                               To_String (First.Description));
                begin
@@ -613,7 +566,8 @@ package body Descriptors.Peripheral is
 
             elsif Sorted.Is_Empty and then not Partial_Similarity then
                Dump_Periph_Type
-                 (Spec, First, To_String (First.Group_Name) & "_Peripheral");
+                 (Spec, First.all,
+                  To_String (First.Group_Name) & "_Peripheral");
 
                for Periph of List loop
                   declare
@@ -634,14 +588,15 @@ package body Descriptors.Peripheral is
             else
                Partial_Similarity := True;
                Dump_Periph_Type
-                 (Spec, First, To_String (First.Name) & "_Peripheral");
+                 (Spec, First.all,
+                  To_String (First.Type_Name) & "_Peripheral");
 
                for Periph of List loop
                   declare
                      Inst : Ada_Instance :=
                               New_Instance
                                 (To_String (Periph.Name) & "_Periph",
-                                 To_String (First.Name) & "_Peripheral",
+                                 To_String (First.Type_Name) & "_Peripheral",
                                  True,
                                  To_String (Periph.Description));
                   begin

@@ -17,7 +17,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Containers.Vectors;
 with Ada.Containers.Indefinite_Holders;
 with Ada.Strings.Unbounded;             use Ada.Strings;
 
@@ -66,7 +65,6 @@ package Descriptors.Register is
       Is_Overlapping   : Boolean := False;
       Overlap_Suffix   : Unbounded.Unbounded_String;
 
-
       --  When two registers are identical, the second register will not
       --  generate an Ada type. We reference the first register here to
       --  keep track of the type name.
@@ -87,17 +85,18 @@ package Descriptors.Register is
    --  If R1 and R2 share a common type, then return the base type name.
    --  else, return an empty string
 
-   package Register_Vectors is new Ada.Containers.Vectors
-     (Positive, Register_Access, Equal);
+   type Register_Db is interface;
 
-   procedure Find_Common_Types (Reg_Set : Register_Vectors.Vector);
+   function Get_Register
+     (Db     : Register_Db;
+      XML_Id : String) return Register_Access is abstract;
 
    function Read_Register
      (Elt            : DOM.Core.Element;
       Prepend        : Unbounded.Unbounded_String;
       Append         : Unbounded.Unbounded_String;
       Reg_Properties : Register_Properties_T;
-      Vec            : in out Register_Vectors.Vector)
+      Reg_Db         : Register_Db'Class)
       return Register_Access;
 
    function Get_Ada_Type (Reg : Register_Access) return Ada_Gen.Ada_Type'Class;

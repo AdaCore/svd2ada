@@ -103,8 +103,9 @@ package body Descriptors.Device is
                              Read_Peripheral
                                (Element (Nodes.Item (Child_List, K)),
                                 Ret.Reg_Properties,
-                                Ret.Peripherals);
-                           Ret.Peripherals.Append (Peripheral);
+                                Ret);
+                           Ret.Peripherals.Append
+                             (new Peripheral_T'(Peripheral));
                         end if;
                      end loop;
                   end;
@@ -119,6 +120,24 @@ package body Descriptors.Device is
 
       return Ret;
    end Read_Device;
+
+   --------------------
+   -- Get_Peripheral --
+   --------------------
+
+   overriding function Get_Peripheral
+     (Db     : Device_T;
+      XML_Id : String) return Peripheral_Access
+   is
+   begin
+      for P of Db.Peripherals loop
+         if Ada.Strings.Unbounded.To_String (P.Name) = XML_Id then
+            return P;
+         end if;
+      end loop;
+
+      return null;
+   end Get_Peripheral;
 
    ----------------------
    -- Dump_Handler_ASM --
@@ -449,14 +468,14 @@ package body Descriptors.Device is
 
       while not Peripherals.Is_Empty loop
          declare
-            P     : Peripheral_T := Peripherals.First_Element;
+            P     : constant Peripheral_Access := Peripherals.First_Element;
             Vec   : Peripheral_Vectors.Vector;
             Index : Natural;
          begin
             Peripherals.Delete_First;
 
             if Ada.Strings.Unbounded.Length (P.Group_Name) = 0 then
-               Dump (P,
+               Dump (P.all,
                      Ada.Strings.Unbounded.To_String (Device.Name),
                      Output_Dir);
             else

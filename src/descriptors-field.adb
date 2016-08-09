@@ -362,6 +362,7 @@ package body Descriptors.Field is
                for Enum of Fields (Index).Enums loop
                   declare
                      Enum_Name   : constant String :=
+                                     To_String (Reg.Name) & "_" &
                                      (if Unbounded.Length (Enum.Name) > 0
                                       then To_String (Enum.Name)
                                       else To_String (Fields (Index).Name) &
