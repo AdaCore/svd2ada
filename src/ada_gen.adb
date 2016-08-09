@@ -32,10 +32,11 @@ with SVD2Ada_Utils;
 
 package body Ada_Gen is
 
-   Max_Width    : constant Natural := 79;
-   G_Input_File : Unbounded_String;
-   G_Empty_Line : Boolean := False;
-   G_Withed_All : Unbounded_String := Null_Unbounded_String;
+   Max_Width      : constant Natural := 79;
+   G_Input_File   : Unbounded_String;
+   G_Empty_Line   : Boolean := False;
+   G_Withed_All   : Unbounded_String := Null_Unbounded_String;
+   G_License_Text : Unbounded_String := Null_Unbounded_String;
 
    function Is_Parent
      (Spec        : Ada_Spec;
@@ -166,6 +167,52 @@ package body Ada_Gen is
    begin
       G_Input_File := To_Unbounded_String (FName);
    end Set_Input_File_Name;
+
+   ----------------------
+   -- Set_License_Text --
+   ----------------------
+
+   procedure Set_License_Text (Text : Unbounded_String)
+   is
+      Is_New_Line : Boolean := True;
+      White_Space : Unbounded_String;
+      J           : Natural := 1;
+   begin
+      Append (G_License_Text, "--  ");
+
+      while J <= Length (Text) loop
+         if Element (Text, J) = ASCII.CR
+           or else Element (Text, J) = ASCII.LF
+         then
+            J := J + 1;
+
+         elsif J < Length (Text)
+           and then Slice (Text, J, J + 1) = "\n" then
+            Append (G_License_Text, ASCII.LF & "--  ");
+            Is_New_Line := True;
+            White_Space := Null_Unbounded_String;
+            J := J + 2;
+
+         elsif Is_New_Line then
+            if J < Length (Text) and then Slice (Text, J, J + 1) = "  " then
+               J := J + 2;
+            end if;
+
+            Is_New_Line := False;
+
+         elsif Element (Text, J) = ' ' then
+            --  Trim right each line
+            Append (White_Space, " ");
+            J := J + 1;
+
+         else
+            Append (G_License_Text, White_Space);
+            Append (G_License_Text, Element (Text, J));
+            White_Space := Null_Unbounded_String;
+            J := J + 1;
+         end if;
+      end loop;
+   end Set_License_Text;
 
    --------------
    -- Is_Empty --
@@ -1004,6 +1051,11 @@ package body Ada_Gen is
               ", AdaCore");
          Ada.Text_IO.Put_Line
            (F, "--");
+         Ada.Text_IO.New_Line (F);
+      end if;
+
+      if Length (G_License_Text) > 0 then
+         Ada.Text_IO.Put_Line (F, To_String (G_License_Text));
          Ada.Text_IO.New_Line (F);
       end if;
 

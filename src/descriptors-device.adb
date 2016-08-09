@@ -70,6 +70,9 @@ package body Descriptors.Device is
                elsif Tag = "description" then
                   Ret.Description := Get_Value (Child);
 
+               elsif Tag = "licenseText" then
+                  Ada_Gen.Set_License_Text (Get_Value (Child));
+
                elsif Tag = "addressUnitBits" then
                   Ret.Address_Unit_Bits := Get_Value (Child);
 

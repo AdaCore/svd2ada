@@ -36,6 +36,8 @@ package Ada_Gen is
 
    procedure Set_Input_File_Name (FName : String);
 
+   procedure Set_License_Text (Text : Unbounded_String);
+
    type Ada_Spec is private;
 
    function New_Spec
