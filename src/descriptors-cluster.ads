@@ -109,7 +109,7 @@ package Descriptors.Cluster is
      (Db     : Cluster_T;
       XML_Id : String) return Cluster_Access;
 
-   function Get_MSB (Cluster : Cluster_T) return Positive;
+   function Get_Size (Cluster : Cluster_T) return Positive;
 
    procedure Dump
      (Spec    : in out Ada_Gen.Ada_Spec;

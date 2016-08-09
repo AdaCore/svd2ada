@@ -383,7 +383,7 @@ package body Descriptors.Peripheral is
                Typ      => Type_Holders.Element (Reg.Cluster.Ada_Type),
                Offset   => Reg.Cluster.Address_Offset,
                LSB      => 0,
-               MSB      => Get_MSB (Reg.Cluster.all),
+               MSB      => Get_Size (Reg.Cluster.all) * Reg.Cluster.Dim - 1,
                Comment  => To_String (Reg.Cluster.Description));
 
          else
@@ -406,7 +406,7 @@ package body Descriptors.Peripheral is
                      Typ     => Type_Holders.Element (Reg.Cluster.Ada_Type),
                      Offset  => Reg.Cluster.Address_Offset,
                      LSB     => 0,
-                     MSB     => Get_MSB (Reg.Cluster.all),
+                     MSB     => Get_Size (Reg.Cluster.all) * Reg.Cluster.Dim - 1,
                      Comment => To_String (Reg.Cluster.Description));
             end case;
          end if;

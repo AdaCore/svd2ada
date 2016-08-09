@@ -305,31 +305,35 @@ package body Descriptors.Cluster is
    -- Get_MSB --
    -------------
 
-   function Get_MSB (Cluster : Cluster_T) return Positive
+   function Get_Size (Cluster : Cluster_T) return Positive
    is
       Elt : Peripheral_Element renames Cluster.Content.Last_Element;
       Ret : Natural := 0;
 
    begin
+      if Cluster.Dim > 1 then
+         return Cluster.Dim_Increment * 8;
+      end if;
+
       Ret := 8 * Address_Offset (Elt);
 
       case Elt.Kind is
          when Register_Element =>
             Ret := Ret +
               (if Elt.Reg.Dim = 1
-               then Elt.Reg.Reg_Properties.Size - 1
-               else Elt.Reg.Dim * Elt.Reg.Dim_Increment * 8 - 1);
+               then Elt.Reg.Reg_Properties.Size
+               else Elt.Reg.Dim * Elt.Reg.Dim_Increment * 8);
 
          when Cluster_Element =>
-            Ret := Ret + Get_MSB (Elt.Cluster.all);
+            Ret := Ret + Get_Size (Elt.Cluster.all);
       end case;
 
       if (Ret + 1) mod 32 /= 0 then
-         Ret := Ret + 31 - (Ret mod 32);
+         Ret := Ret + 32 - (Ret mod 32);
       end if;
 
       return Positive (Ret);
-   end Get_MSB;
+   end Get_Size;
 
    --------------------
    -- Insert_Element --
@@ -676,7 +680,7 @@ package body Descriptors.Cluster is
 
    begin
       Add_Aspect (Rec, "Volatile");
-      Add_Size_Aspect (Rec, Get_MSB (Cluster) + 1);
+      Add_Size_Aspect (Rec, Get_Size (Cluster));
 
       for Elt of Cluster.Content loop
          if Elt.Kind = Register_Element and then Elt.Reg.Is_Overlapping then
@@ -752,6 +756,23 @@ package body Descriptors.Cluster is
 
       Dump_Cluster_Type
         (Spec, Cluster.all, To_String (Cluster.Type_Name) & "_Cluster");
+
+      if Cluster.Dim > 1 then
+         declare
+            Array_T : Ada_Type_Array;
+         begin
+            Array_T :=
+              New_Type_Array
+                (Id           => To_String (Cluster.Type_Name) & "_Clusters",
+                 Index_Type   => "",
+                 Index_First  => 0,
+                 Index_Last   => Cluster.Dim - 1,
+                 Element_Type => -Cluster.Ada_Type,
+                 Comment      => To_String (Cluster.Description));
+            Add (Spec, Array_T);
+            Cluster.Ada_Type := -Array_T;
+         end;
+      end if;
    end Dump;
 
 end Descriptors.Cluster;
