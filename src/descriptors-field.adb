@@ -500,19 +500,6 @@ package body Descriptors.Field is
                   Array_T  : Ada_Type_Array;
 
                begin
-                  if Index /= 0
-                    or else Fields (Index).Size * Length /= Properties.Size
-                  then
-                     --  Print a boxed comment only if there are more than
-                     --  one fields defined in the register. Else, this
-                     --  becomes a bit too verbose with one boxed comment to
-                     --  start the register definition, and one boxed comment
-                     --  for the unique register's field definition
-                     Add (Spec,
-                          New_Comment_Box
-                            (To_String (Reg.Name) & "." & F_Name));
-                  end if;
-
                   if Ada_Type_Size = 1 and then As_Boolean then
                      if Ada_Type.Is_Empty then
                         Ada_Type := -Get_Boolean;
