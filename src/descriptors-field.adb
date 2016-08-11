@@ -467,7 +467,7 @@ package body Descriptors.Field is
                   declare
                      Sub_T : Ada_Subtype_Scalar :=
                                New_Subype_Scalar
-                                 (Id  => To_String (Reg.Name) &
+                                 (Id  => To_String (Reg.Type_Name) &
                                          "_" &
                                          To_String (Fields (Index).Name) &
                                          "_Field",
@@ -486,8 +486,8 @@ package body Descriptors.Field is
                   F_Name  : constant String :=
                               Slice (Fields (Index).Name, 1, Prefix);
                   T_Name  : constant String :=
-                              (if To_String (Reg.Name) /= F_Name
-                               then To_String (Reg.Name) & "_" & F_Name
+                              (if To_String (Reg.Type_Name) /= F_Name
+                               then To_String (Reg.Type_Name) & "_" & F_Name
                                else F_Name);
 
                   Union_T : Ada_Type_Union :=

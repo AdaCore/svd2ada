@@ -38,28 +38,6 @@ package body Descriptors.Cluster is
    package String_List is new Ada.Containers.Indefinite_Vectors
      (Positive, String);
 
---
---     function Find_Overlapping_Registers
---       (Reg_Set : Register_Vectors.Vector) return Boolean;
---
---     function Less (P1, P2 : Cluster_T) return Boolean;
---
---     package Cluster_Sort is new Cluster_Vectors.Generic_Sorting
---       (Less);
---
---     package String_List is new Ada.Containers.Indefinite_Vectors
---       (Positive, String);
---
---     ----------
---     -- Less --
---     ----------
---
---     function Less (P1, P2 : Cluster_T) return Boolean
---     is
---     begin
---        return P1.Base_Address < P2.Base_Address;
---     end Less;
-
    ---------------------
    -- Read_Cluster --
    ---------------------
@@ -158,8 +136,9 @@ package body Descriptors.Cluster is
             begin
                if Tag = "name" then
                   Ret.Xml_Id := Get_Value (Child);
-                  Ret.Name := Compute_Name;
-                  Ret.Type_Name := Prepend & Ret.Name & Append;
+                  Ret.Name := Prepend & Compute_Name & Append;
+                  Ret.Type_Name := Ret.Name;
+                  --  Type_Name might be overloaded by headerStructName
 
                elsif Tag = "headerStructName" then
                   Ret.Type_Name := Get_Value (Child);
@@ -740,7 +719,11 @@ package body Descriptors.Cluster is
 
    begin
       if not Cluster.Content.Is_Empty then
-         Add (Spec, New_Comment_Box ("Cluster's Registers"));
+         Add
+           (Spec,
+            New_Comment_Box
+              (To_String (Cluster.Type_Name) &
+                 " cluster's Registers"));
       end if;
 
       Find_Common_Types (Cluster.Content);
