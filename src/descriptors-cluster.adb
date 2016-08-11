@@ -328,7 +328,7 @@ package body Descriptors.Cluster is
             Ret := Ret + Get_Size (Elt.Cluster.all);
       end case;
 
-      if (Ret + 1) mod 32 /= 0 then
+      if Ret mod 32 /= 0 then
          Ret := Ret + 32 - (Ret mod 32);
       end if;
 
