@@ -20,7 +20,6 @@
 with Ada.Text_IO;
 with Ada.Containers.Indefinite_Vectors;
 
-with Interfaces;         use Interfaces;
 with DOM.Core;
 with DOM.Core.Elements;  use DOM.Core.Elements;
 with DOM.Core.Nodes;
