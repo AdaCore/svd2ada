@@ -18385,24 +18385,6 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <value>39</value>
       </interrupt>
     </peripheral>
-    <peripheral derivedFrom="USART6">
-      <name>UART7</name>
-      <baseAddress>0x40007800</baseAddress>
-      <interrupt>
-        <name>UART7</name>
-        <description>UART 7 global interrupt</description>
-        <value>82</value>
-      </interrupt>
-    </peripheral>
-    <peripheral derivedFrom="USART6">
-      <name>UART8</name>
-      <baseAddress>0x40007C00</baseAddress>
-      <interrupt>
-        <name>UART8</name>
-        <description>UART 8 global interrupt</description>
-        <value>83</value>
-      </interrupt>
-    </peripheral>
     <peripheral>
       <name>DAC</name>
       <description>Digital-to-analog converter</description>
@@ -20870,6 +20852,24 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <name>UART5</name>
         <description>UART5 global interrupt</description>
         <value>53</value>
+      </interrupt>
+    </peripheral>
+    <peripheral derivedFrom="UART4">
+      <name>UART7</name>
+      <baseAddress>0x40007800</baseAddress>
+      <interrupt>
+        <name>UART7</name>
+        <description>UART 7 global interrupt</description>
+        <value>82</value>
+      </interrupt>
+    </peripheral>
+    <peripheral derivedFrom="UART4">
+      <name>UART8</name>
+      <baseAddress>0x40007C00</baseAddress>
+      <interrupt>
+        <name>UART8</name>
+        <description>UART 8 global interrupt</description>
+        <value>83</value>
       </interrupt>
     </peripheral>
     <peripheral>
