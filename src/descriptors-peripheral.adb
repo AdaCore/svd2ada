@@ -47,8 +47,37 @@ package body Descriptors.Peripheral is
 
    function Less (P1, P2 : Peripheral_Access) return Boolean
    is
+      Name1  : constant String := Unbounded.To_String (P1.Name);
+      Name2  : constant String := Unbounded.To_String (P2.Name);
+      I1, I2 : Natural := 0;
+      N1, N2 : Natural;
    begin
-      return P1.Base_Address < P2.Base_Address;
+      for J in reverse Name1'Range loop
+         if Name1 (J) not in '0' .. '9' then
+            I1 := J;
+            exit;
+         end if;
+      end loop;
+
+      for J in reverse Name2'Range loop
+         if Name2 (J) not in '0' .. '9' then
+            I2 := J;
+            exit;
+         end if;
+      end loop;
+
+      if I1 = I2
+        and then I1 /= Name1'Last
+        and then I2 /= Name2'Last
+        and then Name1 (1 .. I1) = Name2 (1 .. I2)
+      then
+         N1 := Natural'Value (Name1 (I1 + 1 .. Name1'Last));
+         N2 := Natural'Value (Name2 (I2 + 1 .. Name2'Last));
+
+         return N1 < N2;
+      end if;
+
+      return Name1 < Name2;
    end Less;
 
    ---------------------
@@ -105,10 +134,7 @@ package body Descriptors.Peripheral is
             begin
                if Tag = "name" then
                   Ret.Name := Get_Value (Child);
-
-                  if Ada.Strings.Unbounded.Length (Ret.Type_Name) = 0 then
-                     Ret.Type_Name := Ret.Name;
-                  end if;
+                  Ret.Type_Name := Ret.Name;
 
                elsif Tag = "headerStructName" then
                   Ret.Type_Name := Get_Value (Child);
@@ -501,6 +527,8 @@ package body Descriptors.Peripheral is
          "",
          True);
 
+      Peripheral_Sort.Sort (Sorted);
+
       --  Registers
 
       for Periph of Sorted loop
@@ -525,7 +553,6 @@ package body Descriptors.Peripheral is
       Add (Spec, New_Comment_Box ("Peripherals"));
 
       --  Determine if all peripherals of the group have the same layout
-      Peripheral_Sort.Sort (Sorted);
 
       while not Sorted.Is_Empty loop
          declare
