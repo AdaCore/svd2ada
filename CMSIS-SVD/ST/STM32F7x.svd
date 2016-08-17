@@ -18815,6 +18815,12 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <value>24</value>
       </interrupt>
       <interrupt>
+        <name>TIM1_UP_TIM10</name>
+        <description>TIM1 Update interrupt and TIM10 global
+        interrupt</description>
+        <value>24</value>
+      </interrupt>
+      <interrupt>
         <name>TIM1_TRG_COM_TIM11</name>
         <description>TIM1 Trigger and Commutation interrupts and
         TIM11 global interrupt</description>
@@ -42000,7 +42006,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <usage>registers</usage>
       </addressBlock>
       <interrupt>
-        <name>LCD_TFT</name>
+        <name>LTDC</name>
         <description>LTDC global interrupt</description>
         <value>88</value>
       </interrupt>
@@ -43912,6 +43918,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
     <peripheral derivedFrom="SAI1">
       <name>SAI2</name>
       <baseAddress>0x40015C00</baseAddress>
+      <interrupt>
+        <name>SAI2</name>
+        <description>SAI2 global interrupt</description>
+        <value>91</value>
+      </interrupt>
     </peripheral>
     <peripheral>
       <name>DMA2D</name>
@@ -44604,6 +44615,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x1000</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>QUADSPI</name>
+        <description>QUADSPI global interrupt</description>
+        <value>92</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -45067,6 +45083,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>CEC</name>
+        <description>CEC global interrupt</description>
+        <value>94</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -45404,6 +45425,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>SPDIF_RX</name>
+        <description>SPDIF-RX global interrupt</description>
+        <value>97</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -45784,8 +45810,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <usage>registers</usage>
       </addressBlock>
       <interrupt>
-        <name>SDIO</name>
-        <description>SDIO global interrupt</description>
+        <name>SDMMC1</name>
+        <description>SDMMC1 global interrupt</description>
         <value>49</value>
       </interrupt>
       <registers>
@@ -46776,6 +46802,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>LPTIM1</name>
+        <description>LPTIM1 global interrupt</description>
+        <value>93</value>
+      </interrupt>
       <registers>
         <register>
           <name>ISR</name>
@@ -47779,14 +47810,44 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
     <peripheral derivedFrom="I2C1">
       <name>I2C2</name>
       <baseAddress>0x40005800</baseAddress>
+      <interrupt>
+        <name>I2C2_EV</name>
+        <description>I2C2 event interrupt</description>
+        <value>33</value>
+      </interrupt>
+      <interrupt>
+        <name>I2C2_ER</name>
+        <description>I2C2 error interrupt</description>
+        <value>34</value>
+      </interrupt>
     </peripheral>
     <peripheral derivedFrom="I2C1">
       <name>I2C3</name>
       <baseAddress>0x40005C00</baseAddress>
+      <interrupt>
+        <name>I2C3_EV</name>
+        <description>I2C3 event interrupt</description>
+        <value>72</value>
+      </interrupt>
+      <interrupt>
+        <name>I2C3_ER</name>
+        <description>I2C3 error interrupt</description>
+        <value>73</value>
+      </interrupt>
     </peripheral>
     <peripheral derivedFrom="I2C1">
       <name>I2C4</name>
       <baseAddress>0x40006000</baseAddress>
+      <interrupt>
+        <name>I2C4_EV</name>
+        <description>I2C4 event interrupt</description>
+        <value>95</value>
+      </interrupt>
+      <interrupt>
+        <name>I2C4_ER</name>
+        <description>I2C4 error interrupt</description>
+        <value>96</value>
+      </interrupt>
     </peripheral>
     <peripheral>
       <name>RTC</name>
@@ -49403,6 +49464,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>USART6</name>
+        <description>USART6 global interrupt</description>
+        <value>71</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR1</name>
@@ -50279,6 +50345,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
     <peripheral derivedFrom="USART6">
       <name>UART4</name>
       <baseAddress>0x40004C00</baseAddress>
+      <interrupt>
+        <name>UART4</name>
+        <description>UART4 global interrupt</description>
+        <value>52</value>
+      </interrupt>
     </peripheral>
     <peripheral derivedFrom="USART6">
       <name>UART8</name>
@@ -50292,6 +50363,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
     <peripheral derivedFrom="USART6">
       <name>UART7</name>
       <baseAddress>0x40007800</baseAddress>
+      <interrupt>
+        <name>UART7</name>
+        <description>UART 7 global interrupt</description>
+        <value>82</value>
+      </interrupt>
     </peripheral>
     <peripheral>
       <name>OTG_FS_GLOBAL</name>

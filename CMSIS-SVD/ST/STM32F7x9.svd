@@ -6919,1990 +6919,261 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-        <register>
-          <name>S0CR</name>
-          <displayName>S0CR</displayName>
-          <description>stream x configuration
-          register</description>
+        <cluster>
+          <name>Stream</name>
+          <description>Stream registers</description>
+          <dim>8</dim>
+          <dimIncrement>0x18</dimIncrement>
           <addressOffset>0x10</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>CHSEL</name>
-              <description>Channel selection</description>
-              <bitOffset>25</bitOffset>
-              <bitWidth>3</bitWidth>
-            </field>
-            <field>
-              <name>MBURST</name>
-              <description>Memory burst transfer
-              configuration</description>
-              <bitOffset>23</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PBURST</name>
-              <description>Peripheral burst transfer
-              configuration</description>
-              <bitOffset>21</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>CT</name>
-              <description>Current target (only in double buffer
-              mode)</description>
-              <bitOffset>19</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DBM</name>
-              <description>Double buffer mode</description>
-              <bitOffset>18</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PL</name>
-              <description>Priority level</description>
-              <bitOffset>16</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PINCOS</name>
-              <description>Peripheral increment offset
-              size</description>
-              <bitOffset>15</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>MSIZE</name>
-              <description>Memory data size</description>
-              <bitOffset>13</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PSIZE</name>
-              <description>Peripheral data size</description>
-              <bitOffset>11</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>MINC</name>
-              <description>Memory increment mode</description>
-              <bitOffset>10</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PINC</name>
-              <description>Peripheral increment mode</description>
-              <bitOffset>9</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>CIRC</name>
-              <description>Circular mode</description>
-              <bitOffset>8</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DIR</name>
-              <description>Data transfer direction</description>
-              <bitOffset>6</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PFCTRL</name>
-              <description>Peripheral flow controller</description>
-              <bitOffset>5</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>TCIE</name>
-              <description>Transfer complete interrupt
-              enable</description>
-              <bitOffset>4</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>HTIE</name>
-              <description>Half transfer interrupt
-              enable</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>TEIE</name>
-              <description>Transfer error interrupt
-              enable</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DMEIE</name>
-              <description>Direct mode error interrupt
-              enable</description>
-              <bitOffset>1</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>EN</name>
-              <description>Stream enable / flag stream ready when
-              read low</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S0NDTR</name>
-          <displayName>S0NDTR</displayName>
-          <description>stream x number of data
-          register</description>
-          <addressOffset>0x14</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>NDT</name>
-              <description>Number of data items to
-              transfer</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>16</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S0PAR</name>
-          <displayName>S0PAR</displayName>
-          <description>stream x peripheral address
-          register</description>
-          <addressOffset>0x18</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>PA</name>
-              <description>Peripheral address</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S0M0AR</name>
-          <displayName>S0M0AR</displayName>
-          <description>stream x memory 0 address
-          register</description>
-          <addressOffset>0x1C</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>M0A</name>
-              <description>Memory 0 address</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S0M1AR</name>
-          <displayName>S0M1AR</displayName>
-          <description>stream x memory 1 address
-          register</description>
-          <addressOffset>0x20</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>M1A</name>
-              <description>Memory 1 address (used in case of Double
-              buffer mode)</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S0FCR</name>
-          <displayName>S0FCR</displayName>
-          <description>stream x FIFO control register</description>
-          <addressOffset>0x24</addressOffset>
-          <size>0x20</size>
-          <resetValue>0x00000021</resetValue>
-          <fields>
-            <field>
-              <name>FEIE</name>
-              <description>FIFO error interrupt
-              enable</description>
-              <bitOffset>7</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>FS</name>
-              <description>FIFO status</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>3</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>DMDIS</name>
-              <description>Direct mode disable</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>FTH</name>
-              <description>FIFO threshold selection</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>2</bitWidth>
-              <access>read-write</access>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S1CR</name>
-          <displayName>S1CR</displayName>
-          <description>stream x configuration
-          register</description>
-          <addressOffset>0x28</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>CHSEL</name>
-              <description>Channel selection</description>
-              <bitOffset>25</bitOffset>
-              <bitWidth>3</bitWidth>
-            </field>
-            <field>
-              <name>MBURST</name>
-              <description>Memory burst transfer
-              configuration</description>
-              <bitOffset>23</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PBURST</name>
-              <description>Peripheral burst transfer
-              configuration</description>
-              <bitOffset>21</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>CT</name>
-              <description>Current target (only in double buffer
-              mode)</description>
-              <bitOffset>19</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DBM</name>
-              <description>Double buffer mode</description>
-              <bitOffset>18</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PL</name>
-              <description>Priority level</description>
-              <bitOffset>16</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PINCOS</name>
-              <description>Peripheral increment offset
-              size</description>
-              <bitOffset>15</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>MSIZE</name>
-              <description>Memory data size</description>
-              <bitOffset>13</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PSIZE</name>
-              <description>Peripheral data size</description>
-              <bitOffset>11</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>MINC</name>
-              <description>Memory increment mode</description>
-              <bitOffset>10</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PINC</name>
-              <description>Peripheral increment mode</description>
-              <bitOffset>9</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>CIRC</name>
-              <description>Circular mode</description>
-              <bitOffset>8</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DIR</name>
-              <description>Data transfer direction</description>
-              <bitOffset>6</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PFCTRL</name>
-              <description>Peripheral flow controller</description>
-              <bitOffset>5</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>TCIE</name>
-              <description>Transfer complete interrupt
-              enable</description>
-              <bitOffset>4</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>HTIE</name>
-              <description>Half transfer interrupt
-              enable</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>TEIE</name>
-              <description>Transfer error interrupt
-              enable</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DMEIE</name>
-              <description>Direct mode error interrupt
-              enable</description>
-              <bitOffset>1</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>EN</name>
-              <description>Stream enable / flag stream ready when
-              read low</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S1NDTR</name>
-          <displayName>S1NDTR</displayName>
-          <description>stream x number of data
-          register</description>
-          <addressOffset>0x2C</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>NDT</name>
-              <description>Number of data items to
-              transfer</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>16</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S1PAR</name>
-          <displayName>S1PAR</displayName>
-          <description>stream x peripheral address
-          register</description>
-          <addressOffset>0x30</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>PA</name>
-              <description>Peripheral address</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S1M0AR</name>
-          <displayName>S1M0AR</displayName>
-          <description>stream x memory 0 address
-          register</description>
-          <addressOffset>0x34</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>M0A</name>
-              <description>Memory 0 address</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S1M1AR</name>
-          <displayName>S1M1AR</displayName>
-          <description>stream x memory 1 address
-          register</description>
-          <addressOffset>0x38</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>M1A</name>
-              <description>Memory 1 address (used in case of Double
-              buffer mode)</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S1FCR</name>
-          <displayName>S1FCR</displayName>
-          <description>stream x FIFO control register</description>
-          <addressOffset>0x3C</addressOffset>
-          <size>0x20</size>
-          <resetValue>0x00000021</resetValue>
-          <fields>
-            <field>
-              <name>FEIE</name>
-              <description>FIFO error interrupt
-              enable</description>
-              <bitOffset>7</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>FS</name>
-              <description>FIFO status</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>3</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>DMDIS</name>
-              <description>Direct mode disable</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>FTH</name>
-              <description>FIFO threshold selection</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>2</bitWidth>
-              <access>read-write</access>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S2CR</name>
-          <displayName>S2CR</displayName>
-          <description>stream x configuration
-          register</description>
-          <addressOffset>0x40</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>CHSEL</name>
-              <description>Channel selection</description>
-              <bitOffset>25</bitOffset>
-              <bitWidth>3</bitWidth>
-            </field>
-            <field>
-              <name>MBURST</name>
-              <description>Memory burst transfer
-              configuration</description>
-              <bitOffset>23</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PBURST</name>
-              <description>Peripheral burst transfer
-              configuration</description>
-              <bitOffset>21</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>CT</name>
-              <description>Current target (only in double buffer
-              mode)</description>
-              <bitOffset>19</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DBM</name>
-              <description>Double buffer mode</description>
-              <bitOffset>18</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PL</name>
-              <description>Priority level</description>
-              <bitOffset>16</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PINCOS</name>
-              <description>Peripheral increment offset
-              size</description>
-              <bitOffset>15</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>MSIZE</name>
-              <description>Memory data size</description>
-              <bitOffset>13</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PSIZE</name>
-              <description>Peripheral data size</description>
-              <bitOffset>11</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>MINC</name>
-              <description>Memory increment mode</description>
-              <bitOffset>10</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PINC</name>
-              <description>Peripheral increment mode</description>
-              <bitOffset>9</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>CIRC</name>
-              <description>Circular mode</description>
-              <bitOffset>8</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DIR</name>
-              <description>Data transfer direction</description>
-              <bitOffset>6</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PFCTRL</name>
-              <description>Peripheral flow controller</description>
-              <bitOffset>5</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>TCIE</name>
-              <description>Transfer complete interrupt
-              enable</description>
-              <bitOffset>4</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>HTIE</name>
-              <description>Half transfer interrupt
-              enable</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>TEIE</name>
-              <description>Transfer error interrupt
-              enable</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DMEIE</name>
-              <description>Direct mode error interrupt
-              enable</description>
-              <bitOffset>1</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>EN</name>
-              <description>Stream enable / flag stream ready when
-              read low</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S2NDTR</name>
-          <displayName>S2NDTR</displayName>
-          <description>stream x number of data
-          register</description>
-          <addressOffset>0x44</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>NDT</name>
-              <description>Number of data items to
-              transfer</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>16</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S2PAR</name>
-          <displayName>S2PAR</displayName>
-          <description>stream x peripheral address
-          register</description>
-          <addressOffset>0x48</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>PA</name>
-              <description>Peripheral address</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S2M0AR</name>
-          <displayName>S2M0AR</displayName>
-          <description>stream x memory 0 address
-          register</description>
-          <addressOffset>0x4C</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>M0A</name>
-              <description>Memory 0 address</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S2M1AR</name>
-          <displayName>S2M1AR</displayName>
-          <description>stream x memory 1 address
-          register</description>
-          <addressOffset>0x50</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>M1A</name>
-              <description>Memory 1 address (used in case of Double
-              buffer mode)</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S2FCR</name>
-          <displayName>S2FCR</displayName>
-          <description>stream x FIFO control register</description>
-          <addressOffset>0x54</addressOffset>
-          <size>0x20</size>
-          <resetValue>0x00000021</resetValue>
-          <fields>
-            <field>
-              <name>FEIE</name>
-              <description>FIFO error interrupt
-              enable</description>
-              <bitOffset>7</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>FS</name>
-              <description>FIFO status</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>3</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>DMDIS</name>
-              <description>Direct mode disable</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>FTH</name>
-              <description>FIFO threshold selection</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>2</bitWidth>
-              <access>read-write</access>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S3CR</name>
-          <displayName>S3CR</displayName>
-          <description>stream x configuration
-          register</description>
-          <addressOffset>0x58</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>CHSEL</name>
-              <description>Channel selection</description>
-              <bitOffset>25</bitOffset>
-              <bitWidth>3</bitWidth>
-            </field>
-            <field>
-              <name>MBURST</name>
-              <description>Memory burst transfer
-              configuration</description>
-              <bitOffset>23</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PBURST</name>
-              <description>Peripheral burst transfer
-              configuration</description>
-              <bitOffset>21</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>CT</name>
-              <description>Current target (only in double buffer
-              mode)</description>
-              <bitOffset>19</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DBM</name>
-              <description>Double buffer mode</description>
-              <bitOffset>18</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PL</name>
-              <description>Priority level</description>
-              <bitOffset>16</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PINCOS</name>
-              <description>Peripheral increment offset
-              size</description>
-              <bitOffset>15</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>MSIZE</name>
-              <description>Memory data size</description>
-              <bitOffset>13</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PSIZE</name>
-              <description>Peripheral data size</description>
-              <bitOffset>11</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>MINC</name>
-              <description>Memory increment mode</description>
-              <bitOffset>10</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PINC</name>
-              <description>Peripheral increment mode</description>
-              <bitOffset>9</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>CIRC</name>
-              <description>Circular mode</description>
-              <bitOffset>8</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DIR</name>
-              <description>Data transfer direction</description>
-              <bitOffset>6</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PFCTRL</name>
-              <description>Peripheral flow controller</description>
-              <bitOffset>5</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>TCIE</name>
-              <description>Transfer complete interrupt
-              enable</description>
-              <bitOffset>4</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>HTIE</name>
-              <description>Half transfer interrupt
-              enable</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>TEIE</name>
-              <description>Transfer error interrupt
-              enable</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DMEIE</name>
-              <description>Direct mode error interrupt
-              enable</description>
-              <bitOffset>1</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>EN</name>
-              <description>Stream enable / flag stream ready when
-              read low</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S3NDTR</name>
-          <displayName>S3NDTR</displayName>
-          <description>stream x number of data
-          register</description>
-          <addressOffset>0x5C</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>NDT</name>
-              <description>Number of data items to
-              transfer</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>16</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S3PAR</name>
-          <displayName>S3PAR</displayName>
-          <description>stream x peripheral address
-          register</description>
-          <addressOffset>0x60</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>PA</name>
-              <description>Peripheral address</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S3M0AR</name>
-          <displayName>S3M0AR</displayName>
-          <description>stream x memory 0 address
-          register</description>
-          <addressOffset>0x64</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>M0A</name>
-              <description>Memory 0 address</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S3M1AR</name>
-          <displayName>S3M1AR</displayName>
-          <description>stream x memory 1 address
-          register</description>
-          <addressOffset>0x68</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>M1A</name>
-              <description>Memory 1 address (used in case of Double
-              buffer mode)</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S3FCR</name>
-          <displayName>S3FCR</displayName>
-          <description>stream x FIFO control register</description>
-          <addressOffset>0x6C</addressOffset>
-          <size>0x20</size>
-          <resetValue>0x00000021</resetValue>
-          <fields>
-            <field>
-              <name>FEIE</name>
-              <description>FIFO error interrupt
-              enable</description>
-              <bitOffset>7</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>FS</name>
-              <description>FIFO status</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>3</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>DMDIS</name>
-              <description>Direct mode disable</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>FTH</name>
-              <description>FIFO threshold selection</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>2</bitWidth>
-              <access>read-write</access>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S4CR</name>
-          <displayName>S4CR</displayName>
-          <description>stream x configuration
-          register</description>
-          <addressOffset>0x70</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>CHSEL</name>
-              <description>Channel selection</description>
-              <bitOffset>25</bitOffset>
-              <bitWidth>3</bitWidth>
-            </field>
-            <field>
-              <name>MBURST</name>
-              <description>Memory burst transfer
-              configuration</description>
-              <bitOffset>23</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PBURST</name>
-              <description>Peripheral burst transfer
-              configuration</description>
-              <bitOffset>21</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>CT</name>
-              <description>Current target (only in double buffer
-              mode)</description>
-              <bitOffset>19</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DBM</name>
-              <description>Double buffer mode</description>
-              <bitOffset>18</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PL</name>
-              <description>Priority level</description>
-              <bitOffset>16</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PINCOS</name>
-              <description>Peripheral increment offset
-              size</description>
-              <bitOffset>15</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>MSIZE</name>
-              <description>Memory data size</description>
-              <bitOffset>13</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PSIZE</name>
-              <description>Peripheral data size</description>
-              <bitOffset>11</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>MINC</name>
-              <description>Memory increment mode</description>
-              <bitOffset>10</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PINC</name>
-              <description>Peripheral increment mode</description>
-              <bitOffset>9</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>CIRC</name>
-              <description>Circular mode</description>
-              <bitOffset>8</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DIR</name>
-              <description>Data transfer direction</description>
-              <bitOffset>6</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PFCTRL</name>
-              <description>Peripheral flow controller</description>
-              <bitOffset>5</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>TCIE</name>
-              <description>Transfer complete interrupt
-              enable</description>
-              <bitOffset>4</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>HTIE</name>
-              <description>Half transfer interrupt
-              enable</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>TEIE</name>
-              <description>Transfer error interrupt
-              enable</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DMEIE</name>
-              <description>Direct mode error interrupt
-              enable</description>
-              <bitOffset>1</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>EN</name>
-              <description>Stream enable / flag stream ready when
-              read low</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S4NDTR</name>
-          <displayName>S4NDTR</displayName>
-          <description>stream x number of data
-          register</description>
-          <addressOffset>0x74</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>NDT</name>
-              <description>Number of data items to
-              transfer</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>16</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S4PAR</name>
-          <displayName>S4PAR</displayName>
-          <description>stream x peripheral address
-          register</description>
-          <addressOffset>0x78</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>PA</name>
-              <description>Peripheral address</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S4M0AR</name>
-          <displayName>S4M0AR</displayName>
-          <description>stream x memory 0 address
-          register</description>
-          <addressOffset>0x7C</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>M0A</name>
-              <description>Memory 0 address</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S4M1AR</name>
-          <displayName>S4M1AR</displayName>
-          <description>stream x memory 1 address
-          register</description>
-          <addressOffset>0x80</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>M1A</name>
-              <description>Memory 1 address (used in case of Double
-              buffer mode)</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S4FCR</name>
-          <displayName>S4FCR</displayName>
-          <description>stream x FIFO control register</description>
-          <addressOffset>0x84</addressOffset>
-          <size>0x20</size>
-          <resetValue>0x00000021</resetValue>
-          <fields>
-            <field>
-              <name>FEIE</name>
-              <description>FIFO error interrupt
-              enable</description>
-              <bitOffset>7</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>FS</name>
-              <description>FIFO status</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>3</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>DMDIS</name>
-              <description>Direct mode disable</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>FTH</name>
-              <description>FIFO threshold selection</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>2</bitWidth>
-              <access>read-write</access>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S5CR</name>
-          <displayName>S5CR</displayName>
-          <description>stream x configuration
-          register</description>
-          <addressOffset>0x88</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>CHSEL</name>
-              <description>Channel selection</description>
-              <bitOffset>25</bitOffset>
-              <bitWidth>3</bitWidth>
-            </field>
-            <field>
-              <name>MBURST</name>
-              <description>Memory burst transfer
-              configuration</description>
-              <bitOffset>23</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PBURST</name>
-              <description>Peripheral burst transfer
-              configuration</description>
-              <bitOffset>21</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>CT</name>
-              <description>Current target (only in double buffer
-              mode)</description>
-              <bitOffset>19</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DBM</name>
-              <description>Double buffer mode</description>
-              <bitOffset>18</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PL</name>
-              <description>Priority level</description>
-              <bitOffset>16</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PINCOS</name>
-              <description>Peripheral increment offset
-              size</description>
-              <bitOffset>15</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>MSIZE</name>
-              <description>Memory data size</description>
-              <bitOffset>13</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PSIZE</name>
-              <description>Peripheral data size</description>
-              <bitOffset>11</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>MINC</name>
-              <description>Memory increment mode</description>
-              <bitOffset>10</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PINC</name>
-              <description>Peripheral increment mode</description>
-              <bitOffset>9</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>CIRC</name>
-              <description>Circular mode</description>
-              <bitOffset>8</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DIR</name>
-              <description>Data transfer direction</description>
-              <bitOffset>6</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PFCTRL</name>
-              <description>Peripheral flow controller</description>
-              <bitOffset>5</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>TCIE</name>
-              <description>Transfer complete interrupt
-              enable</description>
-              <bitOffset>4</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>HTIE</name>
-              <description>Half transfer interrupt
-              enable</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>TEIE</name>
-              <description>Transfer error interrupt
-              enable</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DMEIE</name>
-              <description>Direct mode error interrupt
-              enable</description>
-              <bitOffset>1</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>EN</name>
-              <description>Stream enable / flag stream ready when
-              read low</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S5NDTR</name>
-          <displayName>S5NDTR</displayName>
-          <description>stream x number of data
-          register</description>
-          <addressOffset>0x8C</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>NDT</name>
-              <description>Number of data items to
-              transfer</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>16</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S5PAR</name>
-          <displayName>S5PAR</displayName>
-          <description>stream x peripheral address
-          register</description>
-          <addressOffset>0x90</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>PA</name>
-              <description>Peripheral address</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S5M0AR</name>
-          <displayName>S5M0AR</displayName>
-          <description>stream x memory 0 address
-          register</description>
-          <addressOffset>0x94</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>M0A</name>
-              <description>Memory 0 address</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S5M1AR</name>
-          <displayName>S5M1AR</displayName>
-          <description>stream x memory 1 address
-          register</description>
-          <addressOffset>0x98</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>M1A</name>
-              <description>Memory 1 address (used in case of Double
-              buffer mode)</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S5FCR</name>
-          <displayName>S5FCR</displayName>
-          <description>stream x FIFO control register</description>
-          <addressOffset>0x9C</addressOffset>
-          <size>0x20</size>
-          <resetValue>0x00000021</resetValue>
-          <fields>
-            <field>
-              <name>FEIE</name>
-              <description>FIFO error interrupt
-              enable</description>
-              <bitOffset>7</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>FS</name>
-              <description>FIFO status</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>3</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>DMDIS</name>
-              <description>Direct mode disable</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>FTH</name>
-              <description>FIFO threshold selection</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>2</bitWidth>
-              <access>read-write</access>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S6CR</name>
-          <displayName>S6CR</displayName>
-          <description>stream x configuration
-          register</description>
-          <addressOffset>0xA0</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>CHSEL</name>
-              <description>Channel selection</description>
-              <bitOffset>25</bitOffset>
-              <bitWidth>3</bitWidth>
-            </field>
-            <field>
-              <name>MBURST</name>
-              <description>Memory burst transfer
-              configuration</description>
-              <bitOffset>23</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PBURST</name>
-              <description>Peripheral burst transfer
-              configuration</description>
-              <bitOffset>21</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>CT</name>
-              <description>Current target (only in double buffer
-              mode)</description>
-              <bitOffset>19</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DBM</name>
-              <description>Double buffer mode</description>
-              <bitOffset>18</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PL</name>
-              <description>Priority level</description>
-              <bitOffset>16</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PINCOS</name>
-              <description>Peripheral increment offset
-              size</description>
-              <bitOffset>15</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>MSIZE</name>
-              <description>Memory data size</description>
-              <bitOffset>13</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PSIZE</name>
-              <description>Peripheral data size</description>
-              <bitOffset>11</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>MINC</name>
-              <description>Memory increment mode</description>
-              <bitOffset>10</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PINC</name>
-              <description>Peripheral increment mode</description>
-              <bitOffset>9</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>CIRC</name>
-              <description>Circular mode</description>
-              <bitOffset>8</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DIR</name>
-              <description>Data transfer direction</description>
-              <bitOffset>6</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PFCTRL</name>
-              <description>Peripheral flow controller</description>
-              <bitOffset>5</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>TCIE</name>
-              <description>Transfer complete interrupt
-              enable</description>
-              <bitOffset>4</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>HTIE</name>
-              <description>Half transfer interrupt
-              enable</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>TEIE</name>
-              <description>Transfer error interrupt
-              enable</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DMEIE</name>
-              <description>Direct mode error interrupt
-              enable</description>
-              <bitOffset>1</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>EN</name>
-              <description>Stream enable / flag stream ready when
-              read low</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S6NDTR</name>
-          <displayName>S6NDTR</displayName>
-          <description>stream x number of data
-          register</description>
-          <addressOffset>0xA4</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>NDT</name>
-              <description>Number of data items to
-              transfer</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>16</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S6PAR</name>
-          <displayName>S6PAR</displayName>
-          <description>stream x peripheral address
-          register</description>
-          <addressOffset>0xA8</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>PA</name>
-              <description>Peripheral address</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S6M0AR</name>
-          <displayName>S6M0AR</displayName>
-          <description>stream x memory 0 address
-          register</description>
-          <addressOffset>0xAC</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>M0A</name>
-              <description>Memory 0 address</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S6M1AR</name>
-          <displayName>S6M1AR</displayName>
-          <description>stream x memory 1 address
-          register</description>
-          <addressOffset>0xB0</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>M1A</name>
-              <description>Memory 1 address (used in case of Double
-              buffer mode)</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S6FCR</name>
-          <displayName>S6FCR</displayName>
-          <description>stream x FIFO control register</description>
-          <addressOffset>0xB4</addressOffset>
-          <size>0x20</size>
-          <resetValue>0x00000021</resetValue>
-          <fields>
-            <field>
-              <name>FEIE</name>
-              <description>FIFO error interrupt
-              enable</description>
-              <bitOffset>7</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>FS</name>
-              <description>FIFO status</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>3</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>DMDIS</name>
-              <description>Direct mode disable</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>FTH</name>
-              <description>FIFO threshold selection</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>2</bitWidth>
-              <access>read-write</access>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S7CR</name>
-          <displayName>S7CR</displayName>
-          <description>stream x configuration
-          register</description>
-          <addressOffset>0xB8</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>CHSEL</name>
-              <description>Channel selection</description>
-              <bitOffset>25</bitOffset>
-              <bitWidth>3</bitWidth>
-            </field>
-            <field>
-              <name>MBURST</name>
-              <description>Memory burst transfer
-              configuration</description>
-              <bitOffset>23</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PBURST</name>
-              <description>Peripheral burst transfer
-              configuration</description>
-              <bitOffset>21</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>CT</name>
-              <description>Current target (only in double buffer
-              mode)</description>
-              <bitOffset>19</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DBM</name>
-              <description>Double buffer mode</description>
-              <bitOffset>18</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PL</name>
-              <description>Priority level</description>
-              <bitOffset>16</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PINCOS</name>
-              <description>Peripheral increment offset
-              size</description>
-              <bitOffset>15</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>MSIZE</name>
-              <description>Memory data size</description>
-              <bitOffset>13</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PSIZE</name>
-              <description>Peripheral data size</description>
-              <bitOffset>11</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>MINC</name>
-              <description>Memory increment mode</description>
-              <bitOffset>10</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>PINC</name>
-              <description>Peripheral increment mode</description>
-              <bitOffset>9</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>CIRC</name>
-              <description>Circular mode</description>
-              <bitOffset>8</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DIR</name>
-              <description>Data transfer direction</description>
-              <bitOffset>6</bitOffset>
-              <bitWidth>2</bitWidth>
-            </field>
-            <field>
-              <name>PFCTRL</name>
-              <description>Peripheral flow controller</description>
-              <bitOffset>5</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>TCIE</name>
-              <description>Transfer complete interrupt
-              enable</description>
-              <bitOffset>4</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>HTIE</name>
-              <description>Half transfer interrupt
-              enable</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>TEIE</name>
-              <description>Transfer error interrupt
-              enable</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>DMEIE</name>
-              <description>Direct mode error interrupt
-              enable</description>
-              <bitOffset>1</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>EN</name>
-              <description>Stream enable / flag stream ready when
-              read low</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S7NDTR</name>
-          <displayName>S7NDTR</displayName>
-          <description>stream x number of data
-          register</description>
-          <addressOffset>0xBC</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>NDT</name>
-              <description>Number of data items to
-              transfer</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>16</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S7PAR</name>
-          <displayName>S7PAR</displayName>
-          <description>stream x peripheral address
-          register</description>
-          <addressOffset>0xC0</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>PA</name>
-              <description>Peripheral address</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S7M0AR</name>
-          <displayName>S7M0AR</displayName>
-          <description>stream x memory 0 address
-          register</description>
-          <addressOffset>0xC4</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>M0A</name>
-              <description>Memory 0 address</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S7M1AR</name>
-          <displayName>S7M1AR</displayName>
-          <description>stream x memory 1 address
-          register</description>
-          <addressOffset>0xC8</addressOffset>
-          <size>0x20</size>
-          <access>read-write</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>M1A</name>
-              <description>Memory 1 address (used in case of Double
-              buffer mode)</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>32</bitWidth>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>S7FCR</name>
-          <displayName>S7FCR</displayName>
-          <description>stream x FIFO control register</description>
-          <addressOffset>0xCC</addressOffset>
-          <size>0x20</size>
-          <resetValue>0x00000021</resetValue>
-          <fields>
-            <field>
-              <name>FEIE</name>
-              <description>FIFO error interrupt
-              enable</description>
-              <bitOffset>7</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>FS</name>
-              <description>FIFO status</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>3</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>DMDIS</name>
-              <description>Direct mode disable</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>FTH</name>
-              <description>FIFO threshold selection</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>2</bitWidth>
-              <access>read-write</access>
-            </field>
-          </fields>
-        </register>
+          <register>
+            <name>SxCR</name>
+            <displayName>SxCR</displayName>
+            <description>stream x configuration
+            register</description>
+            <addressOffset>0x0</addressOffset>
+            <size>0x20</size>
+            <access>read-write</access>
+            <resetValue>0x00000000</resetValue>
+            <fields>
+              <field>
+                <name>CHSEL</name>
+                <description>Channel selection</description>
+                <bitOffset>25</bitOffset>
+                <bitWidth>4</bitWidth>
+              </field>
+              <field>
+                <name>MBURST</name>
+                <description>Memory burst transfer
+                configuration</description>
+                <bitOffset>23</bitOffset>
+                <bitWidth>2</bitWidth>
+              </field>
+              <field>
+                <name>PBURST</name>
+                <description>Peripheral burst transfer
+                configuration</description>
+                <bitOffset>21</bitOffset>
+                <bitWidth>2</bitWidth>
+              </field>
+              <field>
+                <name>CT</name>
+                <description>Current target (only in double buffer
+                mode)</description>
+                <bitOffset>19</bitOffset>
+                <bitWidth>1</bitWidth>
+              </field>
+              <field>
+                <name>DBM</name>
+                <description>Double buffer mode</description>
+                <bitOffset>18</bitOffset>
+                <bitWidth>1</bitWidth>
+              </field>
+              <field>
+                <name>PL</name>
+                <description>Priority level</description>
+                <bitOffset>16</bitOffset>
+                <bitWidth>2</bitWidth>
+              </field>
+              <field>
+                <name>PINCOS</name>
+                <description>Peripheral increment offset
+                size</description>
+                <bitOffset>15</bitOffset>
+                <bitWidth>1</bitWidth>
+              </field>
+              <field>
+                <name>MSIZE</name>
+                <description>Memory data size</description>
+                <bitOffset>13</bitOffset>
+                <bitWidth>2</bitWidth>
+              </field>
+              <field>
+                <name>PSIZE</name>
+                <description>Peripheral data size</description>
+                <bitOffset>11</bitOffset>
+                <bitWidth>2</bitWidth>
+              </field>
+              <field>
+                <name>MINC</name>
+                <description>Memory increment mode</description>
+                <bitOffset>10</bitOffset>
+                <bitWidth>1</bitWidth>
+              </field>
+              <field>
+                <name>PINC</name>
+                <description>Peripheral increment mode</description>
+                <bitOffset>9</bitOffset>
+                <bitWidth>1</bitWidth>
+              </field>
+              <field>
+                <name>CIRC</name>
+                <description>Circular mode</description>
+                <bitOffset>8</bitOffset>
+                <bitWidth>1</bitWidth>
+              </field>
+              <field>
+                <name>DIR</name>
+                <description>Data transfer direction</description>
+                <bitOffset>6</bitOffset>
+                <bitWidth>2</bitWidth>
+              </field>
+              <field>
+                <name>PFCTRL</name>
+                <description>Peripheral flow controller</description>
+                <bitOffset>5</bitOffset>
+                <bitWidth>1</bitWidth>
+              </field>
+              <field>
+                <name>TCIE</name>
+                <description>Transfer complete interrupt
+                enable</description>
+                <bitOffset>4</bitOffset>
+                <bitWidth>1</bitWidth>
+              </field>
+              <field>
+                <name>HTIE</name>
+                <description>Half transfer interrupt
+                enable</description>
+                <bitOffset>3</bitOffset>
+                <bitWidth>1</bitWidth>
+              </field>
+              <field>
+                <name>TEIE</name>
+                <description>Transfer error interrupt
+                enable</description>
+                <bitOffset>2</bitOffset>
+                <bitWidth>1</bitWidth>
+              </field>
+              <field>
+                <name>DMEIE</name>
+                <description>Direct mode error interrupt
+                enable</description>
+                <bitOffset>1</bitOffset>
+                <bitWidth>1</bitWidth>
+              </field>
+              <field>
+                <name>EN</name>
+                <description>Stream enable / flag stream ready when
+                read low</description>
+                <bitOffset>0</bitOffset>
+                <bitWidth>1</bitWidth>
+              </field>
+            </fields>
+          </register>
+          <register>
+            <name>SxNDTR</name>
+            <displayName>SxNDTR</displayName>
+            <description>stream x number of data
+            register</description>
+            <addressOffset>0x04</addressOffset>
+            <size>0x20</size>
+            <access>read-write</access>
+            <resetValue>0x00000000</resetValue>
+            <fields>
+              <field>
+                <name>NDT</name>
+                <description>Number of data items to
+                transfer</description>
+                <bitOffset>0</bitOffset>
+                <bitWidth>16</bitWidth>
+              </field>
+            </fields>
+          </register>
+          <register>
+            <name>SxPAR</name>
+            <displayName>SxPAR</displayName>
+            <description>stream x peripheral address
+            register</description>
+            <addressOffset>0x08</addressOffset>
+            <size>0x20</size>
+            <access>read-write</access>
+            <resetValue>0x00000000</resetValue>
+            <fields>
+              <field>
+                <name>PA</name>
+                <description>Peripheral address</description>
+                <bitOffset>0</bitOffset>
+                <bitWidth>32</bitWidth>
+              </field>
+            </fields>
+          </register>
+          <register>
+            <name>SxM0AR</name>
+            <displayName>SxM0AR</displayName>
+            <description>stream x memory 0 address
+            register</description>
+            <addressOffset>0x0C</addressOffset>
+            <size>0x20</size>
+            <access>read-write</access>
+            <resetValue>0x00000000</resetValue>
+            <fields>
+              <field>
+                <name>M0A</name>
+                <description>Memory 0 address</description>
+                <bitOffset>0</bitOffset>
+                <bitWidth>32</bitWidth>
+              </field>
+            </fields>
+          </register>
+          <register>
+            <name>SxM1AR</name>
+            <displayName>SxM1AR</displayName>
+            <description>stream x memory 1 address
+            register</description>
+            <addressOffset>0x10</addressOffset>
+            <size>0x20</size>
+            <access>read-write</access>
+            <resetValue>0x00000000</resetValue>
+            <fields>
+              <field>
+                <name>M1A</name>
+                <description>Memory 1 address (used in case of Double
+                buffer mode)</description>
+                <bitOffset>0</bitOffset>
+                <bitWidth>32</bitWidth>
+              </field>
+            </fields>
+          </register>
+          <register>
+            <name>SxFCR</name>
+            <displayName>SxFCR</displayName>
+            <description>stream x FIFO control register</description>
+            <addressOffset>0x14</addressOffset>
+            <size>0x20</size>
+            <resetValue>0x00000021</resetValue>
+            <fields>
+              <field>
+                <name>FEIE</name>
+                <description>FIFO error interrupt
+                enable</description>
+                <bitOffset>7</bitOffset>
+                <bitWidth>1</bitWidth>
+                <access>read-write</access>
+              </field>
+              <field>
+                <name>FS</name>
+                <description>FIFO status</description>
+                <bitOffset>3</bitOffset>
+                <bitWidth>3</bitWidth>
+                <access>read-only</access>
+              </field>
+              <field>
+                <name>DMDIS</name>
+                <description>Direct mode disable</description>
+                <bitOffset>2</bitOffset>
+                <bitWidth>1</bitWidth>
+                <access>read-write</access>
+              </field>
+              <field>
+                <name>FTH</name>
+                <description>FIFO threshold selection</description>
+                <bitOffset>0</bitOffset>
+                <bitWidth>2</bitWidth>
+                <access>read-write</access>
+              </field>
+            </fields>
+          </register>
+        </cluster>
       </registers>
     </peripheral>
     <peripheral derivedFrom="DMA2">
@@ -15660,6 +13931,47 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>TAMP_STAMP</name>
+        <description>Tamper and TimeStamp interrupts through the
+        EXTI line</description>
+        <value>2</value>
+      </interrupt>
+      <interrupt>
+        <name>EXTI0</name>
+        <description>EXTI Line0 interrupt</description>
+        <value>6</value>
+      </interrupt>
+      <interrupt>
+        <name>EXTI1</name>
+        <description>EXTI Line1 interrupt</description>
+        <value>7</value>
+      </interrupt>
+      <interrupt>
+        <name>EXTI2</name>
+        <description>EXTI Line2 interrupt</description>
+        <value>8</value>
+      </interrupt>
+      <interrupt>
+        <name>EXTI3</name>
+        <description>EXTI Line3 interrupt</description>
+        <value>9</value>
+      </interrupt>
+      <interrupt>
+        <name>EXTI4</name>
+        <description>EXTI Line4 interrupt</description>
+        <value>10</value>
+      </interrupt>
+      <interrupt>
+        <name>EXTI9_5</name>
+        <description>EXTI Line[9:5] interrupts</description>
+        <value>23</value>
+      </interrupt>
+      <interrupt>
+        <name>EXTI15_10</name>
+        <description>EXTI Line[15:10] interrupts</description>
+        <value>40</value>
+      </interrupt>
       <registers>
         <register>
           <name>MEMRM</name>
@@ -16558,6 +14870,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x100</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>ADC</name>
+        <description>ADC1 global interrupt</description>
+        <value>18</value>
+      </interrupt>
       <registers>
         <register>
           <name>SR</name>
@@ -17347,11 +15664,6 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
     <peripheral derivedFrom="ADC1">
       <name>ADC3</name>
       <baseAddress>0x40012200</baseAddress>
-      <interrupt>
-        <name>SDIO</name>
-        <description>SDIO global interrupt</description>
-        <value>49</value>
-      </interrupt>
     </peripheral>
     <peripheral>
       <name>C_ADC</name>
@@ -17590,11 +15902,6 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <interrupt>
-        <name>ADC</name>
-        <description>ADC1 global interrupt</description>
-        <value>18</value>
-      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -18508,12 +16815,6 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>Window Watchdog interrupt</description>
         <value>0</value>
       </interrupt>
-      <interrupt>
-        <name>TIM6_DAC</name>
-        <description>TIM6 global interrupt, DAC1 and DAC2 underrun
-        error interrupt</description>
-        <value>54</value>
-      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -18603,6 +16904,30 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>TIM1_BRK_TIM9</name>
+        <description>TIM1 Break interrupt and TIM9 global
+        interrupt</description>
+        <value>24</value>
+      </interrupt>
+      <interrupt>
+        <name>TIM1_UP_TIM10</name>
+        <description>TIM1 Update interrupt and TIM10 global
+        interrupt</description>
+        <value>25</value>
+      </interrupt>
+      <interrupt>
+        <name>TIM1_TRG_COM_TIM11</name>
+        <description>TIM1 Trigger and Commutation interrupts and
+        TIM11 global interrupt</description>
+        <value>26</value>
+      </interrupt>
+      <interrupt>
+        <name>TIM1_CC</name>
+        <description>TIM1 Capture Compare
+        interrupt</description>
+        <value>27</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR1</name>
@@ -19823,9 +18148,27 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
       <name>TIM8</name>
       <baseAddress>0x40010400</baseAddress>
       <interrupt>
-        <name>UART5</name>
-        <description>UART5 global interrupt</description>
-        <value>53</value>
+        <name>TIM8_BRK_TIM12</name>
+        <description>TIM8 Break interrupt and TIM12 global
+        interrupt</description>
+        <value>43</value>
+      </interrupt>
+      <interrupt>
+        <name>TIM8_UP_TIM13</name>
+        <description>TIM8 Update interrupt and TIM13 global
+        interrupt</description>
+        <value>44</value>
+      </interrupt>
+      <interrupt>
+        <name>TIM8_TRG_COM_TIM14</name>
+        <description>TIM8 Trigger and Commutation interrupts and
+        TIM14 global interrupt</description>
+        <value>45</value>
+      </interrupt>
+      <interrupt>
+        <name>TIM8_CC</name>
+        <description>TIM8 Capture Compare interrupt</description>
+        <value>46</value>
       </interrupt>
     </peripheral>
     <peripheral>
@@ -19838,6 +18181,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>TIM2</name>
+        <description>TIM2 global interrupt</description>
+        <value>28</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR1</name>
@@ -20810,6 +19158,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>TIM3</name>
+        <description>TIM3 global interrupt</description>
+        <value>29</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR1</name>
@@ -21771,21 +20124,9 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <usage>registers</usage>
       </addressBlock>
       <interrupt>
-        <name>TIM8_UP_TIM13</name>
-        <description>TIM8 Update interrupt and TIM13 global
-        interrupt</description>
-        <value>44</value>
-      </interrupt>
-      <interrupt>
-        <name>TIM8_TRG_COM_TIM14</name>
-        <description>TIM8 Trigger and Commutation interrupts and
-        TIM14 global interrupt</description>
-        <value>45</value>
-      </interrupt>
-      <interrupt>
-        <name>TIM8_CC</name>
-        <description>TIM8 Capture Compare interrupt</description>
-        <value>46</value>
+        <name>TIM4</name>
+        <description>TIM4 global interrupt</description>
+        <value>30</value>
       </interrupt>
       <registers>
         <register>
@@ -22707,9 +21048,9 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
       <name>TIM5</name>
       <baseAddress>0x40000C00</baseAddress>
       <interrupt>
-        <name>TIM2</name>
-        <description>TIM2 global interrupt</description>
-        <value>28</value>
+        <name>TIM5</name>
+        <description>TIM5 global interrupt</description>
+        <value>50</value>
       </interrupt>
     </peripheral>
     <peripheral>
@@ -22722,11 +21063,6 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <interrupt>
-        <name>TIM3</name>
-        <description>TIM3 global interrupt</description>
-        <value>29</value>
-      </interrupt>
       <registers>
         <register>
           <name>CR1</name>
@@ -23196,11 +21532,6 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
     <peripheral derivedFrom="TIM9">
       <name>TIM12</name>
       <baseAddress>0x40001800</baseAddress>
-      <interrupt>
-        <name>TIM4</name>
-        <description>TIM4 global interrupt</description>
-        <value>30</value>
-      </interrupt>
     </peripheral>
     <peripheral>
       <name>TIM10</name>
@@ -23212,11 +21543,6 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <interrupt>
-        <name>TIM5</name>
-        <description>TIM5 global interrupt</description>
-        <value>50</value>
-      </interrupt>
       <registers>
         <register>
           <name>CR1</name>
@@ -23592,22 +21918,10 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
     <peripheral derivedFrom="TIM10">
       <name>TIM11</name>
       <baseAddress>0x40014800</baseAddress>
-      <interrupt>
-        <name>TIM1_BRK_TIM9</name>
-        <description>TIM1 Break interrupt and TIM9 global
-        interrupt</description>
-        <value>24</value>
-      </interrupt>
     </peripheral>
     <peripheral derivedFrom="TIM10">
       <name>TIM13</name>
       <baseAddress>0x40001C00</baseAddress>
-      <interrupt>
-        <name>TIM8_BRK_TIM12</name>
-        <description>TIM8 Break interrupt and TIM12 global
-        interrupt</description>
-        <value>43</value>
-      </interrupt>
     </peripheral>
     <peripheral derivedFrom="TIM10">
       <name>TIM14</name>
@@ -23623,6 +21937,12 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>TIM6_DAC</name>
+        <description>TIM6 global interrupt, DAC1 and DAC2 underrun
+        error interrupt</description>
+        <value>54</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR1</name>
@@ -23795,6 +22115,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
     <peripheral derivedFrom="TIM6">
       <name>TIM7</name>
       <baseAddress>0x40001400</baseAddress>
+      <interrupt>
+        <name>TIM7</name>
+        <description>TIM7 global interrupt</description>
+        <value>55</value>
+      </interrupt>
     </peripheral>
     <peripheral>
       <name>Ethernet_MAC</name>
@@ -23808,10 +22133,16 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <usage>registers</usage>
       </addressBlock>
       <interrupt>
-        <name>TIM1_TRG_COM_TIM11</name>
-        <description>TIM1 Trigger and Commutation interrupts and
-        TIM11 global interrupt</description>
-        <value>26</value>
+        <name>ETH</name>
+        <description>Ethernet global
+        interrupt</description>
+        <value>61</value>
+      </interrupt>
+      <interrupt>
+        <name>ETH_WKUP</name>
+        <description>Ethernet global
+        interrupt</description>
+        <value>62</value>
       </interrupt>
       <registers>
         <register>
@@ -24669,6 +23000,26 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>CAN1_TX</name>
+        <description>CAN1 TX interrupts</description>
+        <value>19</value>
+      </interrupt>
+      <interrupt>
+        <name>CAN1_RX0</name>
+        <description>CAN1 RX0 interrupts</description>
+        <value>20</value>
+      </interrupt>
+      <interrupt>
+        <name>CAN1_RX1</name>
+        <description>CAN1 RX1 interrupts</description>
+        <value>21</value>
+      </interrupt>
+      <interrupt>
+        <name>CAN1_SCE</name>
+        <description>CAN1 SCE interrupt</description>
+        <value>22</value>
+      </interrupt>
       <registers>
         <register>
           <name>MCR</name>
@@ -38088,6 +36439,26 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
     <peripheral derivedFrom="CAN1">
       <name>CAN2</name>
       <baseAddress>0x40006800</baseAddress>
+      <interrupt>
+        <name>CAN2_TX</name>
+        <description>CAN2 TX interrupts</description>
+        <value>63</value>
+      </interrupt>
+      <interrupt>
+        <name>CAN2_RX0</name>
+        <description>CAN2 RX0 interrupts</description>
+        <value>64</value>
+      </interrupt>
+      <interrupt>
+        <name>CAN2_RX1</name>
+        <description>CAN2 RX1 interrupts</description>
+        <value>65</value>
+      </interrupt>
+      <interrupt>
+        <name>CAN2_SCE</name>
+        <description>CAN2 SCE interrupt</description>
+        <value>66</value>
+      </interrupt>
     </peripheral>
     <peripheral derivedFrom="CAN1">
       <name>CAN3</name>
@@ -39175,26 +37546,6 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>Flash global interrupt</description>
         <value>4</value>
       </interrupt>
-      <interrupt>
-        <name>CAN1_TX</name>
-        <description>CAN1 TX interrupts</description>
-        <value>19</value>
-      </interrupt>
-      <interrupt>
-        <name>CAN1_RX0</name>
-        <description>CAN1 RX0 interrupts</description>
-        <value>20</value>
-      </interrupt>
-      <interrupt>
-        <name>CAN1_RX1</name>
-        <description>CAN1 RX1 interrupts</description>
-        <value>21</value>
-      </interrupt>
-      <interrupt>
-        <name>CAN1_SCE</name>
-        <description>CAN1 SCE interrupt</description>
-        <value>22</value>
-      </interrupt>
       <registers>
         <register>
           <name>ACR</name>
@@ -39509,26 +37860,6 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <interrupt>
-        <name>CAN2_TX</name>
-        <description>CAN2 TX interrupts</description>
-        <value>63</value>
-      </interrupt>
-      <interrupt>
-        <name>CAN2_RX0</name>
-        <description>CAN2 RX0 interrupts</description>
-        <value>64</value>
-      </interrupt>
-      <interrupt>
-        <name>CAN2_RX1</name>
-        <description>CAN2 RX1 interrupts</description>
-        <value>65</value>
-      </interrupt>
-      <interrupt>
-        <name>CAN2_SCE</name>
-        <description>CAN2 SCE interrupt</description>
-        <value>66</value>
-      </interrupt>
       <registers>
         <register>
           <name>IMR</name>
@@ -40510,9 +38841,14 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <usage>registers</usage>
       </addressBlock>
       <interrupt>
-        <name>LCD_TFT</name>
+        <name>LTDC</name>
         <description>LTDC global interrupt</description>
         <value>88</value>
+      </interrupt>
+      <interrupt>
+        <name>LTDC_ER</name>
+        <description>LTDC Error global interrupt</description>
+        <value>89</value>
       </interrupt>
       <registers>
         <register>
@@ -42417,6 +40753,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
     <peripheral derivedFrom="SAI1">
       <name>SAI2</name>
       <baseAddress>0x40015C00</baseAddress>
+      <interrupt>
+        <name>SAI2</name>
+        <description>SAI2 global interrupt</description>
+        <value>91</value>
+      </interrupt>
     </peripheral>
     <peripheral>
       <name>DMA2D</name>
@@ -43109,6 +41450,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x1000</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>QUADSPI</name>
+        <description>QUADSPI global interrupt</description>
+        <value>92</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -43572,6 +41918,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>CEC</name>
+        <description>CEC global interrupt</description>
+        <value>94</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -43909,6 +42260,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>SPDIF_RX</name>
+        <description>SPDIF_RX global interrupt</description>
+        <value>97</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR</name>
@@ -44288,6 +42644,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>SDMMC1</name>
+        <description>SDMMC1 global interrupt</description>
+        <value>49</value>
+      </interrupt>
       <registers>
         <register>
           <name>POWER</name>
@@ -45285,6 +43646,11 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>LPTIM1</name>
+        <description>LPTIM1 global interrupt</description>
+        <value>93</value>
+      </interrupt>
       <registers>
         <register>
           <name>ISR</name>
@@ -45647,6 +44013,16 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>I2C1_EV</name>
+        <description>I2C1 event interrupt</description>
+        <value>31</value>
+      </interrupt>
+      <interrupt>
+        <name>I2C1_ER</name>
+        <description>I2C1 error interrupt</description>
+        <value>32</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR1</name>
@@ -46278,18 +44654,43 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
     <peripheral derivedFrom="I2C1">
       <name>I2C2</name>
       <baseAddress>0x40005800</baseAddress>
+      <interrupt>
+        <name>I2C2_EV</name>
+        <description>I2C2 event interrupt</description>
+        <value>33</value>
+      </interrupt>
+      <interrupt>
+        <name>I2C2_ER</name>
+        <description>I2C2 error interrupt</description>
+        <value>34</value>
+      </interrupt>
     </peripheral>
     <peripheral derivedFrom="I2C1">
       <name>I2C3</name>
       <baseAddress>0x40005C00</baseAddress>
+      <interrupt>
+        <name>I2C3_EV</name>
+        <description>I2C3 event interrupt</description>
+        <value>72</value>
+      </interrupt>
+      <interrupt>
+        <name>I2C3_ER</name>
+        <description>I2C3 error interrupt</description>
+        <value>73</value>
+      </interrupt>
     </peripheral>
     <peripheral derivedFrom="I2C1">
       <name>I2C4</name>
       <baseAddress>0x40006000</baseAddress>
       <interrupt>
-        <name>I2C1_ER</name>
-        <description>I2C1 error interrupt</description>
-        <value>32</value>
+        <name>I2C4_EV</name>
+        <description>I2C4 event interrupt</description>
+        <value>95</value>
+      </interrupt>
+      <interrupt>
+        <name>I2C4_ER</name>
+        <description>I2C4 error interrupt</description>
+        <value>96</value>
       </interrupt>
     </peripheral>
     <peripheral>
@@ -46309,9 +44710,10 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <value>3</value>
       </interrupt>
       <interrupt>
-        <name>I2C1_EV</name>
-        <description>I2C1 event interrupt</description>
-        <value>31</value>
+        <name>RTC_ALARM</name>
+        <description>RTC alarms through EXTI line 18
+        interrupts</description>
+        <value>41</value>
       </interrupt>
       <registers>
         <register>
@@ -47906,6 +46308,12 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>USART6</name>
+        <description>USART6 global
+        interrupt</description>
+        <value>71</value>
+      </interrupt>
       <registers>
         <register>
           <name>CR1</name>
@@ -48747,19 +47155,18 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
       <name>USART1</name>
       <baseAddress>0x40011000</baseAddress>
       <interrupt>
-        <name>RTC_ALARM</name>
-        <description>RTC alarms through EXTI line 18
-        interrupts</description>
-        <value>41</value>
+        <name>USART1</name>
+        <description>USART1 global interrupt</description>
+        <value>37</value>
       </interrupt>
     </peripheral>
     <peripheral derivedFrom="USART6">
       <name>USART3</name>
       <baseAddress>0x40004800</baseAddress>
       <interrupt>
-        <name>USART1</name>
-        <description>USART1 global interrupt</description>
-        <value>37</value>
+        <name>USART3</name>
+        <description>USART3 global interrupt</description>
+        <value>39</value>
       </interrupt>
     </peripheral>
     <peripheral derivedFrom="USART6">
@@ -48774,14 +47181,19 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
     <peripheral derivedFrom="USART6">
       <name>UART5</name>
       <baseAddress>0x40005000</baseAddress>
+      <interrupt>
+        <name>UART5</name>
+        <description>UART5 global interrupt</description>
+        <value>53</value>
+      </interrupt>
     </peripheral>
     <peripheral derivedFrom="USART6">
       <name>UART4</name>
       <baseAddress>0x40004C00</baseAddress>
       <interrupt>
-        <name>USART3</name>
-        <description>USART3 global interrupt</description>
-        <value>39</value>
+        <name>UART4</name>
+        <description>UART4 global interrupt</description>
+        <value>52</value>
       </interrupt>
     </peripheral>
     <peripheral derivedFrom="USART6">
@@ -48796,6 +47208,12 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
     <peripheral derivedFrom="USART6">
       <name>UART7</name>
       <baseAddress>0x40007800</baseAddress>
+      <interrupt>
+        <name>UART7</name>
+        <description>UART7 global
+        interrupt</description>
+        <value>82</value>
+      </interrupt>
     </peripheral>
     <peripheral>
       <name>OTG_FS_GLOBAL</name>
@@ -53254,6 +51672,26 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
+      <interrupt>
+        <name>DFSDM1_FLT0</name>
+        <description>DFSDM1 Filter 0 global interrupt</description>
+        <value>99</value>
+      </interrupt>
+      <interrupt>
+        <name>DFSDM1_FLT1</name>
+        <description>DFSDM1 Filter 1 global interrupt</description>
+        <value>100</value>
+      </interrupt>
+      <interrupt>
+        <name>DFSDM1_FLT2</name>
+        <description>DFSDM1 Filter 2 global interrupt</description>
+        <value>101</value>
+      </interrupt>
+      <interrupt>
+        <name>DFSDM1_FLT3</name>
+        <description>DFSDM1 Filter 3 global interrupt</description>
+        <value>102</value>
+      </interrupt>
       <registers>
         <register>
           <name>DFSDM_CHCFG0R1</name>
@@ -57152,8 +55590,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <usage>registers</usage>
       </addressBlock>
       <interrupt>
-        <name>DSIHOST</name>
-        <description>DSI host global interrupt</description>
+        <name>DSI</name>
+        <description>DSI global interrupt</description>
         <value>98</value>
       </interrupt>
       <registers>
@@ -61106,11 +59544,6 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <interrupt>
-        <name>TIM7</name>
-        <description>TIM7 global interrupt</description>
-        <value>55</value>
-      </interrupt>
       <registers>
         <register>
           <name>DMABMR</name>
@@ -73096,47 +71529,6 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <interrupt>
-        <name>TAMP_STAMP</name>
-        <description>Tamper and TimeStamp interrupts through the
-        EXTI line</description>
-        <value>2</value>
-      </interrupt>
-      <interrupt>
-        <name>EXTI0</name>
-        <description>EXTI Line0 interrupt</description>
-        <value>6</value>
-      </interrupt>
-      <interrupt>
-        <name>EXTI1</name>
-        <description>EXTI Line1 interrupt</description>
-        <value>7</value>
-      </interrupt>
-      <interrupt>
-        <name>EXTI2</name>
-        <description>EXTI Line2 interrupt</description>
-        <value>8</value>
-      </interrupt>
-      <interrupt>
-        <name>EXTI3</name>
-        <description>EXTI Line3 interrupt</description>
-        <value>9</value>
-      </interrupt>
-      <interrupt>
-        <name>EXTI4</name>
-        <description>EXTI Line4 interrupt</description>
-        <value>10</value>
-      </interrupt>
-      <interrupt>
-        <name>EXTI9_5</name>
-        <description>EXTI Line[9:5] interrupts</description>
-        <value>23</value>
-      </interrupt>
-      <interrupt>
-        <name>EXTI15_10</name>
-        <description>EXTI Line[15:10] interrupts</description>
-        <value>40</value>
-      </interrupt>
       <registers>
         <register>
           <name>OTG_HS_DCFG</name>

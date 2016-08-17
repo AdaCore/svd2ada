@@ -54978,12 +54978,12 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <usage>registers</usage>
       </addressBlock>
       <interrupt>
-        <name>LCD_TFT</name>
+        <name>LTDC</name>
         <description>LTDC global interrupt</description>
         <value>88</value>
       </interrupt>
       <interrupt>
-        <name>LCD_TFT_1</name>
+        <name>LTDC_ER</name>
         <description>LTDC global error interrupt</description>
         <value>89</value>
       </interrupt>
