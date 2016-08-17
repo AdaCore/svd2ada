@@ -76,6 +76,12 @@ package Descriptors.Cluster is
       Name            : Unbounded.Unbounded_String;
       Xml_Id          : Unbounded.Unbounded_String;
       Type_Name       : Unbounded.Unbounded_String;
+
+      --  When two clusters are identical, the second register will not
+      --  generate an Ada type. We reference the first register here to
+      --  keep track of the type name.
+      Type_Holder     : Cluster_Access := null;
+
       Ada_Type        : Type_Holders.Holder;
       Description     : Unbounded.Unbounded_String;
 
@@ -91,6 +97,8 @@ package Descriptors.Cluster is
       Dim_Index       : Unbounded.Unbounded_String;
       Content         : Peripheral_Element_Vectors.Vector;
    end record;
+
+   function Equal (C1, C2 : Cluster_Access) return Boolean;
 
    function Read_Cluster
      (Elt            : DOM.Core.Element;
@@ -148,7 +156,7 @@ private
      (E1.Kind = E2.Kind and then
         (case E1.Kind is
             when Register_Element => Equal (E1.Reg, E2.Reg),
-            when Cluster_Element  => E1.Cluster = E2.Cluster));
+            when Cluster_Element  => Equal (E1.Cluster, E2.Cluster)));
 
    function Deep_Copy (E : Peripheral_Element) return Peripheral_Element is
      (case E.Kind is

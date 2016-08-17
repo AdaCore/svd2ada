@@ -169,7 +169,7 @@ package body Descriptors.Cluster is
                   Register := Read_Register
                     (Child,
                      Prepend,
-                     Append & Unbounded.To_String (Ret.Name) & "_",
+                     Append & "_" & Unbounded.To_String (Ret.Name),
                      Ret.Reg_Properties,
                      Ret);
 
@@ -524,6 +524,49 @@ package body Descriptors.Cluster is
       return Ret;
    end Find_Overlapping_Registers;
 
+   -----------
+   -- Equal --
+   -----------
+
+   function Equal (C1, C2 : Cluster_Access) return Boolean
+   is
+      use Unbounded;
+      use type Ada.Containers.Count_Type;
+   begin
+      if C1.Name /= C2.Name
+        or else C1.Address_Offset /= C2.Address_Offset
+        or else Get_Size (C1.all) /= Get_Size (C2.all)
+        or else C1.Dim /= C2.Dim
+        or else C1.Dim_Increment /= C2.Dim_Increment
+        or else C1.Content.Length /= C2.Content.Length
+      then
+         return False;
+      end if;
+
+      for J in C1.Content.First_Index .. C1.Content.Last_Index loop
+         declare
+            Elt1 : Peripheral_Element renames C1.Content (J);
+            Elt2 : Peripheral_Element renames C2.Content (J);
+         begin
+            if Elt1.Kind /= Elt2.Kind then
+               return False;
+            end if;
+
+            if Elt1.Kind = Register_Element then
+               if not Equal (Elt1.Reg, Elt2.Reg) then
+                  return False;
+               end if;
+            else
+               if not Equal (Elt1.Cluster, Elt2.Cluster) then
+                  return False;
+               end if;
+            end if;
+         end;
+      end loop;
+
+      return True;
+   end Equal;
+
    -----------------------
    -- Find_Common_Types --
    -----------------------
@@ -556,6 +599,16 @@ package body Descriptors.Cluster is
                            Elts (K).Reg.Type_Holder := Elts (J).Reg;
                         end if;
                      end;
+                  end if;
+               end if;
+            end loop;
+         elsif Elts (J).Kind = Cluster_Element
+           and then Elts (J).Cluster.Type_Holder = null
+         then
+            for K in J + 1 .. Elts.Last_Index loop
+               if Elts (K).Kind = Cluster_Element then
+                  if Equal (Elts (J).Cluster, Elts (K).Cluster) then
+                     Elts (K).Cluster.Type_Holder := Elts (J).Cluster;
                   end if;
                end if;
             end loop;
