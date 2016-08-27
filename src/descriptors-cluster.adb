@@ -207,7 +207,7 @@ package body Descriptors.Cluster is
 
                else
                   Ada.Text_IO.Put_Line
-                    ("*** WARNING: ignoring peripheral element " & Tag);
+                    ("*** WARNING: ignoring cluster element " & Tag);
                end if;
             end;
          end if;
