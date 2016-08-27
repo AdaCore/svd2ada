@@ -2,7 +2,6 @@
       <name>PF</name>
       <description>Processor Features</description>
       <baseAddress>0xE000ED78</baseAddress>
-      <groupName>SCB</groupName>
       <addressBlock>
         <offset>0</offset>
         <size>0x10</size>

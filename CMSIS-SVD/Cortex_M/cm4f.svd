@@ -81,7 +81,7 @@
         <register>
           <name>STIR</name>
           <description>Software Trigger Interrupt Register</description>
-          <addressOffset>0x300</addressOffset>
+          <addressOffset>0xE00</addressOffset>
           <size>32</size>
           <access>write-only</access>
           <fields>
@@ -630,7 +630,7 @@
                   <name>No_Preempted</name>
                   <description>There are no active exceptions, or the currently-executing exception
                     is the only active exception.</description>
-                  <value>0x0</value>
+                  <value>0x1</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
@@ -1290,7 +1290,7 @@
               <name>VECTTBL</name>
               <description>Indicates a BusFault on a vector table read during exception processing.</description>
               <bitOffset>1</bitOffset>
-              <bitWidth>32</bitWidth>
+              <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
@@ -1299,7 +1299,7 @@
                 with configurable priority that cannot be handled, either because of priority or
                 because it is disabled.</description>
               <bitOffset>30</bitOffset>
-              <bitWidth>32</bitWidth>
+              <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
@@ -1308,7 +1308,7 @@
               register, you must write 1 to this bit, otherwise behavior is
               UNPREDICTABLE.</description>
               <bitOffset>31</bitOffset>
-              <bitWidth>32</bitWidth>
+              <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
           </fields>
@@ -1346,33 +1346,6 @@
               <access>read-write</access>
             </field>
           </fields>
-        </register>
-      </registers>
-    </peripheral>
-    <peripheral>
-      <name>WDT</name>
-      <description>Watchdog Timer</description>
-      <baseAddress>0x40001000</baseAddress>
-
-      <addressBlock>
-        <offset>0</offset>
-        <size>0x10</size>
-        <usage>registers</usage>
-      </addressBlock>
-
-      <interrupt>
-        <name>WDT</name>
-        <value>1</value>
-      </interrupt>
-
-      <registers>
-        <register>
-          <name>CSR</name>
-          <description>Watchdog Control and Status Register</description>
-          <addressOffset>0</addressOffset>
-          <size>32</size>
-          <resetValue>0x4</resetValue>
-          <resetMask>0xFFFFFFFF</resetMask>
         </register>
       </registers>
     </peripheral>
@@ -2060,12 +2033,12 @@
                 <enumeratedValue>
                   <name>Read_Only</name>
                   <description>Read_Only by privileged or unprivileged software.</description>
-                  <value>0x5</value>
+                  <value>0x6</value>
                 </enumeratedValue>
                 <enumeratedValue>
                   <name>Read_Only</name>
                   <description>Read_Only by privileged or unprivileged software.</description>
-                  <value>0x6</value>
+                  <value>0x7</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>

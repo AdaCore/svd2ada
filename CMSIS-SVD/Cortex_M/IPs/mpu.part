@@ -280,12 +280,12 @@
                 <enumeratedValue>
                   <name>Read_Only</name>
                   <description>Read_Only by privileged or unprivileged software.</description>
-                  <value>0x5</value>
+                  <value>0x6</value>
                 </enumeratedValue>
                 <enumeratedValue>
                   <name>Read_Only</name>
                   <description>Read_Only by privileged or unprivileged software.</description>
-                  <value>0x6</value>
+                  <value>0x7</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>

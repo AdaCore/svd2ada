@@ -532,7 +532,7 @@
                   <name>No_Preempted</name>
                   <description>There are no active exceptions, or the currently-executing exception
                     is the only active exception.</description>
-                  <value>0x0</value>
+                  <value>0x1</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
@@ -1192,7 +1192,7 @@
               <name>VECTTBL</name>
               <description>Indicates a BusFault on a vector table read during exception processing.</description>
               <bitOffset>1</bitOffset>
-              <bitWidth>32</bitWidth>
+              <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
@@ -1201,7 +1201,7 @@
                 with configurable priority that cannot be handled, either because of priority or
                 because it is disabled.</description>
               <bitOffset>30</bitOffset>
-              <bitWidth>32</bitWidth>
+              <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
@@ -1210,7 +1210,7 @@
               register, you must write 1 to this bit, otherwise behavior is
               UNPREDICTABLE.</description>
               <bitOffset>31</bitOffset>
-              <bitWidth>32</bitWidth>
+              <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
           </fields>

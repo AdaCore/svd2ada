@@ -73,7 +73,7 @@
         <register>
           <name>STIR</name>
           <description>Software Trigger Interrupt Register</description>
-          <addressOffset>0x300</addressOffset>
+          <addressOffset>0xE00</addressOffset>
           <size>32</size>
           <access>write-only</access>
           <fields>
