@@ -21,7 +21,7 @@ with Interfaces; use Interfaces;
 
 with Ada.Calendar;
 with Ada.Characters.Handling;
-with Ada.Strings.Fixed;
+with Ada.Strings.Fixed;          use Ada.Strings;
 with Ada.Strings.Unbounded.Equal_Case_Insensitive;
 with Ada.Tags;
 
@@ -683,7 +683,7 @@ package body Ada_Gen is
          Ada.Text_IO.Put_Line
            (File,
             Get_Id (F) &
-              " at " & To_String (F.Offset) &
+              " at " & To_Hex (F.Offset) &
               " range " & To_String (F.LSB) & " .. " & To_String (F.MSB) &
               ";");
       end loop;
@@ -779,7 +779,7 @@ package body Ada_Gen is
          Ada.Text_IO.Put_Line
            (File,
             Get_Id (F) &
-              " at " & To_String (F.Offset) &
+              " at " & To_Hex (F.Offset) &
               " range " & To_String (F.LSB) & " .. " & To_String (F.MSB) &
               ";");
       end loop;
@@ -1054,7 +1054,7 @@ package body Ada_Gen is
          Ada.Text_IO.New_Line (F);
       end if;
 
-      if Length (G_License_Text) > 0 then
+      if Length (Trim (G_License_Text, Both)) > 0 then
          Ada.Text_IO.Put_Line (F, To_String (G_License_Text));
          Ada.Text_IO.New_Line (F);
       end if;
@@ -1360,6 +1360,11 @@ package body Ada_Gen is
 
             Prev := Current;
          end loop;
+
+         --  Removes trailing spaces
+         if Current = ' ' then
+            Idx := Idx - 1;
+         end if;
 
          return Ret (Ret'First .. Idx - 1);
       end Strip_String;
