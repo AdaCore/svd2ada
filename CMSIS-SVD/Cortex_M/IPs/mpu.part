@@ -1,0 +1,362 @@
+    <peripheral>
+      <name>MPU</name>
+      <description>Memory Protection Unit</description>
+      <baseAddress>0xE000ED90</baseAddress>
+      <prependToName>MPU_</prependToName>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x30</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>TYPE</name>
+          <description>MPU Type Register</description>
+          <addressOffset>0x0</addressOffset>
+          <size>32</size>
+          <resetValue>0x00000800</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>SEPARATE</name>
+              <description>Indicates support for unified or separate instruction
+                and data memory maps.</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Unified</name>
+                  <description>Only unified memory maps are supported.</description>
+                  <value>0x0</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DREGION</name>
+              <description>Indicates the number of supported MPU data regions depending
+                on your implementation.</description>
+              <bitOffset>8</bitOffset>
+              <bitWidth>8</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>IREGION</name>
+              <description>Indicates the number of supported MPU instruction regions. Always
+                contains 0x0: the MPU memory map is unified and is described by the DREGION
+                field.</description>
+              <bitOffset>16</bitOffset>
+              <bitWidth>8</bitWidth>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>CTRL</name>
+          <description>MPU Control Register</description>
+          <addressOffset>0x4</addressOffset>
+          <size>32</size>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>ENABLE</name>
+              <description>Enables the optional MPU.</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>HFNMIENA</name>
+              <description>Enables the operation of MPU during hard fault, NMI,
+                and FAULTMASK handlers.</description>
+              <bitOffset>1</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>PRIVDEFENA</name>
+              <description>Enables privileged software access to the default memory map.</description>
+              <bitOffset>2</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>RNR</name>
+          <description>MPU Region Number Register</description>
+          <addressOffset>0x8</addressOffset>
+          <size>32</size>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>REGION</name>
+              <description>Indicates the MPU region referenced by the MPU_RBAR and MPU_RASR
+                registers.</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>8</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>RBAR</name>
+          <description>MPU Region Base Address Register</description>
+          <addressOffset>0xC</addressOffset>
+          <size>32</size>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>REGION</name>
+              <description>On Write, see the VALID field. On read, specifies the region number.</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>4</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>VALID</name>
+              <description>MPU Region number valid bit. Depending on your implementation, this has the
+                following effect: 0 - either updates the base address for the region specified by MPU_RNR or ignores the value of the REGION field. 1 - either updates the value of the MPU_RNR to the value of the REGION field or updates the base address for the region specified in the REGION field.</description>
+              <bitOffset>4</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>ADDR</name>
+              <description>The ADDR field is bits[31:N] of the MPU_RBAR. The region size, as specified by the SIZE field in the MPU_RASR, defines the value of N:
+                N = Log2(Region size in bytes).
+                If the region size is configured to 4GB, in the MPU_RASR, there is no valid ADDR field. In
+                this case, the region occupies the complete memory map, and the base address is 0x00000000. The base address is aligned to the size of the region. For example, a 64KB region must be
+                aligned on a multiple of 64KB, for example, at 0x00010000 or 0x00020000.</description>
+              <bitOffset>5</bitOffset>
+              <bitWidth>27</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>RASR</name>
+          <description>MPU Region Base Attribute and Size Register</description>
+          <addressOffset>0x10</addressOffset>
+          <size>32</size>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>ENABLE</name>
+              <description>Region enable bit.</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>SIZE</name>
+              <description>Specifies the size of the MPU protection region. Minimum value is 4.
+                The Region size is defined as (Region size in bytes) = 2^(SIZE+1)</description>
+              <bitOffset>1</bitOffset>
+              <bitWidth>5</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>SRD0</name>
+              <description>Subregion disable bits</description>
+              <bitOffset>8</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>SRD1</name>
+              <description>Subregion disable bits</description>
+              <bitOffset>9</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>SRD2</name>
+              <description>Subregion disable bits</description>
+              <bitOffset>10</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>SRD3</name>
+              <description>Subregion disable bits</description>
+              <bitOffset>11</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>SRD4</name>
+              <description>Subregion disable bits</description>
+              <bitOffset>12</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>SRD5</name>
+              <description>Subregion disable bits.</description>
+              <bitOffset>13</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>SRD6</name>
+              <description>Subregion disable bits.</description>
+              <bitOffset>14</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>SRD7</name>
+              <description>Subregion disable bits.</description>
+              <bitOffset>15</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>B</name>
+              <description>Memory access attribute.</description>
+              <bitOffset>16</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>C</name>
+              <description>Memory access attribute.</description>
+              <bitOffset>17</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>S</name>
+              <description>Shareable bit. Applies to Normal memory only.</description>
+              <bitOffset>18</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>TEX</name>
+              <description>Memory access attribute.</description>
+              <bitOffset>19</bitOffset>
+              <bitWidth>3</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>AP</name>
+              <description>Access permission field</description>
+              <bitOffset>24</bitOffset>
+              <bitWidth>3</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>No_Access</name>
+                  <description>All accesses generate a permission fault.</description>
+                  <value>0x0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Privileged_RW</name>
+                  <description>Access from privileged software only.</description>
+                  <value>0x1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Unpriviledged_RO</name>
+                  <description>Writes by unprivileged software generates a permission fault.</description>
+                  <value>0x2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Full_Access</name>
+                  <description>Full Access.</description>
+                  <value>0x3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Privileged_RO</name>
+                  <description>Reads by privileged software only.</description>
+                  <value>0x5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Read_Only</name>
+                  <description>Read_Only by privileged or unprivileged software.</description>
+                  <value>0x5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Read_Only</name>
+                  <description>Read_Only by privileged or unprivileged software.</description>
+                  <value>0x6</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>XN</name>
+              <description>Instruction access disable bit</description>
+              <bitOffset>28</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>I_Enabled</name>
+                  <description>Instruction fetches enabled.</description>
+                  <value>0x0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>I_Disabled</name>
+                  <description>Instruction fetches disabled.</description>
+                  <value>0x1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+        <register derivedFrom="RBAR">
+          <name>RBAR_A1</name>
+          <description>Uses (MPU_RNR[7:2]&lt;&lt;2) + 1</description>
+          <addressOffset>0x14</addressOffset>
+          <size>32</size>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+        </register>
+        <register derivedFrom="RASR">
+          <name>RASR_A1</name>
+          <description>Uses (MPU_RNR[7:2]&lt;&lt;2) + 1</description>
+          <addressOffset>0x18</addressOffset>
+          <size>32</size>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+        </register>
+        <register derivedFrom="RBAR">
+          <name>RBAR_A2</name>
+          <description>Uses (MPU_RNR[7:2]&lt;&lt;2) + 2</description>
+          <addressOffset>0x1C</addressOffset>
+          <size>32</size>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+        </register>
+        <register derivedFrom="RASR">
+          <name>RASR_A2</name>
+          <description>Uses (MPU_RNR[7:2]&lt;&lt;2) + 2</description>
+          <addressOffset>0x20</addressOffset>
+          <size>32</size>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+        </register>
+        <register derivedFrom="RBAR">
+          <name>RBAR_A3</name>
+          <description>Uses (MPU_RNR[7:2]&lt;&lt;2) + 3</description>
+          <addressOffset>0x24</addressOffset>
+          <size>32</size>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+        </register>
+        <register derivedFrom="RASR">
+          <name>RASR_A3</name>
+          <description>Uses (MPU_RNR[7:2]&lt;&lt;2) + 3</description>
+          <addressOffset>0x28</addressOffset>
+          <size>32</size>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+        </register>
+      </registers>
+    </peripheral>

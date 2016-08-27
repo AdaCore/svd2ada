@@ -1,0 +1,1253 @@
+    <peripheral>
+      <name>SCB</name>
+      <description>System control block</description>
+      <groupName>SCB</groupName>
+      <baseAddress>0xE000E000</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x08</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>ACTLR</name>
+          <description>Auxiliary Control Register.
+          The ACTLR provides disable bits for the following processor
+          functions: FPU exception outputs, Dual-issue functionality,
+          Flushing of the trace output from the ITM and DWT, Dynamic read
+          allocate mode. By default this register is set to provide optimum
+          performance from the Cortex-M7 processor, and does not normally
+          require modification.</description>
+          <addressOffset>0x8</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>DISFOLD</name>
+              <description>Disables Interruption Folding</description>
+              <bitOffset>2</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Interruption folding enabled</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Interruption folding disabled</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>PFEXCODIS</name>
+              <description>Disabled FPU exception outputs</description>
+              <bitOffset>10</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Normal operation.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>FPU exception outputs are disabled.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DISRAMODE</name>
+              <description>Disables dynamic read allocate mode for Write-Back
+              Write-Allocate memory regions:</description>
+              <bitOffset>11</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Normal operation.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Dynamic disabled.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DISITMATBFLUSH</name>
+              <description>Disables ITM and DWT ATB flush:</description>
+              <bitOffset>12</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>ITM and DWT ATB flush disabled. AFVALID is
+                  ignored and AFREADY is held HIGH.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DISBTACREAD</name>
+              <description>Disables the Branch Target Address Cache (BTAC):
+              </description>
+              <bitOffset>13</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Normal operation.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>BTAC is not used and only static branch
+                  prediction can occur.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DISBTACALLOC</name>
+              <description>Disables the Branch Target Address Cache allocation:
+              </description>
+              <bitOffset>14</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Normal operation.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>No new entries are allocated in BTAC,
+                  but existing entries can be updated.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DISCRITAXIRUR</name>
+              <description>Disables critical AXI Read-Under-Read:
+              </description>
+              <bitOffset>15</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Normal operation.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>An AXI read to Strongly-ordered or device
+                  memory, or an LDREX to shared memory, is not put on AXI if
+                  there are any outstanding reads on AXI. Transactions on
+                  AXI cannot be interrupted. This bit might reduce the time
+                  that these transactions are in progress and might improve
+                  worst case interrupt latency. Performance is decreased when
+                  this bit is set.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DISDI_DB</name>
+              <description>Disables dual-issued direct branches:
+              </description>
+              <bitOffset>16</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Normal operation.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Direct branches instruction type cannot be
+                  dual-issued in channel 0</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DISDI_IB</name>
+              <description>Disables dual-issued indirect branches:
+              </description>
+              <bitOffset>17</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Normal operation.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Indirect branches, but not loads to PC
+                  instruction type cannot be dual-issued in channel 0
+                  </description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DISDI_LPC</name>
+              <description>Disables dual-issued loads to PC:
+              </description>
+              <bitOffset>18</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Normal operation.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Loads to PC instruction type cannot be
+                  dual-issued in channel 0
+                  </description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DISDI_MAC_MUL</name>
+              <description>Disables integer MAC and MUL dual-issued
+              instructions:
+              </description>
+              <bitOffset>19</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Normal operation.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Integer MAC and MUL instruction type cannot be
+                  dual-issued in channel 0
+                  </description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DISDI_VFP</name>
+              <description>Disables VFP dual-issued instruction:
+              </description>
+              <bitOffset>20</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Normal operation.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>VFP instruction type cannot be
+                  dual-issued in channel 0
+                  </description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DISISSCH1_DB</name>
+              <description>Disables direct branches instructions in channel 1:
+              </description>
+              <bitOffset>21</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Normal operation.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Direct branches instruction type cannot be
+                  issued in channel 1</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DISISSCH1_IB</name>
+              <description>Disables indirect branches instructions in channel 1:
+              </description>
+              <bitOffset>22</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Normal operation.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Indirect branches, but not loads to PC
+                  instruction type cannot be issued in channel 1
+                  </description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DISISSCH1_LPC</name>
+              <description>Disables loads to PC instructions in channel 1:
+              </description>
+              <bitOffset>23</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Normal operation.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Loads to PC instruction type cannot be
+                  issued in channel 1
+                  </description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DISISSCH1_MAC_MUL</name>
+              <description>Disables integer MAC and MUL instructions in
+              channel 1:
+              </description>
+              <bitOffset>24</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Normal operation.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Integer MAC and MUL instruction type cannot be
+                  issued in channel 1
+                  </description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DISISSCH1_VFP</name>
+              <description>Disables VFP instructions in channel 1:
+              </description>
+              <bitOffset>25</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Normal operation.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>VFP instruction type cannot be
+                  issued in channel 1
+                  </description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DISDYNADD</name>
+              <description>Disables dybnamic allocation of ADD ans SUB
+              instructions:
+              </description>
+              <bitOffset>26</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Normal</name>
+                  <description>Normal operation. Some ADD and SUB instructions
+                  are resolved in EX1.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>All ADD and SUB instructions are resolved in EX2.
+                  </description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CPUID</name>
+          <description>CPUID Base Register</description>
+          <addressOffset>0xD00</addressOffset>
+          <size>32</size>
+          <resetValue>0x411FC271</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Revision</name>
+              <description>Revision number, the p value in the rnpn product revision identifier.</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>4</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>p0</name>
+                  <description>Patch 0</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>p1</name>
+                  <description>Patch 1</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>p2</name>
+                  <description>Patch 2</description>
+                  <value>2</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>PartNo</name>
+              <description>Part number of the processor.</description>
+              <bitOffset>4</bitOffset>
+              <bitWidth>12</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Cortex_M7</name>
+                  <description>Cortes-M7</description>
+                  <value>0xC27</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>Constant</name>
+              <description>Reads as 0xF.</description>
+              <bitOffset>16</bitOffset>
+              <bitWidth>4</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>Variant</name>
+              <description>Variant number, the r value in the rnpn product revision identifier.</description>
+              <bitOffset>20</bitOffset>
+              <bitWidth>4</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>r0</name>
+                  <description>Revision 0</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>r1</name>
+                  <description>Revision 1</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>Implementer</name>
+              <description>Implementer code.</description>
+              <bitOffset>24</bitOffset>
+              <bitWidth>8</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>ARM</name>
+                  <description>ARM</description>
+                  <value>0x41</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>ICSR</name>
+          <description>Interrupt Control and State Register</description>
+          <addressOffset>0xD04</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>VECTACTIVE</name>
+              <description>Contains the active exception number.
+                Subtract 16 from this value to obtain the CMSIS IRQ number required to index into the
+                Interrupt Clear-Enable, Set-Enable, Clear-Pending, Set-Pending or Priority Registers.</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>9</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>RETTOBASE</name>
+              <description>Indicates whether there are preempted active exceptions.</description>
+              <bitOffset>11</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Preempted</name>
+                  <description>There are preempted active exceptions to execute.</description>
+                  <value>0x0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>No_Preempted</name>
+                  <description>There are no active exceptions, or the currently-executing exception
+                    is the only active exception.</description>
+                  <value>0x0</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>VECTPENDING</name>
+              <description>Indicates the exception number of the highest priority pending
+                enabled exception.</description>
+              <bitOffset>12</bitOffset>
+              <bitWidth>9</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>ISRPENDING</name>
+              <description>Interrupt pending flag, excluding NMI and Faults</description>
+              <bitOffset>22</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>PENDSTCLR</name>
+              <description>SysTick exception clear-pending bit.</description>
+              <bitOffset>25</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>write-only</access>
+            </field>
+            <field>
+              <name>PENDSTSET</name>
+              <description>SysTick exception set-pending bit.</description>
+              <bitOffset>26</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>PENDSVCLR</name>
+              <description>PendSV clear-pending bit.</description>
+              <bitOffset>27</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>write-only</access>
+            </field>
+            <field>
+              <name>PENDSVSET</name>
+              <description>PendSV set-pending bit.</description>
+              <bitOffset>28</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>NMIPENDSET</name>
+              <description>NMI set-pending bit.</description>
+              <bitOffset>31</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>VTOR</name>
+          <description>Vector Table Offset Register</description>
+          <addressOffset>0xD08</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>TBLOFF</name>
+              <description>Vector table base offset field. It contains bits [29:7] of the
+                offset of the table base from the bottom of the memory map. The lower bit
+                in the TBLOFF field is implementation defined.
+
+                When setting TBLOFF, you must align the offset of the number of exception entries
+                in the vector table. The minimum alignment is 32 words, enough for up to 16 interupts.
+                For more interrupts, adjust the alignment by rounding up to the next power of two.
+                For example, if you require 21 interrupts, the alignment must be on a 64-word boundary
+                because the required table size is 37 words, and the next power of two is 64.</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>32</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>AIRCR</name>
+          <description>Application Interrupt and Reset Control Register</description>
+          <addressOffset>0xD0C</addressOffset>
+          <size>32</size>
+          <resetValue>0xFA050000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>SYSRESETREQ</name>
+              <description>System reset request bit setting is implementation defined.</description>
+              <bitOffset>2</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>write-only</access>
+            </field>
+            <field>
+              <name>PRIGROUP</name>
+              <description>Interrupt priority grouping field. This field determines the split of
+                group priority from subpriority.</description>
+              <bitOffset>8</bitOffset>
+              <bitWidth>3</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Bxxxxxxx_y</name>
+                  <description>Group priority bits: [7:1], subpriority bits [0]</description>
+                  <value>0x0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Bxxxxxx_yy</name>
+                  <description>Group priority bits: [7:2], subpriority bits [1:0]</description>
+                  <value>0x1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Bxxxxx_yyy</name>
+                  <description>Group priority bits: [7:3], subpriority bits [2:0]</description>
+                  <value>0x2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Bxxxx_yyyy</name>
+                  <description>Group priority bits: [7:4], subpriority bits [3:0]</description>
+                  <value>0x3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Bxxx_yyyyy</name>
+                  <description>Group priority bits: [7:5], subpriority bits [4:0]</description>
+                  <value>0x4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Bxx_yyyyyy</name>
+                  <description>Group priority bits: [7:6], subpriority bits [5:0]</description>
+                  <value>0x5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Bx_yyyyyyy</name>
+                  <description>Group priority bits: [7], subpriority bits [6:0]</description>
+                  <value>0x6</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>B_yyyyyyyy</name>
+                  <description>Group priority bits: None, subpriority bits [7:0]</description>
+                  <value>0x7</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>ENDIANNESS</name>
+              <description>Data endianness bit setting is implementation defined.</description>
+              <bitOffset>15</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Little_Endian</name>
+                  <description>Data is little endian</description>
+                  <value>0x0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Big_Endian</name>
+                  <description>Data is big endian</description>
+                  <value>0x1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>VECTKEY</name>
+              <description>Register key. On write, write 0x5FA to VECTKEY, otherwise
+                the write is ignored. Reads as 0xFA05</description>
+              <bitOffset>16</bitOffset>
+              <bitWidth>16</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Key</name>
+                  <description>The write key</description>
+                  <value>0x05FA</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Key_Read</name>
+                  <description>The read key</description>
+                  <value>0xFA05</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>SCR</name>
+          <description>System Control Register</description>
+          <addressOffset>0xD10</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>SLEEPONEXIT</name>
+              <description>Indicates sleep-on-exit when returning from Handler mode to Thread mode</description>
+              <bitOffset>1</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>SLEEPDEEP</name>
+              <description>Controls whether the processor uses sleep or deep sleep as its
+                low-power mode</description>
+              <bitOffset>3</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>SEVONPEND</name>
+              <description>Send event on pending bit</description>
+              <bitOffset>4</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>CCR</name>
+          <description>Configuration and Control Register</description>
+          <addressOffset>0xD14</addressOffset>
+          <size>32</size>
+          <resetValue>0x00000200</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>NONBASETHERADENA</name>
+              <description>Indicates how the processor enters Thread mode</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>No_Active_Exception</name>
+                  <description>Processor can enter Thread mode only when no exception is active</description>
+                  <value>0x0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>On_Exc_Return</name>
+                  <description>Processor can enter Thread mode from any level under the control of
+                    an EXC_RETURN value</description>
+                  <value>0x1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>USERSETMPEND</name>
+              <description>Enables unprivileged software access to the STIR</description>
+              <bitOffset>1</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>UNALIGNED_TRP</name>
+              <description>Enables unalign access traps.</description>
+              <bitOffset>3</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>DIV0_TRP</name>
+              <description>Enables faulting or halting when the processor executes an SDIF or
+                UDIV instruction with a divisor of 0.</description>
+              <bitOffset>4</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>BFHFNMIGN</name>
+              <description>Enables handlers with priority -1 or -2 to ignore data
+                BusFaults caused by load and store instructions. This applies to the
+                hard fault, NMI, and FAULTMASK escalated handlers.</description>
+              <bitOffset>8</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>STKALIGN</name>
+              <description>Always reads-as-one. It indicates stack alignment on exception
+                entry is 8-byte aligned.</description>
+              <bitOffset>9</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>DC</name>
+              <description>Enables L1 data cache.</description>
+              <bitOffset>16</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>IC</name>
+              <description>Enables L1 instruction cache.</description>
+              <bitOffset>17</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>SHPR1</name>
+          <description>System Handler Priority Register 1</description>
+          <addressOffset>0xD18</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>PRI_4</name>
+              <description>Priority of the system handler, MemManage</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>8</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>PRI_5</name>
+              <description>Priority of the system handler, BusFault</description>
+              <bitOffset>8</bitOffset>
+              <bitWidth>8</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>PRI_6</name>
+              <description>Priority of the system handler, UsageFault</description>
+              <bitOffset>16</bitOffset>
+              <bitWidth>8</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>SHPR2</name>
+          <description>System Handler Priority Register 2</description>
+          <addressOffset>0xD1C</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>PRI_11</name>
+              <description>Priority of the system handler, SVCall</description>
+              <bitOffset>24</bitOffset>
+              <bitWidth>8</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>SHPR3</name>
+          <description>System Handler Priority Register 3</description>
+          <addressOffset>0xD20</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>PRI_14</name>
+              <description>Priority of the system handler, PendSV</description>
+              <bitOffset>16</bitOffset>
+              <bitWidth>8</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>PRI_15</name>
+              <description>Priority of the system handler, SysTick</description>
+              <bitOffset>24</bitOffset>
+              <bitWidth>8</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>SHPRS</name>
+          <description>System Handler Control and State Register</description>
+          <addressOffset>0xD24</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>MEMFAULTACT</name>
+              <description>MemManage exception active bit, reads as 1 if exception is active.</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>BUSFAULTACT</name>
+              <description>BusFault exception active bit, reads as 1 if exception is active.</description>
+              <bitOffset>1</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>USGFAULTACT</name>
+              <description>UsageFault exception active bit, reads as 1 if exception is active.</description>
+              <bitOffset>3</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>SVCALLACT</name>
+              <description>SVCall active bit, reads as 1 if exception is active.</description>
+              <bitOffset>7</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>MONITORACT</name>
+              <description>Debug Monitor active bit, reads as 1 if exception is active.</description>
+              <bitOffset>8</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>PENDSVACT</name>
+              <description>PendSV exception active bit, reads as 1 if exception is active.</description>
+              <bitOffset>10</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>SYSTICKACT</name>
+              <description>Systick exception active bit, reads as 1 if exception is active.</description>
+              <bitOffset>11</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>USGFAULTPENDED</name>
+              <description>UsageFault exception pending bit, reads as 1 if exception is pending</description>
+              <bitOffset>12</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>MEMFAULTPENDED</name>
+              <description>MemManage exception pending bit, reads as 1 if exception is pending</description>
+              <bitOffset>13</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>BUSFAULTPENDED</name>
+              <description>BusFault exception pending bit, reads as 1 if exception is pending</description>
+              <bitOffset>14</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>SVCALLPENDED</name>
+              <description>SVCall pending bit, reads as 1 if exception is pending</description>
+              <bitOffset>15</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>MEMFAULTENA</name>
+              <description>MemManage enable bit, set to 1 to enable</description>
+              <bitOffset>16</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>BUSFAULTENA</name>
+              <description>BusFault enable bit, set to 1 to enable</description>
+              <bitOffset>17</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>USGFAULTENA</name>
+              <description>UsageFault enable bit, set to 1 to enable</description>
+              <bitOffset>18</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>MMSR</name>
+          <description>MemManage Fault Status Register</description>
+          <addressOffset>0xD28</addressOffset>
+          <size>8</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFF</resetMask>
+          <fields>
+            <field>
+              <name>IACCVIOL</name>
+              <description>Instruction access violation flag</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>DACCVIOL</name>
+              <description>Data access violation flag</description>
+              <bitOffset>1</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>MUNSTKERR</name>
+              <description>MemManage fault on unstacking for a return from exception</description>
+              <bitOffset>3</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>MSTKERR</name>
+              <description>MemManage fault on stacking for exception entry</description>
+              <bitOffset>4</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>MLSPERR</name>
+              <description>MemManage fault during floating-point lazy state preservation.</description>
+              <bitOffset>5</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>MMARVALID</name>
+              <description>MemManage fault address register valid flag.</description>
+              <bitOffset>7</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>BFSR</name>
+          <description>BusFault Status Register</description>
+          <addressOffset>0xD29</addressOffset>
+          <size>8</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFF</resetMask>
+          <fields>
+            <field>
+              <name>IBUSERR</name>
+              <description>Instruction bus error</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>PRECISERR</name>
+              <description>Precise data bus error</description>
+              <bitOffset>1</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>IMPRECISERR</name>
+              <description>Precise data bus error</description>
+              <bitOffset>2</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>UNSTKERR</name>
+              <description>BusFault on unstacking for a return from exception.</description>
+              <bitOffset>3</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>STKERR</name>
+              <description>BusFault on stacking for exception entry.</description>
+              <bitOffset>4</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>LSPERR</name>
+              <description>BusFault on floating-point lazy state preservation.</description>
+              <bitOffset>5</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>BFARVALID</name>
+              <description>BusFault Address Register valid flag.</description>
+              <bitOffset>7</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>UFSR</name>
+          <description>UsageFault Status Register</description>
+          <addressOffset>0xD2A</addressOffset>
+          <size>16</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFF</resetMask>
+          <fields>
+            <field>
+              <name>UNDEFINSTR</name>
+              <description>Undefined instruction UsageFault</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>INVSTATE</name>
+              <description>Invalid State UsageFault</description>
+              <bitOffset>1</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>INVPC</name>
+              <description>Invalid PC load UsageFault, caused by an invalid PC load by EXC_RETURN</description>
+              <bitOffset>2</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>NOCP</name>
+              <description>No coprocessor UsageFault</description>
+              <bitOffset>3</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>UNALIGNED</name>
+              <description>Unaligned access UsageFault</description>
+              <bitOffset>8</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>DIVBYZERO</name>
+              <description>Divide by zero UsageFault.</description>
+              <bitOffset>9</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>HFSR</name>
+          <description>HardFault Status Register</description>
+          <addressOffset>0xD2C</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>VECTTBL</name>
+              <description>Indicates a BusFault on a vector table read during exception processing.</description>
+              <bitOffset>1</bitOffset>
+              <bitWidth>32</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>FORCED</name>
+              <description>Indicates a forced hard fault, generated by escalation of a fault
+                with configurable priority that cannot be handled, either because of priority or
+                because it is disabled.</description>
+              <bitOffset>30</bitOffset>
+              <bitWidth>32</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>DEBUGEVT</name>
+              <description>Reserved for Debug use. When writing to the
+              register, you must write 1 to this bit, otherwise behavior is
+              UNPREDICTABLE.</description>
+              <bitOffset>31</bitOffset>
+              <bitWidth>32</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>MMAR</name>
+          <description>MemManage Fault Address Register</description>
+          <addressOffset>0xD34</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>ADDRESS</name>
+              <description></description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>32</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>BFAR</name>
+          <description>BusFault Address Register</description>
+          <addressOffset>0xD38</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>ADDRESS</name>
+              <description></description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>32</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>

@@ -1,0 +1,222 @@
+    <peripheral>
+      <name>FPU</name>
+      <description>Floating Point Unit</description>
+      <baseAddress>0xE000ED88</baseAddress>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1B8</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+        <register>
+          <name>CPACR</name>
+          <description>Coprocessor Access Control Register</description>
+          <addressOffset>0</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>CP10</name>
+              <description>Access privileges for coprocessor 10.</description>
+              <bitOffset>20</bitOffset>
+              <bitWidth>2</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Access_Denied</name>
+                  <description>Any attempted access generates a NOCP
+                  UsageFault.</description>
+                  <value>0x0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Privileged</name>
+                  <description>Privileged access only. An unprivileged
+                  addess generates a NOCP
+                  UsageFault.</description>
+                  <value>0x1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Full_Access</name>
+                  <description>Full access.</description>
+                  <value>0x3</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>CP11</name>
+              <description>Access privileges for coprocessor 11.</description>
+              <bitOffset>22</bitOffset>
+              <bitWidth>2</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Access_Denied</name>
+                  <description>Any attempted access generates a NOCP
+                  UsageFault.</description>
+                  <value>0x0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Privileged</name>
+                  <description>Privileged access only. An unprivileged
+                  addess generates a NOCP
+                  UsageFault.</description>
+                  <value>0x1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Full_Access</name>
+                  <description>Full access.</description>
+                  <value>0x3</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>FPCCR</name>
+          <description>Floating-Point Context Control Register</description>
+          <addressOffset>0x1AC</addressOffset>
+          <size>32</size>
+          <resetValue>0xC0000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>LSPACT</name>
+              <description>Lazy state preservation activation.</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>USER</name>
+              <description>If set, privilege level was user when the
+              floating-point stack frame was allocated.</description>
+              <bitOffset>1</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>THREAD</name>
+              <description>If set, the mode was Thread Mode when the
+              floating-point stack frame was allocated.</description>
+              <bitOffset>3</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>HFRDY</name>
+              <description>If set, priority permitted setting the HardFault
+              handler to the pending state when the floating-point stack
+              frame was allocated.</description>
+              <bitOffset>4</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>MMRDY</name>
+              <description>If set, MemManage is enabled and priority permitted
+              setting the MemManage handler to the pending state when the
+              floating-point stack frame was allocated.</description>
+              <bitOffset>5</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>BFRDY</name>
+              <description>If set, BusFault is enabled and priority permitted
+              setting the BusFault handler to the pending state when the
+              floating-point stack frame was allocated.</description>
+              <bitOffset>6</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>MONRDY</name>
+              <description>If set, DebugMonitor is enabled and priority
+              permitted setting the DebugMonitor handler to the pending state
+              when the floating-point stack frame was allocated.</description>
+              <bitOffset>8</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>LSPEN</name>
+              <description>Enables automatic lazy state preservation for
+              floating-point context.</description>
+              <bitOffset>30</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>ASPEN</name>
+              <description>Enables CONTROL.FPCA setting on execution of
+              a floating point instruction. This results in automatic
+              hardware state preservation and restoration, for floating-point
+              context, on exception entry and exit.</description>
+              <bitOffset>31</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>FPCAR</name>
+          <description>Floating-Point Context Address Register</description>
+          <addressOffset>0x1B0</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>ADDRESS</name>
+              <description>The FPCAR register holds the location of the
+              unpopulated floating-point register space allocated on an
+              exception stack frame.</description>
+              <bitOffset>3</bitOffset>
+              <bitWidth>29</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>FPDSCR</name>
+          <description>Floating-Point Default Status Control Register</description>
+          <addressOffset>0x1B4</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>RMode</name>
+              <description>Default value for FPSCR.RMode.</description>
+              <bitOffset>22</bitOffset>
+              <bitWidth>2</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>FZ</name>
+              <description>Default value for FPSCR.FZ.</description>
+              <bitOffset>24</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>DN</name>
+              <description>Default value for FPSCR.DN.</description>
+              <bitOffset>25</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>AHP</name>
+              <description>Default value for FPSCR.AHP.</description>
+              <bitOffset>26</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>

@@ -1,0 +1,90 @@
+    <peripheral>
+      <name>NVIC</name>
+      <baseAddress>0xE000E100</baseAddress>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x350</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+        <register>
+          <name>NVIC_ISER</name>
+          <description>Interrupt Set-Enable Registers</description>
+          <addressOffset>0x00</addressOffset>
+          <size>32</size>
+          <access>read-only</access>
+          <dim>8</dim>
+          <dimIndex>0-7</dimIndex>
+          <dimIncrement>4</dimIncrement>
+        </register>
+        <register>
+          <name>NVIC_ICER</name>
+          <description>Interrupt Clear-Enable Registers</description>
+          <addressOffset>0x80</addressOffset>
+          <size>32</size>
+          <access>read-only</access>
+          <dim>8</dim>
+          <dimIndex>0-7</dimIndex>
+          <dimIncrement>4</dimIncrement>
+        </register>
+        <register>
+          <name>NVIC_ISPR</name>
+          <description>Interrupt Set-Pending Registers</description>
+          <addressOffset>0x100</addressOffset>
+          <size>32</size>
+          <access>read-only</access>
+          <dim>8</dim>
+          <dimIndex>0-7</dimIndex>
+          <dimIncrement>4</dimIncrement>
+        </register>
+        <register>
+          <name>NVIC_ICPR</name>
+          <description>Interrupt Clear-Pending Registers</description>
+          <addressOffset>0x180</addressOffset>
+          <size>32</size>
+          <access>read-only</access>
+          <dim>8</dim>
+          <dimIndex>0-7</dimIndex>
+          <dimIncrement>4</dimIncrement>
+        </register>
+        <register>
+          <name>NVIC_IABR</name>
+          <description>Interrupt Active Bit Register</description>
+          <addressOffset>0x200</addressOffset>
+          <size>32</size>
+          <access>read-only</access>
+          <dim>8</dim>
+          <dimIndex>0-7</dimIndex>
+          <dimIncrement>4</dimIncrement>
+        </register>
+        <register>
+          <name>NVIC_IPR</name>
+          <description>Interrupt Priority Register</description>
+          <addressOffset>0x300</addressOffset>
+          <size>32</size>
+          <access>read-only</access>
+          <dim>60</dim>
+          <dimIndex>0-59</dimIndex>
+          <dimIncrement>4</dimIncrement>
+        </register>
+        <register>
+          <name>STIR</name>
+          <description>Software Trigger Interrupt Register</description>
+          <addressOffset>0x300</addressOffset>
+          <size>32</size>
+          <access>write-only</access>
+          <fields>
+            <field>
+              <name>INTID</name>
+              <description>Interrupt ID of the interrupt to trigger, in the
+              range 0-239.</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>9</bitWidth>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
