@@ -642,6 +642,7 @@ package body Ada_Gen is
       File    : Ada.Text_IO.File_Type)
    is
       Max_Id  : Natural := 0;
+      As_Hex  : Boolean := False;
 
       function Get_Id (F : Record_Field) return String is
          Id : String (1 .. Max_Id) := (others => ' ');
@@ -677,13 +678,23 @@ package body Ada_Gen is
 
       Ada.Text_IO.Put_Line
         (File, "   for " & To_String (Element.Id) & " use record");
+      for F of Element.Fields loop
+         if F.Offset /= 0 then
+            As_Hex := True;
+            exit;
+         end if;
+      end loop;
+
 
       for F of Element.Fields loop
          Ada.Text_IO.Put (File, (1 .. 6 => ' '));
          Ada.Text_IO.Put_Line
            (File,
             Get_Id (F) &
-              " at " & To_Hex (F.Offset) &
+              " at " &
+              (if As_Hex
+                 then To_Hex (F.Offset)
+                 else To_String (F.Offset)) &
               " range " & To_String (F.LSB) & " .. " & To_String (F.MSB) &
               ";");
       end loop;
@@ -702,6 +713,7 @@ package body Ada_Gen is
       File    : Ada.Text_IO.File_Type)
    is
       Max_Id : Natural := 0;
+      As_Hex : Boolean := False;
 
       function Get_Id (F : Record_Field) return String is
          Id : String (1 .. Max_Id) := (others => ' ');
@@ -774,12 +786,34 @@ package body Ada_Gen is
       Ada.Text_IO.Put_Line
         (File, "   for " & To_String (Element.Id) & " use record");
 
+      --  If one of the field offset is different from 0, dump the offsets
+      --  as hexa values. Else just dump a regular decimal value.
+      for F of Element.Fields loop
+         if F.Offset /= 0 then
+            As_Hex := True;
+            exit;
+         end if;
+      end loop;
+
+      for Val of Element.Discriminent.Values loop
+         exit when As_Hex;
+         for F of Element.Disc_Fields (To_String (Val.Id)) loop
+            if F.Offset /= 0 then
+               As_Hex := True;
+               exit;
+            end if;
+         end loop;
+      end loop;
+
       for F of Element.Fields loop
          Ada.Text_IO.Put (File, (1 .. 6 => ' '));
          Ada.Text_IO.Put_Line
            (File,
             Get_Id (F) &
-              " at " & To_Hex (F.Offset) &
+              " at " &
+              (if As_Hex
+                 then To_Hex (F.Offset)
+                 else To_String (F.Offset)) &
               " range " & To_String (F.LSB) & " .. " & To_String (F.MSB) &
               ";");
       end loop;
@@ -790,7 +824,10 @@ package body Ada_Gen is
             Ada.Text_IO.Put_Line
               (File,
                Get_Id (F) &
-                 " at " & To_String (F.Offset) &
+                 " at " &
+                 (if As_Hex
+                   then To_Hex (F.Offset)
+                   else To_String (F.Offset)) &
                  " range " & To_String (F.LSB) & " .. " & To_String (F.MSB) &
                  ";");
          end loop;
