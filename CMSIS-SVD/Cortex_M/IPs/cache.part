@@ -1,0 +1,151 @@
+    <peripheral>
+      <name>Cache</name>
+      <description>Cache maintenance operations</description>
+      <baseAddress>0xE000EF50</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x2C</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+        <register>
+          <name>ICIALLU</name>
+          <description>Instruction cache invalidate all to the PoU</description>
+          <addressOffset>0x0</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>ICIMVAU</name>
+          <description>Instruction cache invalidate by address to the PoU</description>
+          <addressOffset>0x8</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>DCIMVAC</name>
+          <description>Data cache invalidate by address to the PoC</description>
+          <addressOffset>0xC</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>DCISW</name>
+          <description>Data cache invalidate by set/way</description>
+          <addressOffset>0x10</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+          <fields>
+            <field>
+              <name>Set</name>
+              <description>Set/index that operation applies to. The number of
+              indices in a cache depends on the configured cache size. When
+              this is less than the maximum, use the LSB of this field.
+              </description>
+              <bitOffset>5</bitOffset>
+              <bitWidth>9</bitWidth>
+            </field>
+            <field>
+              <name>Way</name>
+              <description>Way that operation applies to. For the data cache,
+              values 0, 1, 2 and 3 are supported..
+              </description>
+              <bitOffset>30</bitOffset>
+              <bitWidth>2</bitWidth>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>DCCMVAU</name>
+          <description>Data cache clean by address to the PoU</description>
+          <addressOffset>0x14</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>DCCMVAC</name>
+          <description>Data cache clean by address to the PoC</description>
+          <addressOffset>0x18</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>DCCSW</name>
+          <description>Data cache clean by set/way</description>
+          <addressOffset>0x1C</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+          <fields>
+            <field>
+              <name>Set</name>
+              <description>Set/index that operation applies to. The number of
+              indices in a cache depends on the configured cache size. When
+              this is less than the maximum, use the LSB of this field.
+              </description>
+              <bitOffset>5</bitOffset>
+              <bitWidth>9</bitWidth>
+            </field>
+            <field>
+              <name>Way</name>
+              <description>Way that operation applies to. For the data cache,
+              values 0, 1, 2 and 3 are supported..
+              </description>
+              <bitOffset>30</bitOffset>
+              <bitWidth>2</bitWidth>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>DCCIMVAC</name>
+          <description>Data cache clean and invalidate by address to the PoC</description>
+          <addressOffset>0x20</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>DCCISW</name>
+          <description>Data cache clean and invalidate by set/way</description>
+          <addressOffset>0x24</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+          <fields>
+            <field>
+              <name>Set</name>
+              <description>Set/index that operation applies to. The number of
+              indices in a cache depends on the configured cache size. When
+              this is less than the maximum, use the LSB of this field.
+              </description>
+              <bitOffset>5</bitOffset>
+              <bitWidth>9</bitWidth>
+            </field>
+            <field>
+              <name>Way</name>
+              <description>Way that operation applies to. For the data cache,
+              values 0, 1, 2 and 3 are supported..
+              </description>
+              <bitOffset>30</bitOffset>
+              <bitWidth>2</bitWidth>
+            </field>
+          </fields>
+        </register>
+     </registers>
+    </peripheral>

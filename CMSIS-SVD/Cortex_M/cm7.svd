@@ -1779,271 +1779,6 @@
       </registers>
     </peripheral>
     <peripheral>
-      <name>PF</name>
-      <description>Processor Features</description>
-      <baseAddress>0xE000ED78</baseAddress>
-      <groupName>SCB</groupName>
-      <addressBlock>
-        <offset>0</offset>
-        <size>0x10</size>
-        <usage>registers</usage>
-      </addressBlock>
-      <registers>
-        <register>
-          <name>CLIDR</name>
-          <description>Cache Level ID Register</description>
-          <addressOffset>0x0</addressOffset>
-          <size>32</size>
-          <resetValue>0x09000003</resetValue>
-          <resetMask>0xFFFFFFFF</resetMask>
-          <fields>
-            <field>
-              <name>ICL1</name>
-              <description>An instrumentation Cache is implemented at L1</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>DCL1</name>
-              <description>Data Cache is implemented at L1</description>
-              <bitOffset>1</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>UCL1</name>
-              <description>Unified Cache is implemented at L1</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>LoC</name>
-              <description>Level of Coherency</description>
-              <bitOffset>24</bitOffset>
-              <bitWidth>3</bitWidth>
-              <access>read-only</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Level_1</name>
-                  <description>Level 1, if neither instruction nor data cache is implemented</description>
-                  <value>0x0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>Level_2</name>
-                  <description>Level 2, if either cache is implemented</description>
-                  <value>0x1</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-            <field>
-              <name>LoU</name>
-              <description>Level of Unification</description>
-              <bitOffset>27</bitOffset>
-              <bitWidth>3</bitWidth>
-              <access>read-only</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Level_1</name>
-                  <description>Level 1, if neither instruction nor data cache is implemented</description>
-                  <value>0x0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>Level_2</name>
-                  <description>Level 2, if either cache is implemented</description>
-                  <value>0x1</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>CTR</name>
-          <description>Cache Type Register</description>
-          <addressOffset>0x4</addressOffset>
-          <size>32</size>
-          <resetValue>0x8303C003</resetValue>
-          <resetMask>0xFFFFFFFF</resetMask>
-          <fields>
-            <field>
-              <name>IMinLine</name>
-              <description>Smallest cache line of all the instruction caches.</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>4</bitWidth>
-              <access>read-only</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Line_8_Words</name>
-                  <description>8 words for the Cortex-M7 processor.</description>
-                  <value>0x3</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-            <field>
-              <name>DMinLine</name>
-              <description>Smallest cache line of all the data caches.</description>
-              <bitOffset>16</bitOffset>
-              <bitWidth>4</bitWidth>
-              <access>read-only</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Line_8_Words</name>
-                  <description>8 words for the Cortex-M7 processor.</description>
-                  <value>0x3</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-            <field>
-              <name>ERG</name>
-              <description>Exclusive Reservation Granule.
-              The local monitor within the processor does not hold any physical
-              address. It treats any STREX instruction access as matching the
-              address of the previous LDREX instruction. This means that the
-              implemented exclusive reservation granule is the entire memory
-              address range.</description>
-              <bitOffset>20</bitOffset>
-              <bitWidth>4</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>CWG</name>
-              <description>Cache Writable Granule.</description>
-              <bitOffset>24</bitOffset>
-              <bitWidth>4</bitWidth>
-              <access>read-only</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Granularity_8_Words</name>
-                  <description>8 words granularity for the Cortex-M7
-                  processor.</description>
-                  <value>0x3</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-            <field>
-              <name>Format</name>
-              <description>Cache Writable Granule.</description>
-              <bitOffset>29</bitOffset>
-              <bitWidth>3</bitWidth>
-              <access>read-only</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>ARMv7</name>
-                  <description>ARMv7 register forat.</description>
-                  <value>0x4</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>CCSIDR</name>
-          <description>Cache Size ID Register</description>
-          <addressOffset>0x8</addressOffset>
-          <size>32</size>
-          <resetValue>0x0</resetValue>
-          <resetMask>0xFFFFFFFF</resetMask>
-          <fields>
-            <field>
-              <name>LineSize</name>
-              <description>Indicates the number of words in each cache line.
-                Encoded as 2 - log(2) number of words.
-                e.g. 0 means 4 words, 1 means 8 words.</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>3</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>Associativity</name>
-              <description>Indicates the number of ways as (ways - 1)</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>10</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>NumSets</name>
-              <description>Indicates the number of sets as (sets - 1)</description>
-              <bitOffset>13</bitOffset>
-              <bitWidth>15</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>WA</name>
-              <description>Indicates support available for write allocation.</description>
-              <bitOffset>28</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>RA</name>
-              <description>Indicates support available for read allocation.</description>
-              <bitOffset>29</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>WB</name>
-              <description>Indicates support available for write back.</description>
-              <bitOffset>30</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>WT</name>
-              <description>Indicates support available for write through.</description>
-              <bitOffset>31</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-only</access>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>CCSELR</name>
-          <description>Cache Size Selection Register</description>
-          <addressOffset>0xC</addressOffset>
-          <size>32</size>
-          <resetValue>0x0</resetValue>
-          <resetMask>0xFFFFFFFF</resetMask>
-          <fields>
-            <field>
-              <name>InD</name>
-              <description>Selects the cache currently visible in the CCSIDR.</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Data_Cache</name>
-                  <description>Data cache is selected.</description>
-                  <value>0x0</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>Instruction_Cache</name>
-                  <description>Instruction cache is selected.</description>
-                  <value>0x1</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-            <field>
-              <name>Level</name>
-              <description>Identifies the cache level selected.</description>
-              <bitOffset>1</bitOffset>
-              <bitWidth>3</bitWidth>
-              <access>read-write</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Level_1</name>
-                  <description>Level 1 cache is selected.</description>
-                  <value>0x0</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-          </fields>
-        </register>
-      </registers>
-    </peripheral>
-    <peripheral>
       <name>MPU</name>
       <description>Memory Protection Unit</description>
       <baseAddress>0xE000ED90</baseAddress>
@@ -2406,6 +2141,421 @@
       </registers>
     </peripheral>
     <peripheral>
+      <name>PF</name>
+      <description>Processor Features</description>
+      <baseAddress>0xE000ED78</baseAddress>
+      <groupName>SCB</groupName>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x10</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>CLIDR</name>
+          <description>Cache Level ID Register</description>
+          <addressOffset>0x0</addressOffset>
+          <size>32</size>
+          <resetValue>0x09000003</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>ICL1</name>
+              <description>An instrumentation Cache is implemented at L1</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>DCL1</name>
+              <description>Data Cache is implemented at L1</description>
+              <bitOffset>1</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>UCL1</name>
+              <description>Unified Cache is implemented at L1</description>
+              <bitOffset>2</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>LoC</name>
+              <description>Level of Coherency</description>
+              <bitOffset>24</bitOffset>
+              <bitWidth>3</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Level_1</name>
+                  <description>Level 1, if neither instruction nor data cache is implemented</description>
+                  <value>0x0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Level_2</name>
+                  <description>Level 2, if either cache is implemented</description>
+                  <value>0x1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>LoU</name>
+              <description>Level of Unification</description>
+              <bitOffset>27</bitOffset>
+              <bitWidth>3</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Level_1</name>
+                  <description>Level 1, if neither instruction nor data cache is implemented</description>
+                  <value>0x0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Level_2</name>
+                  <description>Level 2, if either cache is implemented</description>
+                  <value>0x1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>CTR</name>
+          <description>Cache Type Register</description>
+          <addressOffset>0x4</addressOffset>
+          <size>32</size>
+          <resetValue>0x8303C003</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>IMinLine</name>
+              <description>Smallest cache line of all the instruction caches.</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>4</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Line_8_Words</name>
+                  <description>8 words for the Cortex-M7 processor.</description>
+                  <value>0x3</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>DMinLine</name>
+              <description>Smallest cache line of all the data caches.</description>
+              <bitOffset>16</bitOffset>
+              <bitWidth>4</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Line_8_Words</name>
+                  <description>8 words for the Cortex-M7 processor.</description>
+                  <value>0x3</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>ERG</name>
+              <description>Exclusive Reservation Granule.
+              The local monitor within the processor does not hold any physical
+              address. It treats any STREX instruction access as matching the
+              address of the previous LDREX instruction. This means that the
+              implemented exclusive reservation granule is the entire memory
+              address range.</description>
+              <bitOffset>20</bitOffset>
+              <bitWidth>4</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>CWG</name>
+              <description>Cache Writable Granule.</description>
+              <bitOffset>24</bitOffset>
+              <bitWidth>4</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Granularity_8_Words</name>
+                  <description>8 words granularity for the Cortex-M7
+                  processor.</description>
+                  <value>0x3</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>Format</name>
+              <description>Cache Writable Granule.</description>
+              <bitOffset>29</bitOffset>
+              <bitWidth>3</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>ARMv7</name>
+                  <description>ARMv7 register forat.</description>
+                  <value>0x4</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>CCSIDR</name>
+          <description>Cache Size ID Register</description>
+          <addressOffset>0x8</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>LineSize</name>
+              <description>Indicates the number of words in each cache line.
+                Encoded as 2 - log(2) number of words.
+                e.g. 0 means 4 words, 1 means 8 words.</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>3</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>Associativity</name>
+              <description>Indicates the number of ways as (ways - 1)</description>
+              <bitOffset>3</bitOffset>
+              <bitWidth>10</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>NumSets</name>
+              <description>Indicates the number of sets as (sets - 1)</description>
+              <bitOffset>13</bitOffset>
+              <bitWidth>15</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>WA</name>
+              <description>Indicates support available for write allocation.</description>
+              <bitOffset>28</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>RA</name>
+              <description>Indicates support available for read allocation.</description>
+              <bitOffset>29</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>WB</name>
+              <description>Indicates support available for write back.</description>
+              <bitOffset>30</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>WT</name>
+              <description>Indicates support available for write through.</description>
+              <bitOffset>31</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>CCSELR</name>
+          <description>Cache Size Selection Register</description>
+          <addressOffset>0xC</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>InD</name>
+              <description>Selects the cache currently visible in the CCSIDR.</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Data_Cache</name>
+                  <description>Data cache is selected.</description>
+                  <value>0x0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Instruction_Cache</name>
+                  <description>Instruction cache is selected.</description>
+                  <value>0x1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>Level</name>
+              <description>Identifies the cache level selected.</description>
+              <bitOffset>1</bitOffset>
+              <bitWidth>3</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Level_1</name>
+                  <description>Level 1 cache is selected.</description>
+                  <value>0x0</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>Cache</name>
+      <description>Cache maintenance operations</description>
+      <baseAddress>0xE000EF50</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x2C</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+        <register>
+          <name>ICIALLU</name>
+          <description>Instruction cache invalidate all to the PoU</description>
+          <addressOffset>0x0</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>ICIMVAU</name>
+          <description>Instruction cache invalidate by address to the PoU</description>
+          <addressOffset>0x8</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>DCIMVAC</name>
+          <description>Data cache invalidate by address to the PoC</description>
+          <addressOffset>0xC</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>DCISW</name>
+          <description>Data cache invalidate by set/way</description>
+          <addressOffset>0x10</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+          <fields>
+            <field>
+              <name>Set</name>
+              <description>Set/index that operation applies to. The number of
+              indices in a cache depends on the configured cache size. When
+              this is less than the maximum, use the LSB of this field.
+              </description>
+              <bitOffset>5</bitOffset>
+              <bitWidth>9</bitWidth>
+            </field>
+            <field>
+              <name>Way</name>
+              <description>Way that operation applies to. For the data cache,
+              values 0, 1, 2 and 3 are supported..
+              </description>
+              <bitOffset>30</bitOffset>
+              <bitWidth>2</bitWidth>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>DCCMVAU</name>
+          <description>Data cache clean by address to the PoU</description>
+          <addressOffset>0x14</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>DCCMVAC</name>
+          <description>Data cache clean by address to the PoC</description>
+          <addressOffset>0x18</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>DCCSW</name>
+          <description>Data cache clean by set/way</description>
+          <addressOffset>0x1C</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+          <fields>
+            <field>
+              <name>Set</name>
+              <description>Set/index that operation applies to. The number of
+              indices in a cache depends on the configured cache size. When
+              this is less than the maximum, use the LSB of this field.
+              </description>
+              <bitOffset>5</bitOffset>
+              <bitWidth>9</bitWidth>
+            </field>
+            <field>
+              <name>Way</name>
+              <description>Way that operation applies to. For the data cache,
+              values 0, 1, 2 and 3 are supported..
+              </description>
+              <bitOffset>30</bitOffset>
+              <bitWidth>2</bitWidth>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>DCCIMVAC</name>
+          <description>Data cache clean and invalidate by address to the PoC</description>
+          <addressOffset>0x20</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>DCCISW</name>
+          <description>Data cache clean and invalidate by set/way</description>
+          <addressOffset>0x24</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <access>write-only</access>
+          <fields>
+            <field>
+              <name>Set</name>
+              <description>Set/index that operation applies to. The number of
+              indices in a cache depends on the configured cache size. When
+              this is less than the maximum, use the LSB of this field.
+              </description>
+              <bitOffset>5</bitOffset>
+              <bitWidth>9</bitWidth>
+            </field>
+            <field>
+              <name>Way</name>
+              <description>Way that operation applies to. For the data cache,
+              values 0, 1, 2 and 3 are supported..
+              </description>
+              <bitOffset>30</bitOffset>
+              <bitWidth>2</bitWidth>
+            </field>
+          </fields>
+        </register>
+     </registers>
+    </peripheral>    <peripheral>
       <name>Debug</name>
       <version>1.0</version>
       <baseAddress>0xE000ED00</baseAddress>
