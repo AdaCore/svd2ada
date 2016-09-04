@@ -32069,9 +32069,8 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <bitWidth>16</bitWidth>
             </field>
             <field>
-              <name>OEPINT</name>
-              <description>OUT endpoint interrupt
-              bits</description>
+              <name>OEPM</name>
+              <description>OUT EP interrupt mask bits</description>
               <bitOffset>16</bitOffset>
               <bitWidth>16</bitWidth>
             </field>
