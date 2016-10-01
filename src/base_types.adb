@@ -47,10 +47,6 @@ package body Base_Types is
          return Pkg & "Bit";
       elsif Size = 8 then
          return Pkg & "Byte";
-      elsif Size = 16 then
-         return Pkg & "Short";
-      elsif Size = 32 then
-         return Pkg & "Word";
       else
          return Pkg & "UInt" & To_String (Size);
       end if;
