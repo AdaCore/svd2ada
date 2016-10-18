@@ -763,7 +763,7 @@
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
-              <name>NONBASETHERADENA</name>
+              <name>NONBASETHREADENA</name>
               <description>Indicates how the processor enters Thread mode</description>
               <bitOffset>0</bitOffset>
               <bitWidth>1</bitWidth>
@@ -776,8 +776,8 @@
                 </enumeratedValue>
                 <enumeratedValue>
                   <name>On_Exc_Return</name>
-                  <description>Processor can enter Thread mode from any level under the control of
-                    an EXC_RETURN value</description>
+                  <description>Processor can enter Thread mode from any level
+                  under the control of an EXC_RETURN value</description>
                   <value>0x1</value>
                 </enumeratedValue>
               </enumeratedValues>

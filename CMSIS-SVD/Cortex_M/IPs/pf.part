@@ -218,7 +218,7 @@
           </fields>
         </register>
         <register>
-          <name>CCSELR</name>
+          <name>CSSELR</name>
           <description>Cache Size Selection Register</description>
           <addressOffset>0xC</addressOffset>
           <size>32</size>
