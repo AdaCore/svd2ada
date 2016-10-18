@@ -141,7 +141,7 @@ package Base_Types is
    type Interrupt_Type is record
       Name        : Unbounded.Unbounded_String;
       Description : Unbounded.Unbounded_String;
-      Value       : Unsigned;
+      Value       : Integer;
    end record;
 
    function "=" (I1, I2 : Interrupt_Type) return Boolean;

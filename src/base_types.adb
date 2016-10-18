@@ -559,7 +559,7 @@ package body Base_Types is
          --  GNAT re-numbers the interrupt to add the Sys_Tick interrupt
          --  which is a core interrupt. So we need to take this re-numbering
          --  here by adding 2 to the constants extracted from the SVD
-         Val.Value := Get_Value (Elt) + 2;
+         Val.Value := Get_Value (Elt);
       else
          raise Constraint_Error with "Unexpected interrupt tag " & Tag;
       end if;

@@ -17,7 +17,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Interfaces;            use Interfaces;
 with Ada.Text_IO;           use Ada.Text_IO;
 with GNAT.OS_Lib;
 
@@ -269,14 +268,14 @@ package body Descriptors.Device is
 
       Curs := Ints.First;
 
-      for J in 2 .. Ints.Last_Element.Value loop
+      for J in 0 .. Ints.Last_Element.Value loop
          while Interrupt_Vectors.Element (Curs).Value < J loop
             Interrupt_Vectors.Next (Curs);
          end loop;
 
          Put
            (ASM, ASCII.HT & ".word __gnat_irq_trap        /*" &
-              Unsigned'Image (J - 2 + 16) & " ");
+              Integer'Image (J + 16) & " ");
          if Interrupt_Vectors.Element (Curs).Value = J then
             Put_Line
               (ASM,
@@ -285,7 +284,7 @@ package body Descriptors.Device is
                  " */");
          else
             Put_Line
-              (ASM, "IRQ" & Unsigned'Image (J - 2) & ". */");
+              (ASM, "IRQ" & Integer'Image (J) & ". */");
          end if;
       end loop;
 
@@ -347,13 +346,8 @@ package body Descriptors.Device is
          Interrupts.Append
            ((Name        => To_Unbounded_String ("Sys_Tick"),
              Description => To_Unbounded_String
-               ("The position of the interrupts are documented as starting " &
-                  "at 0. Unfortunately, Interrupt_Id 0 is reserved and the " &
-                  "SysTick interrupt (a core interrupt) is handled by the " &
-                  "runtime like other interrupts. So IRQ 0 is numbered 2 " &
-                  "while it is at position 0 in the manual. The offset of 2 " &
-                  "is reflected in s-bbbosu.adb by the First_IRQ constant."),
-             Value       => 1));
+               ("System tick"),
+             Value       => -1));
 
          if Slice (Device.Description, 1, 5) = "STM32" then
             --  ??? Workaround for the STM32F* svd files that do not define the
@@ -362,7 +356,7 @@ package body Descriptors.Device is
               ((Name        => To_Unbounded_String ("FPU"),
                 Description => To_Unbounded_String
                   ("FPU global interrupt"),
-                Value       => 83));
+                Value       => 81));
          end if;
 
       else
@@ -398,7 +392,7 @@ package body Descriptors.Device is
                                   "_Interrupt",
                     Align_Id => Max_Len + 11,
                     Typ      => "Interrupt_ID",
-                    Value    => To_String (Integer (Int.Value)),
+                    Value    => To_String (Int.Value),
                     Comment  => To_String (Int.Description)));
          else
             Add (Spec,
@@ -406,7 +400,7 @@ package body Descriptors.Device is
                    (Id       => To_String (Int.Name) & "_Interrupt",
                     Align_Id => Max_Len + 11,
                     Typ      => "Interrupt_ID",
-                    Value    => To_String (Integer (Int.Value)),
+                    Value    => To_String (Int.Value),
                     Comment  => To_String (Int.Description)));
          end if;
       end loop;
