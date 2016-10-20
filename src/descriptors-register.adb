@@ -284,7 +284,8 @@ package body Descriptors.Register is
          if Reg.Dim > 1 then
             --  Just generate a comment to document the array that's going
             --  to be generated
-            Add (Spec, New_Comment (To_String (Reg.Description)));
+            Add (Spec,
+                 New_Comment (To_String (Reg.Description), Strip => True));
          end if;
 
       else
