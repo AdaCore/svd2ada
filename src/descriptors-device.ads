@@ -34,6 +34,7 @@ package Descriptors.Device is
       Name              : Unbounded.Unbounded_String;
       Version           : Unbounded.Unbounded_String;
       Description       : Unbounded.Unbounded_String;
+      Short_Desc        : Unbounded.Unbounded_String;
 
       --  BUS interface properties:
       --  adressable unit

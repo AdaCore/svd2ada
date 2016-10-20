@@ -248,6 +248,13 @@ package body Ada_Gen is
                Last_Space := J;
             end if;
 
+            if Element (Comment.Comment, J) = ASCII.LF then
+               Ada.Text_IO.Put_Line
+                 (F,
+                  Pre & "--  " & Slice (Comment.Comment, First, J - 1));
+               First := J + 1;
+            end if;
+
             if J - First + Pre'Length + 4 >= Max_Width
               and then Last_Space > 0
             then
@@ -943,7 +950,7 @@ package body Ada_Gen is
       Spec : Ada_Spec;
    begin
       Spec.Id := Ada_Identifier (Name, "");
-      Spec.Comment := New_Comment (Descr);
+      Spec.Comment := New_Comment (Descr, False);
       Spec.Preelaborated := Preelaborated;
 
       if Length (G_Withed_All) /= 0 then
@@ -1372,7 +1379,8 @@ package body Ada_Gen is
    -----------------
 
    function New_Comment
-     (Comment : String) return Ada_Comment
+     (Comment : String;
+      Strip   : Boolean) return Ada_Comment
    is
       function Strip_String (Str : String) return String
       is
@@ -1406,9 +1414,13 @@ package body Ada_Gen is
          return Ret (Ret'First .. Idx - 1);
       end Strip_String;
    begin
-      return (Comment => To_Unbounded_String
-              (Strip_String
-                 (Ada.Strings.Fixed.Trim (Comment, Ada.Strings.Both))));
+      if Strip then
+         return (Comment => To_Unbounded_String
+                 (Strip_String
+                    (Ada.Strings.Fixed.Trim (Comment, Ada.Strings.Both))));
+      else
+         return (Comment => To_Unbounded_String (Comment));
+      end if;
    end New_Comment;
 
    ---------------------
@@ -1418,7 +1430,7 @@ package body Ada_Gen is
    function New_Comment_Box
      (Comment : String) return Ada_Comment_Box
    is
-      C : constant Ada_Comment := New_Comment (Comment);
+      C : constant Ada_Comment := New_Comment (Comment, Strip => True);
    begin
       return (Comment => C.Comment);
    end New_Comment_Box;
@@ -1433,7 +1445,7 @@ package body Ada_Gen is
    is
       C : constant Ada_Pragma :=
             (Id      => To_Unbounded_String (Identifier),
-             Comment => New_Comment (Comment));
+             Comment => New_Comment (Comment, Strip => True));
    begin
       return C;
    end New_Pragma;
@@ -1529,7 +1541,7 @@ package body Ada_Gen is
       Ret : Ada_Type_Scalar;
    begin
       Ret.Id      := Ada_Identifier (Id, "Scalar");
-      Ret.Comment := New_Comment (Comment);
+      Ret.Comment := New_Comment (Comment, Strip => True);
       Ret.Size    := Size;
       Add_Size_Aspect (Ret, Size);
       return Ret;
@@ -1563,7 +1575,7 @@ package body Ada_Gen is
    is
    begin
       return (Id      => Ada_Identifier (Id, "Scalar"),
-              Comment => New_Comment (Comment),
+              Comment => New_Comment (Comment, Strip => True),
               Typ     => Typ.Id,
               others  => <>);
    end New_Subype_Scalar;
@@ -1624,7 +1636,7 @@ package body Ada_Gen is
    is
    begin
       return (Id           => Ada_Identifier (Id, "Arr"),
-              Comment      => New_Comment (Comment),
+              Comment      => New_Comment (Comment, Strip => True),
               Aspects      => <>,
               Index_Type   => To_Unbounded_String (Index_Type),
               Index_First  => Index_First,
@@ -1657,7 +1669,7 @@ package body Ada_Gen is
       Dead2 : constant Ada_Spec := New_Spec ("Standard", "", False);
    begin
       Ret := (Id      => To_Unbounded_String ("Boolean"),
-              Comment => New_Comment (""),
+              Comment => New_Comment ("", False),
               Aspects => <>,
               Values  => <>);
       Dead := Add_Enum_Id (Dead2, Ret, "False", 0);
@@ -1677,7 +1689,7 @@ package body Ada_Gen is
       Ret : Ada_Type_Enum;
    begin
       Ret := (Id      => Ada_Identifier (Id, "E"),
-              Comment => New_Comment (Comment),
+              Comment => New_Comment (Comment, Strip => True),
               Aspects => <>,
               Values  => <>);
       if Size > 0 then
@@ -1732,7 +1744,7 @@ package body Ada_Gen is
         (Id       => The_Id,
          Has_Repr => Has_Repr,
          Repr     => Repr,
-         Comment  => New_Comment (Comment));
+         Comment  => New_Comment (Comment, Strip => True));
 
       loop
          Done   := True;
@@ -1857,7 +1869,7 @@ package body Ada_Gen is
    begin
       return Ada_Type_Record'
         (Id          => Ada_Identifier (Id, "Rec"),
-         Comment     => New_Comment (Comment),
+         Comment     => New_Comment (Comment, Strip => True),
          Aspects     => <>,
          Fields      => <>,
          Need_System => False);
@@ -1992,7 +2004,7 @@ package body Ada_Gen is
           MSB         => MSB,
           Has_Default => Has_Default,
           Default     => Default,
-          Comment     => New_Comment (Comment)));
+          Comment     => New_Comment (Comment, Strip => True)));
    end Add_Field_Internal;
 
    ---------------
@@ -2117,7 +2129,7 @@ package body Ada_Gen is
    begin
       Ret :=
         (Id           => Ada_Identifier (Id, "Rec"),
-         Comment      => New_Comment (Comment),
+         Comment      => New_Comment (Comment, Strip => True),
          Aspects      => <>,
          Disc_name    => To_Unbounded_String (Disc_Name),
          Discriminent => Ada_Type_Enum (Disc_Type),
@@ -2170,7 +2182,7 @@ package body Ada_Gen is
           MSB         => MSB,
           Has_Default => False,
           Default     => Null_Unbounded_String,
-          Comment     => New_Comment (Comment)));
+          Comment     => New_Comment (Comment, Strip => True)));
    end Add_Field;
 
    ----------------
@@ -2219,7 +2231,7 @@ package body Ada_Gen is
               Id_Size => Align_Id,
               Typ     => To_Unbounded_String (Typ),
               Value   => To_Unbounded_String (Value),
-              Comment => New_Comment (Comment));
+              Comment => New_Comment (Comment, Strip => True));
    end New_Constant_Value;
 
    ------------------
@@ -2236,7 +2248,7 @@ package body Ada_Gen is
       return (Id      => Ada_Identifier (Id, "I"),
               Typ     => To_Unbounded_String (Typ),
               Aliasd  => Aliased_Inst,
-              Comment => New_Comment (Comment),
+              Comment => New_Comment (Comment, Strip => True),
               Aspects => <>);
    end New_Instance;
 

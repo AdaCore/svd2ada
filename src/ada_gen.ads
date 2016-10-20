@@ -148,7 +148,8 @@ package Ada_Gen is
       Use_Visible : Boolean := False) return Ada_With_Clause;
 
    function New_Comment
-     (Comment : String) return Ada_Comment;
+     (Comment : String;
+      Strip   : Boolean) return Ada_Comment;
 
    function New_Comment_Box
      (Comment : String) return Ada_Comment_Box;
