@@ -249,9 +249,14 @@ package body Ada_Gen is
             end if;
 
             if Element (Comment.Comment, J) = ASCII.LF then
-               Ada.Text_IO.Put_Line
-                 (F,
-                  Pre & "--  " & Slice (Comment.Comment, First, J - 1));
+               if J = First then
+                  Ada.Text_IO.Put_Line (F, "--");
+               else
+                  Ada.Text_IO.Put_Line
+                    (F,
+                     Pre & "--  " & Slice (Comment.Comment, First, J - 1));
+               end if;
+
                First := J + 1;
             end if;
 
