@@ -1125,6 +1125,7 @@ package body Ada_Gen is
 
          Ada.Text_IO.Put_Line
            (F, "pragma Ada_2012;");
+         Ada.Text_IO.Put_Line (F, "pragma Style_Checks (Off);");
          Ada.Text_IO.New_Line (F);
          G_Empty_Line := True;
       end if;
