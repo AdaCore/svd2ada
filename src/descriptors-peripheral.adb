@@ -550,6 +550,7 @@ package body Descriptors.Peripheral is
       end loop;
 
       Add (Spec, New_Comment_Box ("Peripherals"));
+      Add (Spec, New_With_Clause ("System"));
 
       --  Determine if all peripherals of the group have the same layout
 
@@ -586,7 +587,11 @@ package body Descriptors.Peripheral is
                               To_String (First.Description));
                begin
                   Add_Aspect (Inst, "Import");
-                  Add_Address_Aspect (Inst, To_String (First.Name) & "_Base");
+                  Add_Address_Aspect
+                    (Inst,
+                     "System'To_Address (" &
+                       To_Hex (First.Base_Address) & ")");
+--                Add_Address_Aspect (Inst, To_String (First.Name) & "_Base");
                   Add (Spec, Inst);
                end;
 
@@ -606,7 +611,11 @@ package body Descriptors.Peripheral is
                   begin
                      Add_Aspect (Inst, "Import");
                      Add_Address_Aspect
-                       (Inst, To_String (Periph.Name) & "_Base");
+                       (Inst,
+                        "System'To_Address (" &
+                          To_Hex (Periph.Base_Address) & ")");
+--                       Add_Address_Aspect
+--                         (Inst, To_String (Periph.Name) & "_Base");
                      Add (Spec, Inst);
                   end;
                end loop;
@@ -628,7 +637,11 @@ package body Descriptors.Peripheral is
                   begin
                      Add_Aspect (Inst, "Import");
                      Add_Address_Aspect
-                       (Inst, To_String (Periph.Name) & "_Base");
+                       (Inst,
+                        "System'To_Address (" &
+                          To_Hex (Periph.Base_Address) & ")");
+--                       Add_Address_Aspect
+--                         (Inst, To_String (Periph.Name) & "_Base");
                      Add (Spec, Inst);
                   end;
                end loop;
