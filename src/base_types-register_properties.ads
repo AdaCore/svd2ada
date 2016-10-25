@@ -24,19 +24,14 @@ with DOM.Core; use DOM.Core;
 package Base_Types.Register_Properties is
 
    type Register_Properties_T is record
-      Size        : Natural;
-      Reg_Access  : Access_Type;
-      Protection  : Protection_Type;
-      Reset_Value : Unsigned;
-      Reset_Mask  : Unsigned;
+      Size        : Natural := 0;
+      Reg_Access  : Access_Type := Read_Write;
+      Protection  : Protection_Type := Undefined_Protection;
+      Reset_Value : Unsigned := 0;
+      Reset_Mask  : Unsigned := 0;
    end record;
 
-   Null_Register_Property : constant Register_Properties_T :=
-                              (Size        => 0,
-                               Reg_Access  => Read_Write,
-                               Protection  => Undefined_Protection,
-                               Reset_Value => 0,
-                               Reset_Mask  => 0);
+   Null_Register_Property : constant Register_Properties_T := (others => <>);
 
    function Is_Register_Property (Tag : String) return Boolean;
 
