@@ -332,6 +332,7 @@ package body Descriptors.Register is
                            Element_Type => Get_Ada_Type (Reg),
                            Comment      => To_String (Reg.Description));
          begin
+            Add_Aspect(Array_T, "Volatile");
             Add (Spec, Array_T);
             Reg.Ada_Type := -Array_T;
          end;

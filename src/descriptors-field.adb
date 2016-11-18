@@ -327,6 +327,7 @@ package body Descriptors.Field is
                   LSB         => Index,
                   MSB         => Index + Length - 1,
                   Default     => Default,
+                  Is_Aliased  => False,
                   Comment     => "unspecified");
             else
                Ada_Gen.Add_Field
@@ -337,6 +338,7 @@ package body Descriptors.Field is
                   Offset      => 0,
                   LSB         => Index,
                   MSB         => Index + Length - 1,
+                  Is_Aliased  => False,
                   Comment     => "unspecified");
             end if;
 
@@ -548,6 +550,7 @@ package body Descriptors.Field is
                      Offset   => 0,
                      LSB      => 0,
                      MSB      => Fields (Index).Size * Length - 1,
+                     Is_Aliased  => False,
                      Comment  => F_Name & " as an array");
                   Add_Field
                     (Rec      => Union_T,
@@ -558,6 +561,7 @@ package body Descriptors.Field is
                      Offset   => 0,
                      LSB      => 0,
                      MSB      => Fields (Index).Size * Length - 1,
+                     Is_Aliased  => False,
                      Comment  => F_Name & " as a value");
 
                   Add (Spec, Union_T);
@@ -658,34 +662,37 @@ package body Descriptors.Field is
             if All_RO then
                Add_Field
                  (Rec,
-                  Id      => To_String (Ada_Name),
-                  Typ     => -Ada_Type,
-                  Offset  => 0,
-                  LSB     => Index,
-                  MSB     => Index + Ada_Type_Size - 1,
-                  Comment => To_String (Description));
+                  Id         => To_String (Ada_Name),
+                  Typ        => -Ada_Type,
+                  Offset     => 0,
+                  LSB        => Index,
+                  MSB        => Index + Ada_Type_Size - 1,
+                  Is_Aliased => False,
+                  Comment    => To_String (Description));
 
             elsif Default_Id = Null_Unbounded_String then
                Add_Field
                  (Rec,
-                  Id      => To_String (Ada_Name),
-                  Typ     => -Ada_Type,
-                  Offset  => 0,
-                  LSB     => Index,
-                  MSB     => Index + Ada_Type_Size - 1,
-                  Default => Default,
-                  Comment => To_String (Description));
+                  Id         => To_String (Ada_Name),
+                  Typ        => -Ada_Type,
+                  Offset     => 0,
+                  LSB        => Index,
+                  MSB        => Index + Ada_Type_Size - 1,
+                  Default    => Default,
+                  Is_Aliased => False,
+                  Comment    => To_String (Description));
 
             else
                Add_Field
                  (Rec,
-                  Id      => To_String (Ada_Name),
-                  Typ     => -Ada_Type,
-                  Offset  => 0,
-                  LSB     => Index,
-                  MSB     => Index + Ada_Type_Size - 1,
-                  Default => Default_Id,
-                  Comment => To_String (Description));
+                  Id         => To_String (Ada_Name),
+                  Typ        => -Ada_Type,
+                  Offset     => 0,
+                  LSB        => Index,
+                  MSB        => Index + Ada_Type_Size - 1,
+                  Default    => Default_Id,
+                  Is_Aliased => False,
+                  Comment    => To_String (Description));
             end if;
 
             Default_Id := Null_Unbounded_String;

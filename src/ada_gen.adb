@@ -620,7 +620,9 @@ package body Ada_Gen is
          declare
             Id   : constant String := Get_Id (F);
             Line : constant String :=
-                     (1 .. 6 => ' ') & Id & " : " & To_String (F.Typ);
+              (1 .. 6 => ' ') & Id & " : " &
+              (if F.Is_Aliased then "aliased " else "") &
+              To_String (F.Typ);
          begin
             Ada.Text_IO.Put (File, Line);
 
@@ -783,7 +785,9 @@ package body Ada_Gen is
             end if;
             Ada.Text_IO.Put (File, (1 .. 4 * 3 => ' '));
             Ada.Text_IO.Put_Line
-              (File, To_String (F.Id) & " : " & To_String (F.Typ) & ";");
+              (File, To_String (F.Id) & " : " &
+                 (if F.Is_Aliased then "aliased " else "") &
+                   To_String (F.Typ) & ";");
          end loop;
       end loop;
 
@@ -1988,6 +1992,7 @@ package body Ada_Gen is
       MSB         : Natural;
       Has_Default : Boolean;
       Default     : Unbounded_String;
+      Is_Aliased  : Boolean;
       Comment     : String := "")
    is
       Idx     : Natural := 0;
@@ -2010,6 +2015,7 @@ package body Ada_Gen is
           MSB         => MSB,
           Has_Default => Has_Default,
           Default     => Default,
+          Is_Aliased  => Is_Aliased,
           Comment     => New_Comment (Comment, Strip => True)));
    end Add_Field_Internal;
 
@@ -2024,6 +2030,7 @@ package body Ada_Gen is
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
+      Is_Aliased  : Boolean;
       Comment     : String := "")
    is
    begin
@@ -2036,6 +2043,7 @@ package body Ada_Gen is
          MSB         => MSB,
          Has_Default => False,
          Default     => Null_Unbounded_String,
+         Is_Aliased  => Is_Aliased,
          Comment     => Comment);
    end Add_Field;
 
@@ -2051,6 +2059,7 @@ package body Ada_Gen is
       LSB         : Natural;
       MSB         : Natural;
       Default     : Unsigned;
+      Is_Aliased  : Boolean;
       Comment     : String := "")
    is
    begin
@@ -2063,6 +2072,7 @@ package body Ada_Gen is
          MSB         => MSB,
          Has_Default => True,
          Default     => To_Unbounded_String (To_Hex (Default)),
+         Is_Aliased  => Is_Aliased,
          Comment     => Comment);
    end Add_Field;
 
@@ -2078,6 +2088,7 @@ package body Ada_Gen is
       LSB         : Natural;
       MSB         : Natural;
       Default     : Unbounded_String;
+      Is_Aliased  : Boolean;
       Comment     : String := "")
    is
    begin
@@ -2090,6 +2101,7 @@ package body Ada_Gen is
          MSB         => MSB,
          Has_Default => True,
          Default     => Default,
+         Is_Aliased  => Is_Aliased,
          Comment     => Comment);
    end Add_Field;
 
@@ -2164,6 +2176,7 @@ package body Ada_Gen is
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
+      Is_Aliased  : Boolean;
       Comment     : String := "")
    is
       Idx     : Natural := 0;
@@ -2188,6 +2201,7 @@ package body Ada_Gen is
           MSB         => MSB,
           Has_Default => False,
           Default     => Null_Unbounded_String,
+          Is_Aliased  => Is_Aliased,
           Comment     => New_Comment (Comment, Strip => True)));
    end Add_Field;
 

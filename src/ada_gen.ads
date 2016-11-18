@@ -272,6 +272,7 @@ package Ada_Gen is
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
+      Is_Aliased  : Boolean;
       Comment     : String := "");
 
    procedure Add_Field
@@ -282,6 +283,7 @@ package Ada_Gen is
       LSB         : Natural;
       MSB         : Natural;
       Default     : Unsigned;
+      Is_Aliased  : Boolean;
       Comment     : String := "");
    procedure Add_Field
      (Rec         : in out Ada_Type_Record'Class;
@@ -291,6 +293,7 @@ package Ada_Gen is
       LSB         : Natural;
       MSB         : Natural;
       Default     : Unbounded_String;
+      Is_Aliased  : Boolean;
       Comment     : String := "");
    --  Adds a new field to the record 'rec'
    --  Id : The ID of the field
@@ -318,6 +321,7 @@ package Ada_Gen is
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
+      Is_Aliased  : Boolean;
       Comment     : String := "");
 
    ---------------
@@ -488,6 +492,7 @@ private
       MSB         : Natural;
       Has_Default : Boolean;
       Default     : Unbounded_String;
+      Is_Aliased  : Boolean;
       Comment     : Ada_Comment;
    end record;
 
