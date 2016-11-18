@@ -9790,10 +9790,17 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <bitWidth>1</bitWidth>
             </field>
             <field>
-              <name>SDMMCSEL</name>
-              <description>SDMMC clock source
+              <name>SDMMC1SEL</name>
+              <description>SDMMC1 clock source
               selection</description>
               <bitOffset>28</bitOffset>
+              <bitWidth>1</bitWidth>
+            </field>
+            <field>
+              <name>SDMMC2SEL</name>
+              <description>SDMMC2 clock source
+              selection</description>
+              <bitOffset>29</bitOffset>
               <bitWidth>1</bitWidth>
             </field>
           </fields>
@@ -58718,7 +58725,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           <name>JPEG_CR</name>
           <displayName>JPEG_CR</displayName>
           <description>JPEG control register</description>
-          <addressOffset>0x20</addressOffset>
+          <addressOffset>0x30</addressOffset>
           <size>0x20</size>
           <resetValue>0x00000000</resetValue>
           <fields>
@@ -58811,7 +58818,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           <name>JPEG_SR</name>
           <displayName>JPEG_SR</displayName>
           <description>JPEG status register</description>
-          <addressOffset>0x24</addressOffset>
+          <addressOffset>0x34</addressOffset>
           <size>0x20</size>
           <access>read-only</access>
           <resetValue>0x00000000</resetValue>
@@ -58864,7 +58871,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           <name>JPEG_CFR</name>
           <displayName>JPEG_CFR</displayName>
           <description>JPEG clear flag register</description>
-          <addressOffset>0x28</addressOffset>
+          <addressOffset>0x38</addressOffset>
           <size>0x20</size>
           <access>write-only</access>
           <resetValue>0x00000000</resetValue>
@@ -58889,7 +58896,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           <name>JPEG_DIR</name>
           <displayName>JPEG_DIR</displayName>
           <description>JPEG data input register</description>
-          <addressOffset>0x2C</addressOffset>
+          <addressOffset>0x40</addressOffset>
           <size>0x20</size>
           <access>write-only</access>
           <resetValue>0x00000000</resetValue>
@@ -58906,7 +58913,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           <name>JPEG_DOR</name>
           <displayName>JPEG_DOR</displayName>
           <description>JPEG data output register</description>
-          <addressOffset>0x30</addressOffset>
+          <addressOffset>0x44</addressOffset>
           <size>0x20</size>
           <access>read-only</access>
           <resetValue>0x00000000</resetValue>
@@ -58918,6 +58925,114 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <bitWidth>32</bitWidth>
             </field>
           </fields>
+        </register>
+        <register>
+          <name>QMEM0</name>
+          <description>Quantization table</description>
+          <addressOffset>0x50</addressOffset>
+          <size>0x20</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <dim>16</dim>
+        </register>
+        <register>
+          <name>QMEM1</name>
+          <description>Quantization table</description>
+          <addressOffset>0x90</addressOffset>
+          <size>0x20</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <dim>16</dim>
+        </register>
+        <register>
+          <name>QMEM2</name>
+          <description>Quantization table</description>
+          <addressOffset>0xD0</addressOffset>
+          <size>0x20</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <dim>16</dim>
+        </register>
+        <register>
+          <name>QMEM3</name>
+          <description>Quantization table</description>
+          <addressOffset>0x110</addressOffset>
+          <size>0x20</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <dim>16</dim>
+        </register>
+        <register>
+          <name>HUFFMIN</name>
+          <description>HuffMin register</description>
+          <addressOffset>0x150</addressOffset>
+          <size>0x20</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <dim>16</dim>
+        </register>
+        <register>
+          <name>HUFFBASE</name>
+          <description>HuffBase register</description>
+          <addressOffset>0x190</addressOffset>
+          <size>0x20</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <dim>32</dim>
+        </register>
+        <register>
+          <name>HUFFSYMB</name>
+          <description>HuffSymb register</description>
+          <addressOffset>0x210</addressOffset>
+          <size>0x20</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <dim>84</dim>
+        </register>
+        <register>
+          <name>DHTMEM</name>
+          <description>JPEG DHTMem tables</description>
+          <addressOffset>0x360</addressOffset>
+          <size>0x20</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <dim>103</dim>
+        </register>
+        <register>
+          <name>HUFFENC_AC0</name>
+          <description>JPEG encoder, AC Huffman table 0</description>
+          <addressOffset>0x500</addressOffset>
+          <size>0x20</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <dim>88</dim>
+        </register>
+        <register>
+          <name>HUFFENC_AC1</name>
+          <description>JPEG encoder, AC Huffman table 1</description>
+          <addressOffset>0x660</addressOffset>
+          <size>0x20</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <dim>88</dim>
+        </register>
+        <register>
+          <name>HUFFENC_DC0</name>
+          <description>JPEG encoder, DC Huffman table 0</description>
+          <addressOffset>0x7C0</addressOffset>
+          <size>0x20</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <dim>8</dim>
+        </register>
+        <register>
+          <name>HUFFENC_DC1</name>
+          <description>JPEG encoder, DC Huffman table 1</description>
+          <addressOffset>0x7E0</addressOffset>
+          <size>0x20</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <dim>8</dim>
         </register>
       </registers>
     </peripheral>
