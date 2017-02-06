@@ -24761,7 +24761,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
     </peripheral>
     <peripheral>
       <name>CRC</name>
-      <description>Cryptographic processor</description>
+      <description>Cyclic Redundancy Check (CRC) unit</description>
       <groupName>CRC</groupName>
       <baseAddress>0x40023000</baseAddress>
       <addressBlock>
