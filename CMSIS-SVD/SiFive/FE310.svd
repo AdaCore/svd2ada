@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<device schemaVersion="1.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_0.xsd" >
+  <vendor>SiFive</vendor>
+  <vendorID>SiFive</vendorID>
+  <name>FE310</name>
+  <series>nrf51</series>
+  <version></version>
+  <description>E31 CPU Coreplex, high-performance, 32-bit RV32IMAC core
+  </description>
+  <licenseText></licenseText>
+
+  <addressUnitBits>8</addressUnitBits>
+  <width>32</width>
+  <size>32</size>
+  <resetValue>0x00000000</resetValue>
+  <resetMask>0xFFFFFFFF</resetMask>
+
+  <cpu>
+    <name>E31</name>
+    <endian>little</endian>
+  </cpu>
+
+  <peripherals>
+    <peripheral>
+      <name>GPIO</name>
+      <description>General purpose input/output controller.</description>
+      <baseAddress>0x10012000</baseAddress>
+      <groupName>GPIO</groupName>
+      <size>32</size>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+        <register>
+          <name>VALUE</name>
+          <description>Pin value.</description>
+          <addressOffset>0x000</addressOffset>
+          <fields>
+            <field><name>PIN0</name><lsb>0</lsb><msb>0</msb></field>
+            <field><name>PIN1</name><lsb>1</lsb><msb>1</msb></field>
+            <field><name>PIN2</name><lsb>2</lsb><msb>2</msb></field>
+            <field><name>PIN3</name><lsb>3</lsb><msb>3</msb></field>
+            <field><name>PIN4</name><lsb>4</lsb><msb>4</msb></field>
+            <field><name>PIN5</name><lsb>5</lsb><msb>5</msb></field>
+            <field><name>PIN6</name><lsb>6</lsb><msb>6</msb></field>
+            <field><name>PIN7</name><lsb>7</lsb><msb>7</msb></field>
+            <field><name>PIN8</name><lsb>8</lsb><msb>8</msb></field>
+            <field><name>PIN9</name><lsb>9</lsb><msb>9</msb></field>
+            <field><name>PIN10</name><lsb>10</lsb><msb>10</msb></field>
+            <field><name>PIN11</name><lsb>11</lsb><msb>11</msb></field>
+            <field><name>PIN12</name><lsb>12</lsb><msb>12</msb></field>
+            <field><name>PIN13</name><lsb>13</lsb><msb>13</msb></field>
+            <field><name>PIN14</name><lsb>14</lsb><msb>14</msb></field>
+            <field><name>PIN15</name><lsb>15</lsb><msb>15</msb></field>
+            <field><name>PIN16</name><lsb>16</lsb><msb>16</msb></field>
+            <field><name>PIN17</name><lsb>17</lsb><msb>17</msb></field>
+            <field><name>PIN18</name><lsb>18</lsb><msb>18</msb></field>
+            <field><name>PIN19</name><lsb>19</lsb><msb>19</msb></field>
+            <field><name>PIN20</name><lsb>20</lsb><msb>20</msb></field>
+            <field><name>PIN21</name><lsb>21</lsb><msb>21</msb></field>
+            <field><name>PIN22</name><lsb>22</lsb><msb>22</msb></field>
+            <field><name>PIN23</name><lsb>23</lsb><msb>23</msb></field>
+            <field><name>PIN24</name><lsb>24</lsb><msb>24</msb></field>
+            <field><name>PIN25</name><lsb>25</lsb><msb>25</msb></field>
+            <field><name>PIN26</name><lsb>26</lsb><msb>26</msb></field>
+            <field><name>PIN27</name><lsb>27</lsb><msb>27</msb></field>
+            <field><name>PIN28</name><lsb>28</lsb><msb>28</msb></field>
+            <field><name>PIN29</name><lsb>29</lsb><msb>29</msb></field>
+            <field><name>PIN30</name><lsb>30</lsb><msb>30</msb></field>
+            <field><name>PIN31</name><lsb>31</lsb><msb>31</msb></field>
+          </fields>
+        </register>
+        <register derivedFrom="VALUE">
+          <name>INPUT_EN</name>
+          <description>Pin input enable.</description>
+          <addressOffset>0x004</addressOffset>
+        </register>
+        <register derivedFrom="VALUE">
+          <name>OUTPUT_EN</name>
+          <description>Pin output enable.</description>
+          <addressOffset>0x008</addressOffset>
+        </register>
+        <register derivedFrom="VALUE">
+          <name>PORT</name>
+          <description>Output port value.</description>
+          <addressOffset>0x00C</addressOffset>
+        </register>
+        <register derivedFrom="VALUE">
+          <name>PULLUP</name>
+          <description>Internal Pull-Up enable.</description>
+          <addressOffset>0x010</addressOffset>
+        </register>
+        <register derivedFrom="VALUE">
+          <name>DRIVE</name>
+          <description>Drive Strength.</description>
+          <addressOffset>0x014</addressOffset>
+        </register>
+        <register derivedFrom="VALUE">
+          <name>RISE_INT_EN</name>
+          <description>Rise interrupt enable.</description>
+          <addressOffset>0x018</addressOffset>
+        </register>
+        <register derivedFrom="VALUE">
+          <name>RISE_INT_PEMD</name>
+          <description>Rise interrupt pending.</description>
+          <addressOffset>0x01C</addressOffset>
+        </register>
+        <register derivedFrom="VALUE">
+          <name>FALL_INT_EN</name>
+          <description>Fall interrupt enable.</description>
+          <addressOffset>0x020</addressOffset>
+        </register>
+        <register derivedFrom="VALUE">
+          <name>FALL_INT_PEND</name>
+          <description>Fall interrupt pending.</description>
+          <addressOffset>0x024</addressOffset>
+        </register>
+        <register derivedFrom="VALUE">
+          <name>HIGH_INT_EN</name>
+          <description>High interrupt enable.</description>
+          <addressOffset>0x028</addressOffset>
+        </register>
+        <register derivedFrom="VALUE">
+          <name>HIGH_INT_PEND</name>
+          <description>High interrupt pending.</description>
+          <addressOffset>0x02C</addressOffset>
+        </register>
+        <register derivedFrom="VALUE">
+          <name>LOW_INT_EN</name>
+          <description>Low interrupt enable.</description>
+          <addressOffset>0x030</addressOffset>
+        </register>
+        <register derivedFrom="VALUE">
+          <name>LOW_INT_PEND</name>
+          <description>Low interrupt pending.</description>
+          <addressOffset>0x034</addressOffset>
+        </register>
+        <register derivedFrom="VALUE">
+          <name>IO_FUNC_EN</name>
+          <description>HW I/O function enable.</description>
+          <addressOffset>0x038</addressOffset>
+        </register>
+        <register derivedFrom="VALUE">
+          <name>IO_FUNC_SEL</name>
+          <description>HW I/O function select.</description>
+          <addressOffset>0x03C</addressOffset>
+        </register>
+        <register derivedFrom="VALUE">
+          <name>OUT_XOR</name>
+          <description>Output XOR (invert).</description>
+          <addressOffset>0x040</addressOffset>
+        </register>
+      </registers>
+    </peripheral> <!-- GPIO -->
+
+</peripherals>
+</device>
