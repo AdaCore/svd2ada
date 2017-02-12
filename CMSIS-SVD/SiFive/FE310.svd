@@ -22,7 +22,7 @@
 
   <peripherals>
     <peripheral>
-      <name>GPIO</name>
+      <name>GPIO0</name>
       <description>General purpose input/output controller.</description>
       <baseAddress>0x10012000</baseAddress>
       <groupName>GPIO</groupName>
@@ -158,5 +158,89 @@
       </registers>
     </peripheral> <!-- GPIO -->
 
-</peripherals>
+
+    <peripheral>
+      <name>UART0</name>
+      <description>Universal Asynchronous Receiver/Transmitter.</description>
+      <baseAddress>0x10013000</baseAddress>
+      <groupName>UART</groupName>
+      <size>32</size>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+        <register>
+          <name>TXDATA</name>
+          <description>Transmit Data Register.</description>
+          <addressOffset>0x000</addressOffset>
+          <fields>
+            <field><name>DATA</name><lsb>0</lsb><msb>7</msb></field>
+            <field><name>FULL</name><lsb>31</lsb><msb>31</msb></field>
+          </fields>
+        </register>
+        <register>
+          <name>RXDATA</name>
+          <description>Receive Data Register.</description>
+          <addressOffset>0x004</addressOffset>
+          <fields>
+            <field><name>DATA</name><lsb>0</lsb><msb>7</msb></field>
+            <field><name>EMPTY</name><lsb>31</lsb><msb>31</msb></field>
+          </fields>
+        </register>
+        <register>
+          <name>TXCTRL</name>
+          <description>Transmit Control Register.</description>
+          <addressOffset>0x008</addressOffset>
+          <fields>
+            <field><name>ENABLE</name><lsb>0</lsb><msb>0</msb></field>
+            <field><name>NSTOP</name><lsb>1</lsb><msb>1</msb></field>
+            <field><name>TXCNT</name><lsb>16</lsb><msb>18</msb></field>
+          </fields>
+        </register>
+        <register>
+          <name>RXCTRL</name>
+          <description>Receive Control Register.</description>
+          <addressOffset>0x00C</addressOffset>
+          <fields>
+            <field><name>ENABLE</name><lsb>0</lsb><msb>0</msb></field>
+            <field><name>RXCNT</name><lsb>16</lsb><msb>18</msb></field>
+          </fields>
+        </register>
+        <register>
+          <name>IP</name>
+          <description>Interrupt Pending Register.</description>
+          <addressOffset>0x0010</addressOffset>
+          <fields>
+            <field><name>TXWM</name><lsb>0</lsb><msb>0</msb></field>
+            <field><name>RXWM</name><lsb>1</lsb><msb>1</msb></field>
+          </fields>
+        </register>
+        <register derivedFrom="IP">
+          <name>IE</name>
+          <description>Interrupt Enable Register.</description>
+          <addressOffset>0x0014</addressOffset>
+        </register>
+        <register>
+          <name>DIV</name>
+          <description>Baud Rate Divisor Register (BAUD = Fin / (DIV + 1)).
+          </description>
+          <addressOffset>0x0018</addressOffset>
+          <fields>
+            <field><name>DIV</name><lsb>0</lsb><msb>15</msb></field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral> <!-- UART0 -->
+    <peripheral derivedFrom="UART0">
+      <name>UART1</name>
+      <description>Universal Asynchronous Receiver/Transmitter.</description>
+      <baseAddress>0x10023000</baseAddress>
+      <groupName>UART</groupName>
+    </peripheral> <!-- UART1 -->
+  </peripherals>
 </device>
