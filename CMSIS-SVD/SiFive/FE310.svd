@@ -7,7 +7,6 @@
   <version></version>
   <description>E31 CPU Coreplex, high-performance, 32-bit RV32IMAC core
   </description>
-  <licenseText></licenseText>
 
   <addressUnitBits>8</addressUnitBits>
   <width>32</width>
