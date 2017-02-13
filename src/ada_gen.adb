@@ -411,8 +411,8 @@ package body Ada_Gen is
         or else Element.Size = 64
       then
          Ada.Text_IO.Put_Line
-           (File, "   subtype " & To_String (Element.Id) &
-              " is Interfaces.Unsigned_" & To_String (Element.Size) & ";");
+           (File, "   type " & To_String (Element.Id) &
+              " is new Interfaces.Unsigned_" & To_String (Element.Size) & ";");
       else
          Ada.Text_IO.Put
            (File, "   type " & To_String (Element.Id) &
