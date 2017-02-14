@@ -175,42 +175,57 @@ package body Ada_Gen is
    procedure Set_License_Text (Text : Unbounded_String)
    is
       Is_New_Line : Boolean := True;
-      White_Space : Unbounded_String;
       J           : Natural := 1;
+
+      function Valid_Index (Index : Natural) return Boolean
+        is (Index <= Length (Text));
+
    begin
-      Append (G_License_Text, "--  ");
+      while Valid_Index (J) loop
 
-      while J <= Length (Text) loop
-         if Element (Text, J) = ASCII.CR
-           or else Element (Text, J) = ASCII.LF
-         then
-            J := J + 1;
+         --  Beginning of a line...
+         Is_New_Line := True;
 
-         elsif J < Length (Text)
-           and then Slice (Text, J, J + 1) = "\n" then
-            Append (G_License_Text, ASCII.LF & "--  ");
-            Is_New_Line := True;
-            White_Space := Null_Unbounded_String;
-            J := J + 2;
+         --  ... add the comment marker.
+         Append (G_License_Text, "--");
 
-         elsif Is_New_Line then
-            if J < Length (Text) and then Slice (Text, J, J + 1) = "  " then
+         --  Process all the characters until end of text or a new line marker
+         Line_Loop :  while Valid_Index (J) loop
+
+            if (Is_New_Line and then Element (Text, J) = ' ')
+              or else
+                Element (Text, J) = ASCII.CR
+              or else
+                Element (Text, J) = ASCII.LF
+            then
+               --  Ignore leading white space and CR and LF from the input SVD
+               --  file.
+               J := J + 1;
+
+            elsif Valid_Index (J + 1)
+              and then Slice (Text, J, J + 1) = "\n" then
+               --  New line delimiter in the input license text
+
+               --  Skip it
                J := J + 2;
+
+               --  Start new line in the output
+               Append (G_License_Text, ASCII.LF);
+
+               --  Start procesing the next line
+               exit Line_Loop;
+            else
+               if Is_New_Line then
+                  --  First character of a new line, we know that the line will
+                  --  not be empty so we can add the two leading white spaces
+                  --  of the comment.
+                  Append (G_License_Text, "  ");
+                  Is_New_Line := False;
+               end if;
+               Append (G_License_Text, Element (Text, J));
+               J := J + 1;
             end if;
-
-            Is_New_Line := False;
-
-         elsif Element (Text, J) = ' ' then
-            --  Trim right each line
-            Append (White_Space, " ");
-            J := J + 1;
-
-         else
-            Append (G_License_Text, White_Space);
-            Append (G_License_Text, Element (Text, J));
-            White_Space := Null_Unbounded_String;
-            J := J + 1;
-         end if;
+         end loop Line_Loop;
       end loop;
    end Set_License_Text;
 
