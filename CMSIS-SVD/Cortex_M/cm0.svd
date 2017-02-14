@@ -1,0 +1,928 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  Copyright (C) 2016 AdaCore
+ -->
+
+<device schemaVersion="1.2" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="CMSIS-SVD.xsd" >
+  <peripherals>
+    <peripheral>
+      <name>NVIC</name>
+      <baseAddress>0xE000E100</baseAddress>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x450</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+        <register>
+          <name>NVIC_ISER</name>
+          <description>Interrupt Set-Enable Registers</description>
+          <addressOffset>0x00</addressOffset>
+          <size>32</size>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>NVIC_ICER</name>
+          <description>Interrupt Clear-Enable Registers</description>
+          <addressOffset>0x80</addressOffset>
+          <size>32</size>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>NVIC_ISPR</name>
+          <description>Interrupt Set-Pending Registers</description>
+          <addressOffset>0x100</addressOffset>
+          <size>32</size>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>NVIC_ICPR</name>
+          <description>Interrupt Clear-Pending Registers</description>
+          <addressOffset>0x180</addressOffset>
+          <size>32</size>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>NVIC_IPR</name>
+          <description>Interrupt Priority Register</description>
+          <addressOffset>0x300</addressOffset>
+          <size>32</size>
+          <access>read-only</access>
+          <dim>8</dim>
+          <dimIndex>0-7</dimIndex>
+          <dimIncrement>4</dimIncrement>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>SCB</name>
+      <description>System control block</description>
+      <groupName>SCB</groupName>
+      <baseAddress>0xE000ED00</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x08</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+
+        <register>
+          <name>CPUID</name>
+          <description>CPUID Base Register</description>
+          <addressOffset>0x00</addressOffset>
+          <size>32</size>
+          <resetValue>0x411FC271</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Revision</name>
+              <description>Revision number, the p value in the rnpn product revision identifier.</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>4</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>p0</name>
+                  <description>Patch 0</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>p1</name>
+                  <description>Patch 1</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>p2</name>
+                  <description>Patch 2</description>
+                  <value>2</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>PartNo</name>
+              <description>Part number of the processor.</description>
+              <bitOffset>4</bitOffset>
+              <bitWidth>12</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Cortex_M7</name>
+                  <description>Cortes-M7</description>
+                  <value>0xC27</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>Constant</name>
+              <description>Reads as 0xF.</description>
+              <bitOffset>16</bitOffset>
+              <bitWidth>4</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>Variant</name>
+              <description>Variant number, the r value in the rnpn product revision identifier.</description>
+              <bitOffset>20</bitOffset>
+              <bitWidth>4</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>r0</name>
+                  <description>Revision 0</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>r1</name>
+                  <description>Revision 1</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>Implementer</name>
+              <description>Implementer code.</description>
+              <bitOffset>24</bitOffset>
+              <bitWidth>8</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>ARM</name>
+                  <description>ARM</description>
+                  <value>0x41</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>ICSR</name>
+          <description>Interrupt Control and State Register</description>
+          <addressOffset>0x04</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>VECTACTIVE</name>
+              <description>Contains the active exception number.
+                Subtract 16 from this value to obtain the CMSIS IRQ number required to index into the
+                Interrupt Clear-Enable, Set-Enable, Clear-Pending, Set-Pending or Priority Registers.</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>6</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>VECTPENDING</name>
+              <description>Indicates the exception number of the highest priority pending
+                enabled exception.</description>
+              <bitOffset>12</bitOffset>
+              <bitWidth>6</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>ISRPENDING</name>
+              <description>Interrupt pending flag, excluding NMI and Faults</description>
+              <bitOffset>22</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>PENDSTCLR</name>
+              <description>SysTick exception clear-pending bit.</description>
+              <bitOffset>25</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>write-only</access>
+            </field>
+            <field>
+              <name>PENDSTSET</name>
+              <description>SysTick exception set-pending bit.</description>
+              <bitOffset>26</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>PENDSVCLR</name>
+              <description>PendSV clear-pending bit.</description>
+              <bitOffset>27</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>write-only</access>
+            </field>
+            <field>
+              <name>PENDSVSET</name>
+              <description>PendSV set-pending bit.</description>
+              <bitOffset>28</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>NMIPENDSET</name>
+              <description>NMI set-pending bit.</description>
+              <bitOffset>31</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>AIRCR</name>
+          <description>Application Interrupt and Reset Control Register</description>
+          <addressOffset>0x0C</addressOffset>
+          <size>32</size>
+          <resetValue>0xFA050000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>VECTCLRACTIVE</name>
+              <description>Reserved for debug use. This bit reads as 0. When
+              writing to the register youmust write 0 to this bit, otherwise
+              behavior is Unpredictable.</description>
+              <bitOffset>1</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>write-only</access>
+            </field>
+            <field>
+              <name>SYSRESETREQ</name>
+              <description>System reset request bit setting is implementation defined.</description>
+              <bitOffset>2</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>write-only</access>
+            </field>
+            <field>
+              <name>ENDIANNESS</name>
+              <description>Data endianness bit setting is implementation defined.</description>
+              <bitOffset>15</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Little_Endian</name>
+                  <description>Data is little endian</description>
+                  <value>0x0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Big_Endian</name>
+                  <description>Data is big endian</description>
+                  <value>0x1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>VECTKEY</name>
+              <description>Register key. On write, write 0x5FA to VECTKEY, otherwise
+                the write is ignored. Reads as 0xFA05</description>
+              <bitOffset>16</bitOffset>
+              <bitWidth>16</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Key</name>
+                  <description>The write key</description>
+                  <value>0x05FA</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Key_Read</name>
+                  <description>The read key</description>
+                  <value>0xFA05</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>SCR</name>
+          <description>System Control Register</description>
+          <addressOffset>0x10</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>SLEEPONEXIT</name>
+              <description>Indicates sleep-on-exit when returning from Handler mode to Thread mode</description>
+              <bitOffset>1</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>SLEEPDEEP</name>
+              <description>Controls whether the processor uses sleep or deep sleep as its
+                low-power mode</description>
+              <bitOffset>2</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>SEVONPEND</name>
+              <description>Send event on pending bit</description>
+              <bitOffset>4</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>CCR</name>
+          <description>Configuration and Control Register</description>
+          <addressOffset>0x14</addressOffset>
+          <size>32</size>
+          <resetValue>0x00000200</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>UNALIGNED_TRP</name>
+              <description>Enables unalign access traps.</description>
+              <bitOffset>3</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>STKALIGN</name>
+              <description>Always reads-as-one. It indicates stack alignment on exception
+                entry is 8-byte aligned.</description>
+              <bitOffset>9</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>SHPR2</name>
+          <description>System Handler Priority Register 2</description>
+          <addressOffset>0x1C</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>PRI_11</name>
+              <description>Priority of the system handler, SVCall</description>
+              <bitOffset>24</bitOffset>
+              <bitWidth>8</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>SHPR3</name>
+          <description>System Handler Priority Register 3</description>
+          <addressOffset>0x20</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>PRI_14</name>
+              <description>Priority of the system handler, PendSV</description>
+              <bitOffset>16</bitOffset>
+              <bitWidth>8</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>PRI_15</name>
+              <description>Priority of the system handler, SysTick</description>
+              <bitOffset>24</bitOffset>
+              <bitWidth>8</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>SysTick</name>
+      <description>24Bit System Tick Timer for use in RTOS</description>
+      <baseAddress>0xE000E010</baseAddress>
+      <prependToName>SYST_</prependToName>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x10</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+        <register>
+          <name>CSR</name>
+          <description>SysTick Control and Status Register</description>
+          <addressOffset>0</addressOffset>
+          <size>32</size>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>ENABLE</name>
+              <description>Enable SysTick Timer</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>counter disabled</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Enable</name>
+                  <description>counter enabled</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>TICKINT</name>
+              <description>Generate Tick Interrupt</description>
+              <bitOffset>1</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Enable</name>
+                  <description>Counting down to zero does not assert the
+                  SysTick exception request</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Counting down to zero asserts the
+                  SysTick exception request</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>CLKSOURCE</name>
+              <description>Source to count from</description>
+              <bitOffset>2</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>External_Clk</name>
+                  <description>External Clock</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CPU_Clk</name>
+                  <description>CPU Clock</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>COUNTFLAG</name>
+              <description>SysTick counted to zero</description>
+              <bitOffset>16</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>RVR</name>
+          <description>SysTick Reload Value Register</description>
+          <addressOffset>0x4</addressOffset>
+          <size>32</size>
+          <resetValue>0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>RELOAD</name>
+              <description>Value to auto reload SysTick after reaching zero</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>24</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>CVR</name>
+          <description>SysTick Current Value Register</description>
+          <addressOffset>0x8</addressOffset>
+          <size>32</size>
+          <resetValue>0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>CURRENT</name>
+              <description>Current value</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>24</bitWidth>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>CALIB</name>
+          <description>SysTick Calibration Value Register</description>
+          <addressOffset>0xC</addressOffset>
+          <size>32</size>
+          <resetValue>0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>TENMS</name>
+              <description>Reload value to use for 10ms timing</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>24</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>SKEW</name>
+              <description>Clock Skew</description>
+              <bitOffset>30</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Exact</name>
+                  <description>10ms calibration value is exact</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Inexact</name>
+                  <description>10ms calibration value is inexact, because of the clock frequency</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>NOREF</name>
+              <description>No Ref</description>
+              <bitOffset>31</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Ref_Clk_Available</name>
+                  <description>Ref Clk available</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Ref_Clk_Unavailable</name>
+                  <description>Ref Clk not available</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
+    <peripheral>
+      <name>Debug</name>
+      <version>1.0</version>
+      <baseAddress>0xE000ED00</baseAddress>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x100</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+
+        <!-- DFSR: Debug Fault Status Register -->
+        <register>
+          <name>DFSR</name>
+          <description>Debug Fault Status Register</description>
+          <addressOffset>0x30</addressOffset>
+          <size>32</size>
+          <access>read-write</access>
+
+          <fields>
+            <field>
+              <name>HALTED</name>
+              <bitRange>[0:0]</bitRange>
+            </field>
+            <field>
+              <name>BKPT</name>
+              <description>BKPT instruction executed or breakpoint match in
+              FPB.</description>
+              <bitRange>[1:1]</bitRange>
+            </field>
+            <field>
+              <name>DWTTRAP</name>
+              <description>Data Watchpoint and Trace trap. Indicates that the
+              core halted due to at least one DWT trap event.</description>
+              <bitRange>[2:2]</bitRange>
+            </field>
+            <field>
+              <name>VCATCH</name>
+              <description>Vector catch triggered. Corresponding FSR will
+              contain the primary cause of the exception.</description>
+              <bitRange>[3:3]</bitRange>
+            </field>
+            <field>
+              <name>EXTERNAL</name>
+              <description>An asynchronous exception generated due to the
+              assertion of EDBGRQ. </description>
+              <bitRange>[4:4]</bitRange>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DHCSR: Debug Halting Control and Status Register -->
+        <cluster>
+          <name>DHCSR</name>
+          <description>Debug Halting Control and Status Register</description>
+          <addressOffset>0xF0</addressOffset>
+          <register>
+            <name>Read</name>
+            <addressOffset>0x00</addressOffset>
+            <size>32</size>
+            <access>read-only</access>
+            <fields>
+              <field>
+                <name>C_DEBUGGEN</name>
+                <bitRange>[0:0]</bitRange>
+              </field>
+              <field>
+                <name>C_HALT</name>
+                <bitRange>[1:1]</bitRange>
+              </field>
+              <field>
+                <name>C_STEP</name>
+                <bitRange>[2:2]</bitRange>
+              </field>
+              <field>
+                <name>C_MASKINTS</name>
+                <bitRange>[3:3]</bitRange>
+              </field>
+              <field>
+                <name>C_SNAPSTALL</name>
+                <bitRange>[5:5]</bitRange>
+              </field>
+              <field>
+                <name>S_REGRDY</name>
+                <bitRange>[16:16]</bitRange>
+                <access>read-only</access>
+              </field>
+              <field>
+                <name>S_HALT</name>
+                <bitRange>[17:17]</bitRange>
+                <access>read-only</access>
+              </field>
+              <field>
+                <name>S_SLEEP</name>
+                <bitRange>[18:18]</bitRange>
+                <access>read-only</access>
+              </field>
+              <field>
+                <name>S_LOCKUP</name>
+                <bitRange>[19:19]</bitRange>
+                <access>read-only</access>
+              </field>
+              <field>
+                <name>S_RETIRE_ST</name>
+                <bitRange>[24:24]</bitRange>
+                <access>read-only</access>
+              </field>
+              <field>
+                <name>S_RESET_ST</name>
+              <bitRange>[25:25]</bitRange>
+              <access>read-only</access>
+              </field>
+            </fields>
+          </register>
+          <register>
+            <name>Write</name>
+            <addressOffset>0x00</addressOffset>
+            <size>32</size>
+            <access>write-only</access>
+            <alternateRegister>DHCSR_Read</alternateRegister>
+            <fields>
+              <field>
+                <name>C_DEBUGGEN</name>
+                <bitRange>[0:0]</bitRange>
+              </field>
+              <field>
+                <name>C_HALT</name>
+                <bitRange>[1:1]</bitRange>
+              </field>
+              <field>
+                <name>C_STEP</name>
+                <bitRange>[2:2]</bitRange>
+              </field>
+              <field>
+                <name>C_MASKINTS</name>
+                <bitRange>[3:3]</bitRange>
+              </field>
+              <field>
+                <name>C_SNAPSTALL</name>
+                <bitRange>[5:5]</bitRange>
+              </field>
+              <field>
+                <name>S_RESET_ST</name>
+                <description>Debug Key. The value 0xA05F must be written to
+                enable write accesses to bits [15:0], otherwise the write
+                access will be ignored. Read behavior of bits [31:16] is as
+                listed below.</description>
+                <bitRange>[31:16]</bitRange>
+              </field>
+            </fields>
+          </register>
+        </cluster>
+
+        <!-- DCRSR: Debug Core Register Selector Register -->
+        <register>
+          <name>DCRSR</name>
+          <description>Debug Core Register Selector Register: The DCRSR
+          write-only register generates a handshake to the core to transfer the
+          selected register to/from the DCRDR. The DHCSR S_REGRDY bit is
+          cleared when the DCRSR is written, and remains clear until the core
+          transaction completes. This register is only accessible from Debug
+          state.</description>
+          <addressOffset>0xF4</addressOffset>
+          <size>32</size>
+          <access>write-only</access>
+
+          <fields>
+            <field>
+              <name>HALTED</name>
+              <bitRange>[4:0]</bitRange>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Register_0</name>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_1</name>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_2</name>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_3</name>
+                  <value>3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_4</name>
+                  <value>4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_5</name>
+                  <value>5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_6</name>
+                  <value>6</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_7</name>
+                  <value>7</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_8</name>
+                  <value>8</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_9</name>
+                  <value>9</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_10</name>
+                  <value>10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_11</name>
+                  <value>11</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Register_12</name>
+                  <value>12</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Current_SP</name>
+                  <value>13</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Link_Rregister</name>
+                  <value>14</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Debug_Return_Address</name>
+                  <value>15</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>xPSR</name>
+                  <value>16</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>MSP</name>
+                  <value>17</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>PSP</name>
+                  <value>18</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CONTROL_FAULTMASK_BASEPRI_PRIMASK</name>
+                  <value>19</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>REGWnR</name>
+              <description></description>
+              <bitRange>[16:16]</bitRange>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Write</name>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Read</name>
+                  <value>0</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+
+        <!-- DCRDR: Debug Core Register Data Register -->
+        <register>
+          <name>DCRDR</name>
+          <description>Debug Core Register Data Register</description>
+          <addressOffset>0xF8</addressOffset>
+          <size>32</size>
+          <access>read-write</access>
+        </register>
+
+        <!-- DEMCR: Debug Exception and Monitor Control Register -->
+        <register>
+          <name>DEMCR</name>
+          <description>Debug Exception and Monitor Control Register</description>
+          <addressOffset>0xFC</addressOffset>
+          <size>32</size>
+          <access>read-write</access>
+
+          <fields>
+            <field>
+              <name>VC_CORERESET</name>
+              <bitRange>[0:0]</bitRange>
+            </field>
+            <field>
+              <name>VC_MMERR</name>
+              <bitRange>[4:4]</bitRange>
+            </field>
+            <field>
+              <name>VC_NOCPERR</name>
+              <bitRange>[5:5]</bitRange>
+            </field>
+            <field>
+              <name>VC_CHKERR</name>
+              <bitRange>[6:6]</bitRange>
+            </field>
+            <field>
+              <name>VC_STATERR</name>
+              <bitRange>[7:7]</bitRange>
+            </field>
+            <field>
+              <name>VC_BUSERR</name>
+              <bitRange>[8:8]</bitRange>
+            </field>
+            <field>
+              <name>VC_INTERR</name>
+              <bitRange>[9:9]</bitRange>
+            </field>
+            <field>
+              <name>VC_HARDERR</name>
+              <bitRange>[10:10]</bitRange>
+            </field>
+            <field>
+              <name>MON_EN</name>
+              <bitRange>[16:16]</bitRange>
+            </field>
+            <field>
+              <name>MON_PEND</name>
+              <bitRange>[17:17]</bitRange>
+            </field>
+            <field>
+              <name>MON_STEP</name>
+              <bitRange>[18:18]</bitRange>
+            </field>
+            <field>
+              <name>MON_REQ</name>
+              <bitRange>[19:19]</bitRange>
+            </field>
+            <field>
+              <name>TRCENA</name>
+              <bitRange>[24:24]</bitRange>
+            </field>
+          </fields>
+        </register>
+
+      </registers>
+    </peripheral>
+  </peripherals>
+</device>
