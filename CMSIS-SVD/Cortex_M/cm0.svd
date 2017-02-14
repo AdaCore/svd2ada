@@ -50,11 +50,11 @@
           <name>NVIC_IPR</name>
           <description>Interrupt Priority Register</description>
           <addressOffset>0x300</addressOffset>
-          <size>8</size>
+          <size>32</size>
           <access>read-only</access>
-          <dim>32</dim>
-          <dimIndex>0-31</dimIndex>
-          <dimIncrement>1</dimIncrement>
+          <dim>8</dim>
+          <dimIndex>0-7</dimIndex>
+          <dimIncrement>4</dimIncrement>
         </register>
       </registers>
     </peripheral>
