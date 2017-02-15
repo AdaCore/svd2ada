@@ -43,7 +43,11 @@ package body Base_Types is
                else SVD2Ada_Utils.Base_Types_Package & ".");
 
    begin
-      return Pkg & "UInt" & To_String (Size);
+      if Size = 1 then
+         return Pkg & "Bit";
+      else
+         return Pkg & "UInt" & To_String (Size);
+      end if;
    end Target_Type;
 
    ---------
