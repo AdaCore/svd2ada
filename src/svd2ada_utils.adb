@@ -28,6 +28,7 @@ package body SVD2Ada_Utils is
    G_Use_Boolean : Boolean := False;
    G_Types_Pkg   : Unbounded_String := Null_Unbounded_String;
    G_Root_Pkg    : Unbounded_String := Null_Unbounded_String;
+   G_Use_UInt    : Boolean := False;
 
    -------------------------
    -- Executable_Location --
@@ -133,6 +134,26 @@ package body SVD2Ada_Utils is
    begin
       return G_Use_Boolean;
    end Use_Boolean_For_Bit;
+
+   ------------------
+   -- Set_Use_UInt --
+   ------------------
+
+   procedure Set_Use_UInt (Value : Boolean)
+   is
+   begin
+      G_Use_UInt := Value;
+   end Set_Use_UInt;
+
+   ---------------------
+   -- Use_UInt_Always --
+   ---------------------
+
+   function Use_UInt_Always return Boolean
+   is
+   begin
+      return G_Use_UInt;
+   end Use_UInt_Always;
 
    ----------------------------
    -- Set_Base_Types_Package --

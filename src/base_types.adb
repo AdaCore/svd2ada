@@ -45,6 +45,8 @@ package body Base_Types is
    begin
       if Size = 1 then
          return Pkg & "Bit";
+      elsif Size = 8 and then not SVD2Ada_Utils.Use_UInt_Always then
+         return Pkg & "Byte";
       else
          return Pkg & "UInt" & To_String (Size);
       end if;
