@@ -1,0 +1,311 @@
+    <peripheral>
+      <name>DWT</name>
+      <version>1.0</version>
+      <description>Data Watchpoint Trace</description>
+      <baseAddress>0xE0001000</baseAddress>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0xFB8</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+        <register>
+          <name>CTRL</name>
+          <description>Control Register</description>
+          <addressOffset>0</addressOffset>
+          <size>32</size>
+          <fields>
+            <field>
+              <name>NUMCOMP</name>
+              <description>Number of comparators</description>
+              <bitOffset>28</bitOffset>
+              <bitWidth>4</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>NOTRCPKT</name>
+              <description>No trace sampling and exception tracing</description>
+              <bitOffset>27</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>NOEXTTRIG</name>
+              <description>No external match signals</description>
+              <bitOffset>26</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>NOCYCCNT</name>
+              <description>No cycle counter</description>
+              <bitOffset>25</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>NOPRFCNT</name>
+              <description>No profiling counters</description>
+              <bitOffset>24</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>Reserved_23</name>
+              <description>Reserved bit 23</description>
+              <bitOffset>23</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-only</access>
+            </field>
+            <field>
+              <name>CYCEVTENA</name>
+              <description>enable Cycle count event</description>
+              <bitOffset>22</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>FOLDEVTENA</name>
+              <description>enable Folded instruction count event</description>
+              <bitOffset>21</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>LSUEVTENA</name>
+              <description>enable Load Store Unit (LSU) count event</description>
+              <bitOffset>20</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>SLEEPEVTENA</name>
+              <description>enable Sleep count event</description>
+              <bitOffset>19</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>EXCEVTENA</name>
+              <description>enable interrupt overhead event</description>
+              <bitOffset>18</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>CPIEVTENA</name>
+              <description>enable CPI count event</description>
+              <bitOffset>17</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>EXCTRCENA</name>
+              <description>enable interrupt event tracing</description>
+              <bitOffset>16</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>Reserved_13_15</name>
+              <description>Reserved bits 13..15</description>
+              <bitOffset>13</bitOffset>
+              <bitWidth>3</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>PCSAMPLENA</name>
+              <description>enable POSTCNT as timer for PC sample packets</description>
+              <bitOffset>12</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>SYNCTAP</name>
+              <description>???</description>
+              <bitOffset>10</bitOffset>
+              <bitWidth>2</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>CYCTAP</name>
+              <description>???</description>
+              <bitOffset>9</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>POSTINIT</name>
+              <description>???</description>
+              <bitOffset>5</bitOffset>
+              <bitWidth>4</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>POSTPRESET</name>
+              <description>???</description>
+              <bitOffset>1</bitOffset>
+              <bitWidth>4</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>CYCCNTENA</name>
+              <description>enable cycle counter</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>1</bitWidth>
+              <access>read-write</access>
+            </field>
+         </fields>
+        </register>
+        <register>
+          <name>CYCCNT</name>
+          <description>Cycle Count Register</description>
+          <addressOffset>4</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>CPICNT</name>
+          <description>CPI Count Register</description>
+          <addressOffset>8</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>EXCCNT</name>
+          <description>Exception Overhead Count Register</description>
+          <addressOffset>0xC</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>SLEEPCNT</name>
+          <description>Sleep Count Register</description>
+          <addressOffset>0x10</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>LSUCNT</name>
+          <description>LSU Count Register</description>
+          <addressOffset>0x14</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>FOLDCNT</name>
+          <description>Folded-instruction Count Register</description>
+          <addressOffset>0x18</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>PCSR</name>
+          <description>Program Counter Sample Register</description>
+          <addressOffset>0x1C</addressOffset>
+          <size>32</size>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>COMP0</name>
+          <description>Comparator Register 0</description>
+          <addressOffset>0x20</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>MASK0</name>
+          <description>Mask Register 0</description>
+          <addressOffset>0x24</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>FUNCTION0</name>
+          <description>Function Register 0</description>
+          <addressOffset>0x28</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>RESERVED0</name>
+          <description>Reserved 0</description>
+          <addressOffset>0x2C</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>COMP1</name>
+          <description>Comparator Register 1</description>
+          <addressOffset>0x30</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>MASK1</name>
+          <description>Mask Register 1</description>
+          <addressOffset>0x34</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>FUNCTION1</name>
+          <description>Function Register 1</description>
+          <addressOffset>0x38</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>RESERVED1</name>
+          <description>Reserved 1</description>
+          <addressOffset>0x3C</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>COMP2</name>
+          <description>Comparator Register 2</description>
+          <addressOffset>0x40</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>MASK2</name>
+          <description>Mask Register 2</description>
+          <addressOffset>0x44</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>FUNCTION2</name>
+          <description>Function Register 2</description>
+          <addressOffset>0x48</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>RESERVED2</name>
+          <description>Reserved 2</description>
+          <addressOffset>0x4C</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>COMP3</name>
+          <description>Comparator Register 3</description>
+          <addressOffset>0x50</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>MASK3</name>
+          <description>Mask Register 3</description>
+          <addressOffset>0x54</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>FUNCTION3</name>
+          <description>Function Register 3</description>
+          <addressOffset>0x58</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>LAR</name>
+          <description>Lock Access Register</description>
+          <addressOffset>0xFB0</addressOffset>
+          <size>32</size>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>LSR</name>
+          <description>Lock Status Register</description>
+          <addressOffset>0xFB4</addressOffset>
+          <size>32</size>
+          <access>read-only</access>
+        </register>
+       </registers>
+    </peripheral>
