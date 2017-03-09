@@ -1242,7 +1242,20 @@ package body Ada_Gen is
 
    procedure Add
      (Spec : in out Ada_Spec;
-      Elt  : Ada_Comment'Class)
+      Elt  : Ada_Comment)
+   is
+   begin
+      Spec.Elements.Append (Elt);
+      Elt.Added_In_Spec (Spec);
+   end Add;
+
+   ---------
+   -- Add --
+   ---------
+
+   procedure Add
+     (Spec : in out Ada_Spec;
+      Elt  : Ada_Comment_Box)
    is
    begin
       Spec.Elements.Append (Elt);
