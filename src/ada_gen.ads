@@ -40,43 +40,58 @@ package Ada_Gen is
 
    type Ada_Spec is private;
 
-   function New_Spec
-     (Name          : String;
-      Descr         : String;
-      Preelaborated : Boolean) return Ada_Spec;
-
-   function New_Child_Spec
-     (Name          : String;
-      Parent        : String;
-      Descr         : String;
-      Preelaborated : Boolean) return Ada_Spec;
-
-   function Id (Spec : Ada_Spec) return Unbounded_String;
-
-   function Is_Interfaces_Hierarchy
-     (Spec : Ada_Spec) return Boolean;
-
-   procedure Write_Spec
-     (Spec       : Ada_Spec;
-      Output_Dir : String);
-
-   procedure Add_Global_With (Spec : String);
-   --  Adds a with/use clause to this Spec on all generated spec from now on.
+   -----------------
+   -- With clause --
+   -----------------
 
    type Ada_With_Clause is private;
    --  with/use clauses
 
-   type Ada_Comment is tagged private;
+   function New_With_Clause
+     (Pkg         : String;
+      Use_Visible : Boolean := False) return Ada_With_Clause;
+
+   procedure Add_Global_With (Spec : String);
+   --  Adds a with/use clause to this Spec on all generated spec from now on.
+
+   -------------
+   -- Comment --
+   -------------
+
+   type Ada_Comment is private;
    --  A comment
 
-   type Ada_Comment_Box is new Ada_Comment with private;
+   function New_Comment
+     (Comment : String;
+      Strip   : Boolean) return Ada_Comment;
+
+   -----------------
+   -- Comment box --
+   -----------------
+
+   type Ada_Comment_Box is private;
    --  A comment within a box
    --  such as:
    -- -------------
    -- -- comment --
    -- -------------
 
+   function New_Comment_Box
+     (Comment : String) return Ada_Comment_Box;
+
+   ------------
+   -- Pragma --
+   ------------
+
    type Ada_Pragma is private;
+
+   function New_Pragma
+     (Identifier : String;
+      Comment    : String := "") return Ada_Pragma;
+
+   ----------------------
+   -- Type declaration --
+   ----------------------
 
    type Ada_Type is abstract tagged private;
    --  Base type for type definition
@@ -85,82 +100,6 @@ package Ada_Gen is
      (T1, T2 : Ada_Type) return Boolean is abstract;
    --  This should have been private, but visibility rule RM 3.9.3(10) do
    --  not let me do that.
-
-   type Ada_Type_Scalar is new Ada_Type with private;
-   --  A scalar type definition
-
-   type Ada_Subtype_Scalar is new Ada_Type with private;
-   --  A scalar subtype definition
-
-   type Ada_Type_Array is new Ada_Type with private;
-   --  An array type definition
-
-   type Ada_Type_Enum is new Ada_Type with private;
-   --  An enum type definition
-
-   type Ada_Enum_Value is private;
-
-   type Ada_Type_Record is new Ada_Type with private;
-   --  A record type definition
-
-   type Ada_Type_Union is new Ada_Type_Record with private;
-   --  A union record definition
-
-   type Ada_Constant_Value is private;
-   --  Some constant value
-
-   type Ada_Instance is private;
-   --  A global variable definition
-
-   procedure Add
-     (Spec : in out Ada_Spec;
-      Elt  : Ada_With_Clause);
-   procedure Add
-     (Spec : in out Ada_Spec;
-      Elt  : Ada_Comment'Class);
-   procedure Add
-     (Spec : in out Ada_Spec;
-      Elt  : Ada_Pragma);
-
-   procedure Add_No_Check
-     (Spec : in out Ada_Spec;
-      Elt  : Ada_Type'Class);
-   --  Adds a new type definition.
-   --  If a previous type has the same Id and different definition, then
-   --  a constraint_error is raised
-
-   procedure Add
-     (Spec : in out Ada_Spec;
-      Elt  : in out Ada_Type'Class);
-   --  Adds a new type definition.
-   --  If a previous type has the same Id and different definition, then
-   --  Elt's id is modified
-
-   procedure Add
-     (Spec : in out Ada_Spec;
-      Elt  : Ada_Constant_Value);
-   procedure Add
-     (Spec : in out Ada_Spec;
-      Elt  : Ada_Instance);
-
-   function New_With_Clause
-     (Pkg         : String;
-      Use_Visible : Boolean := False) return Ada_With_Clause;
-
-   function New_Comment
-     (Comment : String;
-      Strip   : Boolean) return Ada_Comment;
-
-   function New_Comment_Box
-     (Comment : String) return Ada_Comment_Box;
-
-   function New_Pragma
-     (Identifier : String;
-      Comment    : String := "") return Ada_Pragma;
-
-   -----------------------
-   -- Type declarations --
-   -----------------------
 
    function Id (Elt : Ada_Type'Class) return Unbounded_String;
    function Id (Elt : Ada_Type'Class) return String;
@@ -178,40 +117,42 @@ package Ada_Gen is
       Aspect : String);
    --  Generic method to add aspects to type definition
 
+   -------------------
+   -- Type: scalars --
+   -------------------
+
+   type Ada_Type_Scalar is new Ada_Type with private;
+   --  A scalar type definition
+
    overriding function Is_Similar
      (T1, T2 : Ada_Type_Scalar) return Boolean;
-   overriding function Is_Similar
-     (T1, T2 : Ada_Subtype_Scalar) return Boolean;
-   overriding function Is_Similar
-     (T1, T2 : Ada_Type_Array) return Boolean;
-   overriding function Is_Similar
-     (T1, T2 : Ada_Type_Enum) return Boolean;
-   overriding function Is_Similar
-     (T1, T2 : Ada_Type_Record) return Boolean;
-   overriding function Is_Similar
-     (T1, T2 : Ada_Type_Union) return Boolean;
-
-   ------------
-   -- Scalar --
-   ------------
 
    function New_Type_Scalar
      (Id      : String;
       Size    : Natural;
       Comment : String := "") return Ada_Type_Scalar;
 
+   function Target_Type
+     (Size            : Natural;
+      Fully_Qualified : Boolean := True) return Ada_Type'Class;
+
+   type Ada_Subtype_Scalar is new Ada_Type with private;
+   --  A scalar subtype definition
+
    function New_Subype_Scalar
      (Id      : String;
       Typ     : Ada_Type'Class;
       Comment : String := "") return Ada_Subtype_Scalar;
 
-   function Target_Type
-     (Size            : Natural;
-      Fully_Qualified : Boolean := True) return Ada_Type'Class;
+   overriding function Is_Similar
+     (T1, T2 : Ada_Subtype_Scalar) return Boolean;
 
-   ------------
-   -- Arrays --
-   ------------
+   ------------------
+   -- Type: arrays --
+   ------------------
+
+   type Ada_Type_Array is new Ada_Type with private;
+   --  An array type definition
 
    function New_Type_Array
      (Id           : String;
@@ -221,9 +162,18 @@ package Ada_Gen is
       Element_Type : Ada_Type'Class;
       Comment      : String := "") return Ada_Type_Array;
 
-   -----------
-   -- Enums --
-   -----------
+   overriding function Is_Similar
+     (T1, T2 : Ada_Type_Array) return Boolean;
+
+   -----------------
+   -- Type: enums --
+   -----------------
+
+   type Ada_Type_Enum is new Ada_Type with private;
+   --  An enum type definition
+
+   type Ada_Enum_Value is private;
+   --  A particular value of an enum type
 
    function Get_Boolean return Ada_Type_Enum;
 
@@ -232,24 +182,17 @@ package Ada_Gen is
       Size    : Natural := 0;
       Comment : String := "") return Ada_Type_Enum;
 
-   function Add_Enum_Id
-     (Spec    : Ada_Spec;
-      Enum    : in out Ada_Type_Enum;
-      Id      : String;
-      Comment : String := "") return Ada_Enum_Value;
-
-   function Add_Enum_Id
-     (Spec    : Ada_Spec;
-      Enum    : in out Ada_Type_Enum;
-      Id      : String;
-      Repr    : Unsigned;
-      Comment : String := "") return Ada_Enum_Value;
-
    function Id (Elt : Ada_Enum_Value) return Unbounded_String;
 
-   ------------
-   -- Record --
-   ------------
+   overriding function Is_Similar
+     (T1, T2 : Ada_Type_Enum) return Boolean;
+
+   -------------------
+   -- Type: records --
+   -------------------
+
+   type Ada_Type_Record is new Ada_Type with private;
+   --  A record type definition
 
    function New_Type_Record
      (Id      : String;
@@ -258,12 +201,6 @@ package Ada_Gen is
    procedure Add_Bit_Order_Aspect
      (Elt   : in out Ada_Type_Record'Class;
       Order : System.Bit_Order);
-
-   function Simplify
-     (Elt  : Ada_Type_Record;
-      Spec : in out Ada_Spec) return Ada_Type'Class;
-   --  If the record has just one field, then this returns the field with
-   --  the type name substituted with Elt's type name
 
    procedure Add_Field
      (Rec         : in out Ada_Type_Record'Class;
@@ -303,9 +240,21 @@ package Ada_Gen is
    --  MSB : The most significant bit after offset
    --  Desctr: Description of the field
 
-   ----------------
-   -- Union Type --
-   ----------------
+   function Simplify
+     (Elt  : Ada_Type_Record;
+      Spec : in out Ada_Spec) return Ada_Type'Class;
+   --  If the record has just one field, then this returns the field with
+   --  the type name substituted with Elt's type name
+
+   ------------------
+   -- Type: unions --
+   ------------------
+
+   overriding function Is_Similar
+     (T1, T2 : Ada_Type_Record) return Boolean;
+
+   type Ada_Type_Union is new Ada_Type_Record with private;
+   --  A union record definition
 
    function New_Type_Union
      (Id        : String;
@@ -324,9 +273,15 @@ package Ada_Gen is
       Is_Aliased  : Boolean;
       Comment     : String := "");
 
-   ---------------
-   -- Constants --
-   ---------------
+   overriding function Is_Similar
+     (T1, T2 : Ada_Type_Union) return Boolean;
+
+   --------------
+   -- Constant --
+   --------------
+
+   type Ada_Constant_Value is private;
+   --  Some constant value
 
    function New_Constant_Value
      (Id       : String;
@@ -339,9 +294,12 @@ package Ada_Gen is
    --  next to the constant identifier, else some space is left to align
    --  declarations
 
-   ---------------
-   -- Instances --
-   ---------------
+   --------------
+   -- Variable --
+   --------------
+
+   type Ada_Instance is private;
+   --  A global variable definition
 
    function New_Instance
      (Id           : String;
@@ -360,6 +318,77 @@ package Ada_Gen is
    procedure Add_Aspect
      (Elt    : in out Ada_Instance;
       Aspect : String);
+
+   --------------
+   -- Ada Spec --
+   --------------
+
+   function New_Spec
+     (Name          : String;
+      Descr         : String;
+      Preelaborated : Boolean) return Ada_Spec;
+
+   function New_Child_Spec
+     (Name          : String;
+      Parent        : String;
+      Descr         : String;
+      Preelaborated : Boolean) return Ada_Spec;
+
+   function Id (Spec : Ada_Spec) return Unbounded_String;
+
+   function Is_Interfaces_Hierarchy
+     (Spec : Ada_Spec) return Boolean;
+
+   procedure Write_Spec
+     (Spec       : Ada_Spec;
+      Output_Dir : String);
+
+   procedure Add
+     (Spec : in out Ada_Spec;
+      Elt  : Ada_With_Clause);
+   procedure Add
+     (Spec : in out Ada_Spec;
+      Elt  : Ada_Comment);
+   procedure Add
+     (Spec : in out Ada_Spec;
+      Elt  : Ada_Comment_Box);
+   procedure Add
+     (Spec : in out Ada_Spec;
+      Elt  : Ada_Pragma);
+
+   procedure Add_No_Check
+     (Spec : in out Ada_Spec;
+      Elt  : Ada_Type'Class);
+   --  Adds a new type definition.
+   --  If a previous type has the same Id and different definition, then
+   --  a constraint_error is raised
+
+   procedure Add
+     (Spec : in out Ada_Spec;
+      Elt  : in out Ada_Type'Class);
+   --  Adds a new type definition.
+   --  If a previous type has the same Id and different definition, then
+   --  Elt's id is modified
+
+   procedure Add
+     (Spec : in out Ada_Spec;
+      Elt  : Ada_Constant_Value);
+   procedure Add
+     (Spec : in out Ada_Spec;
+      Elt  : Ada_Instance);
+
+   function Add_Enum_Id
+     (Spec    : Ada_Spec;
+      Enum    : in out Ada_Type_Enum;
+      Id      : String;
+      Comment : String := "") return Ada_Enum_Value;
+
+   function Add_Enum_Id
+     (Spec    : Ada_Spec;
+      Enum    : in out Ada_Type_Enum;
+      Id      : String;
+      Repr    : Unsigned;
+      Comment : String := "") return Ada_Enum_Value;
 
 private
 
