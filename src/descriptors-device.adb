@@ -264,8 +264,7 @@ package body Descriptors.Device is
          ASCII.HT & ".word   __gnat_sv_call_trap  /* 11 SVCall. */");
       Put_Line
         (ASM,
-         ASCII.HT &
-           ".word   fault                /* 12 reserved for debug. */");
+         ASCII.HT & ".word   __gnat_bkpt_trap     /* 12 Breakpoint. */");
       Put_Line
         (ASM,
          ASCII.HT & ".word   fault                /* 13 reserved. */");
