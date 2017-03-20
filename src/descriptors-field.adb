@@ -205,7 +205,7 @@ package body Descriptors.Field is
 
       for J in reverse 1 .. Length (F2.Name) loop
          if Unbounded.Element (F2.Name, J) not in '0' .. '9' then
-            if J = Length (F1.Name) then
+            if J = Length (F2.Name) then
                N := 1;
             else
                N := Natural'Value (Slice (F2.Name, J + 1, Length (F2.Name)));
