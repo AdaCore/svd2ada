@@ -212,7 +212,9 @@ package body Descriptors.Field is
             end if;
 
             if N < First then
-               First := N;
+               --  We can't support decreasing numbering for field numbers
+               --  as we map it to an Ada array that has an increasing index
+               return False;
             end if;
 
             exit;
