@@ -921,8 +921,71 @@
             </field>
           </fields>
         </register>
-
       </registers>
     </peripheral>
+
+    <peripheral>
+      <name>DWT</name>
+      <version>1.0</version>
+      <description>Data Watchpoint Trace</description>
+      <baseAddress>0xE0001000</baseAddress>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x2C</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+        <register>
+          <name>CTRL</name>
+          <description>Control Register</description>
+          <addressOffset>0</addressOffset>
+          <size>32</size>
+          <fields>
+            <field>
+              <name>NUMCOMP</name>
+              <description>Number of comparators available</description>
+              <bitOffset>28</bitOffset>
+              <bitWidth>4</bitWidth>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>Reserved_0_27</name>
+              <description>Reserved bits 0..27</description>
+              <bitOffset>0</bitOffset>
+              <bitWidth>28</bitWidth>
+              <access>read-only</access>
+            </field>
+          </fields>
+        </register>     
+        <register>
+          <name>PCSR</name>
+          <description>Program Counter Sample Register</description>
+          <addressOffset>0x1C</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>COMP0</name>
+          <description>Comparator Register 0</description>
+          <addressOffset>0x20</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>MASK0</name>
+          <description>Mask Register 0</description>
+          <addressOffset>0x24</addressOffset>
+          <size>32</size>
+        </register>
+        <register>
+          <name>FUNCTION0</name>
+          <description>Function Register 0</description>
+          <addressOffset>0x28</addressOffset>
+          <size>32</size>
+        </register>
+        </registers>
+    </peripheral>
+
   </peripherals>
 </device>
