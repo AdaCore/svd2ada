@@ -361,16 +361,16 @@ package body Descriptors.Device is
                ("System tick"),
              Value       => -1));
 
-         if Slice (Device.Description, 1, 5) = "STM32" then
+         if Slice (Device.Description, 1, 5) = "STM32"
+	    and then Slice (Device.Description, 6, 7) /= "F0"
+	 then
             --  ??? Workaround for the STM32F* svd files that do not define the
             --  FPU Interrupt. The STM32F0 series do not have an FPU.
-            if not (Slice (Device.Description, 1, 7) = "STM32F0") then
-               Interrupts.Append
-                 ((Name        => To_Unbounded_String ("FPU"),
-                   Description => To_Unbounded_String
-                     ("FPU global interrupt"),
-                   Value       => 81));
-            end if;
+            Interrupts.Append
+              ((Name        => To_Unbounded_String ("FPU"),
+                Description => To_Unbounded_String
+                  ("FPU global interrupt"),
+                Value       => 81));
          end if;
 
       else
