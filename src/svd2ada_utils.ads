@@ -35,4 +35,13 @@ package SVD2Ada_Utils is
    function Root_Package return String;
    function In_Runtime return Boolean;
 
+   procedure Set_Gen_Trap_Handlers (Value : Boolean);
+   --  Force generation of trap handlers even if the root is not a run-time
+   --  package.
+
+   function Gen_Trap_Handlers return Boolean;
+   --  Returns True if the trap handlers (handler.S) should be generated.
+   --  Trap handlers are generated if the root is a run-time package or if the
+   --  user requested with a command line option.
+
 end SVD2Ada_Utils;

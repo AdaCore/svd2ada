@@ -332,7 +332,11 @@ package body Descriptors.Device is
                                 True);
       Old_Spec    : Ada_Gen.Ada_Spec;
       Max_Len     : Natural := 0;
-      Gen_RT_IRQ  : constant Boolean := Is_Interfaces_Hierarchy (Spec);
+
+      Gen_Trap_Handler : constant Boolean := SVD2Ada_Utils.Gen_Trap_Handlers;
+      --  Whether we generate trap handler vector file (handler.S)
+
+      In_Runtime  : constant Boolean := SVD2Ada_Utils.In_Runtime;
       --  Whether we generate Run-Time support files for IRQ handling
       --  This is activated when generating in the Interfaces hierarchy
 
@@ -341,7 +345,7 @@ package body Descriptors.Device is
       -- Interrupts --
       ----------------
 
-      if Gen_RT_IRQ then
+      if In_Runtime then
          Old_Spec := Spec;
          --  When generating stubs for the Interfaces run-time hierarchy, also
          --  generate the Ada.Exceptions.Name file from the interrupts list
@@ -349,6 +353,7 @@ package body Descriptors.Device is
                            "This is a version for the " &
                              To_String (Device.Description) & " MCU",
                            False);
+
          Add (Spec,
               New_Pragma
                 ("Implementation_Defined",
@@ -372,14 +377,12 @@ package body Descriptors.Device is
                   ("FPU global interrupt"),
                 Value       => 81));
          end if;
-
       else
          Old_Spec := Spec;
          Spec := New_Child_Spec ("Interrupts",
                                  To_String (Device.Name),
                                  "Definition of the device's interrupts",
                                  False);
-         Add (Spec, New_With_Clause ("Ada.Interrupts", True));
       end if;
 
       Add (Spec, New_Comment_Box ("Interrupts"));
@@ -395,32 +398,35 @@ package body Descriptors.Device is
 
       Interrupt_Sort.Sort (Interrupts);
 
-      for Int of Interrupts loop
-         if Length (Int.Name) > 4
-           and then Slice (Int.Name, Length (Int.Name) - 3,
-                           Length (Int.Name)) = "_IRQ"
-         then
-            Add (Spec,
-                 New_Constant_Value
-                   (Id       => Slice (Int.Name, 1, Length (Int.Name) - 4) &
-                                  "_Interrupt",
-                    Align_Id => Max_Len + 11,
-                    Typ      => "Interrupt_ID",
-                    Value    => To_String (Int.Value),
-                    Comment  => To_String (Int.Description)));
-         else
-            Add (Spec,
-                 New_Constant_Value
-                   (Id       => To_String (Int.Name) & "_Interrupt",
-                    Align_Id => Max_Len + 11,
-                    Typ      => "Interrupt_ID",
-                    Value    => To_String (Int.Value),
-                    Comment  => To_String (Int.Description)));
-         end if;
-      end loop;
+      declare
+         typ : constant String := (if In_Runtime then "Interrupt_ID" else "");
+         --  When generating code for the run-time, we use the
+         --  Ada.Interrupts.Interrupt_ID type. Otherwise, the interrupts are
+         --  declared as named number to avoid dependency on Ada.Interrupts
+         --  that may not be available, for instance when using ZFP run-time.
+      begin
+         for Int of Interrupts loop
+            declare
+               Id : constant String :=
+                 (if Ends_With (To_String (Int.Name), "_IRQ")
+                  then Slice (Int.Name, 1, Length (Int.Name) - 4)
+                  else To_String (Int.Name));
+               --  Remove the trailing _IRQ of the interrupt name, if any
+            begin
+               Add (Spec,
+                    New_Constant_Value
+                      (Id       => Id,
+                       Align_Id => Max_Len + 11,
+                       Typ      => Typ,
+                       Value    => To_String (Int.Value),
+                       Comment  => To_String (Int.Description)));
+            end;
+         end loop;
+      end;
 
-      if Gen_RT_IRQ then
-         Ada_Gen.Write_Spec (Spec, Output_Dir);
+      Ada_Gen.Write_Spec (Spec, Output_Dir);
+
+      if Gen_Trap_Handler then
          Dump_Handler_ASM (Device, Interrupts, Output_Dir);
       end if;
 

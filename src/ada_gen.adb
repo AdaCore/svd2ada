@@ -1011,19 +1011,6 @@ package body Ada_Gen is
       return Spec.Id;
    end Id;
 
-   -----------------------------
-   -- Is_Interfaces_Hierarchy --
-   -----------------------------
-
-   function Is_Interfaces_Hierarchy
-     (Spec : Ada_Spec) return Boolean
-   is
-   begin
-      return Length (Spec.Id) > 10
-        and then Ada.Characters.Handling.To_Lower
-          (Slice (Spec.Id, 1, 11)) = "interfaces.";
-   end Is_Interfaces_Hierarchy;
-
    ---------------------
    -- Add_Global_With --
    ---------------------
@@ -2351,5 +2338,21 @@ package body Ada_Gen is
          Add (Spec, New_With_Clause ("System"));
       end if;
    end Added_In_Spec;
+
+   -----------------
+   -- Starts_With --
+   -----------------
+
+   function Starts_With (S1, S2 : String) return Boolean
+   is (S1'Length >= S2'Length
+       and then S1 (S1'First .. S1'First + S2'Length - 1) = S2);
+
+   ---------------
+   -- Ends_With --
+   ---------------
+
+   function Ends_With (S1, S2 : String) return Boolean
+   is (S1'Length >= S2'Length
+       and then S1 (S1'Last - S2'Length + 1 .. S1'Last) = S2);
 
 end Ada_Gen;

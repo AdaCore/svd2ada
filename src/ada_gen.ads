@@ -336,9 +336,6 @@ package Ada_Gen is
 
    function Id (Spec : Ada_Spec) return Unbounded_String;
 
-   function Is_Interfaces_Hierarchy
-     (Spec : Ada_Spec) return Boolean;
-
    procedure Write_Spec
      (Spec       : Ada_Spec;
       Output_Dir : String);
@@ -389,6 +386,16 @@ package Ada_Gen is
       Id      : String;
       Repr    : Unsigned;
       Comment : String := "") return Ada_Enum_Value;
+
+   -----------------------------
+   -- String comparison utils --
+   -----------------------------
+
+   function Starts_With (S1, S2 : String) return Boolean;
+   --  Whether S1 starts with the substring S2 (or is equal to S2)
+
+   function Ends_With (S1, S2 : String) return Boolean;
+   --  Whether S1 ends with the substring S2 (or is equal to S2)
 
 private
 
