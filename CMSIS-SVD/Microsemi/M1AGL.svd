@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<device schemaVersion="1.1" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_0.xsd" >
+  <vendor>Microsemi</vendor>
+  <vendorID>Microsemi</vendorID>
+  <name>M1AGL</name>
+  <series>IGLOO</series>
+  <version></version>
+  <description>Cortex-M1 on IGLOO FPGA</description>
+
+  <addressUnitBits>8</addressUnitBits>
+  <width>32</width>
+  <size>32</size>
+  <resetValue>0x00000000</resetValue>
+  <resetMask>0xFFFFFFFF</resetMask>
+
+  <cpu>
+    <name>CM1</name>
+    <endian>little</endian>
+  </cpu>
+
+  <peripherals>
+
+    <peripheral>
+      <name>CoreUARTapb</name>
+      <description>serial communication controller with a flexible serial data
+      interface
+      </description>
+      <baseAddress>0xA1000000</baseAddress>
+      <size>32</size>
+      <access>read-write</access>
+
+      <interrupt>
+	<name>Core_Timer_Interrupt</name>
+	<value>1</value>
+      </interrupt>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+        <register>
+          <name>Tx_Data</name>
+          <description>Transmit Data register</description>
+          <addressOffset>0x000</addressOffset>
+          <fields>
+            <field><name>Value</name><lsb>0</lsb><msb>7</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>Rx_Data</name>
+          <description>Receive Data register</description>
+          <addressOffset>0x004</addressOffset>
+          <fields>
+            <field><name>Value</name><lsb>0</lsb><msb>7</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>Control_1</name>
+          <description>Control register 1</description>
+          <addressOffset>0x008</addressOffset>
+          <fields>
+            <field><name>Baud_Value</name><lsb>0</lsb><msb>7</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>Control_2</name>
+          <description>Control register 1</description>
+          <addressOffset>0x00C</addressOffset>
+          <fields>
+            <field><name>Bit8</name><lsb>0</lsb><msb>0</msb></field>
+            <field><name>Parity_En</name><lsb>1</lsb><msb>1</msb></field>
+            <field><name>Odd_N_Even</name><lsb>2</lsb><msb>2</msb>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Even</name>
+                  <description></description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Odd</name>
+                  <description></description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field><name>Baud_Value</name><lsb>3</lsb><msb>7</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>Status</name>
+          <description>Control register 1</description>
+          <addressOffset>0x010</addressOffset>
+          <fields>
+            <field><name>TX_Rdy</name><lsb>0</lsb><msb>0</msb></field>
+            <field><name>RX_Rdy</name><lsb>1</lsb><msb>1</msb></field>
+            <field><name>Parity_Err</name><lsb>2</lsb><msb>2</msb></field>
+            <field><name>Overflow</name><lsb>3</lsb><msb>3</msb></field>
+            <field><name>Framing_Err</name><lsb>4</lsb><msb>4</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>Control_3</name>
+          <description>Control register 1</description>
+          <addressOffset>0x014</addressOffset>
+          <fields>
+            <field><name>Baud_Val_Fraction</name><lsb>0</lsb><msb>2</msb></field>
+          </fields>
+        </register>
+
+      </registers>
+    </peripheral> <!-- CoreUARTapb -->
+
+    <peripheral>
+      <name>CoreTimer</name>
+      <description>interrupt-generating, programmable decrementing counter</description>
+      <baseAddress>0xA2000000</baseAddress>
+      <size>32</size>
+      <access>read-write</access>
+
+      <interrupt>
+	<name>Core_Timer_Interrupt</name>
+	<value>1</value>
+      </interrupt>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+        <register>
+          <name>Load_Value</name>
+          <description>Counter load value</description>
+          <addressOffset>0x000</addressOffset>
+          <fields>
+            <field><name>Value</name><lsb>0</lsb><msb>31</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>Current_Value</name>
+          <description>Counter current value</description>
+          <addressOffset>0x004</addressOffset>
+          <fields>
+            <field><name>Value</name><lsb>0</lsb><msb>31</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>Control</name>
+          <description>PWM Configuration Register.</description>
+          <addressOffset>0x008</addressOffset>
+          <fields>
+
+            <field><name>Enable</name><lsb>0</lsb><msb>0</msb></field>
+
+            <field><name>Interrupt_Enable</name><lsb>1</lsb><msb>1</msb></field>
+
+            <field><name>Timer_Mode</name><lsb>2</lsb><msb>2</msb>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Continuous</name>
+                  <description></description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>One_Shot</name>
+                  <description></description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>Prescale</name>
+          <description>Clock prescale setting</description>
+          <addressOffset>0x00C</addressOffset>
+          <fields>
+            <field><name>Value</name><lsb>0</lsb><msb>3</msb>
+              <enumeratedValues>
+
+                <enumeratedValue>
+                  <name>Divide_By_2</name>
+                  <description></description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Divide_By_4</name>
+                  <description></description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Divide_By_8</name>
+                  <description></description>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Divide_By_16</name>
+                  <description></description>
+                  <value>3</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Divide_By_32</name>
+                  <description></description>
+                  <value>4</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Divide_By_64</name>
+                  <description></description>
+                  <value>5</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Divide_By_128</name>
+                  <description></description>
+                  <value>6</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Divide_By_256</name>
+                  <description></description>
+                  <value>7</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Divide_By_512</name>
+                  <description></description>
+                  <value>8</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Divide_By_1024</name>
+                  <description></description>
+                  <value>9</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>Interrupt_Clear</name>
+          <description>Interrupt Clear. Any write to this register will clear
+            the interrupt.
+          </description>
+          <addressOffset>0x010</addressOffset>
+        </register>
+
+        <register>
+          <name>Raw_Interrupt_Status</name>
+          <description>PWM Configuration Register.</description>
+          <addressOffset>0x014</addressOffset>
+          <fields>
+            <field><name>Pending</name><lsb>0</lsb><msb>0</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>Masked_Interrupt_Status</name>
+          <description>PWM Configuration Register.</description>
+          <addressOffset>0x018</addressOffset>
+          <fields>
+            <field><name>Pending</name><lsb>0</lsb><msb>0</msb></field>
+          </fields>
+        </register>
+
+      </registers>
+    </peripheral> <!-- CoreTimer -->
+
+    <peripheral>
+      <name>CoreInterrupt</name>
+      <description>Flexible Interrupt Controller for Advanced Microcontroller
+      Bus Architecture (AMBA) Based Systems
+      </description>
+      <baseAddress>0xA3000000</baseAddress>
+      <size>32</size>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+
+        <register>
+          <name>IRQ_Soft_Interrupt</name>
+          <description>Software interrupt trigger IRQs.</description>
+          <addressOffset>0x018</addressOffset>
+          <size>0x20</size>
+          <access>read-write</access>
+          <resetValue>0x00000000</resetValue>
+          <fields>
+            <field><name>IRQ1</name><lsb>0</lsb><msb>0</msb></field>
+            <field><name>IRQ2</name><lsb>1</lsb><msb>1</msb></field>
+            <field><name>IRQ3</name><lsb>2</lsb><msb>2</msb></field>
+            <field><name>IRQ4</name><lsb>3</lsb><msb>3</msb></field>
+            <field><name>IRQ5</name><lsb>4</lsb><msb>4</msb></field>
+            <field><name>IRQ6</name><lsb>5</lsb><msb>5</msb></field>
+            <field><name>IRQ7</name><lsb>6</lsb><msb>6</msb></field>
+            <field><name>IRQ8</name><lsb>7</lsb><msb>7</msb></field>
+          </fields>
+        </register>
+
+        <register derivedFrom="IRQ_Soft_Interrupt">
+          <name>IRQ_Soft_Interrupt_Clear</name>
+          <description>Clear soft IRQs.</description>
+          <addressOffset>0x01C</addressOffset>
+        </register>
+
+        <register derivedFrom="IRQ_Soft_Interrupt">
+          <name>IRQ_Enable</name>
+          <description>Enable IRQs.</description>
+          <addressOffset>0x020</addressOffset>
+        </register>
+
+        <register derivedFrom="IRQ_Enable">
+          <name>IRQ_Enable_Clear</name>
+          <description>Disable IRQs.</description>
+          <addressOffset>0x024</addressOffset>
+        </register>
+
+        <register derivedFrom="IRQ_Enable">
+          <name>IRQ_Raw_Status</name>
+          <description>IRQ Raw status</description>
+          <addressOffset>0x028</addressOffset>
+        </register>
+
+        <register derivedFrom="IRQ_Enable">
+          <name>IRQ_Status</name>
+          <description>IRQ status</description>
+          <addressOffset>0x02C</addressOffset>
+        </register>
+
+      </registers>
+    </peripheral> <!-- CoreInterrupt -->
+
+  </peripherals>
+</device>
