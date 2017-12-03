@@ -839,7 +839,7 @@
               <name>SLEEPDEEP</name>
               <description>Controls whether the processor uses sleep or deep sleep as its
                 low-power mode</description>
-              <bitOffset>3</bitOffset>
+              <bitOffset>2</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
