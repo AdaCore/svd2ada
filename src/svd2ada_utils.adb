@@ -25,10 +25,11 @@ with GNAT.OS_Lib;           use GNAT.OS_Lib;
 
 package body SVD2Ada_Utils is
 
-   G_Use_Boolean : Boolean := False;
-   G_Types_Pkg   : Unbounded_String := Null_Unbounded_String;
-   G_Root_Pkg    : Unbounded_String := Null_Unbounded_String;
-   G_Use_UInt    : Boolean := False;
+   G_Use_Boolean       : Boolean := False;
+   G_Types_Pkg         : Unbounded_String := Null_Unbounded_String;
+   G_Root_Pkg          : Unbounded_String := Null_Unbounded_String;
+   G_Use_UInt          : Boolean := False;
+   G_Gen_Trap_Handlers : Boolean := False;
 
    -------------------------
    -- Executable_Location --
@@ -222,5 +223,23 @@ package body SVD2Ada_Utils is
          return True;
       end if;
    end In_Runtime;
+
+   ---------------------------
+   -- Set_Gen_Trap_Handlers --
+   ---------------------------
+
+   procedure Set_Gen_Trap_Handlers (Value : Boolean) is
+   begin
+      G_Gen_Trap_Handlers := Value;
+   end Set_Gen_Trap_Handlers;
+
+   -----------------------
+   -- Gen_Trap_Handlers --
+   -----------------------
+
+   function Gen_Trap_Handlers return Boolean is
+   begin
+      return G_Gen_Trap_Handlers or else In_Runtime;
+   end Gen_Trap_Handlers;
 
 end SVD2Ada_Utils;
