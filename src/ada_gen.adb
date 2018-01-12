@@ -209,6 +209,9 @@ package body Ada_Gen is
                --  Skip it
                J := J + 2;
 
+               --  Trim trailing whitespace
+               Trim (G_License_Text, Right);
+
                --  Start new line in the output
                Append (G_License_Text, ASCII.LF);
 
@@ -227,6 +230,9 @@ package body Ada_Gen is
             end if;
          end loop Line_Loop;
       end loop;
+
+      --  Trim trailing whitespace
+      Trim (G_License_Text, Right);
    end Set_License_Text;
 
    --------------
