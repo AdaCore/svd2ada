@@ -3,7 +3,7 @@
   <vendor>SiFive</vendor>
   <vendorID>SiFive</vendorID>
   <name>FE310</name>
-  <series>nrf51</series>
+  <series>Freedom Everywhere</series>
   <version></version>
   <description>E31 CPU Coreplex, high-performance, 32-bit RV32IMAC core
   </description>
@@ -157,6 +157,194 @@
       </registers>
     </peripheral> <!-- GPIO -->
 
+    <peripheral>
+      <name>QSPI0</name>
+      <description>Serial Peripheral Interface.</description>
+      <baseAddress>0x10014000</baseAddress>
+      <groupName>SPI</groupName>
+      <size>32</size>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+
+        <register>
+          <name>SCKDIV</name>
+          <description>Serial Clock Divisor Register.</description>
+          <addressOffset>0x000</addressOffset>
+          <fields>
+            <field><name>SCALE</name><lsb>0</lsb><msb>11</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>SCKMODE</name>
+          <description>Serial Clock Mode Register.</description>
+          <addressOffset>0x004</addressOffset>
+          <fields>
+            <field><name>PHA</name><lsb>0</lsb><msb>0</msb></field>
+	    <field><name>POL</name><lsb>1</lsb><msb>1</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CSID</name>
+          <description>Chip Select ID Register.</description>
+          <addressOffset>0x010</addressOffset>
+        </register>
+
+        <register>
+          <name>CSDEF</name>
+          <description>Chip Select Default Register.</description>
+          <addressOffset>0x014</addressOffset>
+        </register>
+
+        <register>
+          <name>CSMODE</name>
+          <description>Chip Select Mode Register.</description>
+          <addressOffset>0x018</addressOffset>
+          <fields>
+            <field><name>MODE</name><lsb>0</lsb><msb>1</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>DELAY0</name>
+          <description>Delay Control Register 0.</description>
+          <addressOffset>0x028</addressOffset>
+          <fields>
+            <field><name>CSSCK</name><lsb>0</lsb><msb>7</msb></field>
+	    <field><name>SCKCS</name><lsb>16</lsb><msb>23</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>DELAY1</name>
+          <description>Delay Control Register 1.</description>
+          <addressOffset>0x02C</addressOffset>
+          <fields>
+            <field><name>INTERCS</name><lsb>0</lsb><msb>7</msb></field>
+	    <field><name>INTERXFR</name><lsb>16</lsb><msb>23</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>FMT</name>
+          <description>Frame Format Register.</description>
+          <addressOffset>0x040</addressOffset>
+          <fields>
+            <field><name>PROTO</name><lsb>0</lsb><msb>1</msb></field>
+	    <field><name>ENDIAN</name><lsb>2</lsb><msb>2</msb></field>
+	    <field><name>DIR</name><lsb>3</lsb><msb>3</msb></field>
+	    <field><name>LEN</name><lsb>16</lsb><msb>19</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>TXDATA</name>
+          <description>Transmit Data Register.</description>
+          <addressOffset>0x048</addressOffset>
+          <fields>
+            <field><name>DATA</name><lsb>0</lsb><msb>7</msb></field>
+	    <field><name>FULL</name><lsb>31</lsb><msb>31</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>RXDATA</name>
+          <description>Receive Data Register.</description>
+          <addressOffset>0x04C</addressOffset>
+          <fields>
+            <field><name>DATA</name><lsb>0</lsb><msb>7</msb></field>
+	    <field><name>EMPTY</name><lsb>31</lsb><msb>31</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>TXMARK</name>
+          <description>Transmit Watermark Register.</description>
+          <addressOffset>0x050</addressOffset>
+          <fields>
+            <field><name>TXMARK</name><lsb>0</lsb><msb>2</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>RXMARK</name>
+          <description>Receive Watermark Register.</description>
+          <addressOffset>0x054</addressOffset>
+          <fields>
+            <field><name>RXMARK</name><lsb>0</lsb><msb>2</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>IE</name>
+          <description>SPI Interrupt Enable Register.</description>
+          <addressOffset>0x070</addressOffset>
+          <fields>
+            <field><name>TXWM</name><lsb>0</lsb><msb>0</msb></field>
+            <field><name>RXWM</name><lsb>1</lsb><msb>1</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>IP</name>
+          <description>SPI Interrupt Pending Register.</description>
+          <addressOffset>0x074</addressOffset>
+          <fields>
+            <field><name>TXWM</name><lsb>0</lsb><msb>0</msb></field>
+            <field><name>RXWM</name><lsb>1</lsb><msb>1</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>FCTRL</name>
+          <description>SPI Flash Interface Control Register.</description>
+          <addressOffset>0x060</addressOffset>
+          <fields>
+            <field><name>ENABLE</name><lsb>0</lsb><msb>0</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>FFMT</name>
+          <description>SPI Flash Instruction Format Register.</description>
+          <addressOffset>0x064</addressOffset>
+          <fields>
+            <field><name>CMD_EN</name><lsb>0</lsb><msb>0</msb></field>
+            <field><name>ADDR_LEN</name><lsb>1</lsb><msb>3</msb></field>
+            <field><name>PAD_CNT</name><lsb>4</lsb><msb>7</msb></field>
+            <field><name>CMD_PROTO</name><lsb>8</lsb><msb>9</msb></field>
+            <field><name>ADDR_PROTO</name><lsb>10</lsb><msb>11</msb></field>
+            <field><name>DATA_PROTO</name><lsb>12</lsb><msb>13</msb></field>
+            <field><name>CMD_CODE</name><lsb>16</lsb><msb>23</msb></field>
+            <field><name>PAD_CODE</name><lsb>24</lsb><msb>31</msb></field>
+          </fields>
+        </register>
+
+      </registers>
+
+    </peripheral> <!-- QSPI0 -->
+
+    <peripheral derivedFrom="QSPI0">
+      <name>QSPI1</name>
+      <description>Serial Peripheral Interface.</description>
+      <baseAddress>0x10024000</baseAddress>
+      <groupName>UART</groupName>
+    </peripheral> <!-- QSPI1 -->
+
+    <peripheral derivedFrom="QSPI0">
+      <name>QSPI2</name>
+      <description>Serial Peripheral Interface.</description>
+      <baseAddress>0x10034000</baseAddress>
+      <groupName>UART</groupName>
+    </peripheral> <!-- QSPI1 -->
 
     <peripheral>
       <name>UART0</name>
@@ -297,7 +485,7 @@
 
         <register>
           <name>SCALE_COUNT</name>
-          <description>PWM Scaled Conunter Register.</description>
+          <description>PWM Scaled Counter Register.</description>
           <addressOffset>0x010</addressOffset>
           <fields>
             <field><name>CNT</name><lsb>0</lsb><msb>15</msb></field>
@@ -337,5 +525,524 @@
       <baseAddress>0x10035000</baseAddress>
       <groupName>PWM</groupName>
     </peripheral> <!-- PWM2 -->
+
+    <peripheral>
+      <name>WDT</name>
+      <description>Watchdog Timer.</description>
+      <baseAddress>0x10000000</baseAddress>
+      <groupName>WDT</groupName>
+      <size>32</size>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+
+	<register>
+	  <name>COUNT</name>
+	  <description>Watchdog Count Register.</description>
+	  <addressOffset>0x008</addressOffset>
+	  <fields>
+	    <field><name>CNT</name><lsb>0</lsb><msb>30</msb></field>
+	  </fields>
+	</register>
+
+	<register>
+	  <name>CONFIG</name>
+	  <description>Watchdog Configuration Register.</description>
+	  <addressOffset>0x000</addressOffset>
+	  <fields>
+	    <field><name>SCALE</name><lsb>0</lsb><msb>3</msb></field>
+	    <field><name>SRSTEN</name><lsb>8</lsb><msb>8</msb></field>
+	    <field><name>ZEROCMP</name><lsb>9</lsb><msb>9</msb></field>
+	    <field><name>ENALWAYS</name><lsb>12</lsb><msb>12</msb></field>
+	    <field><name>ENCOREAWAKE</name><lsb>13</lsb><msb>13</msb></field>
+	  </fields>
+	</register>
+
+        <register>
+          <name>SCALE_COUNT</name>
+          <description>Watchdog Scaled Counter Register.</description>
+          <addressOffset>0x010</addressOffset>
+          <fields>
+            <field><name>CNT</name><lsb>0</lsb><msb>15</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>COMPARE</name>
+          <description>Watchdog Compare Register.</description>
+          <addressOffset>0x020</addressOffset>
+          <fields>
+            <field><name>CMP</name><lsb>0</lsb><msb>15</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>KEY</name>
+          <description>Watchdog Key Register.</description>
+          <addressOffset>0x01C</addressOffset>
+        </register>
+
+        <register>
+          <name>FEED</name>
+          <description>Watchdog Feed Address.</description>
+          <addressOffset>0x018</addressOffset>
+        </register>
+
+      </registers>
+    </peripheral> <!-- WDT -->
+
+    <peripheral>
+      <name>RTC</name>
+      <description>Real-Time Clock.</description>
+      <baseAddress>0x10000000</baseAddress>
+      <groupName>RTC</groupName>
+      <size>32</size>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+
+        <register>
+          <name>HI</name>
+          <description>RTC Count Register High.</description>
+          <addressOffset>0x04C</addressOffset>
+          <fields>
+            <field><name>CNT</name><lsb>0</lsb><msb>15</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>LO</name>
+          <description>RTC Count Register Low.</description>
+          <addressOffset>0x048</addressOffset>
+          <fields>
+            <field><name>CNT</name><lsb>0</lsb><msb>31</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CONFIG</name>
+          <description>RTC Configuration Register.</description>
+          <addressOffset>0x040</addressOffset>
+          <fields>
+            <field><name>SCALE</name><lsb>0</lsb><msb>3</msb></field>
+	    <field><name>ENALWAYS</name><lsb>12</lsb><msb>12</msb></field>
+	    <field><name>CMP_IP</name><lsb>28</lsb><msb>28</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>SCALE_COUNT</name>
+          <description>RTC Scaled Counter Register.</description>
+          <addressOffset>0x050</addressOffset>
+          <fields>
+            <field><name>CNT</name><lsb>0</lsb><msb>15</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>COMPARE</name>
+          <description>RTC Compare Register.</description>
+          <addressOffset>0x060</addressOffset>
+          <fields>
+            <field><name>CMP</name><lsb>0</lsb><msb>31</msb></field>
+          </fields>
+        </register>
+
+      </registers>
+    </peripheral> <!-- RTC -->
+
+    <peripheral>
+      <name>AON</name>
+      <description>AON Clock Configuration.</description>
+      <baseAddress>0x10000000</baseAddress>
+      <groupName>AON</groupName>
+      <size>32</size>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+
+        <register>
+          <name>LFROSCCFG</name>
+          <description>LF Ring Oscillator Configuration Register.</description>
+          <addressOffset>0x070</addressOffset>
+          <fields>
+            <field><name>DIV</name><lsb>0</lsb><msb>5</msb></field>
+	    <field><name>TRIM</name><lsb>16</lsb><msb>20</msb></field>
+            <field><name>ENABLE</name><lsb>30</lsb><msb>30</msb></field>
+	    <field><name>READY</name><lsb>31</lsb><msb>31</msb></field>
+          </fields>
+        </register>
+
+      </registers>
+    </peripheral> <!-- AON -->
+
+    <peripheral>
+      <name>BACKUP</name>
+      <description>Backup Registers.</description>
+      <baseAddress>0x10000080</baseAddress>
+      <groupName>BACKUP</groupName>
+      <size>32</size>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+
+        <register>
+          <name>R0</name>
+          <description>Backup Register 0.</description>
+          <addressOffset>0x000</addressOffset>
+        </register>
+
+        <register>
+          <name>R1</name>
+          <description>Backup Register 1.</description>
+          <addressOffset>0x004</addressOffset>
+        </register>
+
+        <register>
+          <name>R2</name>
+          <description>Backup Register 2.</description>
+          <addressOffset>0x008</addressOffset>
+        </register>
+
+        <register>
+          <name>R3</name>
+          <description>Backup Register 3.</description>
+          <addressOffset>0x00C</addressOffset>
+        </register>
+
+        <register>
+          <name>R4</name>
+          <description>Backup Register 4.</description>
+          <addressOffset>0x010</addressOffset>
+        </register>
+
+        <register>
+          <name>R5</name>
+          <description>Backup Register 5.</description>
+          <addressOffset>0x014</addressOffset>
+        </register>
+
+        <register>
+          <name>R6</name>
+          <description>Backup Register 6.</description>
+          <addressOffset>0x018</addressOffset>
+        </register>
+
+        <register>
+          <name>R7</name>
+          <description>Backup Register 7.</description>
+          <addressOffset>0x01C</addressOffset>
+        </register>
+
+        <register>
+          <name>R8</name>
+          <description>Backup Register 8.</description>
+          <addressOffset>0x020</addressOffset>
+        </register>
+
+        <register>
+          <name>R9</name>
+          <description>Backup Register 9.</description>
+          <addressOffset>0x024</addressOffset>
+        </register>
+
+        <register>
+          <name>R10</name>
+          <description>Backup Register 10.</description>
+          <addressOffset>0x028</addressOffset>
+        </register>
+
+        <register>
+          <name>R11</name>
+          <description>Backup Register 11.</description>
+          <addressOffset>0x02C</addressOffset>
+        </register>
+
+        <register>
+          <name>R12</name>
+          <description>Backup Register 12.</description>
+          <addressOffset>0x030</addressOffset>
+        </register>
+
+        <register>
+          <name>R13</name>
+          <description>Backup Register 13.</description>
+          <addressOffset>0x034</addressOffset>
+        </register>
+
+        <register>
+          <name>R14</name>
+          <description>Backup Register 14.</description>
+          <addressOffset>0x038</addressOffset>
+        </register>
+
+        <register>
+          <name>R15</name>
+          <description>Backup Register 15.</description>
+          <addressOffset>0x03C</addressOffset>
+        </register>
+
+        <register>
+          <name>R16</name>
+          <description>Backup Register 16.</description>
+          <addressOffset>0x040</addressOffset>
+        </register>
+
+        <register>
+          <name>R17</name>
+          <description>Backup Register 17.</description>
+          <addressOffset>0x044</addressOffset>
+        </register>
+
+        <register>
+          <name>R18</name>
+          <description>Backup Register 18.</description>
+          <addressOffset>0x048</addressOffset>
+        </register>
+
+        <register>
+          <name>R19</name>
+          <description>Backup Register 19.</description>
+          <addressOffset>0x04C</addressOffset>
+        </register>
+
+        <register>
+          <name>R20</name>
+          <description>Backup Register 20.</description>
+          <addressOffset>0x050</addressOffset>
+        </register>
+
+        <register>
+          <name>R21</name>
+          <description>Backup Register 21.</description>
+          <addressOffset>0x054</addressOffset>
+        </register>
+
+        <register>
+          <name>R22</name>
+          <description>Backup Register 22.</description>
+          <addressOffset>0x058</addressOffset>
+        </register>
+
+        <register>
+          <name>R23</name>
+          <description>Backup Register 23.</description>
+          <addressOffset>0x05C</addressOffset>
+        </register>
+
+        <register>
+          <name>R24</name>
+          <description>Backup Register 24.</description>
+          <addressOffset>0x060</addressOffset>
+        </register>
+
+        <register>
+          <name>R25</name>
+          <description>Backup Register 25.</description>
+          <addressOffset>0x064</addressOffset>
+        </register>
+
+        <register>
+          <name>R26</name>
+          <description>Backup Register 26.</description>
+          <addressOffset>0x068</addressOffset>
+        </register>
+
+        <register>
+          <name>R27</name>
+          <description>Backup Register 27.</description>
+          <addressOffset>0x06C</addressOffset>
+        </register>
+
+        <register>
+          <name>R28</name>
+          <description>Backup Register 28.</description>
+          <addressOffset>0x070</addressOffset>
+        </register>
+
+        <register>
+          <name>R29</name>
+          <description>Backup Register 29.</description>
+          <addressOffset>0x074</addressOffset>
+        </register>
+
+        <register>
+          <name>R30</name>
+          <description>Backup Register 30.</description>
+          <addressOffset>0x078</addressOffset>
+        </register>
+
+        <register>
+          <name>R31</name>
+          <description>Backup Register 31.</description>
+          <addressOffset>0x07C</addressOffset>
+        </register>
+
+      </registers>
+    </peripheral> <!-- BACKUP -->
+
+    <peripheral>
+      <name>PMU</name>
+      <description>Power Management Unit.</description>
+      <baseAddress>0x10000000</baseAddress>
+      <groupName>PMU</groupName>
+      <size>32</size>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x1000</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+
+        <register>
+          <name>WAKEUPI0</name>
+          <description>Wakeup program instruction 0.</description>
+          <addressOffset>0x100</addressOffset>
+        </register>
+
+        <register>
+          <name>WAKEUPI1</name>
+          <description>Wakeup program instruction 1.</description>
+          <addressOffset>0x104</addressOffset>
+        </register>
+
+        <register>
+          <name>WAKEUPI2</name>
+          <description>Wakeup program instruction 2.</description>
+          <addressOffset>0x108</addressOffset>
+        </register>
+
+        <register>
+          <name>WAKEUPI3</name>
+          <description>Wakeup program instruction 3.</description>
+          <addressOffset>0x10C</addressOffset>
+        </register>
+
+        <register>
+          <name>WAKEUPI4</name>
+          <description>Wakeup program instruction 4.</description>
+          <addressOffset>0x110</addressOffset>
+        </register>
+
+        <register>
+          <name>WAKEUPI5</name>
+          <description>Wakeup program instruction 5.</description>
+          <addressOffset>0x114</addressOffset>
+        </register>
+
+        <register>
+          <name>WAKEUPI6</name>
+          <description>Wakeup program instruction 6.</description>
+          <addressOffset>0x118</addressOffset>
+        </register>
+
+        <register>
+          <name>WAKEUPI7</name>
+          <description>Wakeup program instruction 7.</description>
+          <addressOffset>0x11C</addressOffset>
+        </register>
+
+        <register>
+          <name>SLEEPI0</name>
+          <description>Sleep program instruction 0.</description>
+          <addressOffset>0x120</addressOffset>
+        </register>
+
+        <register>
+          <name>SLEEPI1</name>
+          <description>Sleep program instruction 1.</description>
+          <addressOffset>0x124</addressOffset>
+        </register>
+
+        <register>
+          <name>SLEEPI2</name>
+          <description>Sleep program instruction 2.</description>
+          <addressOffset>0x128</addressOffset>
+        </register>
+
+        <register>
+          <name>SLEEPI3</name>
+          <description>Sleep program instruction 3.</description>
+          <addressOffset>0x12C</addressOffset>
+        </register>
+
+        <register>
+          <name>SLEEPI4</name>
+          <description>Sleep program instruction 4.</description>
+          <addressOffset>0x130</addressOffset>
+        </register>
+
+        <register>
+          <name>SLEEPI5</name>
+          <description>Sleep program instruction 5.</description>
+          <addressOffset>0x134</addressOffset>
+        </register>
+
+        <register>
+          <name>SLEEPI6</name>
+          <description>Sleep program instruction 6.</description>
+          <addressOffset>0x138</addressOffset>
+        </register>
+
+        <register>
+          <name>SLEEPI7</name>
+          <description>Sleep program instruction 7.</description>
+          <addressOffset>0x13C</addressOffset>
+        </register>
+
+        <register>
+          <name>IE</name>
+          <description>PMU interrupt enables.</description>
+          <addressOffset>0x140</addressOffset>
+        </register>
+
+        <register>
+          <name>CAUSE</name>
+          <description>PMU wakeup cause.</description>
+          <addressOffset>0x144</addressOffset>
+        </register>
+
+        <register>
+          <name>SLEEP</name>
+          <description>Initiate sleep sequence.</description>
+          <addressOffset>0x148</addressOffset>
+        </register>
+
+        <register>
+          <name>KEY</name>
+          <description>PMU key register.</description>
+          <addressOffset>0x14C</addressOffset>
+        </register>
+
+      </registers>
+    </peripheral> <!-- PMU -->
+
   </peripherals>
 </device>
