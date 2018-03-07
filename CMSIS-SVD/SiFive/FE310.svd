@@ -626,9 +626,6 @@
           <name>LO</name>
           <description>RTC Count Register Low.</description>
           <addressOffset>0x048</addressOffset>
-          <fields>
-            <field><name>CNT</name><lsb>0</lsb><msb>31</msb></field>
-          </fields>
         </register>
 
         <register>
@@ -646,18 +643,12 @@
           <name>SCALE_COUNT</name>
           <description>RTC Scaled Counter Register.</description>
           <addressOffset>0x050</addressOffset>
-          <fields>
-            <field><name>CNT</name><lsb>0</lsb><msb>15</msb></field>
-          </fields>
         </register>
 
         <register>
           <name>COMPARE</name>
           <description>RTC Compare Register.</description>
           <addressOffset>0x060</addressOffset>
-          <fields>
-            <field><name>CMP</name><lsb>0</lsb><msb>31</msb></field>
-          </fields>
         </register>
 
       </registers>
