@@ -20,6 +20,56 @@
   </cpu>
 
   <peripherals>
+
+    <peripheral>
+      <name>CLINT</name>
+      <description>Core Local Interruptor.</description>
+      <baseAddress>0x02000000</baseAddress>
+      <groupName>CLINT</groupName>
+      <size>32</size>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x10000</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+
+        <register>
+          <name>MSIP</name>
+          <description>Machine Software Interrupt Pending Register.</description>
+          <addressOffset>0x0000</addressOffset>
+        </register>
+
+        <register>
+          <name>MTIMECMP_LO</name>
+          <description>Machine Timer Compare Register Low.</description>
+          <addressOffset>0x4000</addressOffset>
+        </register>
+
+        <register>
+          <name>MTIMECMP_HI</name>
+          <description>Machine Timer Compare Register High.</description>
+          <addressOffset>0x4004</addressOffset>
+        </register>
+
+        <register>
+          <name>MTIME_LO</name>
+          <description>Machine Timer Register Low.</description>
+          <addressOffset>0xBFF8</addressOffset>
+        </register>
+
+        <register>
+          <name>MTIME_HI</name>
+          <description>Machine Timer Register High.</description>
+          <addressOffset>0xBFFC</addressOffset>
+        </register>
+
+      </registers>
+    </peripheral> <!-- CLINT -->
+
     <peripheral>
       <name>GPIO0</name>
       <description>General purpose input/output controller.</description>
@@ -536,7 +586,7 @@
 
       <addressBlock>
         <offset>0</offset>
-        <size>0x1000</size>
+        <size>0x40</size>
         <usage>registers</usage>
       </addressBlock>
 
@@ -545,7 +595,7 @@
 	<register>
 	  <name>COUNT</name>
 	  <description>Watchdog Count Register.</description>
-	  <addressOffset>0x008</addressOffset>
+	  <addressOffset>0x08</addressOffset>
 	  <fields>
 	    <field><name>CNT</name><lsb>0</lsb><msb>30</msb></field>
 	  </fields>
@@ -554,7 +604,7 @@
 	<register>
 	  <name>CONFIG</name>
 	  <description>Watchdog Configuration Register.</description>
-	  <addressOffset>0x000</addressOffset>
+	  <addressOffset>0x00</addressOffset>
 	  <fields>
 	    <field><name>SCALE</name><lsb>0</lsb><msb>3</msb></field>
 	    <field><name>SRSTEN</name><lsb>8</lsb><msb>8</msb></field>
@@ -567,7 +617,7 @@
         <register>
           <name>SCALE_COUNT</name>
           <description>Watchdog Scaled Counter Register.</description>
-          <addressOffset>0x010</addressOffset>
+          <addressOffset>0x10</addressOffset>
           <fields>
             <field><name>CNT</name><lsb>0</lsb><msb>15</msb></field>
           </fields>
@@ -576,7 +626,7 @@
         <register>
           <name>COMPARE</name>
           <description>Watchdog Compare Register.</description>
-          <addressOffset>0x020</addressOffset>
+          <addressOffset>0x20</addressOffset>
           <fields>
             <field><name>CMP</name><lsb>0</lsb><msb>15</msb></field>
           </fields>
@@ -585,13 +635,13 @@
         <register>
           <name>KEY</name>
           <description>Watchdog Key Register.</description>
-          <addressOffset>0x01C</addressOffset>
+          <addressOffset>0x1C</addressOffset>
         </register>
 
         <register>
           <name>FEED</name>
           <description>Watchdog Feed Address.</description>
-          <addressOffset>0x018</addressOffset>
+          <addressOffset>0x18</addressOffset>
         </register>
 
       </registers>
@@ -600,14 +650,14 @@
     <peripheral>
       <name>RTC</name>
       <description>Real-Time Clock.</description>
-      <baseAddress>0x10000000</baseAddress>
+      <baseAddress>0x10000040</baseAddress>
       <groupName>RTC</groupName>
       <size>32</size>
       <access>read-write</access>
 
       <addressBlock>
         <offset>0</offset>
-        <size>0x1000</size>
+        <size>0x30</size>
         <usage>registers</usage>
       </addressBlock>
 
@@ -616,7 +666,7 @@
         <register>
           <name>HI</name>
           <description>RTC Count Register High.</description>
-          <addressOffset>0x04C</addressOffset>
+          <addressOffset>0x0C</addressOffset>
           <fields>
             <field><name>CNT</name><lsb>0</lsb><msb>15</msb></field>
           </fields>
@@ -625,13 +675,13 @@
         <register>
           <name>LO</name>
           <description>RTC Count Register Low.</description>
-          <addressOffset>0x048</addressOffset>
+          <addressOffset>0x08</addressOffset>
         </register>
 
         <register>
           <name>CONFIG</name>
           <description>RTC Configuration Register.</description>
-          <addressOffset>0x040</addressOffset>
+          <addressOffset>0x00</addressOffset>
           <fields>
             <field><name>SCALE</name><lsb>0</lsb><msb>3</msb></field>
 	    <field><name>ENALWAYS</name><lsb>12</lsb><msb>12</msb></field>
@@ -642,13 +692,13 @@
         <register>
           <name>SCALE_COUNT</name>
           <description>RTC Scaled Counter Register.</description>
-          <addressOffset>0x050</addressOffset>
+          <addressOffset>0x10</addressOffset>
         </register>
 
         <register>
           <name>COMPARE</name>
           <description>RTC Compare Register.</description>
-          <addressOffset>0x060</addressOffset>
+          <addressOffset>0x20</addressOffset>
         </register>
 
       </registers>
@@ -657,14 +707,14 @@
     <peripheral>
       <name>AON</name>
       <description>AON Clock Configuration.</description>
-      <baseAddress>0x10000000</baseAddress>
+      <baseAddress>0x10000070</baseAddress>
       <groupName>AON</groupName>
       <size>32</size>
       <access>read-write</access>
 
       <addressBlock>
         <offset>0</offset>
-        <size>0x1000</size>
+        <size>0x10</size>
         <usage>registers</usage>
       </addressBlock>
 
@@ -673,7 +723,7 @@
         <register>
           <name>LFROSCCFG</name>
           <description>LF Ring Oscillator Configuration Register.</description>
-          <addressOffset>0x070</addressOffset>
+          <addressOffset>0x0</addressOffset>
           <fields>
             <field><name>DIV</name><lsb>0</lsb><msb>5</msb></field>
 	    <field><name>TRIM</name><lsb>16</lsb><msb>20</msb></field>
@@ -695,7 +745,7 @@
 
       <addressBlock>
         <offset>0</offset>
-        <size>0x1000</size>
+        <size>0x80</size>
         <usage>registers</usage>
       </addressBlock>
 
@@ -704,193 +754,193 @@
         <register>
           <name>R0</name>
           <description>Backup Register 0.</description>
-          <addressOffset>0x000</addressOffset>
+          <addressOffset>0x00</addressOffset>
         </register>
 
         <register>
           <name>R1</name>
           <description>Backup Register 1.</description>
-          <addressOffset>0x004</addressOffset>
+          <addressOffset>0x04</addressOffset>
         </register>
 
         <register>
           <name>R2</name>
           <description>Backup Register 2.</description>
-          <addressOffset>0x008</addressOffset>
+          <addressOffset>0x08</addressOffset>
         </register>
 
         <register>
           <name>R3</name>
           <description>Backup Register 3.</description>
-          <addressOffset>0x00C</addressOffset>
+          <addressOffset>0x0C</addressOffset>
         </register>
 
         <register>
           <name>R4</name>
           <description>Backup Register 4.</description>
-          <addressOffset>0x010</addressOffset>
+          <addressOffset>0x10</addressOffset>
         </register>
 
         <register>
           <name>R5</name>
           <description>Backup Register 5.</description>
-          <addressOffset>0x014</addressOffset>
+          <addressOffset>0x14</addressOffset>
         </register>
 
         <register>
           <name>R6</name>
           <description>Backup Register 6.</description>
-          <addressOffset>0x018</addressOffset>
+          <addressOffset>0x18</addressOffset>
         </register>
 
         <register>
           <name>R7</name>
           <description>Backup Register 7.</description>
-          <addressOffset>0x01C</addressOffset>
+          <addressOffset>0x1C</addressOffset>
         </register>
 
         <register>
           <name>R8</name>
           <description>Backup Register 8.</description>
-          <addressOffset>0x020</addressOffset>
+          <addressOffset>0x20</addressOffset>
         </register>
 
         <register>
           <name>R9</name>
           <description>Backup Register 9.</description>
-          <addressOffset>0x024</addressOffset>
+          <addressOffset>0x24</addressOffset>
         </register>
 
         <register>
           <name>R10</name>
           <description>Backup Register 10.</description>
-          <addressOffset>0x028</addressOffset>
+          <addressOffset>0x28</addressOffset>
         </register>
 
         <register>
           <name>R11</name>
           <description>Backup Register 11.</description>
-          <addressOffset>0x02C</addressOffset>
+          <addressOffset>0x2C</addressOffset>
         </register>
 
         <register>
           <name>R12</name>
           <description>Backup Register 12.</description>
-          <addressOffset>0x030</addressOffset>
+          <addressOffset>0x30</addressOffset>
         </register>
 
         <register>
           <name>R13</name>
           <description>Backup Register 13.</description>
-          <addressOffset>0x034</addressOffset>
+          <addressOffset>0x34</addressOffset>
         </register>
 
         <register>
           <name>R14</name>
           <description>Backup Register 14.</description>
-          <addressOffset>0x038</addressOffset>
+          <addressOffset>0x38</addressOffset>
         </register>
 
         <register>
           <name>R15</name>
           <description>Backup Register 15.</description>
-          <addressOffset>0x03C</addressOffset>
+          <addressOffset>0x3C</addressOffset>
         </register>
 
         <register>
           <name>R16</name>
           <description>Backup Register 16.</description>
-          <addressOffset>0x040</addressOffset>
+          <addressOffset>0x40</addressOffset>
         </register>
 
         <register>
           <name>R17</name>
           <description>Backup Register 17.</description>
-          <addressOffset>0x044</addressOffset>
+          <addressOffset>0x44</addressOffset>
         </register>
 
         <register>
           <name>R18</name>
           <description>Backup Register 18.</description>
-          <addressOffset>0x048</addressOffset>
+          <addressOffset>0x48</addressOffset>
         </register>
 
         <register>
           <name>R19</name>
           <description>Backup Register 19.</description>
-          <addressOffset>0x04C</addressOffset>
+          <addressOffset>0x4C</addressOffset>
         </register>
 
         <register>
           <name>R20</name>
           <description>Backup Register 20.</description>
-          <addressOffset>0x050</addressOffset>
+          <addressOffset>0x50</addressOffset>
         </register>
 
         <register>
           <name>R21</name>
           <description>Backup Register 21.</description>
-          <addressOffset>0x054</addressOffset>
+          <addressOffset>0x54</addressOffset>
         </register>
 
         <register>
           <name>R22</name>
           <description>Backup Register 22.</description>
-          <addressOffset>0x058</addressOffset>
+          <addressOffset>0x58</addressOffset>
         </register>
 
         <register>
           <name>R23</name>
           <description>Backup Register 23.</description>
-          <addressOffset>0x05C</addressOffset>
+          <addressOffset>0x5C</addressOffset>
         </register>
 
         <register>
           <name>R24</name>
           <description>Backup Register 24.</description>
-          <addressOffset>0x060</addressOffset>
+          <addressOffset>0x60</addressOffset>
         </register>
 
         <register>
           <name>R25</name>
           <description>Backup Register 25.</description>
-          <addressOffset>0x064</addressOffset>
+          <addressOffset>0x64</addressOffset>
         </register>
 
         <register>
           <name>R26</name>
           <description>Backup Register 26.</description>
-          <addressOffset>0x068</addressOffset>
+          <addressOffset>0x68</addressOffset>
         </register>
 
         <register>
           <name>R27</name>
           <description>Backup Register 27.</description>
-          <addressOffset>0x06C</addressOffset>
+          <addressOffset>0x6C</addressOffset>
         </register>
 
         <register>
           <name>R28</name>
           <description>Backup Register 28.</description>
-          <addressOffset>0x070</addressOffset>
+          <addressOffset>0x70</addressOffset>
         </register>
 
         <register>
           <name>R29</name>
           <description>Backup Register 29.</description>
-          <addressOffset>0x074</addressOffset>
+          <addressOffset>0x74</addressOffset>
         </register>
 
         <register>
           <name>R30</name>
           <description>Backup Register 30.</description>
-          <addressOffset>0x078</addressOffset>
+          <addressOffset>0x78</addressOffset>
         </register>
 
         <register>
           <name>R31</name>
           <description>Backup Register 31.</description>
-          <addressOffset>0x07C</addressOffset>
+          <addressOffset>0x7C</addressOffset>
         </register>
 
       </registers>
@@ -899,14 +949,14 @@
     <peripheral>
       <name>PMU</name>
       <description>Power Management Unit.</description>
-      <baseAddress>0x10000000</baseAddress>
+      <baseAddress>0x10000100</baseAddress>
       <groupName>PMU</groupName>
       <size>32</size>
       <access>read-write</access>
 
       <addressBlock>
         <offset>0</offset>
-        <size>0x1000</size>
+        <size>0x50</size>
         <usage>registers</usage>
       </addressBlock>
 
@@ -915,121 +965,121 @@
         <register>
           <name>WAKEUPI0</name>
           <description>Wakeup program instruction 0.</description>
-          <addressOffset>0x100</addressOffset>
+          <addressOffset>0x00</addressOffset>
         </register>
 
         <register>
           <name>WAKEUPI1</name>
           <description>Wakeup program instruction 1.</description>
-          <addressOffset>0x104</addressOffset>
+          <addressOffset>0x04</addressOffset>
         </register>
 
         <register>
           <name>WAKEUPI2</name>
           <description>Wakeup program instruction 2.</description>
-          <addressOffset>0x108</addressOffset>
+          <addressOffset>0x08</addressOffset>
         </register>
 
         <register>
           <name>WAKEUPI3</name>
           <description>Wakeup program instruction 3.</description>
-          <addressOffset>0x10C</addressOffset>
+          <addressOffset>0x0C</addressOffset>
         </register>
 
         <register>
           <name>WAKEUPI4</name>
           <description>Wakeup program instruction 4.</description>
-          <addressOffset>0x110</addressOffset>
+          <addressOffset>0x10</addressOffset>
         </register>
 
         <register>
           <name>WAKEUPI5</name>
           <description>Wakeup program instruction 5.</description>
-          <addressOffset>0x114</addressOffset>
+          <addressOffset>0x14</addressOffset>
         </register>
 
         <register>
           <name>WAKEUPI6</name>
           <description>Wakeup program instruction 6.</description>
-          <addressOffset>0x118</addressOffset>
+          <addressOffset>0x18</addressOffset>
         </register>
 
         <register>
           <name>WAKEUPI7</name>
           <description>Wakeup program instruction 7.</description>
-          <addressOffset>0x11C</addressOffset>
+          <addressOffset>0x1C</addressOffset>
         </register>
 
         <register>
           <name>SLEEPI0</name>
           <description>Sleep program instruction 0.</description>
-          <addressOffset>0x120</addressOffset>
+          <addressOffset>0x20</addressOffset>
         </register>
 
         <register>
           <name>SLEEPI1</name>
           <description>Sleep program instruction 1.</description>
-          <addressOffset>0x124</addressOffset>
+          <addressOffset>0x24</addressOffset>
         </register>
 
         <register>
           <name>SLEEPI2</name>
           <description>Sleep program instruction 2.</description>
-          <addressOffset>0x128</addressOffset>
+          <addressOffset>0x28</addressOffset>
         </register>
 
         <register>
           <name>SLEEPI3</name>
           <description>Sleep program instruction 3.</description>
-          <addressOffset>0x12C</addressOffset>
+          <addressOffset>0x2C</addressOffset>
         </register>
 
         <register>
           <name>SLEEPI4</name>
           <description>Sleep program instruction 4.</description>
-          <addressOffset>0x130</addressOffset>
+          <addressOffset>0x30</addressOffset>
         </register>
 
         <register>
           <name>SLEEPI5</name>
           <description>Sleep program instruction 5.</description>
-          <addressOffset>0x134</addressOffset>
+          <addressOffset>0x34</addressOffset>
         </register>
 
         <register>
           <name>SLEEPI6</name>
           <description>Sleep program instruction 6.</description>
-          <addressOffset>0x138</addressOffset>
+          <addressOffset>0x38</addressOffset>
         </register>
 
         <register>
           <name>SLEEPI7</name>
           <description>Sleep program instruction 7.</description>
-          <addressOffset>0x13C</addressOffset>
+          <addressOffset>0x3C</addressOffset>
         </register>
 
         <register>
           <name>IE</name>
           <description>PMU interrupt enables.</description>
-          <addressOffset>0x140</addressOffset>
+          <addressOffset>0x40</addressOffset>
         </register>
 
         <register>
           <name>CAUSE</name>
           <description>PMU wakeup cause.</description>
-          <addressOffset>0x144</addressOffset>
+          <addressOffset>0x44</addressOffset>
         </register>
 
         <register>
           <name>SLEEP</name>
           <description>Initiate sleep sequence.</description>
-          <addressOffset>0x148</addressOffset>
+          <addressOffset>0x48</addressOffset>
         </register>
 
         <register>
           <name>KEY</name>
           <description>PMU key register.</description>
-          <addressOffset>0x14C</addressOffset>
+          <addressOffset>0x4C</addressOffset>
         </register>
 
       </registers>
