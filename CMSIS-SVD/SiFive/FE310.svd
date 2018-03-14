@@ -752,195 +752,10 @@
       <registers>
 
         <register>
-          <name>R0</name>
-          <description>Backup Register 0.</description>
+	  	  <dim>32</dim>
+	  	  <dimIncrement>4</dimIncrement>
+          <name>Backup[%s]</name>
           <addressOffset>0x00</addressOffset>
-        </register>
-
-        <register>
-          <name>R1</name>
-          <description>Backup Register 1.</description>
-          <addressOffset>0x04</addressOffset>
-        </register>
-
-        <register>
-          <name>R2</name>
-          <description>Backup Register 2.</description>
-          <addressOffset>0x08</addressOffset>
-        </register>
-
-        <register>
-          <name>R3</name>
-          <description>Backup Register 3.</description>
-          <addressOffset>0x0C</addressOffset>
-        </register>
-
-        <register>
-          <name>R4</name>
-          <description>Backup Register 4.</description>
-          <addressOffset>0x10</addressOffset>
-        </register>
-
-        <register>
-          <name>R5</name>
-          <description>Backup Register 5.</description>
-          <addressOffset>0x14</addressOffset>
-        </register>
-
-        <register>
-          <name>R6</name>
-          <description>Backup Register 6.</description>
-          <addressOffset>0x18</addressOffset>
-        </register>
-
-        <register>
-          <name>R7</name>
-          <description>Backup Register 7.</description>
-          <addressOffset>0x1C</addressOffset>
-        </register>
-
-        <register>
-          <name>R8</name>
-          <description>Backup Register 8.</description>
-          <addressOffset>0x20</addressOffset>
-        </register>
-
-        <register>
-          <name>R9</name>
-          <description>Backup Register 9.</description>
-          <addressOffset>0x24</addressOffset>
-        </register>
-
-        <register>
-          <name>R10</name>
-          <description>Backup Register 10.</description>
-          <addressOffset>0x28</addressOffset>
-        </register>
-
-        <register>
-          <name>R11</name>
-          <description>Backup Register 11.</description>
-          <addressOffset>0x2C</addressOffset>
-        </register>
-
-        <register>
-          <name>R12</name>
-          <description>Backup Register 12.</description>
-          <addressOffset>0x30</addressOffset>
-        </register>
-
-        <register>
-          <name>R13</name>
-          <description>Backup Register 13.</description>
-          <addressOffset>0x34</addressOffset>
-        </register>
-
-        <register>
-          <name>R14</name>
-          <description>Backup Register 14.</description>
-          <addressOffset>0x38</addressOffset>
-        </register>
-
-        <register>
-          <name>R15</name>
-          <description>Backup Register 15.</description>
-          <addressOffset>0x3C</addressOffset>
-        </register>
-
-        <register>
-          <name>R16</name>
-          <description>Backup Register 16.</description>
-          <addressOffset>0x40</addressOffset>
-        </register>
-
-        <register>
-          <name>R17</name>
-          <description>Backup Register 17.</description>
-          <addressOffset>0x44</addressOffset>
-        </register>
-
-        <register>
-          <name>R18</name>
-          <description>Backup Register 18.</description>
-          <addressOffset>0x48</addressOffset>
-        </register>
-
-        <register>
-          <name>R19</name>
-          <description>Backup Register 19.</description>
-          <addressOffset>0x4C</addressOffset>
-        </register>
-
-        <register>
-          <name>R20</name>
-          <description>Backup Register 20.</description>
-          <addressOffset>0x50</addressOffset>
-        </register>
-
-        <register>
-          <name>R21</name>
-          <description>Backup Register 21.</description>
-          <addressOffset>0x54</addressOffset>
-        </register>
-
-        <register>
-          <name>R22</name>
-          <description>Backup Register 22.</description>
-          <addressOffset>0x58</addressOffset>
-        </register>
-
-        <register>
-          <name>R23</name>
-          <description>Backup Register 23.</description>
-          <addressOffset>0x5C</addressOffset>
-        </register>
-
-        <register>
-          <name>R24</name>
-          <description>Backup Register 24.</description>
-          <addressOffset>0x60</addressOffset>
-        </register>
-
-        <register>
-          <name>R25</name>
-          <description>Backup Register 25.</description>
-          <addressOffset>0x64</addressOffset>
-        </register>
-
-        <register>
-          <name>R26</name>
-          <description>Backup Register 26.</description>
-          <addressOffset>0x68</addressOffset>
-        </register>
-
-        <register>
-          <name>R27</name>
-          <description>Backup Register 27.</description>
-          <addressOffset>0x6C</addressOffset>
-        </register>
-
-        <register>
-          <name>R28</name>
-          <description>Backup Register 28.</description>
-          <addressOffset>0x70</addressOffset>
-        </register>
-
-        <register>
-          <name>R29</name>
-          <description>Backup Register 29.</description>
-          <addressOffset>0x74</addressOffset>
-        </register>
-
-        <register>
-          <name>R30</name>
-          <description>Backup Register 30.</description>
-          <addressOffset>0x78</addressOffset>
-        </register>
-
-        <register>
-          <name>R31</name>
-          <description>Backup Register 31.</description>
-          <addressOffset>0x7C</addressOffset>
         </register>
 
       </registers>
@@ -963,99 +778,19 @@
       <registers>
 
         <register>
-          <name>WAKEUPI0</name>
-          <description>Wakeup program instruction 0.</description>
+	  	  <dim>8</dim>
+	  	  <dimIncrement>4</dimIncrement>
+          <name>WAKEUPI[%s]</name>
+          <description>Wakeup program instructions.</description>
           <addressOffset>0x00</addressOffset>
         </register>
 
         <register>
-          <name>WAKEUPI1</name>
-          <description>Wakeup program instruction 1.</description>
-          <addressOffset>0x04</addressOffset>
-        </register>
-
-        <register>
-          <name>WAKEUPI2</name>
-          <description>Wakeup program instruction 2.</description>
-          <addressOffset>0x08</addressOffset>
-        </register>
-
-        <register>
-          <name>WAKEUPI3</name>
-          <description>Wakeup program instruction 3.</description>
-          <addressOffset>0x0C</addressOffset>
-        </register>
-
-        <register>
-          <name>WAKEUPI4</name>
-          <description>Wakeup program instruction 4.</description>
-          <addressOffset>0x10</addressOffset>
-        </register>
-
-        <register>
-          <name>WAKEUPI5</name>
-          <description>Wakeup program instruction 5.</description>
-          <addressOffset>0x14</addressOffset>
-        </register>
-
-        <register>
-          <name>WAKEUPI6</name>
-          <description>Wakeup program instruction 6.</description>
-          <addressOffset>0x18</addressOffset>
-        </register>
-
-        <register>
-          <name>WAKEUPI7</name>
-          <description>Wakeup program instruction 7.</description>
-          <addressOffset>0x1C</addressOffset>
-        </register>
-
-        <register>
-          <name>SLEEPI0</name>
-          <description>Sleep program instruction 0.</description>
+	  	  <dim>8</dim>
+	  	  <dimIncrement>4</dimIncrement>
+          <name>SLEEPI[%s]</name>
+          <description>Sleep program instructions.</description>
           <addressOffset>0x20</addressOffset>
-        </register>
-
-        <register>
-          <name>SLEEPI1</name>
-          <description>Sleep program instruction 1.</description>
-          <addressOffset>0x24</addressOffset>
-        </register>
-
-        <register>
-          <name>SLEEPI2</name>
-          <description>Sleep program instruction 2.</description>
-          <addressOffset>0x28</addressOffset>
-        </register>
-
-        <register>
-          <name>SLEEPI3</name>
-          <description>Sleep program instruction 3.</description>
-          <addressOffset>0x2C</addressOffset>
-        </register>
-
-        <register>
-          <name>SLEEPI4</name>
-          <description>Sleep program instruction 4.</description>
-          <addressOffset>0x30</addressOffset>
-        </register>
-
-        <register>
-          <name>SLEEPI5</name>
-          <description>Sleep program instruction 5.</description>
-          <addressOffset>0x34</addressOffset>
-        </register>
-
-        <register>
-          <name>SLEEPI6</name>
-          <description>Sleep program instruction 6.</description>
-          <addressOffset>0x38</addressOffset>
-        </register>
-
-        <register>
-          <name>SLEEPI7</name>
-          <description>Sleep program instruction 7.</description>
-          <addressOffset>0x3C</addressOffset>
         </register>
 
         <register>
