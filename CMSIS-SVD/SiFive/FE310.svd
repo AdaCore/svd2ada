@@ -237,8 +237,44 @@
           <description>Serial Clock Mode Register.</description>
           <addressOffset>0x004</addressOffset>
           <fields>
-            <field><name>PHA</name><lsb>0</lsb><msb>0</msb></field>
-	    <field><name>POL</name><lsb>1</lsb><msb>1</msb></field>
+            <field>
+              <name>PHA</name><lsb>0</lsb><msb>0</msb>
+              <description>Serial Clock Phase</description>
+              <enumeratedValues>
+                <name>CPHA</name>                
+                <enumeratedValue>
+                  <name>0</name>
+                  <description>
+                  Data is sampled on the leading edge of SCK and shifted on the trailing edge of SCK.
+                  </description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>1</name>
+                  <description>
+                  Data is shifted on the leading edge of SCK and sampled on the trailing edge of SCK.
+                  </description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>POL</name><lsb>1</lsb><msb>1</msb>
+              <description>Serial Clock Polarity</description>
+              <enumeratedValues>
+                <name>CPOL</name>                
+                <enumeratedValue>
+                  <name>0</name>
+                  <description>Inactive state of SCK is logical 0.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>1</name>
+                  <description>Inactive state of SCK is logical 1.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
           </fields>
         </register>
 
@@ -259,7 +295,27 @@
           <description>Chip Select Mode Register.</description>
           <addressOffset>0x018</addressOffset>
           <fields>
-            <field><name>MODE</name><lsb>0</lsb><msb>1</msb></field>
+            <field>
+              <name>MODE</name><lsb>0</lsb><msb>1</msb>
+              <enumeratedValues>
+                <name>Chip_Select_Modes</name>
+                <enumeratedValue>
+                  <name>AUTO</name>
+                  <description>Assert/de-assert CS at the beginning/end of each frame.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>HOLD</name>
+                  <description>Keep CS continuously asserted after the initial frame.</description>
+                  <value>2</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>OFF</name>
+                  <description>Disable hardware control of the CS pin.</description>
+                  <value>3</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
           </fields>
         </register>
 
@@ -269,7 +325,7 @@
           <addressOffset>0x028</addressOffset>
           <fields>
             <field><name>CSSCK</name><lsb>0</lsb><msb>7</msb></field>
-	    <field><name>SCKCS</name><lsb>16</lsb><msb>23</msb></field>
+            <field><name>SCKCS</name><lsb>16</lsb><msb>23</msb></field>
           </fields>
         </register>
 
@@ -279,7 +335,7 @@
           <addressOffset>0x02C</addressOffset>
           <fields>
             <field><name>INTERCS</name><lsb>0</lsb><msb>7</msb></field>
-	    <field><name>INTERXFR</name><lsb>16</lsb><msb>23</msb></field>
+            <field><name>INTERXFR</name><lsb>16</lsb><msb>23</msb></field>
           </fields>
         </register>
 
@@ -288,10 +344,65 @@
           <description>Frame Format Register.</description>
           <addressOffset>0x040</addressOffset>
           <fields>
-            <field><name>PROTO</name><lsb>0</lsb><msb>1</msb></field>
-	    <field><name>ENDIAN</name><lsb>2</lsb><msb>2</msb></field>
-	    <field><name>DIR</name><lsb>3</lsb><msb>3</msb></field>
-	    <field><name>LEN</name><lsb>16</lsb><msb>19</msb></field>
+            <field>
+              <name>PROTO</name><lsb>0</lsb><msb>1</msb>
+              <enumeratedValues>
+                <name>SPI_Protocol</name>
+                <enumeratedValue>
+                  <name>Single</name>
+                  <description>Data Pins: DQ0 (MOSI), DQ1 (MISO).</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Dual</name>
+                  <description>Data Pins: DQ0, DQ1.</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Quad</name>
+                  <description>Data Pins: DQ0, DQ1, DQ2, DQ3.</description>
+                  <value>2</value>
+                </enumeratedValue>
+              </enumeratedValues>              
+            </field>
+            <field>
+              <name>ENDIAN</name><lsb>2</lsb><msb>2</msb>
+              <enumeratedValues>
+                <name>SPI_Endianness</name>
+                <enumeratedValue>
+                  <name>MSB_First</name>
+                  <description>Tansmit most-significant bit first.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>LSB_First</name>
+                  <description>Transmit least-significant bit first.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues> 
+            </field>
+            <field>
+              <name>DIR</name><lsb>3</lsb><msb>3</msb>
+              <enumeratedValues>
+                <name>SPI_IO_Direction</name>
+                <enumeratedValue>
+                  <name>RX</name>
+                  <description>
+                  For dual and quad protocols, the DQ pins are tri-stated. 
+                  For the single protocol, the DQ0 pin is driven with the transmit data as normal.
+                  </description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>TX</name>
+                  <description>The receive FIFO is not populated.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues> 
+            </field>
+            <field>
+              <name>LEN</name><lsb>16</lsb><msb>19</msb>
+            </field>
           </fields>
         </register>
 
@@ -301,7 +412,7 @@
           <addressOffset>0x048</addressOffset>
           <fields>
             <field><name>DATA</name><lsb>0</lsb><msb>7</msb></field>
-	    <field><name>FULL</name><lsb>31</lsb><msb>31</msb></field>
+            <field><name>FULL</name><lsb>31</lsb><msb>31</msb></field>
           </fields>
         </register>
 
@@ -311,7 +422,7 @@
           <addressOffset>0x04C</addressOffset>
           <fields>
             <field><name>DATA</name><lsb>0</lsb><msb>7</msb></field>
-	    <field><name>EMPTY</name><lsb>31</lsb><msb>31</msb></field>
+            <field><name>EMPTY</name><lsb>31</lsb><msb>31</msb></field>
           </fields>
         </register>
 
@@ -592,27 +703,27 @@
 
       <registers>
 
-	<register>
-	  <name>COUNT</name>
-	  <description>Watchdog Count Register.</description>
-	  <addressOffset>0x08</addressOffset>
-	  <fields>
-	    <field><name>CNT</name><lsb>0</lsb><msb>30</msb></field>
-	  </fields>
-	</register>
+        <register>
+          <name>COUNT</name>
+          <description>Watchdog Count Register.</description>
+          <addressOffset>0x08</addressOffset>
+          <fields>
+            <field><name>CNT</name><lsb>0</lsb><msb>30</msb></field>
+          </fields>
+        </register>
 
-	<register>
-	  <name>CONFIG</name>
-	  <description>Watchdog Configuration Register.</description>
-	  <addressOffset>0x00</addressOffset>
-	  <fields>
-	    <field><name>SCALE</name><lsb>0</lsb><msb>3</msb></field>
-	    <field><name>SRSTEN</name><lsb>8</lsb><msb>8</msb></field>
-	    <field><name>ZEROCMP</name><lsb>9</lsb><msb>9</msb></field>
-	    <field><name>ENALWAYS</name><lsb>12</lsb><msb>12</msb></field>
-	    <field><name>ENCOREAWAKE</name><lsb>13</lsb><msb>13</msb></field>
-	  </fields>
-	</register>
+        <register>
+          <name>CONFIG</name>
+          <description>Watchdog Configuration Register.</description>
+          <addressOffset>0x00</addressOffset>
+          <fields>
+            <field><name>SCALE</name><lsb>0</lsb><msb>3</msb></field>
+            <field><name>SRSTEN</name><lsb>8</lsb><msb>8</msb></field>
+            <field><name>ZEROCMP</name><lsb>9</lsb><msb>9</msb></field>
+            <field><name>ENALWAYS</name><lsb>12</lsb><msb>12</msb></field>
+            <field><name>ENCOREAWAKE</name><lsb>13</lsb><msb>13</msb></field>
+          </fields>
+        </register>
 
         <register>
           <name>SCALE_COUNT</name>
@@ -684,8 +795,8 @@
           <addressOffset>0x00</addressOffset>
           <fields>
             <field><name>SCALE</name><lsb>0</lsb><msb>3</msb></field>
-	    <field><name>ENALWAYS</name><lsb>12</lsb><msb>12</msb></field>
-	    <field><name>CMP_IP</name><lsb>28</lsb><msb>28</msb></field>
+            <field><name>ENALWAYS</name><lsb>12</lsb><msb>12</msb></field>
+            <field><name>CMP_IP</name><lsb>28</lsb><msb>28</msb></field>
           </fields>
         </register>
 
@@ -726,9 +837,9 @@
           <addressOffset>0x0</addressOffset>
           <fields>
             <field><name>DIV</name><lsb>0</lsb><msb>5</msb></field>
-	    <field><name>TRIM</name><lsb>16</lsb><msb>20</msb></field>
+            <field><name>TRIM</name><lsb>16</lsb><msb>20</msb></field>
             <field><name>ENABLE</name><lsb>30</lsb><msb>30</msb></field>
-	    <field><name>READY</name><lsb>31</lsb><msb>31</msb></field>
+            <field><name>READY</name><lsb>31</lsb><msb>31</msb></field>
           </fields>
         </register>
 
@@ -752,8 +863,8 @@
       <registers>
 
         <register>
-	  	  <dim>32</dim>
-	  	  <dimIncrement>4</dimIncrement>
+          <dim>32</dim>
+          <dimIncrement>4</dimIncrement>
           <name>Backup[%s]</name>
           <addressOffset>0x00</addressOffset>
         </register>
@@ -778,16 +889,21 @@
       <registers>
 
         <register>
-	  	  <dim>8</dim>
-	  	  <dimIncrement>4</dimIncrement>
+          <dim>8</dim>
+          <dimIncrement>4</dimIncrement>
           <name>WAKEUPI[%s]</name>
           <description>Wakeup program instructions.</description>
           <addressOffset>0x00</addressOffset>
+          <fields>
+            <field><name>DELAY</name><lsb>0</lsb><msb>3</msb></field>
+            <field><name>PMU_OUT_0</name><lsb>4</lsb><msb>4</msb></field>
+            <field><name>PMU_OUT_1</name><lsb>5</lsb><msb>5</msb></field>
+            <field><name>CORERST</name><lsb>7</lsb><msb>7</msb></field>
+            <field><name>HFCLKRST</name><lsb>8</lsb><msb>8</msb></field>
+          </fields>
         </register>
 
-        <register>
-	  	  <dim>8</dim>
-	  	  <dimIncrement>4</dimIncrement>
+        <register derivedFrom="WAKEUPI[%s]">
           <name>SLEEPI[%s]</name>
           <description>Sleep program instructions.</description>
           <addressOffset>0x20</addressOffset>
@@ -797,12 +913,55 @@
           <name>IE</name>
           <description>PMU interrupt enables.</description>
           <addressOffset>0x40</addressOffset>
+          <fields>
+            <field><name>RTC</name><lsb>1</lsb><msb>1</msb></field>
+            <field><name>DWAKEUP</name><lsb>2</lsb><msb>2</msb></field>
+          </fields>
         </register>
 
         <register>
           <name>CAUSE</name>
           <description>PMU wakeup cause.</description>
           <addressOffset>0x44</addressOffset>
+          <fields>
+            <field>
+              <name>WAKEUP_CAUSE</name><lsb>0</lsb><msb>1</msb>
+              <enumeratedValues>
+                <name>Wakeup_Cause_Values</name>
+                <enumeratedValue>
+                  <name>Reset</name>
+                  <description>Reset.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>RTC</name>
+                  <description>RTC Wakeup.</description>
+                  <value>1</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>DWakeup</name>
+                  <description>Digital input wakeup.</description>
+                  <value>2</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>RESET_CAUSE</name><lsb>8</lsb><msb>9</msb>
+              <enumeratedValues>
+                <name>Reset_Cause_Values</name>
+                <enumeratedValue>
+                  <name>External</name>
+                  <description>External reset.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Watchdog</name>
+                  <description>Watchdog timer reset.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
         </register>
 
         <register>
