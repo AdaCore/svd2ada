@@ -842,10 +842,11 @@
           <addressOffset>0x00</addressOffset>
           <fields>
             <field><name>SCALE</name><lsb>0</lsb><msb>3</msb></field>
-            <field><name>SRSTEN</name><lsb>8</lsb><msb>8</msb></field>
+            <field><name>RSTEN</name><lsb>8</lsb><msb>8</msb></field>
             <field><name>ZEROCMP</name><lsb>9</lsb><msb>9</msb></field>
             <field><name>ENALWAYS</name><lsb>12</lsb><msb>12</msb></field>
             <field><name>ENCOREAWAKE</name><lsb>13</lsb><msb>13</msb></field>
+            <field><name>CMP_IP</name><lsb>28</lsb><msb>28</msb></field>
           </fields>
         </register>
 
@@ -1078,12 +1079,12 @@
                 <enumeratedValue>
                   <name>External</name>
                   <description>External reset.</description>
-                  <value>0</value>
+                  <value>1</value>
                 </enumeratedValue>
                 <enumeratedValue>
                   <name>Watchdog</name>
                   <description>Watchdog timer reset.</description>
-                  <value>1</value>
+                  <value>2</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
