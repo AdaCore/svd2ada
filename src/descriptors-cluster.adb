@@ -251,7 +251,7 @@ package body Descriptors.Cluster is
    begin
       for Elt of Db.Content loop
          if Elt.Kind = Register_Element
-           and then Ada.Strings.Unbounded.To_String (Elt.Reg.XML_Id) = XML_Id
+           and then Ada.Strings.Unbounded.To_String (Elt.Reg.Xml_Id) = XML_Id
          then
             return Elt.Reg;
          end if;
@@ -383,7 +383,7 @@ package body Descriptors.Cluster is
       end Image;
 
    begin
-      For J in Reg_Set.First_Index .. Reg_Set.Last_Index - 1 loop
+      for J in Reg_Set.First_Index .. Reg_Set.Last_Index - 1 loop
          declare
             Elt  : Peripheral_Element renames Reg_Set (J);
             Off1 : constant Natural := Address_Offset (Elt);
@@ -418,7 +418,6 @@ package body Descriptors.Cluster is
       if not Ret then
          return Ret;
       end if;
-
 
       Idx := Reg_Set.First_Index;
       while Idx < Reg_Set.Last_Index loop
@@ -500,16 +499,16 @@ package body Descriptors.Cluster is
                            Skip := Skip + 1;
                         end loop;
 
-                     case Elt.Kind is
-                        when Register_Element =>
-                           Elt.Reg.Overlap_Suffix :=
-                             To_Unbounded_String
-                               (Prefix (Skip .. Prefix'Last));
-                        when Cluster_Element =>
-                           Elt.Cluster.Overlap_Suffix :=
-                             To_Unbounded_String
-                               (Prefix (Skip .. Prefix'Last));
-                     end case;
+                        case Elt.Kind is
+                           when Register_Element =>
+                              Elt.Reg.Overlap_Suffix :=
+                                To_Unbounded_String
+                                  (Prefix (Skip .. Prefix'Last));
+                           when Cluster_Element =>
+                              Elt.Cluster.Overlap_Suffix :=
+                                To_Unbounded_String
+                                  (Prefix (Skip .. Prefix'Last));
+                        end case;
                      end;
                   end if;
 
@@ -723,9 +722,10 @@ package body Descriptors.Cluster is
                Typ        => Get_Ada_Type (Elt.Reg),
                Offset     => Elt.Reg.Address_Offset,
                LSB        => 0,
-               MSB        => (if Elt.Reg.Dim = 1
-                              then Elt.Reg.Reg_Properties.Size - 1
-                              else Elt.Reg.Dim * Elt.Reg.Dim_Increment * 8 - 1),
+               MSB        =>
+                 (if Elt.Reg.Dim = 1
+                  then Elt.Reg.Reg_Properties.Size - 1
+                  else Elt.Reg.Dim * Elt.Reg.Dim_Increment * 8 - 1),
                Is_Aliased => True,
                Comment    => To_String (Elt.Reg.Description));
 
@@ -738,9 +738,10 @@ package body Descriptors.Cluster is
                      Typ        => Get_Ada_Type (Elt.Reg),
                      Offset     => Elt.Reg.Address_Offset,
                      LSB        => 0,
-                     MSB        => (if Elt.Reg.Dim = 1
-                                    then Elt.Reg.Reg_Properties.Size - 1
-                                    else Elt.Reg.Dim * Elt.Reg.Dim_Increment * 8 - 1),
+                     MSB        =>
+                       (if Elt.Reg.Dim = 1
+                        then Elt.Reg.Reg_Properties.Size - 1
+                        else Elt.Reg.Dim * Elt.Reg.Dim_Increment * 8 - 1),
                      Is_Aliased => True,
                      Comment    => To_String (Elt.Reg.Description));
                when Cluster_Element =>
@@ -750,9 +751,11 @@ package body Descriptors.Cluster is
                      Typ        => Type_Holders.Element (Elt.Cluster.Ada_Type),
                      Offset     => Elt.Cluster.Address_Offset,
                      LSB        => 0,
-                     MSB        => (if Elt.Cluster.Dim = 1
-                                    then Elt.Cluster.Reg_Properties.Size - 1
-                                    else Elt.Cluster.Dim * Elt.Cluster.Dim_Increment * 8 - 1),
+                     MSB        =>
+                       (if Elt.Cluster.Dim = 1
+                        then Elt.Cluster.Reg_Properties.Size - 1
+                        else Elt.Cluster.Dim *
+                          Elt.Cluster.Dim_Increment * 8 - 1),
                      Is_Aliased => True,
                      Comment    => To_String (Elt.Cluster.Description));
             end case;

@@ -7,9 +7,13 @@ project SVD2Ada is
    for Object_Dir use "obj/";
    for Exec_Dir use ".";
 
+   package Builder is
+      for Default_Switches ("ada") use ("-s");
+   end Builder;
+
    package Compiler is
-      for Default_Switches ("ada") use ("-g", "-O2", "-gnatwa", "-gnatQ", "-gnatw.X");
+      for Default_Switches ("ada") use
+        ("-g", "-O2", "-gnatwae", "-gnatQ", "-gnatw.X", "-gnatyg-s");
    end Compiler;
 
 end SVD2Ada;
-

@@ -138,7 +138,6 @@ package body Descriptors.Enumerate is
       end if;
    end Read_Value;
 
-
    --------------------
    -- Read_Enumerate --
    --------------------
@@ -197,7 +196,6 @@ package body Descriptors.Enumerate is
             end;
          end if;
       end loop;
-
 
       return Ret;
    end Read_Enumerate;

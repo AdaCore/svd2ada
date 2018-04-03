@@ -243,7 +243,6 @@ package body Descriptors.Register is
 
    function Get_Ada_Type (Reg : Register_Access) return Ada_Gen.Ada_Type'Class
    is
-      use type Ada.Containers.Count_Type;
       use Unbounded;
    begin
       if Reg.Type_Holder /= null then
@@ -279,7 +278,7 @@ package body Descriptors.Register is
         or else Reg.Fields.Is_Empty
       then
          --  Don't generate anything here: we use a base type
-         Reg.Ada_type := -Ada_Gen.Target_Type (Reg.Reg_Properties.Size);
+         Reg.Ada_Type := -Ada_Gen.Target_Type (Reg.Reg_Properties.Size);
 
          if Reg.Dim > 1 then
             --  Just generate a comment to document the array that's going
@@ -332,7 +331,7 @@ package body Descriptors.Register is
                            Element_Type => Get_Ada_Type (Reg),
                            Comment      => To_String (Reg.Description));
          begin
-            Add_Aspect(Array_T, "Volatile");
+            Add_Aspect (Array_T, "Volatile");
             Add (Spec, Array_T);
             Reg.Ada_Type := -Array_T;
          end;

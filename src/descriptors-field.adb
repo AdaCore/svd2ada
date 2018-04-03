@@ -107,7 +107,7 @@ package body Descriptors.Field is
                      Val : String renames Get_Value (Child);
                   begin
                      for K in Val'Range loop
-                        if Val(K) = ':' then
+                        if Val (K) = ':' then
                            Ret.LSB :=
                              Natural'Value (Val (K + 1 .. Val'Last - 1));
                            Ret.Size :=

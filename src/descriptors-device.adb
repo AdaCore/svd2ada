@@ -33,6 +33,11 @@ package body Descriptors.Device is
    package Interrupt_Sort is new Interrupt_Vectors.Generic_Sorting
      (Base_Types."<");
 
+   procedure Dump_Handler_ASM
+     (Device     : Device_T;
+      Ints       : Interrupt_Vectors.Vector;
+      Output_Dir : String);
+
    -----------------
    -- Read_Device --
    -----------------
@@ -367,8 +372,8 @@ package body Descriptors.Device is
              Value       => -1));
 
          if Slice (Device.Description, 1, 5) = "STM32"
-	    and then Slice (Device.Description, 6, 7) /= "F0"
-	 then
+           and then Slice (Device.Description, 6, 7) /= "F0"
+         then
             --  ??? Workaround for the STM32F* svd files that do not define the
             --  FPU Interrupt. The STM32F0 series do not have an FPU.
             Interrupts.Append
@@ -399,7 +404,7 @@ package body Descriptors.Device is
       Interrupt_Sort.Sort (Interrupts);
 
       declare
-         typ : constant String := (if In_Runtime then "Interrupt_ID" else "");
+         Typ : constant String := (if In_Runtime then "Interrupt_ID" else "");
          --  When generating code for the run-time, we use the
          --  Ada.Interrupts.Interrupt_ID type. Otherwise, the interrupts are
          --  declared as named number to avoid dependency on Ada.Interrupts

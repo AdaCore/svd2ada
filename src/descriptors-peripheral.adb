@@ -261,7 +261,7 @@ package body Descriptors.Peripheral is
    begin
       for Elt of Db.Content loop
          if Elt.Kind = Register_Element
-           and then Ada.Strings.Unbounded.To_String (Elt.Reg.XML_Id) = XML_Id
+           and then Ada.Strings.Unbounded.To_String (Elt.Reg.Xml_Id) = XML_Id
          then
             return Elt.Reg;
          end if;
@@ -314,7 +314,9 @@ package body Descriptors.Peripheral is
 
       Added := False;
 
-      for J in 1 .. Integer (Peripheral_Element_Vectors.Length (Periph.Content)) loop
+      for J in 1 ..
+        Integer (Peripheral_Element_Vectors.Length (Periph.Content))
+      loop
          case Periph.Content (J).Kind is
             when Register_Element =>
                if Periph.Content (J).Reg.Address_Offset > Offset then
@@ -393,9 +395,10 @@ package body Descriptors.Peripheral is
                Typ        => Get_Ada_Type (Elt.Reg),
                Offset     => Elt.Reg.Address_Offset,
                LSB        => 0,
-               MSB        => (if Elt.Reg.Dim = 1
-                              then Elt.Reg.Reg_Properties.Size - 1
-                              else Elt.Reg.Dim * Elt.Reg.Dim_Increment * 8 - 1),
+               MSB        =>
+                 (if Elt.Reg.Dim = 1
+                  then Elt.Reg.Reg_Properties.Size - 1
+                  else Elt.Reg.Dim * Elt.Reg.Dim_Increment * 8 - 1),
                Is_Aliased => True,
                Comment    => To_String (Elt.Reg.Description));
 
@@ -422,9 +425,10 @@ package body Descriptors.Peripheral is
                      Typ        => Get_Ada_Type (Elt.Reg),
                      Offset     => Elt.Reg.Address_Offset,
                      LSB        => 0,
-                     MSB        => (if Elt.Reg.Dim = 1
-                                    then Elt.Reg.Reg_Properties.Size - 1
-                                    else Elt.Reg.Dim * Elt.Reg.Dim_Increment * 8 - 1),
+                     MSB        =>
+                       (if Elt.Reg.Dim = 1
+                        then Elt.Reg.Reg_Properties.Size - 1
+                        else Elt.Reg.Dim * Elt.Reg.Dim_Increment * 8 - 1),
                      Is_Aliased => True,
                      Comment    => To_String (Elt.Reg.Description));
                when Cluster_Element =>
@@ -434,7 +438,8 @@ package body Descriptors.Peripheral is
                      Typ        => Type_Holders.Element (Elt.Cluster.Ada_Type),
                      Offset     => Elt.Cluster.Address_Offset,
                      LSB        => 0,
-                     MSB        => Get_Size (Elt.Cluster.all) * Elt.Cluster.Dim - 1,
+                     MSB        =>
+                        Get_Size (Elt.Cluster.all) * Elt.Cluster.Dim - 1,
                      Is_Aliased => True,
                      Comment    => To_String (Elt.Cluster.Description));
             end case;
