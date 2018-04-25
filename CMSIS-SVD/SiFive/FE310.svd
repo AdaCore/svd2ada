@@ -22,6 +22,164 @@
   <peripherals>
 
     <peripheral>
+      <name>OTP_Mem</name>
+      <description>One-Time Programmable Memory.</description>
+      <baseAddress>0x00020000</baseAddress>
+      <groupName>OTP_Mem</groupName>
+      <size>32</size>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x2000</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+
+        <register>
+          <name>BOOT</name>
+          <description>Code to jump to LAST FENCE.</description>
+          <addressOffset>0x0000</addressOffset>
+        </register>
+
+        <register>
+          <name>LIFECYCLE</name>
+          <description>OTP Lifecycle Counter.</description>
+          <addressOffset>0x1FF0</addressOffset>
+        </register>
+
+        <register>
+          <name>HFROSC_TRIM</name>
+          <description>HFROSC Trim Setting for 72MHz.</description>
+          <addressOffset>0x1FEC</addressOffset>
+          <fields>
+            <field><name>VALUE</name><lsb>0</lsb><msb>4</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>STAMP</name>
+          <description>Board Identifier.</description>
+          <addressOffset>0x1FE4</addressOffset>
+        </register>
+
+        <register>
+          <name>LFROSC_TRIM</name>
+          <description>LFROSC Trim Setting, left unburned on HiFive1.</description>
+          <addressOffset>0x1FE8</addressOffset>
+          <fields>
+            <field><name>VALUE</name><lsb>0</lsb><msb>4</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <dim>3</dim>
+          <dimIncrement>4</dimIncrement>
+          <name>LAST_FENCE[%s]</name>
+          <description>Code to jump to SPI-FLASH.</description>
+          <addressOffset>0x1FF4</addressOffset>
+        </register>
+
+      </registers>
+
+    </peripheral> <!-- OTP_mem -->
+
+    <peripheral>
+      <name>PRIC</name>
+      <description>Power, Reset, Clock, Interrupt.</description>
+      <baseAddress>0x10008000</baseAddress>
+      <groupName>PRIC</groupName>
+      <size>32</size>
+      <access>read-write</access>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x10</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+
+        <register>
+          <name>HFROSCCFG</name>
+          <description>HF Ring Oscillator Configuration Register.</description>
+          <addressOffset>0x0</addressOffset>
+          <fields>
+            <field><name>DIV</name><lsb>0</lsb><msb>5</msb></field>
+            <field><name>TRIM</name><lsb>16</lsb><msb>20</msb></field>
+            <field><name>ENABLE</name><lsb>30</lsb><msb>30</msb></field>
+            <field><name>READY</name><lsb>31</lsb><msb>31</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>HFXOSCCFG</name>
+          <description>HF Crystal Oscillator Configuration Register.</description>
+          <addressOffset>0x4</addressOffset>
+          <fields>
+            <field><name>ENABLE</name><lsb>30</lsb><msb>30</msb></field>
+            <field><name>READY</name><lsb>31</lsb><msb>31</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>PLLCFG</name>
+          <description>PLL Configuration Register.</description>
+          <addressOffset>0x8</addressOffset>
+          <fields>
+            <field><name>R</name><lsb>0</lsb><msb>2</msb></field>
+            <field><name>F</name><lsb>4</lsb><msb>9</msb></field>
+            <field><name>Q</name><lsb>10</lsb><msb>11</msb></field>
+            <field>
+              <name>SEL</name><lsb>16</lsb><msb>16</msb>
+              <enumeratedValues>               
+                <enumeratedValue>
+                  <name>Internal</name>
+                  <description>The HFROSCCLK directly drives HFCLK.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>PLL</name>
+                  <description>Drive the final HFCLK with PLL output, bypassed or otherwise.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>REFSEL</name><lsb>17</lsb><msb>17</msb>
+              <enumeratedValues>               
+                <enumeratedValue>
+                  <name>Crystal</name>
+                  <description>Crystal OScillator.</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Internal</name>
+                  <description>Internal Oscillator.</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field><name>BYPASS</name><lsb>18</lsb><msb>18</msb></field>
+            <field><name>LOCK</name><lsb>31</lsb><msb>31</msb></field>
+          </fields>
+        </register>
+
+        <register>
+          <name>PLLOUTDIV</name>
+          <description>PLL Output Divider Register.</description>
+          <addressOffset>0xC</addressOffset>
+          <fields>
+            <field><name>DIV</name><lsb>0</lsb><msb>5</msb></field>
+            <field><name>DIV_BY_1</name><lsb>8</lsb><msb>8</msb></field>
+          </fields>
+        </register>
+
+      </registers>
+    </peripheral> <!-- PRIC -->
+
+    <peripheral>
       <name>PLIC</name>
       <description>Platform-Level Interrupt Controller.</description>
       <baseAddress>0x0C000000</baseAddress>
