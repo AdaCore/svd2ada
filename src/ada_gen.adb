@@ -1209,37 +1209,6 @@ package body Ada_Gen is
       Ada.Text_IO.Close (F);
    end Write_Spec;
 
-   procedure Ensure_Enum_Name_Not_Duplicated
-   (Spec : Ada_Spec;
-    Enum : in out Ada_Type_Enum)
-   is
-      use type Ada.Tags.Tag;
-      Retry     : Boolean := True;
-      Idx : Natural := 0;
-      Name_Orig : constant Unbounded_String := Enum.Id;
-   begin
-      while Retry loop
-         Retry := False;
-         for Prev of Spec.Elements loop
-            if Prev in Ada_Type'Class then
-               declare
-                  Prev_T : constant Ada_Type'Class := Ada_Type'Class (Prev);
-                  Enum_T : constant Ada_Type'Class := Ada_Type'Class (Enum);
-               begin
-                  if Prev_T.Id = Enum_T.Id and Enum_T'Tag = Prev_T'Tag then
-                     Idx := Idx + 1;
-                     Enum.Id := Name_Orig & "_" & To_String (Idx);
-                     Retry := True;
-
-                     --  We exit to recheck all the elements of the Spec.
-                     exit;
-                  end if;
-               end;
-            end if;
-         end loop;
-      end loop;
-   end Ensure_Enum_Name_Not_Duplicated;
-
    ---------
    -- Add --
    ---------
@@ -1800,7 +1769,7 @@ package body Ada_Gen is
          end if;
       end loop;
 
-      The_Id := Ada_Identifier (Camel_C, To_String (Enum.Id));
+      The_Id := Ada_Identifier (Camel_C, "Val");
 
       --  Check duplicated names
       Suffix := 0;
