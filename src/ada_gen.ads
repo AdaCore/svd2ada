@@ -340,6 +340,10 @@ package Ada_Gen is
      (Spec       : Ada_Spec;
       Output_Dir : String);
 
+   procedure Ensure_Enum_Name_Not_Duplicated
+   (Spec : Ada_Spec;
+    Enum : in out Ada_Type_Enum);
+
    procedure Add
      (Spec : in out Ada_Spec;
       Elt  : Ada_With_Clause);

@@ -391,6 +391,11 @@ package body Descriptors.Field is
                   begin
                      Add_Size_Aspect (Enum_T, Ada_Type_Size);
 
+                     --  Here we check that an Enum with the same name is not
+                     --  already present in the spec, otherwise we change the
+                     --  name of Enum_T.
+                     Ensure_Enum_Name_Not_Duplicated (Spec, Enum_T);
+
                      for Val of Enum.Values loop
                         Enum_Val := Add_Enum_Id
                           (Spec,
