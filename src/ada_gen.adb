@@ -1769,7 +1769,7 @@ package body Ada_Gen is
          end if;
       end loop;
 
-      The_Id := Ada_Identifier (Camel_C, To_String (Enum.Id));
+      The_Id := Ada_Identifier (Camel_C, "Val");
 
       --  Check duplicated names
       Suffix := 0;
