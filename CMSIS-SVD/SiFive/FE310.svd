@@ -152,12 +152,12 @@
                 <enumeratedValue>
                   <name>Crystal</name>
                   <description>Crystal OScillator.</description>
-                  <value>0</value>
+                  <value>1</value>
                 </enumeratedValue>
                 <enumeratedValue>
                   <name>Internal</name>
                   <description>Internal Oscillator.</description>
-                  <value>1</value>
+                  <value>0</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
