@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                    Copyright (C) 2015-2018, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -29,6 +29,7 @@ package body SVD2Ada_Utils is
    G_Types_Pkg         : Unbounded_String := Null_Unbounded_String;
    G_Root_Pkg          : Unbounded_String := Null_Unbounded_String;
    G_Use_UInt          : Boolean := False;
+   G_Gen_Arrays        : Boolean := True;
    G_Gen_Trap_Handlers : Boolean := False;
 
    -------------------------
@@ -223,6 +224,26 @@ package body SVD2Ada_Utils is
          return True;
       end if;
    end In_Runtime;
+
+   --------------------
+   -- Set_Gen_Arrays --
+   --------------------
+
+   procedure Set_Gen_Arrays (Value : Boolean)
+   is
+   begin
+      G_Gen_Arrays := Value;
+   end Set_Gen_Arrays;
+
+   ----------------
+   -- Gen_Arrays --
+   ----------------
+
+   function Gen_Arrays return Boolean
+   is
+   begin
+      return G_Gen_Arrays;
+   end Gen_Arrays;
 
    ---------------------------
    -- Set_Gen_Trap_Handlers --

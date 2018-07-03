@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                    Copyright (C) 2015-2018, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -25,6 +25,7 @@ with DOM.Core.Elements;  use DOM.Core.Elements;
 with DOM.Core.Nodes;
 
 with Ada_Gen;            use Ada_Gen;
+with SVD2Ada_Utils;
 
 package body Descriptors.Peripheral is
 
@@ -202,9 +203,10 @@ package body Descriptors.Peripheral is
                                     Ret.Reg_Properties,
                                     Ret);
 
-                                 if Register.Dim > 1
-                                   and then Register.Dim_Increment /=
-                                     Register.Reg_Properties.Size / 8
+                                 if not SVD2Ada_Utils.Gen_Arrays
+                                   or else (Register.Dim > 1
+                                            and then Register.Dim_Increment /=
+                                              Register.Reg_Properties.Size / 8)
                                  then
                                     --  in such case, this certainly indicates
                                     --  two intertwined arrays of registers, We

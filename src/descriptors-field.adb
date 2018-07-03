@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                    Copyright (C) 2015-2018, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -431,21 +431,23 @@ package body Descriptors.Field is
             --  to handle them as such.
 
             Length := 1;
-            First  := Natural'Last;
-            Prefix := Unbounded.Length (Fields (Index).Name);
+            if SVD2Ada_Utils.Gen_Arrays then
+               First  := Natural'Last;
+               Prefix := Unbounded.Length (Fields (Index).Name);
 
-            Index2 := Index + Fields (Index).Size;
-            while Index2 < Properties.Size loop
-               if Similar_Field
-                 (Fields (Index), Fields (Index2), Prefix, First)
-               then
-                  Length := Length + 1;
-               else
-                  exit;
-               end if;
+               Index2 := Index + Fields (Index).Size;
+               while Index2 < Properties.Size loop
+                  if Similar_Field
+                    (Fields (Index), Fields (Index2), Prefix, First)
+                  then
+                     Length := Length + 1;
+                  else
+                     exit;
+                  end if;
 
-               Index2 := Index2 + Fields (Index).Size;
-            end loop;
+                  Index2 := Index2 + Fields (Index).Size;
+               end loop;
+            end if;
 
             if Length = 1 then
                --  Simple field

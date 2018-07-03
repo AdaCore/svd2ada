@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                    Copyright (C) 2015-2018, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -81,6 +81,7 @@ is
    Base_Types_Pkg    : aliased GNAT.Strings.String_Access;
    Gen_Booleans      : aliased Boolean := False;
    Gen_UInt_Always   : aliased Boolean := False;
+   No_Arrays         : aliased Boolean := False;
    Gen_Trap_Handlers : aliased Boolean := False;
 
    use type GNAT.Strings.String_Access;
@@ -130,6 +131,14 @@ begin
       Value       => True);
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
+      Output      => No_Arrays'Access,
+      Long_Switch => "--no-arrays",
+      Help        => "in some circumstances (similar names indexed by " &
+        "ascending numbers), svd2ada can generate arrays of registers or " &
+        "arrays of register fields. This switch prevents this behavior",
+      Value       => True);
+   GNAT.Command_Line.Define_Switch
+     (Cmd_Line_Cfg,
       Output      => Gen_Trap_Handlers'Access,
       Long_Switch => "--gen-trap-handlers",
       Help        => "Generate trap handlers (handlers.S) even is the root" &
@@ -155,6 +164,7 @@ begin
 
    SVD2Ada_Utils.Set_Use_Boolean_For_Bit (Gen_Booleans);
    SVD2Ada_Utils.Set_Use_UInt (Gen_UInt_Always);
+   SVD2Ada_Utils.Set_Gen_Arrays (not No_Arrays);
    SVD2Ada_Utils.Set_Gen_Trap_Handlers (Gen_Trap_Handlers);
 
    if Pkg.all /= "" then
