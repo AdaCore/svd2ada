@@ -25,12 +25,12 @@ with GNAT.OS_Lib;           use GNAT.OS_Lib;
 
 package body SVD2Ada_Utils is
 
-   G_Use_Boolean       : Boolean := False;
-   G_Types_Pkg         : Unbounded_String := Null_Unbounded_String;
-   G_Root_Pkg          : Unbounded_String := Null_Unbounded_String;
-   G_Use_UInt          : Boolean := False;
-   G_Gen_Arrays        : Boolean := True;
-   G_Gen_Trap_Handlers : Boolean := False;
+   G_Use_Boolean     : Boolean := False;
+   G_Types_Pkg       : Unbounded_String := Null_Unbounded_String;
+   G_Root_Pkg        : Unbounded_String := Null_Unbounded_String;
+   G_Use_UInt        : Boolean := False;
+   G_Gen_Arrays      : Boolean := True;
+   G_Gen_IRQ_Support : Boolean := False;
 
    -------------------------
    -- Executable_Location --
@@ -245,22 +245,22 @@ package body SVD2Ada_Utils is
       return G_Gen_Arrays;
    end Gen_Arrays;
 
-   ---------------------------
-   -- Set_Gen_Trap_Handlers --
-   ---------------------------
+   -------------------------
+   -- Set_Gen_IRQ_Support --
+   -------------------------
 
-   procedure Set_Gen_Trap_Handlers (Value : Boolean) is
+   procedure Set_Gen_IRQ_Support (Value : Boolean) is
    begin
-      G_Gen_Trap_Handlers := Value;
-   end Set_Gen_Trap_Handlers;
+      G_Gen_IRQ_Support := Value;
+   end Set_Gen_IRQ_Support;
 
-   -----------------------
-   -- Gen_Trap_Handlers --
-   -----------------------
+   ---------------------
+   -- Gen_IRQ_Support --
+   ---------------------
 
-   function Gen_Trap_Handlers return Boolean is
+   function Gen_IRQ_Support return Boolean is
    begin
-      return G_Gen_Trap_Handlers or else In_Runtime;
-   end Gen_Trap_Handlers;
+      return G_Gen_IRQ_Support or else In_Runtime;
+   end Gen_IRQ_Support;
 
 end SVD2Ada_Utils;

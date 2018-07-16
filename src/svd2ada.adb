@@ -60,29 +60,29 @@ with SVD2Ada_Utils;
 function SVD2Ada return Integer
 is
    --  Local variables used for XML parsing
-   Input         : File_Input;
-   Reader        : Tree_Reader;
-   Sc_Reader     : Schema_Reader;
-   Grammar       : XML_Grammar;
-   Doc           : Document;
-   Schema        : constant String :=
-                     GNAT.OS_Lib.Normalize_Pathname
-                       ("schema/CMSIS-SVD_Schema_1_3_1.xsd",
-                        SVD2Ada_Utils.Executable_Location);
+   Input           : File_Input;
+   Reader          : Tree_Reader;
+   Sc_Reader       : Schema_Reader;
+   Grammar         : XML_Grammar;
+   Doc             : Document;
+   Schema          : constant String :=
+                       GNAT.OS_Lib.Normalize_Pathname
+                         ("schema/CMSIS-SVD_Schema_1_3_1.xsd",
+                          SVD2Ada_Utils.Executable_Location);
 
    --  The produced Device
-   Device        : Descriptors.Device.Device_T;
-   SVD_File      : Unbounded_String;
+   Device          : Descriptors.Device.Device_T;
+   SVD_File        : Unbounded_String;
 
    --  Command line parser
-   Cmd_Line_Cfg      : GNAT.Command_Line.Command_Line_Configuration;
-   Pkg               : aliased GNAT.Strings.String_Access;
-   Out_Dir           : aliased GNAT.Strings.String_Access;
-   Base_Types_Pkg    : aliased GNAT.Strings.String_Access;
-   Gen_Booleans      : aliased Boolean := False;
-   Gen_UInt_Always   : aliased Boolean := False;
-   No_Arrays         : aliased Boolean := False;
-   Gen_Trap_Handlers : aliased Boolean := False;
+   Cmd_Line_Cfg    : GNAT.Command_Line.Command_Line_Configuration;
+   Pkg             : aliased GNAT.Strings.String_Access;
+   Out_Dir         : aliased GNAT.Strings.String_Access;
+   Base_Types_Pkg  : aliased GNAT.Strings.String_Access;
+   Gen_Booleans    : aliased Boolean := False;
+   Gen_UInt_Always : aliased Boolean := False;
+   No_Arrays       : aliased Boolean := False;
+   Gen_IRQ_Support : aliased Boolean := False;
 
    use type GNAT.Strings.String_Access;
 
@@ -139,10 +139,11 @@ begin
       Value       => True);
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
-      Output      => Gen_Trap_Handlers'Access,
-      Long_Switch => "--gen-trap-handlers",
-      Help        => "Generate trap handlers (handlers.S) even is the root" &
-        " is not a run-time package",
+      Output      => Gen_IRQ_Support'Access,
+      Long_Switch => "--gen-interrupts",
+      Help        => "Generate trap handlers and interrupt name package. " &
+        "Activated by default is the generated root package is a run-time " &
+        "package",
       Value       => True);
 
    GNAT.Command_Line.Getopt
@@ -162,14 +163,20 @@ begin
       SVD_File := To_Unbounded_String (GNAT.OS_Lib.Normalize_Pathname (SVD));
    end;
 
+   if Pkg.all /= "" then
+      SVD2Ada_Utils.Set_Root_Package (Pkg.all);
+
+      --  If Pkg is a runtime package, force the generation of Interrupts.Name
+      --  and IRQ trap vector.
+      if SVD2Ada_Utils.In_Runtime then
+         Gen_IRQ_Support := True;
+      end if;
+   end if;
+
    SVD2Ada_Utils.Set_Use_Boolean_For_Bit (Gen_Booleans);
    SVD2Ada_Utils.Set_Use_UInt (Gen_UInt_Always);
    SVD2Ada_Utils.Set_Gen_Arrays (not No_Arrays);
-   SVD2Ada_Utils.Set_Gen_Trap_Handlers (Gen_Trap_Handlers);
-
-   if Pkg.all /= "" then
-      SVD2Ada_Utils.Set_Root_Package (Pkg.all);
-   end if;
+   SVD2Ada_Utils.Set_Gen_IRQ_Support (Gen_IRQ_Support);
 
    if Base_Types_Pkg.all /= "" then
       SVD2Ada_Utils.Set_Base_Types_Package (Base_Types_Pkg.all);

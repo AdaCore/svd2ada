@@ -38,13 +38,9 @@ package SVD2Ada_Utils is
    procedure Set_Gen_Arrays (Value : Boolean);
    function Gen_Arrays return Boolean;
 
-   procedure Set_Gen_Trap_Handlers (Value : Boolean);
-   --  Force generation of trap handlers even if the root is not a run-time
-   --  package.
-
-   function Gen_Trap_Handlers return Boolean;
-   --  Returns True if the trap handlers (handler.S) should be generated.
-   --  Trap handlers are generated if the root is a run-time package or if the
-   --  user requested with a command line option.
+   procedure Set_Gen_IRQ_Support (Value : Boolean);
+   function Gen_IRQ_Support return Boolean;
+   --  Whether to generate trap handler assembly file and Interrupts.Names
+   --  package
 
 end SVD2Ada_Utils;
