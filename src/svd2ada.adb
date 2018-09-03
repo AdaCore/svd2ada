@@ -81,6 +81,7 @@ is
    Base_Types_Pkg  : aliased GNAT.Strings.String_Access;
    Gen_Booleans    : aliased Boolean := False;
    Gen_UInt_Always : aliased Boolean := False;
+   No_UInt_Subtype : aliased Boolean := False;
    No_Arrays       : aliased Boolean := False;
    Gen_IRQ_Support : aliased Boolean := False;
 
@@ -131,6 +132,13 @@ begin
       Value       => True);
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
+      Output      => No_UInt_Subtype'Access,
+      Long_Switch => "--no-uint-subtypes",
+      Help        => "do not generate subtypes for fields, but use the base" &
+        " uint type instead",
+      Value       => True);
+   GNAT.Command_Line.Define_Switch
+     (Cmd_Line_Cfg,
       Output      => No_Arrays'Access,
       Long_Switch => "--no-arrays",
       Help        => "in some circumstances (similar names indexed by " &
@@ -175,6 +183,7 @@ begin
 
    SVD2Ada_Utils.Set_Use_Boolean_For_Bit (Gen_Booleans);
    SVD2Ada_Utils.Set_Use_UInt (Gen_UInt_Always);
+   SVD2Ada_Utils.Set_No_UInt_Subtype (No_UInt_Subtype);
    SVD2Ada_Utils.Set_Gen_Arrays (not No_Arrays);
    SVD2Ada_Utils.Set_Gen_IRQ_Support (Gen_IRQ_Support);
 

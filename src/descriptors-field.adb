@@ -470,18 +470,20 @@ package body Descriptors.Field is
                   --  field is allowed using FIELD_TYPE (Value).
                   Ada_Type := -Ada_Gen.Target_Type (Ada_Type_Size);
 
-                  declare
-                     Sub_T : Ada_Subtype_Scalar :=
-                               New_Subype_Scalar
-                                 (Id  => To_String (Reg.Type_Name) &
-                                         "_" &
-                                         To_String (Fields (Index).Name) &
-                                         "_Field",
-                                  Typ => -Ada_Type);
-                  begin
-                     Add (Spec, Sub_T);
-                     Ada_Type := -Sub_T;
-                  end;
+                  if SVD2Ada_Utils.Gen_UInt_Subtype then
+                     declare
+                        Sub_T : Ada_Subtype_Scalar :=
+                                  New_Subype_Scalar
+                                    (Id  => To_String (Reg.Type_Name) &
+                                       "_" &
+                                       To_String (Fields (Index).Name) &
+                                       "_Field",
+                                     Typ => -Ada_Type);
+                     begin
+                        Add (Spec, Sub_T);
+                        Ada_Type := -Sub_T;
+                     end;
+                  end if;
                end if;
                --  If Ada_Type is not Null_Unbounded_String, then the Field
                --  type has already been generated
@@ -512,17 +514,22 @@ package body Descriptors.Field is
                      end if;
 
                   elsif Ada_Type.Is_Empty then
-                     declare
-                        Scalar_T : Ada_Subtype_Scalar :=
-                                     New_Subype_Scalar
-                                       (Id      => T_Name & "_Element",
-                                        Typ     =>
-                                          Target_Type (Ada_Type_Size),
-                                        Comment => T_Name & " array element");
-                     begin
-                        Add (Spec, Scalar_T);
-                        Ada_Type := -Scalar_T;
-                     end;
+                     Ada_Type := -Target_Type (Ada_Type_Size);
+
+                     if SVD2Ada_Utils.Gen_UInt_Subtype then
+                        declare
+                           Scalar_T : Ada_Subtype_Scalar :=
+                                        New_Subype_Scalar
+                                          (Id      => T_Name & "_Element",
+                                           Typ     =>
+                                             Target_Type (Ada_Type_Size),
+                                           Comment =>
+                                             T_Name & " array element");
+                        begin
+                           Add (Spec, Scalar_T);
+                           Ada_Type := -Scalar_T;
+                        end;
+                     end if;
                   end if;
 
                   Array_T :=

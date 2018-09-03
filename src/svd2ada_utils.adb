@@ -25,12 +25,13 @@ with GNAT.OS_Lib;           use GNAT.OS_Lib;
 
 package body SVD2Ada_Utils is
 
-   G_Use_Boolean     : Boolean := False;
-   G_Types_Pkg       : Unbounded_String := Null_Unbounded_String;
-   G_Root_Pkg        : Unbounded_String := Null_Unbounded_String;
-   G_Use_UInt        : Boolean := False;
-   G_Gen_Arrays      : Boolean := True;
-   G_Gen_IRQ_Support : Boolean := False;
+   G_Use_Boolean      : Boolean := False;
+   G_Types_Pkg        : Unbounded_String := Null_Unbounded_String;
+   G_Root_Pkg         : Unbounded_String := Null_Unbounded_String;
+   G_Use_UInt         : Boolean := False;
+   G_Gen_Arrays       : Boolean := True;
+   G_Gen_IRQ_Support  : Boolean := False;
+   G_Gen_UInt_Subtype : Boolean := True;
 
    -------------------------
    -- Executable_Location --
@@ -156,6 +157,26 @@ package body SVD2Ada_Utils is
    begin
       return G_Use_UInt;
    end Use_UInt_Always;
+
+   -------------------------
+   -- Set_No_UInt_Subtype --
+   -------------------------
+
+   procedure Set_No_UInt_Subtype (Value : Boolean)
+   is
+   begin
+      G_Gen_UInt_Subtype := not Value;
+   end Set_No_UInt_Subtype;
+
+   ----------------------
+   -- Gen_UInt_Subtype --
+   ----------------------
+
+   function Gen_UInt_Subtype return Boolean
+   is
+   begin
+      return G_Gen_UInt_Subtype;
+   end Gen_UInt_Subtype;
 
    ----------------------------
    -- Set_Base_Types_Package --
