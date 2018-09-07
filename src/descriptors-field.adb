@@ -319,7 +319,7 @@ package body Descriptors.Field is
             --  Retrieve the reset value
             Default := Get_Default (Index, Length);
 
-            if not All_RO then
+            if not All_RO and then SVD2Ada_Utils.Gen_Fields_Default then
                Ada_Gen.Add_Field
                  (Rec,
                   "Reserved_" & To_String (Index) &
@@ -351,7 +351,7 @@ package body Descriptors.Field is
             --  Whether to use a Boolean for bit fields
             As_Boolean := SVD2Ada_Utils.Use_Boolean_For_Bit;
 
-            if not All_RO then
+            if not All_RO and then SVD2Ada_Utils.Gen_Fields_Default then
                --  Retrieve the reset value
                Default :=
                  Get_Default (Index, Fields (Index).Size);
@@ -670,7 +670,7 @@ package body Descriptors.Field is
                   null;
             end case;
 
-            if All_RO then
+            if All_RO or else not SVD2Ada_Utils.Gen_Fields_Default then
                Add_Field
                  (Rec,
                   Id         => To_String (Ada_Name),

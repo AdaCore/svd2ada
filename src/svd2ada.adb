@@ -83,6 +83,7 @@ is
    Gen_UInt_Always : aliased Boolean := False;
    No_UInt_Subtype : aliased Boolean := False;
    No_Arrays       : aliased Boolean := False;
+   No_Defaults     : aliased Boolean := False;
    Gen_IRQ_Support : aliased Boolean := False;
 
    use type GNAT.Strings.String_Access;
@@ -147,6 +148,13 @@ begin
       Value       => True);
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
+      Output      => No_Defaults'Access,
+      Long_Switch => "--no-defaults",
+      Help        => "Do not use the registers reset values to provide" &
+        " default fields values",
+      Value       => True);
+   GNAT.Command_Line.Define_Switch
+     (Cmd_Line_Cfg,
       Output      => Gen_IRQ_Support'Access,
       Long_Switch => "--gen-interrupts",
       Help        => "Generate trap handlers and interrupt name package. " &
@@ -184,6 +192,7 @@ begin
    SVD2Ada_Utils.Set_Use_Boolean_For_Bit (Gen_Booleans);
    SVD2Ada_Utils.Set_Use_UInt (Gen_UInt_Always);
    SVD2Ada_Utils.Set_No_UInt_Subtype (No_UInt_Subtype);
+   SVD2Ada_Utils.Set_No_Defaults (No_UInt_Subtype);
    SVD2Ada_Utils.Set_Gen_Arrays (not No_Arrays);
    SVD2Ada_Utils.Set_Gen_IRQ_Support (Gen_IRQ_Support);
 

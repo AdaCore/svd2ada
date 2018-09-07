@@ -30,6 +30,9 @@ package SVD2Ada_Utils is
    procedure Set_No_UInt_Subtype (Value : Boolean);
    function Gen_UInt_Subtype return Boolean;
 
+   procedure Set_No_Defaults (Value : Boolean);
+   function Gen_Fields_Default return Boolean;
+
    procedure Set_Base_Types_Package (Value : String);
    function Base_Types_Package return String;
    function External_Base_Types_Package return Boolean;
