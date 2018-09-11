@@ -44,6 +44,27 @@ package body Descriptors.Device is
    --  Dump the IRQ names and trap handlers
 
    -----------------
+   -- MCU_To_CPU --
+   -----------------
+
+   function MCU_To_CPU
+     (Device : Device_T) return Unbounded_String
+   is
+      Descrition_String : constant String := To_String (Device.Short_Desc);
+      CPU : Unbounded_String;
+   begin
+      if Starts_With (S1 => Descrition_String, S2 => "STM32F0") then
+         CPU := To_Unbounded_String ("cortex-m0");
+      elsif Starts_With (S1 => Descrition_String, S2 => "Cortex-M1") then
+         CPU := To_Unbounded_String ("cortex-m1");
+      else
+         CPU := To_Unbounded_String ("cortex-m4");
+      end if;
+
+      return CPU;
+   end MCU_To_CPU;
+
+   -----------------
    -- Read_Device --
    -----------------
 
@@ -209,7 +230,8 @@ package body Descriptors.Device is
       New_Line (ASM);
       Put_Line (ASM, ASCII.HT & ".syntax unified");
       --  ??? target is m4/m7, but what about previous versions?
-      Put_Line (ASM, ASCII.HT & ".cpu cortex-m4");
+      Put_Line (ASM, ASCII.HT & ".cpu " &
+                  To_String (MCU_To_CPU (Device => Device)));
       Put_Line (ASM, ASCII.HT & ".thumb");
       New_Line (ASM);
 
