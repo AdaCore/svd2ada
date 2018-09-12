@@ -50,12 +50,12 @@ package body Descriptors.Device is
    function MCU_To_CPU
      (Device : Device_T) return Unbounded_String
    is
-      Descrition_String : constant String := To_String (Device.Short_Desc);
+      Description_String : constant String := To_String (Device.Short_Desc);
       CPU : Unbounded_String;
    begin
-      if Starts_With (S1 => Descrition_String, S2 => "STM32F0") then
+      if Starts_With (S1 => Description_String, S2 => "STM32F0") then
          CPU := To_Unbounded_String ("cortex-m0");
-      elsif Starts_With (S1 => Descrition_String, S2 => "Cortex-M1") then
+      elsif Starts_With (S1 => Description_String, S2 => "Cortex-M1") then
          CPU := To_Unbounded_String ("cortex-m1");
       else
          CPU := To_Unbounded_String ("cortex-m4");
