@@ -25,6 +25,7 @@ with DOM.Core.Elements;  use DOM.Core.Elements;
 with DOM.Core.Nodes;
 
 with Ada_Gen;            use Ada_Gen;
+with SVD2Ada_Utils;
 
 package body Descriptors.Register is
 
@@ -304,7 +305,9 @@ package body Descriptors.Register is
                Reg.Fields,
                Reg.Reg_Properties);
 
-            Add_Aspect (Rec, "Volatile_Full_Access");
+            if not SVD2Ada_Utils.No_VFA_On_Reg_Types then
+               Add_Aspect (Rec, "Volatile_Full_Access");
+            end if;
             Add_Size_Aspect (Rec, Reg.Reg_Properties.Size);
             Add_Bit_Order_Aspect (Rec, System.Low_Order_First);
 
@@ -317,8 +320,14 @@ package body Descriptors.Register is
          end;
       end if;
 
+      --  Create an array of registers if Dim > 1 and the registers are
+      --  contiguous.
+      --  Do not do this when we apply the Virtual_Full_Access to clusters or
+      --  peripheral fields instead of the base register type, as we can't
+      --  specify that array components are Virtual_Full_Access.
       if Reg.Dim > 1
         and then Reg.Dim_Increment = Reg.Reg_Properties.Size / 8
+        and then not SVD2Ada_Utils.No_VFA_On_Reg_Types
       then
          declare
             Array_T : Ada_Type_Array :=
@@ -331,7 +340,6 @@ package body Descriptors.Register is
                            Element_Type => Get_Ada_Type (Reg),
                            Comment      => To_String (Reg.Description));
          begin
-            Add_Aspect (Array_T, "Volatile");
             Add (Spec, Array_T);
             Reg.Ada_Type := -Array_T;
          end;

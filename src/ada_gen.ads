@@ -202,6 +202,11 @@ package Ada_Gen is
      (Elt   : in out Ada_Type_Record'Class;
       Order : System.Bit_Order);
 
+   type Field_Properties is record
+      Is_Aliased     : Boolean := True;
+      Is_Volatile_FA : Boolean;
+   end record;
+
    procedure Add_Field
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
@@ -209,7 +214,7 @@ package Ada_Gen is
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
-      Is_Aliased  : Boolean;
+      Properties  : Field_Properties;
       Comment     : String := "");
 
    procedure Add_Field
@@ -220,7 +225,7 @@ package Ada_Gen is
       LSB         : Natural;
       MSB         : Natural;
       Default     : Unsigned;
-      Is_Aliased  : Boolean;
+      Properties  : Field_Properties;
       Comment     : String := "");
    procedure Add_Field
      (Rec         : in out Ada_Type_Record'Class;
@@ -230,7 +235,7 @@ package Ada_Gen is
       LSB         : Natural;
       MSB         : Natural;
       Default     : Unbounded_String;
-      Is_Aliased  : Boolean;
+      Properties  : Field_Properties;
       Comment     : String := "");
    --  Adds a new field to the record 'rec'
    --  Id : The ID of the field
@@ -270,7 +275,7 @@ package Ada_Gen is
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
-      Is_Aliased  : Boolean;
+      Properties  : Field_Properties;
       Comment     : String := "");
 
    overriding function Is_Similar
@@ -528,7 +533,7 @@ private
       MSB         : Natural;
       Has_Default : Boolean;
       Default     : Unbounded_String;
-      Is_Aliased  : Boolean;
+      Properties  : Field_Properties;
       Comment     : Ada_Comment;
    end record;
 

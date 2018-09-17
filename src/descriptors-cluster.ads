@@ -72,6 +72,10 @@ package Descriptors.Cluster is
       Spec      : in out Ada_Gen.Ada_Spec;
       Type_Name : String) return Ada_Type_Enum;
 
+   procedure Dump_Peripheral_Elements
+     (Parent : in out Ada_Gen.Ada_Type_Record'Class;
+      Elts   : Peripheral_Element_Vectors.Vector);
+
    type Cluster_T is new Register_Db and Cluster_Db with record
       Name            : Unbounded.Unbounded_String;
       Xml_Id          : Unbounded.Unbounded_String;

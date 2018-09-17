@@ -388,65 +388,9 @@ package body Descriptors.Peripheral is
    begin
       Add_Aspect (Rec, "Volatile");
 
-      for Elt of Peripheral.Content loop
-         if Elt.Kind = Register_Element and then Elt.Reg.Is_Overlapping then
-            Add_Field
-              (Ada_Type_Union (Rec),
-               Enum_Val   => To_String (Elt.Reg.Overlap_Suffix),
-               Id         => To_String (Elt.Reg.Name),
-               Typ        => Get_Ada_Type (Elt.Reg),
-               Offset     => Elt.Reg.Address_Offset,
-               LSB        => 0,
-               MSB        =>
-                 (if Elt.Reg.Dim = 1
-                  then Elt.Reg.Reg_Properties.Size - 1
-                  else Elt.Reg.Dim * Elt.Reg.Dim_Increment * 8 - 1),
-               Is_Aliased => True,
-               Comment    => To_String (Elt.Reg.Description));
-
-         elsif Elt.Kind = Cluster_Element
-           and then Elt.Cluster.Is_Overlapping
-         then
-            Add_Field
-              (Ada_Type_Union (Rec),
-               Enum_Val   => To_String (Elt.Cluster.Overlap_Suffix),
-               Id         => To_String (Elt.Cluster.Name),
-               Typ        => Type_Holders.Element (Elt.Cluster.Ada_Type),
-               Offset     => Elt.Cluster.Address_Offset,
-               LSB        => 0,
-               MSB        => Get_Size (Elt.Cluster.all) * Elt.Cluster.Dim - 1,
-               Is_Aliased => True,
-               Comment    => To_String (Elt.Cluster.Description));
-
-         else
-            case Elt.Kind is
-               when Register_Element =>
-                  Add_Field
-                    (Rec,
-                     Id         => To_String (Elt.Reg.Name),
-                     Typ        => Get_Ada_Type (Elt.Reg),
-                     Offset     => Elt.Reg.Address_Offset,
-                     LSB        => 0,
-                     MSB        =>
-                       (if Elt.Reg.Dim = 1
-                        then Elt.Reg.Reg_Properties.Size - 1
-                        else Elt.Reg.Dim * Elt.Reg.Dim_Increment * 8 - 1),
-                     Is_Aliased => True,
-                     Comment    => To_String (Elt.Reg.Description));
-               when Cluster_Element =>
-                  Add_Field
-                    (Rec,
-                     Id         => To_String (Elt.Cluster.Name),
-                     Typ        => Type_Holders.Element (Elt.Cluster.Ada_Type),
-                     Offset     => Elt.Cluster.Address_Offset,
-                     LSB        => 0,
-                     MSB        =>
-                        Get_Size (Elt.Cluster.all) * Elt.Cluster.Dim - 1,
-                     Is_Aliased => True,
-                     Comment    => To_String (Elt.Cluster.Description));
-            end case;
-         end if;
-      end loop;
+      Dump_Peripheral_Elements
+        (Rec,
+         Peripheral.Content);
 
       Add (Spec, Rec);
    end Dump_Periph_Type;

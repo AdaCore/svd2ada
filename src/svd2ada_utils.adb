@@ -25,14 +25,15 @@ with GNAT.OS_Lib;           use GNAT.OS_Lib;
 
 package body SVD2Ada_Utils is
 
-   G_Use_Boolean        : Boolean := False;
-   G_Types_Pkg          : Unbounded_String := Null_Unbounded_String;
-   G_Root_Pkg           : Unbounded_String := Null_Unbounded_String;
-   G_Use_UInt           : Boolean := False;
-   G_Gen_Arrays         : Boolean := True;
-   G_Gen_IRQ_Support    : Boolean := False;
-   G_Gen_UInt_Subtype   : Boolean := True;
-   G_Gen_Fields_Default : Boolean := True;
+   G_Use_Boolean         : Boolean := False;
+   G_Types_Pkg           : Unbounded_String := Null_Unbounded_String;
+   G_Root_Pkg            : Unbounded_String := Null_Unbounded_String;
+   G_Use_UInt            : Boolean := False;
+   G_Gen_Arrays          : Boolean := True;
+   G_No_VFA_On_Reg_Types : Boolean := False;
+   G_Gen_IRQ_Support     : Boolean := False;
+   G_Gen_UInt_Subtype    : Boolean := True;
+   G_Gen_Fields_Default  : Boolean := True;
 
    -------------------------
    -- Executable_Location --
@@ -266,6 +267,26 @@ package body SVD2Ada_Utils is
          return True;
       end if;
    end In_Runtime;
+
+   -----------------------------
+   -- Set_No_VFA_On_Reg_Types --
+   -----------------------------
+
+   procedure Set_No_VFA_On_Reg_Types (Value : Boolean)
+   is
+   begin
+      G_No_VFA_On_Reg_Types := Value;
+   end Set_No_VFA_On_Reg_Types;
+
+   -------------------------
+   -- No_VFA_On_Reg_Types --
+   -------------------------
+
+   function No_VFA_On_Reg_Types return Boolean
+   is
+   begin
+      return G_No_VFA_On_Reg_Types;
+   end No_VFA_On_Reg_Types;
 
    --------------------
    -- Set_Gen_Arrays --

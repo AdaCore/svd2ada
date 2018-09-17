@@ -41,8 +41,20 @@ package SVD2Ada_Utils is
    function Root_Package return String;
    function In_Runtime return Boolean;
 
+   procedure Set_No_VFA_On_Reg_Types (Value : Boolean);
+   function No_VFA_On_Reg_Types return Boolean;
+   --  Whether the Volatile_Full_Access pragma is applied on the base
+   --  register type or on the fields of peripherals/clusters.
+   --  This has impacts on the way arrays of registers are generated:
+   --  until we have something like Volatile_Full_Access_Components pragma
+   --  for arrays, there's no way to indicate to the compiler that the
+   --  components of an array should be VFA, unless we apply the pragma to the
+   --  base register type.
+
    procedure Set_Gen_Arrays (Value : Boolean);
    function Gen_Arrays return Boolean;
+   --  If Gen_Arrays is set, the register fields with similar names and types
+   --  only differing by a numbered suffix are generated as an array.
 
    procedure Set_Gen_IRQ_Support (Value : Boolean);
    function Gen_IRQ_Support return Boolean;

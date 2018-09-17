@@ -84,6 +84,7 @@ is
    No_UInt_Subtype : aliased Boolean := False;
    No_Arrays       : aliased Boolean := False;
    No_Defaults     : aliased Boolean := False;
+   No_VFA_On_Types : aliased Boolean := False;
    Gen_IRQ_Support : aliased Boolean := False;
 
    use type GNAT.Strings.String_Access;
@@ -112,13 +113,6 @@ begin
       Argument    => "Pkg_Name");
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
-      Output      => Gen_Booleans'Access,
-      Long_Switch => "--boolean",
-      Help        => "treat bit fields as boolean. Ignored if an enumerate " &
-        "is defined for the field",
-      Value       => True);
-   GNAT.Command_Line.Define_Switch
-     (Cmd_Line_Cfg,
       Output      => Base_Types_Pkg'Access,
       Long_Switch => "--base-types-package=",
       Help        => "the name of the package containing the low level types" &
@@ -126,17 +120,25 @@ begin
         " root package.");
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
+      Output      => Gen_Booleans'Access,
+      Long_Switch => "--boolean",
+      Help        => "treat bit fields as boolean. Ignored if an enumerate " &
+        "is defined for the field",
+      Value       => True);
+   GNAT.Command_Line.Define_Switch
+     (Cmd_Line_Cfg,
+      Output      => Gen_IRQ_Support'Access,
+      Long_Switch => "--gen-interrupts",
+      Help        => "Generate trap handlers and interrupt name package. " &
+        "Activated by default is the generated root package is a run-time " &
+        "package",
+      Value       => True);
+   GNAT.Command_Line.Define_Switch
+     (Cmd_Line_Cfg,
       Output      => Gen_UInt_Always'Access,
       Long_Switch => "--gen-uint-always",
       Help        => "when generating base types, always consider UInt* and" &
         " do not use the Bit and Bytes variants for types with size 1 and 8",
-      Value       => True);
-   GNAT.Command_Line.Define_Switch
-     (Cmd_Line_Cfg,
-      Output      => No_UInt_Subtype'Access,
-      Long_Switch => "--no-uint-subtypes",
-      Help        => "do not generate subtypes for fields, but use the base" &
-        " uint type instead",
       Value       => True);
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
@@ -155,11 +157,18 @@ begin
       Value       => True);
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
-      Output      => Gen_IRQ_Support'Access,
-      Long_Switch => "--gen-interrupts",
-      Help        => "Generate trap handlers and interrupt name package. " &
-        "Activated by default is the generated root package is a run-time " &
-        "package",
+      Output      => No_UInt_Subtype'Access,
+      Long_Switch => "--no-uint-subtypes",
+      Help        => "do not generate subtypes for fields, but use the base" &
+        " uint type instead",
+      Value       => True);
+   GNAT.Command_Line.Define_Switch
+     (Cmd_Line_Cfg,
+      Output      => No_VFA_On_Types'Access,
+      Long_Switch => "--no-vfa-on-types",
+      Help        => "when generating register types, do not specify the" &
+        " Volatile_Full_Access aspect on them (specify it instead on the" &
+        " enclosing peripheral fields",
       Value       => True);
 
    GNAT.Command_Line.Getopt
@@ -190,11 +199,12 @@ begin
    end if;
 
    SVD2Ada_Utils.Set_Use_Boolean_For_Bit (Gen_Booleans);
-   SVD2Ada_Utils.Set_Use_UInt (Gen_UInt_Always);
-   SVD2Ada_Utils.Set_No_UInt_Subtype (No_UInt_Subtype);
-   SVD2Ada_Utils.Set_No_Defaults (No_UInt_Subtype);
-   SVD2Ada_Utils.Set_Gen_Arrays (not No_Arrays);
    SVD2Ada_Utils.Set_Gen_IRQ_Support (Gen_IRQ_Support);
+   SVD2Ada_Utils.Set_Use_UInt (Gen_UInt_Always);
+   SVD2Ada_Utils.Set_Gen_Arrays (not No_Arrays);
+   SVD2Ada_Utils.Set_No_Defaults (No_Defaults);
+   SVD2Ada_Utils.Set_No_UInt_Subtype (No_UInt_Subtype);
+   SVD2Ada_Utils.Set_No_VFA_On_Reg_Types (No_VFA_On_Types);
 
    if Base_Types_Pkg.all /= "" then
       SVD2Ada_Utils.Set_Base_Types_Package (Base_Types_Pkg.all);

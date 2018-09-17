@@ -555,18 +555,21 @@ package body Ada_Gen is
          Value := Element.Values (J);
 
          if J = Element.Values.First_Index then
-            Ada.Text_IO.Put_Line (File, (1 .. 5 => ' ') & '(');
+            Ada.Text_IO.Put (File, (1 .. 5 => ' ') & '(');
+         else
+            Ada.Text_IO.Put (File, (1 .. 6 => ' '));
          end if;
 
          if not Is_Empty (Value.Comment) then
             Dump
               (Value.Comment,
                F      => File,
-               Indent => 2,
+               Indent => 0,
                Inline => False);
+            Ada.Text_IO.Put (File, (1 .. 6 => ' '));
          end if;
 
-         Ada.Text_IO.Put (File, (1 .. 6 => ' ') & To_String (Value.Id));
+         Ada.Text_IO.Put (File, To_String (Value.Id));
 
          if J < Element.Values.Last_Index then
             Ada.Text_IO.Put_Line (File, ",");
@@ -644,7 +647,7 @@ package body Ada_Gen is
             Id   : constant String := Get_Id (F);
             Line : constant String :=
               (1 .. 6 => ' ') & Id & " : " &
-              (if F.Is_Aliased then "aliased " else "") &
+              (if F.Properties.Is_Aliased then "aliased " else "") &
               To_String (F.Typ);
          begin
             Ada.Text_IO.Put (File, Line);
@@ -665,6 +668,13 @@ package body Ada_Gen is
 
             else
                Ada.Text_IO.Put_Line (File, ";");
+            end if;
+
+            if F.Properties.Is_Volatile_FA then
+               Ada.Text_IO.Put (File, (1 .. 6 => ' '));
+               Ada.Text_IO.Put_Line
+                 (File,
+                  "pragma Volatile_Full_Access (" & To_String (F.Id) & ");");
             end if;
          end;
       end loop;
@@ -809,15 +819,20 @@ package body Ada_Gen is
             Ada.Text_IO.Put (File, (1 .. 4 * 3 => ' '));
             Ada.Text_IO.Put_Line
               (File, To_String (F.Id) & " : " &
-                 (if F.Is_Aliased then "aliased " else "") &
-                   To_String (F.Typ) & ";");
+                 (if F.Properties.Is_Aliased then "aliased " else "") &
+                 To_String (F.Typ) & ";");
+            if F.Properties.Is_Volatile_FA then
+               Ada.Text_IO.Put (File, (1 .. 4 * 3 => ' '));
+               Ada.Text_IO.Put_Line
+                 (File,
+                  "pragma Volatile_Full_Access (" & To_String (F.Id) & ");");
+            end if;
          end loop;
       end loop;
 
       Ada.Text_IO.Put (File, (1 .. 2 * 3 => ' '));
       Ada.Text_IO.Put_Line
         (File, "end case;");
-
       Ada.Text_IO.Put_Line (File, "   end record");
       Dump_Aspects (Element.Aspects, File);
       Ada.Text_IO.New_Line (File);
@@ -2015,7 +2030,7 @@ package body Ada_Gen is
       MSB         : Natural;
       Has_Default : Boolean;
       Default     : Unbounded_String;
-      Is_Aliased  : Boolean;
+      Properties  : Field_Properties;
       Comment     : String := "")
    is
       Idx     : Natural := 0;
@@ -2038,7 +2053,7 @@ package body Ada_Gen is
           MSB         => MSB,
           Has_Default => Has_Default,
           Default     => Default,
-          Is_Aliased  => Is_Aliased,
+          Properties  => Properties,
           Comment     => New_Comment (Comment, Strip => True)));
    end Add_Field_Internal;
 
@@ -2053,7 +2068,7 @@ package body Ada_Gen is
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
-      Is_Aliased  : Boolean;
+      Properties  : Field_Properties;
       Comment     : String := "")
    is
    begin
@@ -2066,7 +2081,7 @@ package body Ada_Gen is
          MSB         => MSB,
          Has_Default => False,
          Default     => Null_Unbounded_String,
-         Is_Aliased  => Is_Aliased,
+         Properties  => Properties,
          Comment     => Comment);
    end Add_Field;
 
@@ -2082,7 +2097,7 @@ package body Ada_Gen is
       LSB         : Natural;
       MSB         : Natural;
       Default     : Unsigned;
-      Is_Aliased  : Boolean;
+      Properties  : Field_Properties;
       Comment     : String := "")
    is
    begin
@@ -2095,7 +2110,7 @@ package body Ada_Gen is
          MSB         => MSB,
          Has_Default => True,
          Default     => To_Unbounded_String (To_Hex (Default)),
-         Is_Aliased  => Is_Aliased,
+         Properties  => Properties,
          Comment     => Comment);
    end Add_Field;
 
@@ -2111,7 +2126,7 @@ package body Ada_Gen is
       LSB         : Natural;
       MSB         : Natural;
       Default     : Unbounded_String;
-      Is_Aliased  : Boolean;
+      Properties  : Field_Properties;
       Comment     : String := "")
    is
    begin
@@ -2124,7 +2139,7 @@ package body Ada_Gen is
          MSB         => MSB,
          Has_Default => True,
          Default     => Default,
-         Is_Aliased  => Is_Aliased,
+         Properties  => Properties,
          Comment     => Comment);
    end Add_Field;
 
@@ -2199,7 +2214,7 @@ package body Ada_Gen is
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
-      Is_Aliased  : Boolean;
+      Properties  : Field_Properties;
       Comment     : String := "")
    is
       Idx     : Natural := 0;
@@ -2224,7 +2239,7 @@ package body Ada_Gen is
           MSB         => MSB,
           Has_Default => False,
           Default     => Null_Unbounded_String,
-          Is_Aliased  => Is_Aliased,
+          Properties  => Properties,
           Comment     => New_Comment (Comment, Strip => True)));
    end Add_Field;
 

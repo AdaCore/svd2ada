@@ -329,7 +329,8 @@ package body Descriptors.Field is
                   LSB         => Index,
                   MSB         => Index + Length - 1,
                   Default     => Default,
-                  Is_Aliased  => False,
+                  Properties  => (Is_Aliased     => False,
+                                  Is_Volatile_FA => False),
                   Comment     => "unspecified");
             else
                Ada_Gen.Add_Field
@@ -340,7 +341,8 @@ package body Descriptors.Field is
                   Offset      => 0,
                   LSB         => Index,
                   MSB         => Index + Length - 1,
-                  Is_Aliased  => False,
+                  Properties  => (Is_Aliased     => False,
+                                  Is_Volatile_FA => False),
                   Comment     => "unspecified");
             end if;
 
@@ -554,26 +556,28 @@ package body Descriptors.Field is
                     (Union_T, Fields (Index).Size * Length);
 
                   Add_Field
-                    (Rec      => Union_T,
-                     Enum_Val => "True",
-                     Id       => "Arr",
-                     Typ      => Array_T,
-                     Offset   => 0,
-                     LSB      => 0,
-                     MSB      => Fields (Index).Size * Length - 1,
-                     Is_Aliased  => False,
-                     Comment  => F_Name & " as an array");
+                    (Rec        => Union_T,
+                     Enum_Val   => "True",
+                     Id         => "Arr",
+                     Typ        => Array_T,
+                     Offset     => 0,
+                     LSB        => 0,
+                     MSB        => Fields (Index).Size * Length - 1,
+                     Properties => (Is_Aliased     => False,
+                                    Is_Volatile_FA => False),
+                     Comment    => F_Name & " as an array");
                   Add_Field
-                    (Rec      => Union_T,
-                     Enum_Val => "False",
-                     Id       => "Val",
-                     Typ      =>
+                    (Rec        => Union_T,
+                     Enum_Val   => "False",
+                     Id         => "Val",
+                     Typ        =>
                        Target_Type (Fields (Index).Size * Length),
-                     Offset   => 0,
-                     LSB      => 0,
-                     MSB      => Fields (Index).Size * Length - 1,
-                     Is_Aliased  => False,
-                     Comment  => F_Name & " as a value");
+                     Offset     => 0,
+                     LSB        => 0,
+                     MSB        => Fields (Index).Size * Length - 1,
+                     Properties => (Is_Aliased     => False,
+                                    Is_Volatile_FA => False),
+                     Comment    => F_Name & " as a value");
 
                   Add (Spec, Union_T);
 
@@ -678,7 +682,8 @@ package body Descriptors.Field is
                   Offset     => 0,
                   LSB        => Index,
                   MSB        => Index + Ada_Type_Size - 1,
-                  Is_Aliased => False,
+                  Properties => (Is_Aliased     => False,
+                                 Is_Volatile_FA => False),
                   Comment    => To_String (Description));
 
             elsif Default_Id = Null_Unbounded_String then
@@ -690,7 +695,8 @@ package body Descriptors.Field is
                   LSB        => Index,
                   MSB        => Index + Ada_Type_Size - 1,
                   Default    => Default,
-                  Is_Aliased => False,
+                  Properties => (Is_Aliased     => False,
+                                 Is_Volatile_FA => False),
                   Comment    => To_String (Description));
 
             else
@@ -702,7 +708,8 @@ package body Descriptors.Field is
                   LSB        => Index,
                   MSB        => Index + Ada_Type_Size - 1,
                   Default    => Default_Id,
-                  Is_Aliased => False,
+                  Properties => (Is_Aliased     => False,
+                                 Is_Volatile_FA => False),
                   Comment    => To_String (Description));
             end if;
 

@@ -24,6 +24,8 @@ with DOM.Core;
 with DOM.Core.Elements;  use DOM.Core.Elements;
 with DOM.Core.Nodes;
 
+with SVD2Ada_Utils;
+
 package body Descriptors.Cluster is
 
    procedure Insert_Element
@@ -665,6 +667,144 @@ package body Descriptors.Cluster is
       return Ret;
    end Get_Discriminent_Type;
 
+   ------------------------------
+   -- Dump_Peripheral_Elements --
+   ------------------------------
+
+   procedure Dump_Peripheral_Elements
+     (Parent : in out Ada_Type_Record'Class;
+      Elts   : Peripheral_Element_Vectors.Vector)
+   is
+      use Ada.Strings.Unbounded;
+
+      function Dim (Elt : Peripheral_Element) return Positive
+      is (case Elt.Kind is
+             when Register_Element => Elt.Reg.Dim,
+             when Cluster_Element  => Elt.Cluster.Dim);
+
+      function Get_Ada_Type (Elt : Peripheral_Element) return Ada_Type'Class
+      is (case Elt.Kind is
+             when Register_Element =>
+                Get_Ada_Type (Elt.Reg),
+             when Cluster_Element  =>
+                Type_Holders.Element (Elt.Cluster.Ada_Type));
+
+      function Get_Name (Elt : Peripheral_Element) return String
+      is (case Elt.Kind is
+             when Register_Element => To_String (Elt.Reg.Name),
+             when Cluster_Element  => To_String (Elt.Cluster.Name));
+
+      function Overlap_Suffix (Elt : Peripheral_Element) return String
+      is (case Elt.Kind is
+             when Register_Element => To_String (Elt.Reg.Overlap_Suffix),
+             when Cluster_Element  => To_String (Elt.Cluster.Overlap_Suffix));
+
+      function Get_Description (Elt : Peripheral_Element) return String
+      is (case Elt.Kind is
+             when Register_Element => To_String (Elt.Reg.Description),
+             when Cluster_Element  => To_String (Elt.Cluster.Description));
+
+      Properties     : Field_Properties;
+      Is_Overlapping : Boolean;
+      Dim_Increment  : Positive;
+      Elt_Size       : Positive;
+      Address_Offset : Natural;
+
+   begin
+      for Elt of Elts loop
+         if Elt.Kind = Register_Element
+           and then Get_Ada_Type (Elt) in Ada_Type_Record'Class
+         then
+            Properties :=
+              (Is_Aliased     => True,
+               Is_Volatile_FA => SVD2Ada_Utils.No_VFA_On_Reg_Types);
+         else
+            Properties :=
+              (Is_Aliased     => True,
+               Is_Volatile_FA => False);
+         end if;
+
+         case Elt.Kind is
+            when Register_Element =>
+               Dim_Increment  := Elt.Reg.Dim_Increment;
+               Is_Overlapping := Elt.Reg.Is_Overlapping;
+               Elt_Size       := Elt.Reg.Reg_Properties.Size;
+               Address_Offset := Elt.Reg.Address_Offset;
+
+            when Cluster_Element =>
+               Dim_Increment  := Elt.Cluster.Dim_Increment;
+               Is_Overlapping := Elt.Cluster.Is_Overlapping;
+               Elt_Size       := Get_Size (Elt.Cluster.all);
+               Address_Offset := Elt.Cluster.Address_Offset;
+         end case;
+
+         if Dim (Elt) > 1 and then
+           Get_Ada_Type (Elt) not in Ada_Gen.Ada_Type_Array'Class
+         then
+            --  We need to unroll the array
+            for J in 0 .. Dim (Elt) - 1 loop
+               declare
+                  Idx  : constant String := J'Image;
+                  Name : constant String :=
+                           Get_Name (Elt) & '_' &
+                           Idx (Idx'First + 1 .. Idx'Last);
+               begin
+                  if Is_Overlapping then
+                     Add_Field
+                       (Ada_Type_Union (Parent),
+                        Enum_Val   => Overlap_Suffix (Elt),
+                        Id         => Name,
+                        Typ        => Get_Ada_Type (Elt),
+                        Offset     => Address_Offset + J * Dim_Increment,
+                        LSB        => 0,
+                        MSB        => Elt_Size - 1,
+                        Properties => Properties,
+                        Comment    => Get_Description (Elt));
+                  else
+                     Add_Field
+                       (Parent,
+                        Id         => Name,
+                        Typ        => Get_Ada_Type (Elt),
+                        Offset     => Address_Offset + J * Dim_Increment,
+                        LSB        => 0,
+                        MSB        => Elt_Size - 1,
+                        Properties => Properties,
+                        Comment    => Get_Description (Elt));
+                  end if;
+               end;
+            end loop;
+
+         else
+            if Is_Overlapping then
+               Add_Field
+                 (Ada_Type_Union (Parent),
+                  Enum_Val   => Overlap_Suffix (Elt),
+                  Id         => Get_Name (Elt),
+                  Typ        => Get_Ada_Type (Elt),
+                  Offset     => Address_Offset,
+                  LSB        => 0,
+                  MSB        => (if Dim (Elt) = 1
+                                 then Elt_Size - 1
+                                 else Dim (Elt) * Dim_Increment * 8 - 1),
+                  Properties => Properties,
+                  Comment    => Get_Description (Elt));
+            else
+               Add_Field
+                 (Parent,
+                  Id         => Get_Name (Elt),
+                  Typ        => Get_Ada_Type (Elt),
+                  Offset     => Address_Offset,
+                  LSB        => 0,
+                  MSB        => (if Dim (Elt) = 1
+                                 then Elt_Size - 1
+                                 else Dim (Elt) * Dim_Increment * 8 - 1),
+                  Properties => Properties,
+                  Comment    => Get_Description (Elt));
+            end if;
+         end if;
+      end loop;
+   end Dump_Peripheral_Elements;
+
    -----------------------
    -- Dump_Cluster_Type --
    -----------------------
@@ -707,60 +847,12 @@ package body Descriptors.Cluster is
          end if;
       end Create_Record;
 
-      Rec : Ada_Type_Record'Class := Create_Record;
+      Rec        : Ada_Type_Record'Class := Create_Record;
 
    begin
-      Add_Aspect (Rec, "Volatile");
       Add_Size_Aspect (Rec, Get_Size (Cluster));
 
-      for Elt of Cluster.Content loop
-         if Elt.Kind = Register_Element and then Elt.Reg.Is_Overlapping then
-            Add_Field
-              (Ada_Type_Union (Rec),
-               Enum_Val   => To_String (Elt.Reg.Overlap_Suffix),
-               Id         => To_String (Elt.Reg.Name),
-               Typ        => Get_Ada_Type (Elt.Reg),
-               Offset     => Elt.Reg.Address_Offset,
-               LSB        => 0,
-               MSB        =>
-                 (if Elt.Reg.Dim = 1
-                  then Elt.Reg.Reg_Properties.Size - 1
-                  else Elt.Reg.Dim * Elt.Reg.Dim_Increment * 8 - 1),
-               Is_Aliased => True,
-               Comment    => To_String (Elt.Reg.Description));
-
-         else
-            case Elt.Kind is
-               when Register_Element =>
-                  Add_Field
-                    (Rec,
-                     Id         => To_String (Elt.Reg.Name),
-                     Typ        => Get_Ada_Type (Elt.Reg),
-                     Offset     => Elt.Reg.Address_Offset,
-                     LSB        => 0,
-                     MSB        =>
-                       (if Elt.Reg.Dim = 1
-                        then Elt.Reg.Reg_Properties.Size - 1
-                        else Elt.Reg.Dim * Elt.Reg.Dim_Increment * 8 - 1),
-                     Is_Aliased => True,
-                     Comment    => To_String (Elt.Reg.Description));
-               when Cluster_Element =>
-                  Add_Field
-                    (Rec,
-                     Id         => To_String (Elt.Cluster.Name),
-                     Typ        => Type_Holders.Element (Elt.Cluster.Ada_Type),
-                     Offset     => Elt.Cluster.Address_Offset,
-                     LSB        => 0,
-                     MSB        =>
-                       (if Elt.Cluster.Dim = 1
-                        then Elt.Cluster.Reg_Properties.Size - 1
-                        else Elt.Cluster.Dim *
-                          Elt.Cluster.Dim_Increment * 8 - 1),
-                     Is_Aliased => True,
-                     Comment    => To_String (Elt.Cluster.Description));
-            end case;
-         end if;
-      end loop;
+      Dump_Peripheral_Elements (Rec, Cluster.Content);
 
       Add (Spec, Rec);
       Cluster.Ada_Type := Type_Holders.To_Holder (Rec);
