@@ -33,6 +33,9 @@ package body Descriptors.Device is
    package Interrupt_Sort is new Interrupt_Vectors.Generic_Sorting
      (Base_Types."<");
 
+   function MCU_To_CPU
+     (Device : Device_T) return Unbounded_String;
+
    procedure Dump_Handler_ASM
      (Device     : Device_T;
       Ints       : Interrupt_Vectors.Vector;
