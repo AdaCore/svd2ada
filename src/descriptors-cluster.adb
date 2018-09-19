@@ -62,6 +62,8 @@ package body Descriptors.Cluster is
       Reg2         : Register_Access;
       Cluster      : Cluster_Access;
 
+      function Compute_Name return Unbounded.Unbounded_String;
+
       ------------------
       -- Compute_Name --
       ------------------

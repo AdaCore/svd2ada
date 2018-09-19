@@ -46,6 +46,36 @@ package body Ada_Gen is
      (S            : String;
       Container_Id : String) return Unbounded_String;
 
+   procedure Dump_Aspects
+     (Aspects : String_Vectors.Vector;
+      File    : Ada.Text_IO.File_Type;
+      Inline  : Boolean := False);
+
+   procedure Dump_Record_Fields
+     (Element : Ada_Type_Record'Class;
+      Max_Id  : Natural;
+      File    : Ada.Text_IO.File_Type);
+
+   function Add_Enum_Id_Internal
+     (Spec     : Ada_Spec;
+      Enum     : in out Ada_Type_Enum;
+      Id       : String;
+      Has_Repr : Boolean;
+      Repr     : Unsigned;
+      Comment  : String := "")  return Ada_Enum_Value;
+
+   procedure Add_Field_Internal
+     (Rec         : in out Ada_Type_Record'Class;
+      Id          : String;
+      Typ         : Ada_Type'Class;
+      Offset      : Natural;
+      LSB         : Natural;
+      MSB         : Natural;
+      Has_Default : Boolean;
+      Default     : Unbounded_String;
+      Properties  : Field_Properties;
+      Comment     : String := "");
+
    ----------------------
    -- Protect_Keywords --
    ----------------------
@@ -622,11 +652,14 @@ package body Ada_Gen is
       Max_Id  : Natural;
       File    : Ada.Text_IO.File_Type)
    is
+      function Get_Id (F : Record_Field) return String;
+
       ------------
       -- Get_Id --
       ------------
 
-      function Get_Id (F : Record_Field) return String is
+      function Get_Id (F : Record_Field) return String
+      is
          Id : String (1 .. Max_Id) := (others => ' ');
       begin
          Id (1 .. Length (F.Id)) := To_String (F.Id);
@@ -691,7 +724,10 @@ package body Ada_Gen is
       Max_Id  : Natural := 0;
       As_Hex  : Boolean := False;
 
-      function Get_Id (F : Record_Field) return String is
+      function Get_Id (F : Record_Field) return String;
+
+      function Get_Id (F : Record_Field) return String
+      is
          Id : String (1 .. Max_Id) := (others => ' ');
       begin
          Id (1 .. Length (F.Id)) := To_String (F.Id);
@@ -762,7 +798,10 @@ package body Ada_Gen is
       Max_Id : Natural := 0;
       As_Hex : Boolean := False;
 
-      function Get_Id (F : Record_Field) return String is
+      function Get_Id (F : Record_Field) return String;
+
+      function Get_Id (F : Record_Field) return String
+      is
          Id : String (1 .. Max_Id) := (others => ' ');
       begin
          Id (1 .. Length (F.Id)) := To_String (F.Id);
@@ -1430,6 +1469,8 @@ package body Ada_Gen is
      (Comment : String;
       Strip   : Boolean) return Ada_Comment
    is
+      function Strip_String (Str : String) return String;
+
       function Strip_String (Str : String) return String
       is
          Ret     : String (Str'Range);

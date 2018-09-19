@@ -13,7 +13,7 @@ project SVD2Ada is
 
    package Compiler is
       for Default_Switches ("ada") use
-        ("-g", "-O2", "-gnatwae", "-gnatQ", "-gnatw.X", "-gnatyg-s");
+        ("-g", "-O2", "-gnatwae", "-gnatQ", "-gnatw.X", "-gnatyyg");
    end Compiler;
 
 end SVD2Ada;

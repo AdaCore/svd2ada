@@ -28,6 +28,26 @@ package body Base_Types is
 
    package Unsigned_IO is new Ada.Text_IO.Modular_IO (Unsigned);
 
+   procedure Read_Range_Elts
+     (Tag : String;
+      Elt : DOM.Core.Element;
+      Val : in out Write_Constraint_Type);
+
+   procedure Read_Write_Constraint_Elts
+     (Tag : String;
+      Elt : DOM.Core.Element;
+      Val : in out Write_Constraint_Type);
+
+   procedure Read_Address_Block_Elts
+     (Tag : String;
+      Elt : DOM.Core.Element;
+      Val : in out Address_Block_Type);
+
+   procedure Read_Interrupt_Elts
+     (Tag : String;
+      Elt : DOM.Core.Element;
+      Val : in out Interrupt_Type);
+
    -----------------
    -- Target_Type --
    -----------------

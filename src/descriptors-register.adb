@@ -48,6 +48,8 @@ package body Descriptors.Register is
       Derived_From : constant String :=
                        Elements.Get_Attribute (Elt, "derivedFrom");
 
+      function Compute_Name return Unbounded.Unbounded_String;
+
       ------------------
       -- Compute_Name --
       ------------------

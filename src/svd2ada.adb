@@ -17,6 +17,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+with Ada.Command_Line;
 with Ada.Exceptions;
 with Ada.Strings.Unbounded;       use Ada.Strings.Unbounded;
 with Ada.Text_IO;
@@ -57,7 +58,7 @@ with SVD2Ada_Utils;
 --    of the valid values that are expected for a given field. If such
 --    element is present, then the binding generator will create an enum
 --    for the field, and use this enum as type of the field.
-function SVD2Ada return Integer
+procedure SVD2Ada
 is
    --  Local variables used for XML parsing
    Input           : File_Input;
@@ -182,7 +183,9 @@ begin
            (Ada.Text_IO.Standard_Error,
             "Error: missing arguments");
          GNAT.Command_Line.Try_Help;
-         return 1;
+
+         Ada.Command_Line.Set_Exit_Status (2);
+         return;
       end if;
 
       SVD_File := To_Unbounded_String (GNAT.OS_Lib.Normalize_Pathname (SVD));
@@ -248,21 +251,22 @@ begin
 
    Descriptors.Device.Dump (Device, Out_Dir.all);
 
-   return 0;
-
 exception
    when GNAT.Command_Line.Invalid_Switch |
         GNAT.Command_Line.Invalid_Parameter |
         GNAT.Command_Line.Exit_From_Command_Line =>
-      return 1;
+      Ada.Command_Line.Set_Exit_Status (1);
+
    when XML_Validation_Error =>
       Close (Input);
       Ada.Text_IO.Put_Line ("Non-valid SVD file:");
       Ada.Text_IO.Put_Line (Reader.Get_Error_Message);
-      return 2;
+      Ada.Command_Line.Set_Exit_Status (2);
+
    when E : Sax.Readers.XML_Fatal_Error =>
       Close (Input);
       Ada.Text_IO.Put_Line ("Fatal error when parsing the svd file:");
       Ada.Text_IO.Put_Line (Ada.Exceptions.Exception_Message (E));
-      return 2;
+      Ada.Command_Line.Set_Exit_Status (2);
+
 end SVD2Ada;

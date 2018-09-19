@@ -41,6 +41,11 @@ package body Descriptors.Peripheral is
    package String_List is new Ada.Containers.Indefinite_Vectors
      (Positive, String);
 
+   procedure Dump_Periph_Type
+     (Spec       : in out Ada_Gen.Ada_Spec;
+      Peripheral : Peripheral_T;
+      Type_Name  : String);
+
    ----------
    -- Less --
    ----------
