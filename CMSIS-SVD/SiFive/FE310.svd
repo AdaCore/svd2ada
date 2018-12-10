@@ -196,7 +196,7 @@
       <registers>
 
         <register>
-          <dim>52</dim>
+          <dim>52</dim> <!-- 52 interrupt sources on the FE310 -->
           <dimIncrement>4</dimIncrement>
           <name>PRIORITY[%s]</name>
           <description>PLIC Interrupt Priority Register.</description>
@@ -207,43 +207,122 @@
         </register>
 
         <register>
-          <name>PENDING_1</name>
-          <description>PLIC Interrupt Pending Register 1.</description>
+          <dim>2</dim> <!-- 2x32 to cover the 52 interrupt sources on the FE310 -->
+          <dimIncrement>4</dimIncrement>
+          <name>PENDING[%s]</name>
+          <description>PLIC Interrupt Pending Register.</description>
           <addressOffset>0x001000</addressOffset>
-        </register>
-
-        <register>
-          <name>PENDING_2</name>
-          <description>PLIC Interrupt Pending Register 2.</description>
-          <addressOffset>0x001004</addressOffset>
-        </register>
-
-        <register>
-          <name>ENABLE_1</name>
-          <description>PLIC Interrupt Enable Register 1.</description>
-          <addressOffset>0x002000</addressOffset>
-        </register>
-
-        <register>
-          <name>ENABLE_2</name>
-          <description>PLIC Interrupt Enable Register 2.</description>
-          <addressOffset>0x002004</addressOffset>
-        </register>
-        
-        <register>
-          <name>THRESHOLD</name>
-          <description>PLIC Interrupt Priority Threshold Register.</description>
-          <addressOffset>0x200000</addressOffset>
           <fields>
-            <field><name>THRESHOLD</name><lsb>0</lsb><msb>2</msb></field>
+            <field><name>INT0</name><lsb>0</lsb><msb>0</msb></field>
+            <field><name>INT1</name><lsb>1</lsb><msb>1</msb></field>
+            <field><name>INT2</name><lsb>2</lsb><msb>2</msb></field>
+            <field><name>INT3</name><lsb>3</lsb><msb>3</msb></field>
+            <field><name>INT4</name><lsb>4</lsb><msb>4</msb></field>
+            <field><name>INT5</name><lsb>5</lsb><msb>5</msb></field>
+            <field><name>INT6</name><lsb>6</lsb><msb>6</msb></field>
+            <field><name>INT7</name><lsb>7</lsb><msb>7</msb></field>
+            <field><name>INT8</name><lsb>8</lsb><msb>8</msb></field>
+            <field><name>INT9</name><lsb>9</lsb><msb>9</msb></field>
+            <field><name>INT10</name><lsb>10</lsb><msb>10</msb></field>
+            <field><name>INT11</name><lsb>11</lsb><msb>11</msb></field>
+            <field><name>INT12</name><lsb>12</lsb><msb>12</msb></field>
+            <field><name>INT13</name><lsb>13</lsb><msb>13</msb></field>
+            <field><name>INT14</name><lsb>14</lsb><msb>14</msb></field>
+            <field><name>INT15</name><lsb>15</lsb><msb>15</msb></field>
+            <field><name>INT16</name><lsb>16</lsb><msb>16</msb></field>
+            <field><name>INT17</name><lsb>17</lsb><msb>17</msb></field>
+            <field><name>INT18</name><lsb>18</lsb><msb>18</msb></field>
+            <field><name>INT19</name><lsb>19</lsb><msb>19</msb></field>
+            <field><name>INT20</name><lsb>20</lsb><msb>20</msb></field>
+            <field><name>INT21</name><lsb>21</lsb><msb>21</msb></field>
+            <field><name>INT22</name><lsb>22</lsb><msb>22</msb></field>
+            <field><name>INT23</name><lsb>23</lsb><msb>23</msb></field>
+            <field><name>INT24</name><lsb>24</lsb><msb>24</msb></field>
+            <field><name>INT25</name><lsb>25</lsb><msb>25</msb></field>
+            <field><name>INT26</name><lsb>26</lsb><msb>26</msb></field>
+            <field><name>INT27</name><lsb>27</lsb><msb>27</msb></field>
+            <field><name>INT28</name><lsb>28</lsb><msb>28</msb></field>
+            <field><name>INT29</name><lsb>29</lsb><msb>29</msb></field>
+            <field><name>INT30</name><lsb>30</lsb><msb>30</msb></field>
+            <field><name>INT31</name><lsb>31</lsb><msb>31</msb></field>
           </fields>
         </register>
 
-        <register>
-          <name>CLAIM</name>
-          <description>PLIC Claim/Complete Register.</description>
-          <addressOffset>0x200004</addressOffset>
-        </register>
+        <cluster>
+          <dim>1</dim> <!-- Only one core on the FE310 -->
+          <name>TARGET_ENABLE</name>
+          <addressOffset>0x002000</addressOffset>
+          <register>
+            <dim>2</dim> <!-- 2x32 to cover the 52 interrupt sources on the FE310 -->
+            <dimIncrement>4</dimIncrement>
+            <name>ENABLE[%s]</name>
+            <description>PLIC Interrupt Enable Register.</description>
+            <fields>
+              <field><name>INT0</name><lsb>0</lsb><msb>0</msb></field>
+              <field><name>INT1</name><lsb>1</lsb><msb>1</msb></field>
+              <field><name>INT2</name><lsb>2</lsb><msb>2</msb></field>
+              <field><name>INT3</name><lsb>3</lsb><msb>3</msb></field>
+              <field><name>INT4</name><lsb>4</lsb><msb>4</msb></field>
+              <field><name>INT5</name><lsb>5</lsb><msb>5</msb></field>
+              <field><name>INT6</name><lsb>6</lsb><msb>6</msb></field>
+              <field><name>INT7</name><lsb>7</lsb><msb>7</msb></field>
+              <field><name>INT8</name><lsb>8</lsb><msb>8</msb></field>
+              <field><name>INT9</name><lsb>9</lsb><msb>9</msb></field>
+              <field><name>INT10</name><lsb>10</lsb><msb>10</msb></field>
+              <field><name>INT11</name><lsb>11</lsb><msb>11</msb></field>
+              <field><name>INT12</name><lsb>12</lsb><msb>12</msb></field>
+              <field><name>INT13</name><lsb>13</lsb><msb>13</msb></field>
+              <field><name>INT14</name><lsb>14</lsb><msb>14</msb></field>
+              <field><name>INT15</name><lsb>15</lsb><msb>15</msb></field>
+              <field><name>INT16</name><lsb>16</lsb><msb>16</msb></field>
+              <field><name>INT17</name><lsb>17</lsb><msb>17</msb></field>
+              <field><name>INT18</name><lsb>18</lsb><msb>18</msb></field>
+              <field><name>INT19</name><lsb>19</lsb><msb>19</msb></field>
+              <field><name>INT20</name><lsb>20</lsb><msb>20</msb></field>
+              <field><name>INT21</name><lsb>21</lsb><msb>21</msb></field>
+              <field><name>INT22</name><lsb>22</lsb><msb>22</msb></field>
+              <field><name>INT23</name><lsb>23</lsb><msb>23</msb></field>
+              <field><name>INT24</name><lsb>24</lsb><msb>24</msb></field>
+              <field><name>INT25</name><lsb>25</lsb><msb>25</msb></field>
+              <field><name>INT26</name><lsb>26</lsb><msb>26</msb></field>
+              <field><name>INT27</name><lsb>27</lsb><msb>27</msb></field>
+              <field><name>INT28</name><lsb>28</lsb><msb>28</msb></field>
+              <field><name>INT29</name><lsb>29</lsb><msb>29</msb></field>
+              <field><name>INT30</name><lsb>30</lsb><msb>30</msb></field>
+              <field><name>INT31</name><lsb>31</lsb><msb>31</msb></field>
+            </fields>
+          </register>
+        </cluster>
+
+        <cluster>
+          <dim>1</dim> <!-- Only one core on the FE310 -->
+          <dimIncrement>8</dimIncrement>
+          <name>TARGET</name>
+          <addressOffset>0x200000</addressOffset>
+
+          <register>
+            <name>THRESHOLD</name>
+            <description>PLIC Interrupt Priority Threshold Register.</description>
+            <addressOffset>0x0</addressOffset>
+            <fields>
+              <field><name>THRESHOLD</name><lsb>0</lsb><msb>2</msb></field>
+            </fields>
+          </register>
+
+          <register>
+            <name>CLAIM</name>
+            <access>read-only</access>
+            <description>PLIC Claim Register.</description>
+            <addressOffset>0x4</addressOffset>
+          </register>
+
+          <register>
+            <name>COMPLETE</name>
+            <access>write-only</access>
+            <description>PLIC Complete Register.</description>
+            <addressOffset>0x4</addressOffset>
+          </register>
+        </cluster>
 
       </registers>
     </peripheral> <!-- PLIC -->
