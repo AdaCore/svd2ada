@@ -131,7 +131,7 @@ begin
       Output      => Gen_IRQ_Support'Access,
       Long_Switch => "--gen-interrupts",
       Help        => "Generate trap handlers and interrupt name package. " &
-        "Activated by default is the generated root package is a run-time " &
+        "Activated by default if the generated root package is a run-time " &
         "package",
       Value       => True);
    GNAT.Command_Line.Define_Switch
