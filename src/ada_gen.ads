@@ -227,6 +227,7 @@ package Ada_Gen is
       Default     : Unsigned;
       Properties  : Field_Properties;
       Comment     : String := "");
+
    procedure Add_Field
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
@@ -348,12 +349,15 @@ package Ada_Gen is
    procedure Add
      (Spec : in out Ada_Spec;
       Elt  : Ada_With_Clause);
+
    procedure Add
      (Spec : in out Ada_Spec;
       Elt  : Ada_Comment);
+
    procedure Add
      (Spec : in out Ada_Spec;
       Elt  : Ada_Comment_Box);
+
    procedure Add
      (Spec : in out Ada_Spec;
       Elt  : Ada_Pragma);
@@ -375,6 +379,7 @@ package Ada_Gen is
    procedure Add
      (Spec : in out Ada_Spec;
       Elt  : Ada_Constant_Value);
+
    procedure Add
      (Spec : in out Ada_Spec;
       Elt  : Ada_Instance);
