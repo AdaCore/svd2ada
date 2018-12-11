@@ -43,8 +43,9 @@ package body Descriptors.Register is
    is
       use DOM.Core;
       use type Unbounded.Unbounded_String;
+
       List         : constant Node_List := Nodes.Child_Nodes (Elt);
-      Ret          : Register_T;
+      Result       : Register_T;
       Derived_From : constant String :=
                        Elements.Get_Attribute (Elt, "derivedFrom");
 
@@ -56,12 +57,12 @@ package body Descriptors.Register is
 
       function Compute_Name return Unbounded.Unbounded_String
       is
-         Name : constant String := Unbounded.To_String (Ret.Xml_Id);
-         Ret  : String (Name'Range);
-         Idx  : Natural;
-         Skip : Boolean := False;
+         Name   : constant String := Unbounded.To_String (Result.Xml_Id);
+         Result : String (Name'Range);
+         Idx    : Natural;
+         Skip   : Boolean := False;
       begin
-         Idx := Ret'First - 1;
+         Idx := Result'First - 1;
 
          for J in Name'Range loop
             if Skip then
@@ -78,19 +79,19 @@ package body Descriptors.Register is
 
             else
                Idx := Idx + 1;
-               Ret (Idx) := Name (J);
+               Result (Idx) := Name (J);
             end if;
          end loop;
 
-         if Idx in Ret'Range and then Ret (Idx) = '_' then
+         if Idx in Result'Range and then Result (Idx) = '_' then
             Idx := Idx - 1;
          end if;
 
-         return Unbounded.To_Unbounded_String (Ret (Ret'First .. Idx));
+         return Unbounded.To_Unbounded_String (Result (Result'First .. Idx));
       end Compute_Name;
 
    begin
-      Ret.Reg_Properties := Reg_Properties;
+      Result.Reg_Properties := Reg_Properties;
 
       if Derived_From /= "" then
          declare
@@ -98,8 +99,8 @@ package body Descriptors.Register is
                     Reg_Db.Get_Register (Derived_From);
          begin
             if Oth /= null then
-               Ret := Oth.all;
-               Ret.Name := Unbounded.Null_Unbounded_String;
+               Result := Oth.all;
+               Result.Name := Unbounded.Null_Unbounded_String;
             else
                raise Constraint_Error with
                  "register 'derivedFrom' is not known: " & Derived_From;
@@ -114,33 +115,33 @@ package body Descriptors.Register is
                Tag   : String renames Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
-                  Ret.Xml_Id := Get_Value (Child);
-                  Ret.Name := Compute_Name;
-                  Ret.Type_Name := Prepend & Ret.Name & Append;
+                  Result.Xml_Id := Get_Value (Child);
+                  Result.Name := Compute_Name;
+                  Result.Type_Name := Prepend & Result.Name & Append;
 
                elsif Tag = "displayName" then
-                  Ret.Display_Name := Get_Value (Child);
+                  Result.Display_Name := Get_Value (Child);
 
                elsif Tag = "description" then
-                  Ret.Description := Get_Value (Child);
+                  Result.Description := Get_Value (Child);
 
                elsif Tag = "alternateGroup" then
-                  Ret.Alternate_Group := Get_Value (Child);
+                  Result.Alternate_Group := Get_Value (Child);
 
                elsif Tag = "alternateRegister" then
-                  Ret.Alternate_Reg := Get_Value (Child);
+                  Result.Alternate_Reg := Get_Value (Child);
 
                elsif Tag = "addressOffset" then
-                  Ret.Address_Offset := Get_Value (Child);
+                  Result.Address_Offset := Get_Value (Child);
 
                elsif Is_Register_Property (Tag) then
-                  Read_Register_Property (Child, Ret.Reg_Properties);
+                  Read_Register_Property (Child, Result.Reg_Properties);
 
                elsif Tag = "modifiedWriteValue" then
-                  Ret.Mod_Write_Values := Get_Value (Child);
+                  Result.Mod_Write_Values := Get_Value (Child);
 
                elsif Tag = "readAction" then
-                  Ret.Read_Action := Get_Value (Child);
+                  Result.Read_Action := Get_Value (Child);
 
                elsif Tag = "fields" then
                   declare
@@ -149,34 +150,33 @@ package body Descriptors.Register is
                      Field      : Field_T;
                   begin
                      for K in 0 .. Nodes.Length (Child_List) - 1 loop
-                        if Nodes.Node_Type (Nodes.Item (Child_List, K)) =
-                          Element_Node
+                        if Nodes.Node_Type (Nodes.Item (Child_List, K)) = Element_Node
                         then
                            Field :=
                              Read_Field
                                (Element (Nodes.Item (Child_List, K)),
-                                Ret.Fields,
-                                Ret.Reg_Properties.Reg_Access,
-                                Ret.Read_Action);
-                           if not Ret.Fields.Contains (Field) then
-                              Ret.Fields.Append (Field);
+                                Result.Fields,
+                                Result.Reg_Properties.Reg_Access,
+                                Result.Read_Action);
+                           if not Result.Fields.Contains (Field) then
+                              Result.Fields.Append (Field);
                            end if;
                         end if;
                      end loop;
                   end;
 
                elsif Tag = "dim" then
-                  Ret.Dim := Get_Value (Child);
+                  Result.Dim := Get_Value (Child);
 
-                  if Unbounded.Length (Ret.Xml_Id) > 0 then
-                     Ret.Name := Compute_Name;
+                  if Unbounded.Length (Result.Xml_Id) > 0 then
+                     Result.Name := Compute_Name;
                   end if;
 
                elsif Tag = "dimIncrement" then
-                  Ret.Dim_Increment := Get_Value (Child);
+                  Result.Dim_Increment := Get_Value (Child);
 
                elsif Tag = "dimIndex" then
-                  Ret.Dim_Index := Get_Value (Child);
+                  Result.Dim_Index := Get_Value (Child);
 
                else
                   Ada.Text_IO.Put_Line
@@ -186,7 +186,7 @@ package body Descriptors.Register is
          end if;
       end loop;
 
-      return new Register_T'(Ret);
+      return new Register_T'(Result);
    end Read_Register;
 
    ---------
@@ -217,7 +217,8 @@ package body Descriptors.Register is
    -----------------
 
    function Similar_Type
-     (R1, R2 : Register_Access) return Unbounded.Unbounded_String
+     (R1, R2 : Register_Access)
+      return Unbounded.Unbounded_String
    is
       use Field_Vectors;
       use type Ada.Containers.Count_Type;
@@ -334,8 +335,7 @@ package body Descriptors.Register is
          declare
             Array_T : Ada_Type_Array :=
                         New_Type_Array
-                          (Id           =>
-                                    To_String (Reg.Type_Name) & "_Registers",
+                          (Id           => To_String (Reg.Type_Name) & "_Registers",
                            Index_Type   => "",
                            Index_First  => 0,
                            Index_Last   => Reg.Dim - 1,

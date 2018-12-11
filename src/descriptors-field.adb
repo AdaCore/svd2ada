@@ -50,13 +50,13 @@ package body Descriptors.Field is
       return Field_T
    is
       List         : constant Node_List := Nodes.Child_Nodes (Elt);
-      Ret          : Field_T;
+      Result          : Field_T;
       Derived_From : constant String :=
                        Elements.Get_Attribute (Elt, "derivedFrom");
 
    begin
-      Ret.Acc := Default_Access;
-      Ret.Read_Action := Default_Read;
+      Result.Acc := Default_Access;
+      Result.Read_Action := Default_Read;
 
       if Derived_From /= "" then
          declare
@@ -64,7 +64,7 @@ package body Descriptors.Field is
          begin
             for F of Vec loop
                if Unbounded.To_String (F.Name) = Derived_From then
-                  Ret := F;
+                  Result := F;
                   Found := True;
                   exit;
                end if;
@@ -84,21 +84,21 @@ package body Descriptors.Field is
                Tag   : String renames Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
-                  Ret.Name := Get_Value (Child);
+                  Result.Name := Get_Value (Child);
 
                elsif Tag = "description" then
-                  Ret.Description := Get_Value (Child);
+                  Result.Description := Get_Value (Child);
 
                elsif Tag = "bitOffset"
                  or else Tag = "lsb"
                then
-                  Ret.LSB := Get_Value (Child);
+                  Result.LSB := Get_Value (Child);
 
                elsif Tag = "bitWidth" then
-                  Ret.Size := Get_Value (Child);
+                  Result.Size := Get_Value (Child);
 
                elsif Tag = "msb" then
-                  Ret.Size := Get_Value (Child) - Ret.LSB + 1;
+                  Result.Size := Get_Value (Child) - Result.LSB + 1;
 
                elsif Tag = "bitRange" then
                   --  bitRange has the form: [XX:YY] where XX is the MSB,
@@ -108,30 +108,30 @@ package body Descriptors.Field is
                   begin
                      for K in Val'Range loop
                         if Val (K) = ':' then
-                           Ret.LSB :=
+                           Result.LSB :=
                              Natural'Value (Val (K + 1 .. Val'Last - 1));
-                           Ret.Size :=
-                             Natural'Value (Val (2 .. K - 1)) - Ret.LSB + 1;
+                           Result.Size :=
+                             Natural'Value (Val (2 .. K - 1)) - Result.LSB + 1;
                         end if;
                      end loop;
                   end;
 
                elsif Tag = "access" then
-                  Ret.Acc := Get_Value (Child);
+                  Result.Acc := Get_Value (Child);
 
                elsif Tag = "modifiedWriteValues" then
-                  Ret.Mod_Write_Values := Get_Value (Child);
+                  Result.Mod_Write_Values := Get_Value (Child);
 
                elsif Tag = "readAction" then
-                  Ret.Read_Action := Get_Value (Child);
+                  Result.Read_Action := Get_Value (Child);
 
                elsif Tag = "enumeratedValues" then
                   declare
                      Enum : constant Descriptors.Enumerate.Enumerate_T :=
                               Descriptors.Enumerate.Read_Enumerate
-                                (Child, Ret.Enums, Ret.Acc = Write_Only);
+                                (Child, Result.Enums, Result.Acc = Write_Only);
                   begin
-                     Ret.Enums.Append (Enum);
+                     Result.Enums.Append (Enum);
                   end;
 
                else
@@ -142,7 +142,7 @@ package body Descriptors.Field is
          end if;
       end loop;
 
-      return Ret;
+      return Result;
    end Read_Field;
 
    ---------
@@ -355,8 +355,7 @@ package body Descriptors.Field is
 
             if not All_RO and then SVD2Ada_Utils.Gen_Fields_Default then
                --  Retrieve the reset value
-               Default :=
-                 Get_Default (Index, Fields (Index).Size);
+               Default := Get_Default (Index, Fields (Index).Size);
                Default_Id := Null_Unbounded_String;
             end if;
 

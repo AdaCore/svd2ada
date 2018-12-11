@@ -98,12 +98,12 @@ package body Descriptors.Peripheral is
       use type Ada.Strings.Unbounded.Unbounded_String;
 
       List         : constant Node_List := Nodes.Child_Nodes (Elt);
-      Ret          : Peripheral_T;
+      Result       : Peripheral_T;
       Derived_From : constant String :=
                        Elements.Get_Attribute (Elt, "derivedFrom");
 
    begin
-      Ret.Reg_Properties := Reg_Properties;
+      Result.Reg_Properties := Reg_Properties;
 
       if Derived_From /= "" then
          declare
@@ -113,16 +113,16 @@ package body Descriptors.Peripheral is
             if Oth /= null then
 --              for P of Vector loop
 --                 if Unbounded.To_String (P.Name) = Derived_From then
-               Ret   := Oth.all;
+               Result   := Oth.all;
                --  Deep copy of the registers list
-               Ret.Content.Clear;
+               Result.Content.Clear;
 
                for Elt of Oth.Content loop
-                  Ret.Content.Append (Deep_Copy (Elt));
+                  Result.Content.Append (Deep_Copy (Elt));
                end loop;
 
                --  Do not inherit interrupts
-               Ret.Interrupts.Clear;
+               Result.Interrupts.Clear;
 
             else
                raise Constraint_Error with
@@ -138,36 +138,36 @@ package body Descriptors.Peripheral is
                Tag   : String renames Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
-                  Ret.Name := Get_Value (Child);
-                  Ret.Type_Name := Ret.Name;
+                  Result.Name := Get_Value (Child);
+                  Result.Type_Name := Result.Name;
 
                elsif Tag = "headerStructName" then
-                  Ret.Type_Name := Get_Value (Child);
+                  Result.Type_Name := Get_Value (Child);
 
                elsif Tag = "version" then
-                  Ret.Version := Get_Value (Child);
+                  Result.Version := Get_Value (Child);
 
                elsif Tag = "description" then
-                  Ret.Description := Get_Value (Child);
+                  Result.Description := Get_Value (Child);
 
                elsif Tag = "groupName" then
-                  Ret.Group_Name := Get_Value (Child);
+                  Result.Group_Name := Get_Value (Child);
 
                elsif Tag = "prependToName" then
-                  Ret.Prepend_To_Name := Get_Value (Child);
+                  Result.Prepend_To_Name := Get_Value (Child);
 
                elsif Tag = "appendToName" then
-                  Ret.Append_To_Name := Get_Value (Child);
+                  Result.Append_To_Name := Get_Value (Child);
 
                elsif Tag = "baseAddress" then
-                  Ret.Base_Address := Get_Value (Child);
+                  Result.Base_Address := Get_Value (Child);
 
                elsif Register_Properties.Is_Register_Property (Tag) then
                   Register_Properties.Read_Register_Property
-                    (Child, Ret.Reg_Properties);
+                    (Child, Result.Reg_Properties);
 
                elsif Tag = "addressBlock" then
-                  Ret.Address_Blocks.Append (Get_Value (Child));
+                  Result.Address_Blocks.Append (Get_Value (Child));
 
                elsif Tag = "interrupt" then
                   declare
@@ -175,8 +175,8 @@ package body Descriptors.Peripheral is
                   begin
                      --  Check against invalid svd file that define several
                      --  times the same item
-                     if not Ret.Interrupts.Contains (Int) then
-                        Ret.Interrupts.Append (Int);
+                     if not Result.Interrupts.Contains (Int) then
+                        Result.Interrupts.Append (Int);
                      end if;
                   end;
 
@@ -203,10 +203,10 @@ package body Descriptors.Peripheral is
                               if C_Tag = "register" then
                                  Register := Read_Register
                                    (C_Child,
-                                    Ret.Prepend_To_Name,
-                                    Ret.Append_To_Name,
-                                    Ret.Reg_Properties,
-                                    Ret);
+                                    Result.Prepend_To_Name,
+                                    Result.Append_To_Name,
+                                    Result.Reg_Properties,
+                                    Result);
 
                                  if not SVD2Ada_Utils.Gen_Arrays
                                    or else (Register.Dim > 1
@@ -225,21 +225,21 @@ package body Descriptors.Peripheral is
                                            J * Register.Dim_Increment;
                                        Reg2.Name :=
                                          Register.Name & To_String (J);
-                                       Insert_Element (Ret, +Reg2);
+                                       Insert_Element (Result, +Reg2);
                                     end loop;
                                  else
-                                    Insert_Element (Ret, +Register);
+                                    Insert_Element (Result, +Register);
                                  end if;
 
                               elsif C_Tag = "cluster" then
                                  Cluster := new Cluster_T'
                                    (Read_Cluster
                                       (C_Child,
-                                       Ret.Prepend_To_Name,
-                                       Ret.Append_To_Name,
-                                       Ret.Reg_Properties,
-                                       Ret));
-                                 Insert_Element (Ret, +Cluster);
+                                       Result.Prepend_To_Name,
+                                       Result.Append_To_Name,
+                                       Result.Reg_Properties,
+                                       Result));
+                                 Insert_Element (Result, +Cluster);
                               end if;
                            end;
                         end if;
@@ -254,7 +254,7 @@ package body Descriptors.Peripheral is
          end if;
       end loop;
 
-      return Ret;
+      return Result;
    end Read_Peripheral;
 
    ------------------

@@ -46,9 +46,9 @@ package body Descriptors.Enumerate is
         (Val  : String;
          Name : String);
 
-      List  : constant Node_List := Nodes.Child_Nodes (Elt);
-      Ret   : Enumerate_Value;
-      Has_X : Boolean := False;
+      List   : constant Node_List := Nodes.Child_Nodes (Elt);
+      Result : Enumerate_Value;
+      Has_X  : Boolean := False;
 
       procedure Read_Value
         (Val  : String;
@@ -67,9 +67,9 @@ package body Descriptors.Enumerate is
             end if;
          end loop;
 
-         Ret.Name := To_Unbounded_String (Name);
-         Ret.Value := Interfaces.Unsigned_64'Value ("2" & Val & "#");
-         Values.Append (Ret);
+         Result.Name := To_Unbounded_String (Name);
+         Result.Value := Interfaces.Unsigned_64'Value ("2" & Val & "#");
+         Values.Append (Result);
       end Read_Value;
 
    begin
@@ -81,10 +81,10 @@ package body Descriptors.Enumerate is
                Tag   : String renames Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
-                  Ret.Name := Get_Value (Child);
+                  Result.Name := Get_Value (Child);
 
                elsif Tag = "description" then
-                  Ret.Descr := Get_Value (Child);
+                  Result.Descr := Get_Value (Child);
 
                elsif Tag = "value" then
                   declare
@@ -107,23 +107,23 @@ package body Descriptors.Enumerate is
                         end loop;
 
                         if not Has_X then
-                           Ret.Value :=
+                           Result.Value :=
                              Interfaces.Unsigned_64'Value
                                ("2#" & S (S'First + 1 .. S'Last) & "#");
                         else
-                           Read_Value (S, To_String (Ret.Name));
+                           Read_Value (S, To_String (Result.Name));
                         end if;
                      else
 
-                        Ret.Value := Get_Value (Child);
+                        Result.Value := Get_Value (Child);
                      end if;
                   end;
 
-                  Ret.IsDefault := False;
+                  Result.IsDefault := False;
 
                elsif Tag = "isDefault" then
-                  Ret.Value := 0;
-                  Ret.IsDefault := True;
+                  Result.Value := 0;
+                  Result.IsDefault := True;
 
                else
                   Ada.Text_IO.Put_Line
@@ -134,7 +134,7 @@ package body Descriptors.Enumerate is
       end loop;
 
       if not Has_X then
-         Values.Append (Ret);
+         Values.Append (Result);
       end if;
    end Read_Value;
 
@@ -149,7 +149,7 @@ package body Descriptors.Enumerate is
       return Enumerate_T
    is
       List         : constant Node_List := Nodes.Child_Nodes (Elt);
-      Ret          : Enumerate_T;
+      Result       : Enumerate_T;
       Derived_From : constant String :=
                        Elements.Get_Attribute (Elt, "derivedFrom");
    begin
@@ -160,7 +160,7 @@ package body Descriptors.Enumerate is
             for Oth of Vector loop
                if Unbounded.To_String (Oth.Name) = Derived_From then
                   --  Copy the derived from enumerate type into the new value
-                  Ret := Oth;
+                  Result := Oth;
                   Found := True;
                   exit;
                end if;
@@ -181,13 +181,13 @@ package body Descriptors.Enumerate is
                Tag   : String renames Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
-                  Ret.Name := Get_Value (Child);
+                  Result.Name := Get_Value (Child);
 
                elsif Tag = "usage" then
-                  Ret.Usage := Get_Value (Child);
+                  Result.Usage := Get_Value (Child);
 
                elsif Tag = "enumeratedValue" then
-                  Read_Value (Child, Write_Only, Ret.Values);
+                  Read_Value (Child, Write_Only, Result.Values);
 
                else
                   Ada.Text_IO.Put_Line
@@ -197,7 +197,7 @@ package body Descriptors.Enumerate is
          end if;
       end loop;
 
-      return Ret;
+      return Result;
    end Read_Enumerate;
 
 end Descriptors.Enumerate;

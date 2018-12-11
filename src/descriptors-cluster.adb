@@ -55,7 +55,7 @@ package body Descriptors.Cluster is
       use type Ada.Strings.Unbounded.Unbounded_String;
 
       List         : constant Node_List := Nodes.Child_Nodes (Elt);
-      Ret          : Cluster_T;
+      Result       : Cluster_T;
       Derived_From : constant String :=
                        Elements.Get_Attribute (Elt, "derivedFrom");
       Register     : Register_Access;
@@ -71,16 +71,16 @@ package body Descriptors.Cluster is
       function Compute_Name return Unbounded.Unbounded_String
       is
       begin
-         if Ret.Dim = 1 then
-            return Ret.Xml_Id;
+         if Result.Dim = 1 then
+            return Result.Xml_Id;
          else
             declare
-               Name : constant String := Unbounded.To_String (Ret.Xml_Id);
-               Ret  : String (Name'Range);
-               Idx  : Natural;
-               Skip : Boolean := False;
+               Name   : constant String := Unbounded.To_String (Result.Xml_Id);
+               Result : String (Name'Range);
+               Idx    : Natural;
+               Skip   : Boolean := False;
             begin
-               Idx := Ret'First - 1;
+               Idx := Result'First - 1;
 
                for J in Name'Range loop
                   if Skip then
@@ -97,32 +97,33 @@ package body Descriptors.Cluster is
 
                   else
                      Idx := Idx + 1;
-                     Ret (Idx) := Name (J);
+                     Result (Idx) := Name (J);
                   end if;
                end loop;
 
-               if Idx in Ret'Range and then Ret (Idx) = '_' then
+               if Idx in Result'Range and then Result (Idx) = '_' then
                   Idx := Idx - 1;
                end if;
 
-               return Unbounded.To_Unbounded_String (Ret (Ret'First .. Idx));
+               return Unbounded.To_Unbounded_String
+                 (Result (Result'First .. Idx));
             end;
          end if;
       end Compute_Name;
 
    begin
-      Ret.Reg_Properties := Reg_Properties;
+      Result.Reg_Properties := Reg_Properties;
 
       if Derived_From /= "" then
          declare
             Oth : Cluster_Access renames Db.Get_Cluster (Derived_From);
          begin
             if Oth /= null then
-               Ret := Oth.all;
-               Ret.Content.Clear;
+               Result := Oth.all;
+               Result.Content.Clear;
 
                for Elt of Oth.Content loop
-                  Ret.Content.Append (Deep_Copy (Elt));
+                  Result.Content.Append (Deep_Copy (Elt));
                end loop;
 
             else
@@ -139,43 +140,43 @@ package body Descriptors.Cluster is
                Tag   : String renames Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
-                  Ret.Xml_Id := Get_Value (Child);
-                  Ret.Name := Prepend & Compute_Name & Append;
-                  Ret.Type_Name := Ret.Name;
+                  Result.Xml_Id := Get_Value (Child);
+                  Result.Name := Prepend & Compute_Name & Append;
+                  Result.Type_Name := Result.Name;
                   --  Type_Name might be overloaded by headerStructName
 
                elsif Tag = "headerStructName" then
-                  Ret.Type_Name := Get_Value (Child);
+                  Result.Type_Name := Get_Value (Child);
 
                elsif Tag = "description" then
-                  Ret.Description := Get_Value (Child);
+                  Result.Description := Get_Value (Child);
 
                elsif Tag = "alternateCluster" then
                   null;
 
                elsif Tag = "addressOffset" then
-                  Ret.Address_Offset := Get_Value (Child);
+                  Result.Address_Offset := Get_Value (Child);
 
                elsif Tag = "dim" then
-                  Ret.Dim := Get_Value (Child);
+                  Result.Dim := Get_Value (Child);
 
-                  if Unbounded.Length (Ret.Xml_Id) > 0 then
-                     Ret.Name := Compute_Name;
+                  if Unbounded.Length (Result.Xml_Id) > 0 then
+                     Result.Name := Compute_Name;
                   end if;
 
                elsif Tag = "dimIncrement" then
-                  Ret.Dim_Increment := Get_Value (Child);
+                  Result.Dim_Increment := Get_Value (Child);
 
                elsif Tag = "dimIndex" then
-                  Ret.Dim_Index := Get_Value (Child);
+                  Result.Dim_Index := Get_Value (Child);
 
                elsif Tag = "register" then
                   Register := Read_Register
                     (Child,
                      Prepend,
-                     Append & "_" & Unbounded.To_String (Ret.Name),
-                     Ret.Reg_Properties,
-                     Ret);
+                     Append & "_" & Unbounded.To_String (Result.Name),
+                     Result.Reg_Properties,
+                     Result);
 
                   if Register.Dim > 1
                     and then Register.Dim_Increment /=
@@ -193,10 +194,10 @@ package body Descriptors.Cluster is
                             J * Register.Dim_Increment;
                         Reg2.Name :=
                           Register.Name & To_String (J);
-                        Insert_Element (Ret, +Reg2);
+                        Insert_Element (Result, +Reg2);
                      end loop;
                   else
-                     Insert_Element (Ret, +Register);
+                     Insert_Element (Result, +Register);
                   end if;
 
                elsif Tag = "cluster" then
@@ -205,9 +206,9 @@ package body Descriptors.Cluster is
                        (Child,
                         Prepend,
                         Append,
-                        Ret.Reg_Properties,
-                        Ret));
-                  Insert_Element (Ret, +Cluster);
+                        Result.Reg_Properties,
+                        Result));
+                  Insert_Element (Result, +Cluster);
 
                else
                   Ada.Text_IO.Put_Line
@@ -217,7 +218,7 @@ package body Descriptors.Cluster is
          end if;
       end loop;
 
-      return Ret;
+      return Result;
    end Read_Cluster;
 
    ---------------
@@ -226,22 +227,22 @@ package body Descriptors.Cluster is
 
    function Deep_Copy (Cluster : Cluster_Access) return Cluster_Access
    is
-      Ret : constant Cluster_Access := new Cluster_T'(Cluster.all);
+      Result : constant Cluster_Access := new Cluster_T'(Cluster.all);
    begin
-      Ret.Content.Clear;
+      Result.Content.Clear;
 
       for Elt of Cluster.Content loop
          case Elt.Kind is
             when Register_Element =>
-               Ret.Content.Append
+               Result.Content.Append
                  ((Register_Element, new Register_T'(Elt.Reg.all)));
             when Cluster_Element =>
-               Ret.Content.Append
+               Result.Content.Append
                  ((Cluster_Element, Deep_Copy (Elt.Cluster)));
          end case;
       end loop;
 
-      return Ret;
+      return Result;
    end Deep_Copy;
 
    ------------------
@@ -290,32 +291,31 @@ package body Descriptors.Cluster is
 
    function Get_Size (Cluster : Cluster_T) return Positive
    is
-      Elt : Peripheral_Element renames Cluster.Content.Last_Element;
-      Ret : Natural := 0;
-
+      Elt    : Peripheral_Element renames Cluster.Content.Last_Element;
+      Result : Natural := 0;
    begin
       if Cluster.Dim > 1 then
          return Cluster.Dim_Increment * 8;
       end if;
 
-      Ret := 8 * Address_Offset (Elt);
+      Result := 8 * Address_Offset (Elt);
 
       case Elt.Kind is
          when Register_Element =>
-            Ret := Ret +
+            Result := Result +
               (if Elt.Reg.Dim = 1
                then Elt.Reg.Reg_Properties.Size
                else Elt.Reg.Dim * Elt.Reg.Dim_Increment * 8);
 
          when Cluster_Element =>
-            Ret := Ret + Get_Size (Elt.Cluster.all);
+            Result := Result + Get_Size (Elt.Cluster.all);
       end case;
 
-      if Ret mod 32 /= 0 then
-         Ret := Ret + 32 - (Ret mod 32);
+      if Result mod 32 /= 0 then
+         Result := Result + 32 - (Result mod 32);
       end if;
 
-      return Positive (Ret);
+      return Positive (Result);
    end Get_Size;
 
    --------------------
@@ -367,7 +367,8 @@ package body Descriptors.Cluster is
      (Reg_Set : Peripheral_Element_Vectors.Vector) return Boolean
    is
       use Unbounded;
-      Ret      : Boolean := False;
+
+      Result   : Boolean := False;
       Idx      : Positive;
       Off      : Natural;
       Last     : Natural;
@@ -408,19 +409,19 @@ package body Descriptors.Cluster is
                      when Register_Element =>
                         Reg_Set (J).Reg.Is_Overlapping := True;
                         Reg_Set (K).Reg.Is_Overlapping := True;
-                        Ret := True;
+                        Result := True;
                      when Cluster_Element =>
                         Reg_Set (J).Cluster.Is_Overlapping := True;
                         Reg_Set (K).Cluster.Is_Overlapping := True;
-                        Ret := True;
+                        Result := True;
                   end case;
                end;
             end loop;
          end;
       end loop;
 
-      if not Ret then
-         return Ret;
+      if not Result then
+         return Result;
       end if;
 
       Idx := Reg_Set.First_Index;
@@ -524,7 +525,7 @@ package body Descriptors.Cluster is
          end if;
       end loop;
 
-      return Ret;
+      return Result;
    end Find_Overlapping_Registers;
 
    -----------
@@ -629,8 +630,7 @@ package body Descriptors.Cluster is
       Type_Name : String) return Ada_Type_Enum
    is
       use Unbounded;
-      Ret    : Ada_Type_Enum :=
-                 New_Type_Enum (Id => Type_Name & "_Disc");
+      Result : Ada_Type_Enum := New_Type_Enum (Id => Type_Name & "_Disc");
       Values : String_List.Vector;
       Val    : Ada_Enum_Value;
 
@@ -644,7 +644,7 @@ package body Descriptors.Cluster is
       end loop;
 
       for S of Values loop
-         Val := Add_Enum_Id (Spec, Ret, S);
+         Val := Add_Enum_Id (Spec, Result, S);
 
          declare
             Actual : constant String := To_String (Id (Val));
@@ -666,7 +666,7 @@ package body Descriptors.Cluster is
          end;
       end loop;
 
-      return Ret;
+      return Result;
    end Get_Discriminent_Type;
 
    ------------------------------

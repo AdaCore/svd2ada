@@ -112,17 +112,17 @@ package body Base_Types is
 
    function To_Hex (Val : Unsigned) return String
    is
-      Ret : String (1 .. 12); --  16#01234567#
+      Result : String (1 .. 12); --  16#01234567#
    begin
-      Unsigned_IO.Put (Ret, Val, 16);
+      Unsigned_IO.Put (Result, Val, 16);
 
-      for J in Ret'Range loop
-         if Ret (J) /= ' ' then
-            return Ret (J .. Ret'Last);
+      for J in Result'Range loop
+         if Result (J) /= ' ' then
+            return Result (J .. Result'Last);
          end if;
       end loop;
 
-      return Ret;
+      return Result;
    end To_Hex;
 
    ---------------
@@ -504,11 +504,10 @@ package body Base_Types is
    ---------------
 
    function Get_Value (Elt : DOM.Core.Element) return Write_Constraint_Type is
-      Ret  : Write_Constraint_Type;
-
+      Result : Write_Constraint_Type;
    begin
-      Read_Write_Constraint (Elt, Ret);
-      return Ret;
+      Read_Write_Constraint (Elt, Result);
+      return Result;
    end Get_Value;
 
    ---------------
@@ -546,15 +545,23 @@ package body Base_Types is
       end if;
    end Read_Address_Block_Elts;
 
+   ------------------------
+   -- Read_Address_Block --
+   ------------------------
+
    procedure Read_Address_Block is new Gen_DOM_Iter
      (T        => Address_Block_Type,
       Read_Elt => Read_Address_Block_Elts);
 
+   ---------------
+   -- Get_Value --
+   ---------------
+
    function Get_Value (Elt : DOM.Core.Element) return Address_Block_Type is
-      Ret : Address_Block_Type;
+      Result : Address_Block_Type;
    begin
-      Read_Address_Block (Elt, Ret);
-      return Ret;
+      Read_Address_Block (Elt, Result);
+      return Result;
    end Get_Value;
 
    ---------------
@@ -581,15 +588,23 @@ package body Base_Types is
       end if;
    end Read_Interrupt_Elts;
 
+   --------------------
+   -- Read_Interrupt --
+   --------------------
+
    procedure Read_Interrupt is new Gen_DOM_Iter
      (T        => Interrupt_Type,
       Read_Elt => Read_Interrupt_Elts);
 
+   ---------------
+   -- Get_Value --
+   ---------------
+
    function Get_Value (Elt : DOM.Core.Element) return Interrupt_Type is
-      Ret : Interrupt_Type;
+      Result : Interrupt_Type;
    begin
-      Read_Interrupt (Elt, Ret);
-      return Ret;
+      Read_Interrupt (Elt, Result);
+      return Result;
    end Get_Value;
 
    ---------------
