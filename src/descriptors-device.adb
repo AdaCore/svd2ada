@@ -49,16 +49,16 @@ package body Descriptors.Device is
 
    function Read_Device
      (Elt      : DOM.Core.Element;
-      Pkg_Name : String) return Device_T
+      Pkg_Name : String)
+      return Device_T
    is
       use type DOM.Core.Node_Types;
-      List : constant DOM.Core.Node_List := DOM.Core.Nodes.Child_Nodes (Elt);
-      Ret  : Device_T;
+      List   : constant DOM.Core.Node_List := DOM.Core.Nodes.Child_Nodes (Elt);
+      Result : Device_T;
 
    begin
       if Pkg_Name'Length > 0 then
-         Ret.Name :=
-           Ada.Strings.Unbounded.To_Unbounded_String (Pkg_Name);
+         Result.Name := Ada.Strings.Unbounded.To_Unbounded_String (Pkg_Name);
       end if;
 
       for J in 0 .. DOM.Core.Nodes.Length (List) - 1 loop
@@ -69,26 +69,26 @@ package body Descriptors.Device is
                Tag   : String renames DOM.Core.Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
-                  if Ada.Strings.Unbounded.Length (Ret.Name) = 0 then
-                     Ret.Name := Get_Value (Child);
+                  if Ada.Strings.Unbounded.Length (Result.Name) = 0 then
+                     Result.Name := Get_Value (Child);
                   end if;
 
                   SVD2Ada_Utils.Set_Root_Package
-                    (Ada.Strings.Unbounded.To_String (Ret.Name));
+                    (Ada.Strings.Unbounded.To_String (Result.Name));
 
                elsif Tag = "version" then
-                  Ret.Version := Get_Value (Child);
+                  Result.Version := Get_Value (Child);
 
                elsif Tag = "description" then
-                  Ret.Description := Get_Value (Child);
-                  Ret.Short_Desc  := Ret.Description;
+                  Result.Description := Get_Value (Child);
+                  Result.Short_Desc  := Result.Description;
 
-                  for J in 1 .. Length (Ret.Description) loop
-                     if Element (Ret.Description, J) = ASCII.CR
-                       or else Element (Ret.Description, J) = ASCII.LF
+                  for J in 1 .. Length (Result.Description) loop
+                     if Element (Result.Description, J) = ASCII.CR
+                       or else Element (Result.Description, J) = ASCII.LF
                      then
-                        Ret.Short_Desc := To_Unbounded_String
-                          (Slice (Ret.Description, 1, J - 1));
+                        Result.Short_Desc := To_Unbounded_String
+                          (Slice (Result.Description, 1, J - 1));
                         exit;
                      end if;
                   end loop;
@@ -97,14 +97,14 @@ package body Descriptors.Device is
                   Ada_Gen.Set_License_Text (Get_Value (Child));
 
                elsif Tag = "addressUnitBits" then
-                  Ret.Address_Unit_Bits := Get_Value (Child);
+                  Result.Address_Unit_Bits := Get_Value (Child);
 
                elsif Tag = "width" then
-                  Ret.Width := Get_Value (Child);
+                  Result.Width := Get_Value (Child);
 
                elsif Register_Properties.Is_Register_Property (Tag) then
                   Register_Properties.Read_Register_Property
-                    (Child, Ret.Reg_Properties);
+                    (Child, Result.Reg_Properties);
 
                elsif Tag = "vendor" then
                   null; --  No need to decode, at least for now
@@ -128,9 +128,9 @@ package body Descriptors.Device is
                            Peripheral :=
                              Read_Peripheral
                                (DOM.Core.Element (Item (Child_List, K)),
-                                Ret.Reg_Properties,
-                                Ret);
-                           Ret.Peripherals.Append
+                                Result.Reg_Properties,
+                                Result);
+                           Result.Peripherals.Append
                              (new Peripheral_T'(Peripheral));
                         end if;
                      end loop;
@@ -144,7 +144,7 @@ package body Descriptors.Device is
          end if;
       end loop;
 
-      return Ret;
+      return Result;
    end Read_Device;
 
    --------------------
