@@ -42,7 +42,7 @@ package Base_Types is
       Selectable_Endian,
       Other_Endian);
 
-   --  DataT_ype pre-defines the tokens in line with CMSIS data type
+   --  Data_Type pre-defines the tokens in line with CMSIS data type
    --  definitions
    type Data_Type is
      (Undefined_Data_Type,
