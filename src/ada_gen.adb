@@ -871,8 +871,7 @@ package body Ada_Gen is
       end loop;
 
       Ada.Text_IO.Put (File, (1 .. 2 * 3 => ' '));
-      Ada.Text_IO.Put_Line
-        (File, "end case;");
+      Ada.Text_IO.Put_Line (File, "end case;");
       Ada.Text_IO.Put_Line (File, "   end record");
       Dump_Aspects (Element.Aspects, File);
       Ada.Text_IO.New_Line (File);
