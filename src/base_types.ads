@@ -172,8 +172,7 @@ package Base_Types is
    --  Returns the name of the type on the target given the size of the int
 
    function Get_Value (Elt : DOM.Core.Element) return String;
-   function Get_Value
-     (Elt : DOM.Core.Element) return Unbounded.Unbounded_String;
+   function Get_Value (Elt : DOM.Core.Element) return Unbounded.Unbounded_String;
    function Get_Value (Elt : DOM.Core.Element) return Boolean;
    function Get_Value (Elt : DOM.Core.Element) return Natural;
    function Get_Value (Elt : DOM.Core.Element) return Unsigned;
@@ -181,8 +180,7 @@ package Base_Types is
    function Get_Value (Elt : DOM.Core.Element) return Protection_Type;
    function Get_Value (Elt : DOM.Core.Element) return Endian_Type;
    function Get_Value (Elt : DOM.Core.Element) return Data_Type;
-   function Get_Value
-     (Elt : DOM.Core.Element) return Modified_Write_Values_Type;
+   function Get_Value (Elt : DOM.Core.Element) return Modified_Write_Values_Type;
    function Get_Value (Elt : DOM.Core.Element) return Read_Action_Type;
    function Get_Value (Elt : DOM.Core.Element) return Bit_Range_Type;
    function Get_Value (Elt : DOM.Core.Element) return Write_Constraint_Type;
