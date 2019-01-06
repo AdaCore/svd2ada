@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                    Copyright (C) 2015-2019, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -491,8 +491,6 @@ package body Descriptors.Device is
                  Value    => "System'To_Address (" &
                    To_Hex (Periph.Base_Address) & ")"));
       end loop;
-
-      Ada_Gen.Write_Spec (Spec, Output_Dir);
 
       Write_Spec (Spec, Output_Dir);
 
