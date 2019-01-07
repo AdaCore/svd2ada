@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                    Copyright (C) 2015-2019, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -1563,6 +1563,71 @@ package body Ada_Gen is
       return To_String (Elt.Id);
    end Id;
 
+   ----------------
+   -- Add_Aspect --
+   ----------------
+
+   procedure Add_Aspect
+     (Elt         : in out Ada_Type'Class;
+      Aspect_Mark : String;
+      Value       : Integer)
+   is
+      Specified_Value : String renames To_String (Value);
+      Id_With_Arrow   : constant String := Aspect_Mark & " => ";
+   begin
+      for Aspect_Spec of Elt.Aspects loop
+         declare
+            subtype Id_With_Arrow_Slice is Integer range
+              Aspect_Spec'First .. Aspect_Spec'First + Id_With_Arrow'Length - 1;
+            subtype Value_Slice is Integer range
+              Aspect_Spec'First + Id_With_Arrow'Length .. Aspect_Spec'Last;
+         begin
+            if Aspect_Spec'Length > Id_With_Arrow'Length
+              and then Aspect_Spec (Id_With_Arrow_Slice) = Id_With_Arrow
+            then  -- already specified this same aspect for this type
+               if Aspect_Spec (Value_Slice) /= Specified_Value then
+                  raise Constraint_Error with
+                    Aspect_Mark & " is already specified for " & To_String (Elt.Id);
+               end if;
+               --  It is OK to specify a value that is the same as that which was
+               --  already specified previously
+               return;
+            end if;
+         end;
+      end loop;
+
+      Elt.Aspects.Append (Id_With_Arrow & Specified_Value);
+   end Add_Aspect;
+
+   ------------------
+   -- Aspect_Value --
+   ------------------
+
+   function Aspect_Value
+     (Elt         : Ada_Type'Class;
+      Aspect_Mark : String)
+      return Integer
+   is
+      Id_With_Arrow : constant String := Aspect_Mark & " => ";
+   begin
+      for Aspect_Spec of Elt.Aspects loop
+         declare
+            subtype Id_With_Arrow_Slice is Integer range
+              Aspect_Spec'First .. Aspect_Spec'First + Id_With_Arrow'Length - 1;
+            subtype Value_Slice is Integer range
+              Aspect_Spec'First + Id_With_Arrow'Length .. Aspect_Spec'Last;
+         begin
+            if Aspect_Spec'Length > Id_With_Arrow'Length
+              and then Aspect_Spec (Id_With_Arrow_Slice) = Id_With_Arrow
+            then
+               return Integer'Value (Aspect_Spec (Value_Slice));
+            end if;
+         end;
+      end loop;
+
+      return 0;
+   end Aspect_Value;
+
    ---------------------
    -- Add_Size_Aspect --
    ---------------------
@@ -1571,22 +1636,8 @@ package body Ada_Gen is
      (Elt  : in out Ada_Type'Class;
       Size : Natural)
    is
-      Size_Str : String renames To_String (Size);
    begin
-      for Aspect of Elt.Aspects loop
-         if Aspect'Length > 8
-           and then Aspect (Aspect'First .. Aspect'First + 7) = "Size => "
-         then
-            if Aspect (Aspect'First + 8 .. Aspect'Last) /= Size_Str then
-               raise Constraint_Error with
-                 "Size aspect already defined for " & To_String (Elt.Id);
-            end if;
-
-            return;
-         end if;
-      end loop;
-
-      Elt.Aspects.Append ("Size => " & Size_Str);
+      Add_Aspect (Elt, Aspect_Mark => "Size", Value => Size);
    end Add_Size_Aspect;
 
    ---------------------
@@ -1596,34 +1647,48 @@ package body Ada_Gen is
    function Get_Size_Aspect (Elt  : Ada_Type'Class) return Unsigned
    is
    begin
-      for Aspect of Elt.Aspects loop
-         if Aspect'Length > 8
-           and then Aspect (Aspect'First .. Aspect'First + 7) = "Size => "
-         then
-            return Unsigned'Value (Aspect (Aspect'First + 8 .. Aspect'Last));
-         end if;
-      end loop;
-
-      return 0;
+      return Unsigned'Mod (Aspect_Value (Elt, Aspect_Mark => "Size"));
    end Get_Size_Aspect;
+
+   ----------------------------
+   -- Add_Object_Size_Aspect --
+   ----------------------------
+
+   procedure Add_Object_Size_Aspect
+     (Elt  : in out Ada_Type'Class;
+      Size : Natural)
+   is
+   begin
+      Add_Aspect (Elt, Aspect_Mark => "Object_Size", Value => Size);
+   end Add_Object_Size_Aspect;
+
+   ----------------------------
+   -- Get_Object_Size_Aspect --
+   ----------------------------
+
+   function Get_Object_Size_Aspect (Elt  : Ada_Type'Class) return Unsigned
+   is
+   begin
+      return Unsigned'Mod (Aspect_Value (Elt, Aspect_Mark => "Object_Size"));
+   end Get_Object_Size_Aspect;
 
    ----------------
    -- Add_Aspect --
    ----------------
 
    procedure Add_Aspect
-     (Elt    : in out Ada_Type'Class;
-      Aspect : String)
+     (Elt         : in out Ada_Type'Class;
+      Aspect_Mark : String)
    is
    begin
       for A of Elt.Aspects loop
-         if Aspect = A then
+         if Aspect_Mark = A then
             --  Aspect already defined
             return;
          end if;
       end loop;
 
-      Elt.Aspects.Append (Aspect);
+      Elt.Aspects.Append (Aspect_Mark);
    end Add_Aspect;
 
    ---------------------
@@ -1689,11 +1754,7 @@ package body Ada_Gen is
       Spec    : in out Ada_Spec)
    is
    begin
-      if Element.Size = 8
-        or else Element.Size = 16
-        or else Element.Size = 32
-        or else Element.Size = 64
-      then
+      if Element.Size in 8 | 16 | 32 | 64 then
          Add (Spec, New_With_Clause ("Interfaces", True));
       end if;
    end Added_In_Spec;
@@ -2404,11 +2465,11 @@ package body Ada_Gen is
    ----------------
 
    procedure Add_Aspect
-     (Elt    : in out Ada_Instance;
-      Aspect : String)
+     (Elt         : in out Ada_Instance;
+      Aspect_Mark : String)
    is
    begin
-      Elt.Aspects.Append (Aspect);
+      Elt.Aspects.Append (Aspect_Mark);
    end Add_Aspect;
 
    -------------------

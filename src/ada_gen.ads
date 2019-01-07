@@ -104,18 +104,41 @@ package Ada_Gen is
    function Id (Elt : Ada_Type'Class) return Unbounded_String;
    function Id (Elt : Ada_Type'Class) return String;
 
+   procedure Add_Aspect
+     (Elt         : in out Ada_Type'Class;
+      Aspect_Mark : String);
+   --  General routine to add an aspect (without a value specified) to a type definition
+
+   procedure Add_Aspect
+     (Elt         : in out Ada_Type'Class;
+      Aspect_Mark : String;
+      Value       : Integer);
+   --  General routine to add an aspect with a numeric value to a type
+   --  definition. It is OK to add the same aspect with the same numeric
+   --  value more than once to a given type.
+
+   function Aspect_Value
+     (Elt         : Ada_Type'Class;
+      Aspect_Mark : String)
+      return Integer;
+   --  General routine to get the numeric value specifed for the aspect named
+   --  Aspect_Mark. Returns 0 if the aspect is not currently specified for Elt.
+
    procedure Add_Size_Aspect
      (Elt  : in out Ada_Type'Class;
       Size : Natural);
-   --  Generates a 'with Sixe => value' aspect
+   --  Generates a 'with Size => value' aspect.
 
    function Get_Size_Aspect (Elt  : Ada_Type'Class) return Unsigned;
-   --  Retrieve the size aspect of the type, or 0 if undefined
+   --  Retrieve the Size aspect of the type, or 0 if undefined.
 
-   procedure Add_Aspect
-     (Elt    : in out Ada_Type'Class;
-      Aspect : String);
-   --  Generic method to add aspects to type definition
+   procedure Add_Object_Size_Aspect
+     (Elt  : in out Ada_Type'Class;
+      Size : Natural);
+   --  Generates a 'with Object_Size => value' aspect.
+
+   function Get_Object_Size_Aspect (Elt  : Ada_Type'Class) return Unsigned;
+   --  Retrieve the Object_Size aspect of the type, or 0 if undefined.
 
    -------------------
    -- Type: scalars --
@@ -323,7 +346,7 @@ package Ada_Gen is
 
    procedure Add_Aspect
      (Elt    : in out Ada_Instance;
-      Aspect : String);
+      Aspect_Mark : String);
 
    --------------
    -- Ada Spec --

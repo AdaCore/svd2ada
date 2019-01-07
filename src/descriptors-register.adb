@@ -311,7 +311,7 @@ package body Descriptors.Register is
             if not SVD2Ada_Utils.No_VFA_On_Reg_Types then
                Add_Aspect (Rec, "Volatile_Full_Access");
             end if;
-            Add_Size_Aspect (Rec, Reg.Reg_Properties.Size);
+            Add_Object_Size_Aspect (Rec, Reg.Reg_Properties.Size);
             Add_Bit_Order_Aspect (Rec, System.Low_Order_First);
 
             declare
