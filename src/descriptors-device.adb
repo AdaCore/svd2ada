@@ -57,11 +57,11 @@ package body Descriptors.Device is
      with
        Pre  => Group_Name /= "" and
                Group.Length = 1,  -- the first member has been inserted
-       Post => -- all members of Peripherals in the same group are in Group
+       Post => Group.Length >= 1  -- perhaps only the initial member is in group
+               and
+               --  all members of Peripherals in the same group are in Group
                (for all P of Peripherals'Old =>
                   (if P.Group_Name = Group_Name then Group.Contains (P)))
-               and
-               Group.Length >= 1  -- perhaps only the initial member is in group
                and
                --  all members of Group are in the same group and are no longer
                --  in Peripherals
