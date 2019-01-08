@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                    Copyright (C) 2015-2019, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -313,12 +313,12 @@ package Ada_Gen is
    --  Some constant value
 
    function New_Constant_Value
-     (Id       : String;
-      Align_Id : Natural;
-      Typ      : String;
-      Value    : String;
-      Comment  : String := "") return Ada_Constant_Value;
-   --  Generates "Id : constant Typ := Value";
+     (Id        : String;
+      Align_Id  : Natural;
+      Type_Name : String;
+      Value     : String;
+      Comment   : String := "") return Ada_Constant_Value;
+   --  Generates "Id : constant Type_Name := Value";
    --  If Align_Id is 0 or less than Id's length, then the semicolon is just
    --  next to the constant identifier, else some space is left to align
    --  declarations
@@ -327,25 +327,25 @@ package Ada_Gen is
    -- Variable --
    --------------
 
-   type Ada_Instance is private;
+   type Ada_Variable is private;
    --  A global variable definition
 
-   function New_Instance
-     (Id           : String;
-      Typ          : String;
-      Aliased_Inst : Boolean;
-      Comment      : String := "") return Ada_Instance;
+   function New_Variable
+     (Id         : String;
+      Type_Name  : String;
+      Is_Aliased : Boolean;
+      Comment    : String := "") return Ada_Variable;
 
    procedure Add_Address_Aspect
-     (Elt     : in out Ada_Instance;
+     (Elt     : in out Ada_Variable;
       Address : Unsigned);
 
    procedure Add_Address_Aspect
-     (Elt : in out Ada_Instance;
+     (Elt : in out Ada_Variable;
       Val : String);
 
    procedure Add_Aspect
-     (Elt    : in out Ada_Instance;
+     (Elt    : in out Ada_Variable;
       Aspect_Mark : String);
 
    --------------
@@ -405,7 +405,7 @@ package Ada_Gen is
 
    procedure Add
      (Spec : in out Ada_Spec;
-      Elt  : Ada_Instance);
+      Elt  : Ada_Variable);
 
    function Add_Enum_Id
      (Spec    : Ada_Spec;
@@ -601,31 +601,31 @@ private
       File    : Ada.Text_IO.File_Type);
 
    type Ada_Constant_Value is new Spec_Element with record
-      Id      : Unbounded_String;
-      Id_Size : Natural;
-      Typ     : Unbounded_String;
-      Value   : Unbounded_String;
-      Comment : Ada_Comment;
+      Id        : Unbounded_String;
+      Id_Size   : Natural;
+      Type_Name : Unbounded_String;
+      Value     : Unbounded_String;
+      Comment   : Ada_Comment;
    end record;
 
    overriding procedure Dump
      (Element : Ada_Constant_Value;
       File    : Ada.Text_IO.File_Type);
 
-   type Ada_Instance is new Spec_Element with record
-      Id      : Unbounded_String;
-      Typ     : Unbounded_String;
-      Aliasd  : Boolean;
-      Comment : Ada_Comment;
-      Aspects : String_Vectors.Vector;
+   type Ada_Variable is new Spec_Element with record
+      Id        : Unbounded_String;
+      Type_Name : Unbounded_String;
+      Aliasd    : Boolean;
+      Comment   : Ada_Comment;
+      Aspects   : String_Vectors.Vector;
    end record;
 
    overriding procedure Dump
-     (Element : Ada_Instance;
+     (Element : Ada_Variable;
       File    : Ada.Text_IO.File_Type);
 
    overriding procedure Added_In_Spec
-     (Element : Ada_Instance;
+     (Element : Ada_Variable;
       Spec    : in out Ada_Spec);
 
    type Ada_Spec is record

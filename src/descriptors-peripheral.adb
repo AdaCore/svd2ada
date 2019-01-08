@@ -413,14 +413,13 @@ package body Descriptors.Peripheral is
       Spec : Ada_Spec;
 
    begin
-      Ada.Text_IO.Put_Line
-        ("Generating " & Dev_Name & '.' & To_String (Peripheral.Type_Name));
-
       Spec := New_Child_Spec
         (To_String (Peripheral.Type_Name),
          Parent        => Dev_Name,
          Descr         => To_String (Peripheral.Description),
          Preelaborated => True);
+
+      Ada.Text_IO.Put_Line ("Generating package " & To_String (Id (Spec)));
 
       if not Peripheral.Content.Is_Empty then
          Add (Spec, New_Comment_Box ("Registers"));
@@ -443,17 +442,17 @@ package body Descriptors.Peripheral is
         (Spec, Peripheral, To_String (Peripheral.Type_Name) & "_Peripheral");
 
       declare
-         Inst : Ada_Instance :=
-                  New_Instance
+         Object : Ada_Variable :=
+                  New_Variable
                     (To_String (Peripheral.Name) & "_Periph",
                      To_String (Peripheral.Type_Name) & "_Peripheral",
                      True,
                      To_String (Peripheral.Description));
       begin
-         Add_Aspect (Inst, "Import");
+         Add_Aspect (Object, "Import");
          Add_Address_Aspect
-           (Inst, To_String (Peripheral.Name) & "_Base");
-         Add (Spec, Inst);
+           (Object, To_String (Peripheral.Name) & "_Base");
+         Add (Spec, Object);
       end;
 
       Write_Spec (Spec, Output_Dir);
@@ -471,20 +470,20 @@ package body Descriptors.Peripheral is
       use Ada.Strings.Unbounded;
       use type Peripheral_Element_Vectors.Vector;
       use type Ada.Containers.Count_Type;
+
       Regs               : Peripheral_Element_Vectors.Vector;
       Sorted             : Peripheral_Vectors.Vector := Group;
       Partial_Similarity : Boolean := False;
       Spec               : Ada_Spec;
 
    begin
-      Ada.Text_IO.Put_Line
-        ("Generating " & Dev_Name & '.' & To_String (Group.First_Element.Group_Name));
-
       Spec := New_Child_Spec
         (To_String (Sorted.First_Element.Group_Name),
          Dev_Name,
          "",
          True);
+
+      Ada.Text_IO.Put_Line ("Generating package " & To_String (Id (Spec)));
 
       Peripheral_Sort.Sort (Sorted);
 
@@ -539,8 +538,8 @@ package body Descriptors.Peripheral is
                   To_String (First.Type_Name) & "_Peripheral");
 
                declare
-                  Inst : Ada_Instance :=
-                           New_Instance
+                  Inst : Ada_Variable :=
+                           New_Variable
                              (To_String (First.Name) & "_Periph",
                               To_String (First.Type_Name) & "_Peripheral",
                               True,
@@ -559,17 +558,17 @@ package body Descriptors.Peripheral is
 
                for Periph of List loop
                   declare
-                     Inst : Ada_Instance :=
-                              New_Instance
+                     Object : Ada_Variable :=
+                              New_Variable
                                 (To_String (Periph.Name) & "_Periph",
                                  To_String (First.Group_Name) & "_Peripheral",
                                  True,
                                  To_String (Periph.Description));
                   begin
-                     Add_Aspect (Inst, "Import");
+                     Add_Aspect (Object, "Import");
                      Add_Address_Aspect
-                       (Inst, To_String (Periph.Name) & "_Base");
-                     Add (Spec, Inst);
+                       (Object, To_String (Periph.Name) & "_Base");
+                     Add (Spec, Object);
                   end;
                end loop;
 
@@ -581,17 +580,17 @@ package body Descriptors.Peripheral is
 
                for Periph of List loop
                   declare
-                     Inst : Ada_Instance :=
-                              New_Instance
+                     Object : Ada_Variable :=
+                              New_Variable
                                 (To_String (Periph.Name) & "_Periph",
                                  To_String (First.Type_Name) & "_Peripheral",
                                  True,
                                  To_String (Periph.Description));
                   begin
-                     Add_Aspect (Inst, "Import");
+                     Add_Aspect (Object, "Import");
                      Add_Address_Aspect
-                       (Inst, To_String (Periph.Name) & "_Base");
-                     Add (Spec, Inst);
+                       (Object, To_String (Periph.Name) & "_Base");
+                     Add (Spec, Object);
                   end;
                end loop;
             end if;

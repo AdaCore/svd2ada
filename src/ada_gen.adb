@@ -95,6 +95,7 @@ package body Ada_Gen is
       elsif S (S'First) = '_' then
          return Ada_Identifier (S (S'First + 1 .. S'Last), Container_Id);
       else
+         --  change two successive underscores into one
          for J in S'First + 1 .. S'Last loop
             if S (J) = '_' and then S (J - 1) = '_' then
                return Ada_Identifier
@@ -968,8 +969,8 @@ package body Ada_Gen is
 
       Ada.Text_IO.Put (File, " : constant ");
 
-      if Length (Element.Typ) > 0 then
-         Ada.Text_IO.Put (File, To_String (Element.Typ) & " ");
+      if Length (Element.Type_Name) > 0 then
+         Ada.Text_IO.Put (File, To_String (Element.Type_Name) & " ");
       end if;
 
       declare
@@ -990,7 +991,7 @@ package body Ada_Gen is
    ----------
 
    overriding procedure Dump
-     (Element : Ada_Instance;
+     (Element : Ada_Variable;
       File    : Ada.Text_IO.File_Type)
    is
    begin
@@ -1011,7 +1012,7 @@ package body Ada_Gen is
          Ada.Text_IO.Put (File, "aliased ");
       end if;
 
-      Ada.Text_IO.Put (File, To_String (Element.Typ));
+      Ada.Text_IO.Put (File, To_String (Element.Type_Name));
 
       if Element.Aspects.Is_Empty then
          Ada.Text_IO.Put_Line (File, ";");
@@ -1412,7 +1413,7 @@ package body Ada_Gen is
 
    procedure Add
      (Spec : in out Ada_Spec;
-      Elt  : Ada_Instance)
+      Elt  : Ada_Variable)
    is
    begin
       Spec.Elements.Append (Elt);
@@ -2401,51 +2402,50 @@ package body Ada_Gen is
    ------------------------
 
    function New_Constant_Value
-     (Id       : String;
-      Align_Id : Natural;
-      Typ      : String;
-      Value    : String;
-      Comment  : String := "")
+     (Id        : String;
+      Align_Id  : Natural;
+      Type_Name : String;
+      Value     : String;
+      Comment   : String := "")
       return Ada_Constant_Value
    is
    begin
-      return (Id      => Ada_Identifier (Id, "Cst"),
-              Id_Size => Align_Id,
-              Typ     => To_Unbounded_String (Typ),
-              Value   => To_Unbounded_String (Value),
-              Comment => New_Comment (Comment, Strip => True));
+      return (Id        => Ada_Identifier (Id, "Cst"),
+              Id_Size   => Align_Id,
+              Type_Name => To_Unbounded_String (Type_Name),
+              Value     => To_Unbounded_String (Value),
+              Comment   => New_Comment (Comment, Strip => True));
    end New_Constant_Value;
 
    ------------------
-   -- New_Instance --
+   -- New_Variable --
    ------------------
 
-   function New_Instance
-     (Id           : String;
-      Typ          : String;
-      Aliased_Inst : Boolean;
-      Comment      : String := "")
-      return Ada_Instance
+   function New_Variable
+     (Id         : String;
+      Type_Name  : String;
+      Is_Aliased : Boolean;
+      Comment    : String := "")
+      return Ada_Variable
    is
    begin
-      return (Id      => Ada_Identifier (Id, "I"),
-              Typ     => To_Unbounded_String (Typ),
-              Aliasd  => Aliased_Inst,
-              Comment => New_Comment (Comment, Strip => True),
-              Aspects => <>);
-   end New_Instance;
+      return (Id        => Ada_Identifier (Id, "I"),
+              Type_Name => To_Unbounded_String (Type_Name),
+              Aliasd    => Is_Aliased,
+              Comment   => New_Comment (Comment, Strip => True),
+              Aspects   => <>);
+   end New_Variable;
 
    ----------------
    -- Add_Aspect --
    ----------------
 
    procedure Add_Address_Aspect
-     (Elt     : in out Ada_Instance;
+     (Elt     : in out Ada_Variable;
       Address : Unsigned)
    is
    begin
-      Elt.Aspects.Append ("Address => System'To_Address (" &
-                            To_Hex (Address) & ")");
+      Elt.Aspects.Append ("Address => System'To_Address (" & To_Hex (Address) & ")");
    end Add_Address_Aspect;
 
    ------------------------
@@ -2453,7 +2453,7 @@ package body Ada_Gen is
    ------------------------
 
    procedure Add_Address_Aspect
-     (Elt : in out Ada_Instance;
+     (Elt : in out Ada_Variable;
       Val : String)
    is
    begin
@@ -2465,7 +2465,7 @@ package body Ada_Gen is
    ----------------
 
    procedure Add_Aspect
-     (Elt         : in out Ada_Instance;
+     (Elt         : in out Ada_Variable;
       Aspect_Mark : String)
    is
    begin
@@ -2477,7 +2477,7 @@ package body Ada_Gen is
    -------------------
 
    overriding procedure Added_In_Spec
-     (Element : Ada_Instance;
+     (Element : Ada_Variable;
       Spec    : in out Ada_Spec)
    is
    begin

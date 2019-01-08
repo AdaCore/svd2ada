@@ -436,11 +436,11 @@ package body Descriptors.Device is
             begin
                Add (Spec,
                     New_Constant_Value
-                      (Id       => Id & "_Interrupt",
-                       Align_Id => Max_Len + 11,
-                       Typ      => Typ,
-                       Value    => To_String (Int.Value),
-                       Comment  => To_String (Int.Description)));
+                      (Id        => Id & "_Interrupt",
+                       Align_Id  => Max_Len + 11,
+                       Type_Name => Typ,
+                       Value     => To_String (Int.Value),
+                       Comment   => To_String (Int.Description)));
             end;
          end loop;
       end;
@@ -508,7 +508,7 @@ package body Descriptors.Device is
               New_Constant_Value
                 (Id       => To_String (Periph.Name) & "_Base",
                  Align_Id => 0,
-                 Typ      => "System.Address",
+                 Type_Name      => "System.Address",
                  Value    => "System'To_Address (" &
                    To_Hex (Periph.Base_Address) & ")"));
       end loop;
@@ -517,7 +517,7 @@ package body Descriptors.Device is
       --  Root package for the device --
       ----------------------------------
 
-      Ada.Text_IO.Put_Line ("Generating " & To_String (Id (Spec)));
+      Ada.Text_IO.Put_Line ("Generating package " & To_String (Id (Spec)));
 
       Write_Spec (Spec, Output_Dir);
 
