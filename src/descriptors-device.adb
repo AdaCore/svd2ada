@@ -489,7 +489,7 @@ package body Descriptors.Device is
                    To_Hex (Periph.Base_Address) & ")"));
       end loop;
 
-      Ada.Text_IO.Put_Line ("Generating " & To_String (Device.Name));
+      Ada.Text_IO.Put_Line ("Generating " & To_String (Id (Spec)));
       Write_Spec (Spec, Output_Dir);
 
       Peripherals := Device.Peripherals;
