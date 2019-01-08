@@ -27,8 +27,11 @@ with DOM.Core.Nodes;        use DOM.Core.Nodes;
 
 with Ada_Gen;               use Ada_Gen;
 with SVD2Ada_Utils;
+with Ada.Containers;
 
 package body Descriptors.Device is
+
+   use type Ada.Containers.Count_Type;
 
    package Interrupt_Sort is new Interrupt_Vectors.Generic_Sorting
      (Base_Types."<");
@@ -52,9 +55,13 @@ package body Descriptors.Device is
      --  Group_Name. When finished, all peripherals now in Group are no longer
      --  in Peripherals.
      with
+       Pre  => Group_Name /= "" and
+               Group.Length = 1,  -- the first member has been inserted
        Post => -- all members of Peripherals in the same group are in Group
                (for all P of Peripherals'Old =>
                   (if P.Group_Name = Group_Name then Group.Contains (P)))
+               and
+               Group.Length >= 1  -- perhaps only the initial member is in group
                and
                --  all members of Group are in the same group and are no longer
                --  in Peripherals
