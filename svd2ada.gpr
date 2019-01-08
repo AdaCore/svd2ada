@@ -2,18 +2,35 @@ with "xmlada";
 
 project SVD2Ada is
 
+   type Build_Kind is ("release", "debug");
+   Build : Build_Kind := external ("APP_BUILD", "release");
+
    for Source_Dirs use ("src");
    for Main use ("svd2ada.adb");
-   for Object_Dir use "obj/";
+   for Object_Dir use "obj/" & Build;
    for Exec_Dir use ".";
 
    package Builder is
       for Default_Switches ("ada") use ("-s");
    end Builder;
 
+   Common_Compiler_Switches := (
+                                "-gnatwae",
+                                "-gnatQ",
+                                --  "-gnatw.X",
+                                "-gnatyyg",
+                                "-gnatyM120"  -- allow lines longer than 80
+                               );
+
    package Compiler is
-      for Default_Switches ("ada") use
-        ("-g", "-O2", "-gnatwae", "-gnatQ", "-gnatw.X", "-gnatyyg", "-gnatyM120");
+      case Build is
+         when "release" =>
+            for Default_Switches ("ada") use
+              ("-O2") & Common_Compiler_Switches;
+         when "debug" =>
+            for Default_Switches ("ada") use
+              ("-g", "-gnata") & Common_Compiler_Switches;
+      end case;
    end Compiler;
 
 end SVD2Ada;
