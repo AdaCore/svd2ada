@@ -414,7 +414,7 @@ package body Descriptors.Peripheral is
 
    begin
       Ada.Text_IO.Put_Line
-        ("Generate " & To_String (Peripheral.Type_Name));
+        ("Generating " & Dev_Name & '.' & To_String (Peripheral.Type_Name));
 
       Spec := New_Child_Spec
         (To_String (Peripheral.Type_Name),
@@ -478,7 +478,7 @@ package body Descriptors.Peripheral is
 
    begin
       Ada.Text_IO.Put_Line
-        ("Generate " & To_String (Group.First_Element.Group_Name));
+        ("Generating " & Dev_Name & '.' & To_String (Group.First_Element.Group_Name));
 
       Spec := New_Child_Spec
         (To_String (Sorted.First_Element.Group_Name),

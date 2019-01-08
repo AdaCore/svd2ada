@@ -117,14 +117,11 @@ package body Descriptors.Device is
 
                elsif Tag = "peripherals" then
                   declare
-                     Child_List : constant DOM.Core.Node_List :=
-                                    Child_Nodes (Child);
+                     Child_List : constant DOM.Core.Node_List := Child_Nodes (Child);
                      Peripheral : Peripheral_T;
                   begin
                      for K in 0 .. Length (Child_List) - 1 loop
-                        if Node_Type (Item (Child_List, K)) =
-                          DOM.Core.Element_Node
-                        then
+                        if Node_Type (Item (Child_List, K)) = DOM.Core.Element_Node then
                            Peripheral :=
                              Read_Peripheral
                                (DOM.Core.Element (Item (Child_List, K)),
@@ -492,6 +489,7 @@ package body Descriptors.Device is
                    To_Hex (Periph.Base_Address) & ")"));
       end loop;
 
+      Ada.Text_IO.Put_Line ("Generating " & To_String (Device.Name));
       Write_Spec (Spec, Output_Dir);
 
       Peripherals := Device.Peripherals;
