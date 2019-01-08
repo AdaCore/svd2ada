@@ -43,6 +43,28 @@ package body Descriptors.Device is
       Output_Dir : String);
    --  Dump the IRQ names and trap handlers
 
+   procedure Gather_Peripheral_Group
+     (Group_Name  : Unbounded_String;
+      Peripherals : in out Peripheral_Vectors.Vector;
+      Group       : in out Peripheral_Vectors.Vector)
+     --  Gather into Group each peripheral in Peripherals that is defined in
+     --  the SVD file to be in the same group, as specified by having the same
+     --  Group_Name. When finished, all peripherals now in Group are no longer
+     --  in Peripherals.
+     with
+       Post => -- all members of Peripherals in the same group are in Group
+               (for all P of Peripherals'Old =>
+                  (if P.Group_Name = Group_Name then Group.Contains (P)))
+               and
+               --  all members of Group are in the same group and are no longer
+               --  in Peripherals
+               (for all P of Group =>
+                  P.Group_Name = Group_Name and not Peripherals.Contains (P));
+
+   function Is_Group_Member (P : Peripheral_Access) return Boolean is
+     (Length (P.Group_Name) /= 0);
+   --  a convenience function for readability
+
    -----------------
    -- Read_Device --
    -----------------
@@ -455,19 +477,14 @@ package body Descriptors.Device is
 
       else
          Add (Spec, New_Comment_Box ("Base type"));
-         Add_No_Check
-           (Spec, New_Type_Scalar (Target_Type (32, False), 32));
-         Add_No_Check
-           (Spec, New_Type_Scalar (Target_Type (16, False), 16));
-         Add_No_Check
-           (Spec, New_Type_Scalar (Target_Type (8, False), 8));
-         Add_No_Check
-           (Spec, New_Type_Scalar (Target_Type (1, False), 1));
+         Add_No_Check (Spec, New_Type_Scalar (Target_Type (32, False), 32));
+         Add_No_Check (Spec, New_Type_Scalar (Target_Type (16, False), 16));
+         Add_No_Check (Spec, New_Type_Scalar (Target_Type (8, False), 8));
+         Add_No_Check (Spec, New_Type_Scalar (Target_Type (1, False), 1));
 
          for J in 2 .. Device.Width loop
-            if J /= 8 and then J /= 16 and then J /= 32 then
-               Add_No_Check
-                 (Spec, New_Type_Scalar (Target_Type (J, False), J));
+            if J not in 8 | 16 | 32 then
+               Add_No_Check (Spec, New_Type_Scalar (Target_Type (J, False), J));
             end if;
          end loop;
       end if;
@@ -489,41 +506,63 @@ package body Descriptors.Device is
                    To_Hex (Periph.Base_Address) & ")"));
       end loop;
 
+      ----------------------------------
+      --  Root package for the device --
+      ----------------------------------
+
       Ada.Text_IO.Put_Line ("Generating " & To_String (Id (Spec)));
+
       Write_Spec (Spec, Output_Dir);
+
+      ---------------------------------------------------
+      --  Child packages for the device's peripherals  --
+      ---------------------------------------------------
 
       Peripherals := Device.Peripherals;
 
       while not Peripherals.Is_Empty loop
          declare
             P     : constant Peripheral_Access := Peripherals.First_Element;
-            Vec   : Peripheral_Vectors.Vector;
-            Index : Natural;
+            Group : Peripheral_Vectors.Vector;
          begin
             Peripherals.Delete_First;
 
-            if Ada.Strings.Unbounded.Length (P.Group_Name) = 0 then
+            if not Is_Group_Member (P) then
                Dump (P.all,
-                     Ada.Strings.Unbounded.To_String (Device.Name),
+                     To_String (Device.Name),
                      Output_Dir);
             else
-               Vec.Append (P);
-               Index := Peripherals.First_Index;
-
-               while Index <= Peripherals.Last_Index loop
-                  if Peripherals (Index).Group_Name = P.Group_Name then
-                     Vec.Append (Peripherals (Index));
-                     Peripherals.Delete (Index);
-                  else
-                     Index := Index + 1;
-                  end if;
-               end loop;
-
-               Dump (Vec, Ada.Strings.Unbounded.To_String (Device.Name),
+               Group.Append (P);
+               Gather_Peripheral_Group (P.Group_Name, Peripherals, Group);
+               Dump (Group,
+                     To_String (Device.Name),
                      Output_Dir);
             end if;
          end;
       end loop;
    end Dump;
+
+   -----------------------------
+   -- Gather_Peripheral_Group --
+   -----------------------------
+
+   procedure Gather_Peripheral_Group
+     (Group_Name  : Unbounded_String;
+      Peripherals : in out Peripheral_Vectors.Vector;
+      Group       : in out Peripheral_Vectors.Vector)
+   is
+      Index : Natural;
+   begin
+      Index := Peripherals.First_Index;
+
+      while Index <= Peripherals.Last_Index loop
+         if Peripherals (Index).Group_Name = Group_Name then
+            Group.Append (Peripherals (Index));
+            Peripherals.Delete (Index);
+         else
+            Index := Index + 1;
+         end if;
+      end loop;
+   end Gather_Peripheral_Group;
 
 end Descriptors.Device;
