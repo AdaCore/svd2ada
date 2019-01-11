@@ -77,7 +77,7 @@ is
 
    --  Command line parser
    Cmd_Line_Cfg    : GNAT.Command_Line.Command_Line_Configuration;
-   Pkg             : aliased GNAT.Strings.String_Access;
+   Root_Pkg_Name   : aliased GNAT.Strings.String_Access;
    Out_Dir         : aliased GNAT.Strings.String_Access;
    Base_Types_Pkg  : aliased GNAT.Strings.String_Access;
    Gen_Booleans    : aliased Boolean := False;
@@ -101,36 +101,35 @@ begin
       Output      => Out_Dir'Access,
       Switch      => "-o=",
       Long_Switch => "--output=",
-      Help        => "the destination directory used to " &
-        "generate the binding",
+      Help        => "the directory to contain the generated binding",
       Argument    => "DIR");
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
-      Output      => Pkg'Access,
+      Output      => Root_Pkg_Name'Access,
       Switch      => "-p=",
       Long_Switch => "--package=",
-      Help        => "use pkg_name as main package name for the generated " &
+      Help        => "use this name as root package name for the generated " &
         "spec hierarchy",
       Argument    => "Pkg_Name");
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
       Output      => Base_Types_Pkg'Access,
       Long_Switch => "--base-types-package=",
-      Help        => "the name of the package containing the low level types" &
-        " definitions. If undefined, those types will be specified in the" &
+      Help        => "the name of the package containing the low level types'" &
+        " definitions. If not specified, those types will be declared in the" &
         " root package.");
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
       Output      => Gen_Booleans'Access,
       Long_Switch => "--boolean",
-      Help        => "treat bit fields as boolean. Ignored if an enumerate " &
+      Help        => "represent single-bit fields as Booleans. Ignored if an enumeration " &
         "is defined for the field",
       Value       => True);
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
       Output      => Gen_IRQ_Support'Access,
       Long_Switch => "--gen-interrupts",
-      Help        => "Generate trap handlers and interrupt name package. " &
+      Help        => "generate trap handlers and interrupt names package. " &
         "Activated by default if the generated root package is a run-time " &
         "package",
       Value       => True);
@@ -138,14 +137,14 @@ begin
      (Cmd_Line_Cfg,
       Output      => Gen_UInt_Always'Access,
       Long_Switch => "--gen-uint-always",
-      Help        => "when generating base types, always consider UInt* and" &
-        " do not use the Bit and Bytes variants for types with size 1 and 8",
+      Help        => "when generating base types, consider UInt* and" &
+        " do not use the Bit and Byte variants for types with size 1 and 8",
       Value       => True);
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
       Output      => No_Arrays'Access,
       Long_Switch => "--no-arrays",
-      Help        => "in some circumstances (similar names indexed by " &
+      Help        => "in some circumstances (e.g., similar names indexed by " &
         "ascending numbers), svd2ada can generate arrays of registers or " &
         "arrays of register fields. This switch prevents this behavior",
       Value       => True);
@@ -153,15 +152,15 @@ begin
      (Cmd_Line_Cfg,
       Output      => No_Defaults'Access,
       Long_Switch => "--no-defaults",
-      Help        => "Do not use the registers reset values to provide" &
-        " default fields values",
+      Help        => "do not use the registers' reset values to provide" &
+        " fields' default values",
       Value       => True);
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
       Output      => No_UInt_Subtype'Access,
       Long_Switch => "--no-uint-subtypes",
-      Help        => "do not generate subtypes for fields, but use the base" &
-        " uint type instead",
+      Help        => "do not generate subtypes for fields, but use the corresponding" &
+        " UInt type instead",
       Value       => True);
    GNAT.Command_Line.Define_Switch
      (Cmd_Line_Cfg,
@@ -169,7 +168,7 @@ begin
       Long_Switch => "--no-vfa-on-types",
       Help        => "when generating register types, do not specify the" &
         " Volatile_Full_Access aspect on them (specify it instead on the" &
-        " enclosing peripheral fields",
+        " enclosing peripheral fields)",
       Value       => True);
 
    GNAT.Command_Line.Getopt
@@ -179,9 +178,7 @@ begin
       SVD : constant String := GNAT.Command_Line.Get_Argument;
    begin
       if SVD = "" or else Out_Dir = null or else Out_Dir.all = "" then
-         Ada.Text_IO.Put_Line
-           (Ada.Text_IO.Standard_Error,
-            "Error: missing arguments");
+         Ada.Text_IO.Put_Line (Ada.Text_IO.Standard_Error, "Error: missing arguments");
          GNAT.Command_Line.Try_Help;
 
          Ada.Command_Line.Set_Exit_Status (2);
@@ -191,8 +188,8 @@ begin
       SVD_File := To_Unbounded_String (GNAT.OS_Lib.Normalize_Pathname (SVD));
    end;
 
-   if Pkg.all /= "" then
-      SVD2Ada_Utils.Set_Root_Package (Pkg.all);
+   if Root_Pkg_Name.all /= "" then
+      SVD2Ada_Utils.Set_Root_Package (Root_Pkg_Name.all);
 
       --  If Pkg is a runtime package, force the generation of Interrupts.Name
       --  and IRQ trap vector.
@@ -247,7 +244,7 @@ begin
 
    Device := Descriptors.Device.Read_Device
      (Documents.Get_Element (Doc),
-      (if Pkg = null then "" else Pkg.all));
+      (if Root_Pkg_Name = null then "" else Root_Pkg_Name.all));
 
    Descriptors.Device.Dump (Device, Out_Dir.all);
 
