@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                    Copyright (C) 2015-2019, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -37,6 +37,9 @@ package body Descriptors.Cluster is
       Cluster   : in out Cluster_T;
       Type_Name : String);
 
+   function Image (N : Natural) return String;
+   --  convenience routine, truncates leading blank from 'Image
+
    package String_List is new Ada.Containers.Indefinite_Vectors
      (Positive, String);
 
@@ -46,13 +49,12 @@ package body Descriptors.Cluster is
 
    function Read_Cluster
      (Elt            : DOM.Core.Element;
-      Prepend        : Unbounded.Unbounded_String;
-      Append         : Unbounded.Unbounded_String;
+      Prepend        : Unbounded_String;
+      Append         : Unbounded_String;
       Reg_Properties : Register_Properties_T;
       Db             : Cluster_Db'Class) return Cluster_T
    is
       use DOM.Core;
-      use type Ada.Strings.Unbounded.Unbounded_String;
 
       List         : constant Node_List := Nodes.Child_Nodes (Elt);
       Result       : Cluster_T;
@@ -62,20 +64,20 @@ package body Descriptors.Cluster is
       Reg2         : Register_Access;
       Cluster      : Cluster_Access;
 
-      function Compute_Name return Unbounded.Unbounded_String;
+      function Compute_Name return Unbounded_String;
 
       ------------------
       -- Compute_Name --
       ------------------
 
-      function Compute_Name return Unbounded.Unbounded_String
+      function Compute_Name return Unbounded_String
       is
       begin
          if Result.Dim = 1 then
             return Result.Xml_Id;
          else
             declare
-               Name   : constant String := Unbounded.To_String (Result.Xml_Id);
+               Name   : constant String := To_String (Result.Xml_Id);
                Result : String (Name'Range);
                Idx    : Natural;
                Skip   : Boolean := False;
@@ -86,9 +88,7 @@ package body Descriptors.Cluster is
                   if Skip then
                      Skip := False;
 
-                  elsif Name (J) = '['
-                    or else Name (J) = ']'
-                  then
+                  elsif Name (J) in '[' | ']' then
                      null;
 
                   elsif J < Name'Last and then Name (J .. J + 1) = "%s" then
@@ -105,8 +105,7 @@ package body Descriptors.Cluster is
                   Idx := Idx - 1;
                end if;
 
-               return Unbounded.To_Unbounded_String
-                 (Result (Result'First .. Idx));
+               return To_Unbounded_String (Result (Result'First .. Idx));
             end;
          end if;
       end Compute_Name;
@@ -136,7 +135,7 @@ package body Descriptors.Cluster is
       for J in 0 .. Nodes.Length (List) - 1 loop
          if Nodes.Node_Type (Nodes.Item (List, J)) = Element_Node then
             declare
-               Child : constant Element := Element (Nodes.Item (List, J));
+               Child : constant DOM.Core.Element := DOM.Core.Element (Nodes.Item (List, J));
                Tag   : String renames Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
@@ -160,7 +159,7 @@ package body Descriptors.Cluster is
                elsif Tag = "dim" then
                   Result.Dim := Get_Value (Child);
 
-                  if Unbounded.Length (Result.Xml_Id) > 0 then
+                  if Length (Result.Xml_Id) > 0 then
                      Result.Name := Compute_Name;
                   end if;
 
@@ -174,7 +173,7 @@ package body Descriptors.Cluster is
                   Register := Read_Register
                     (Child,
                      Prepend,
-                     Append & "_" & Unbounded.To_String (Result.Name),
+                     Append & "_" & To_String (Result.Name),
                      Result.Reg_Properties,
                      Result);
 
@@ -234,11 +233,9 @@ package body Descriptors.Cluster is
       for Elt of Cluster.Content loop
          case Elt.Kind is
             when Register_Element =>
-               Result.Content.Append
-                 ((Register_Element, new Register_T'(Elt.Reg.all)));
+               Result.Content.Append ((Register_Element, new Register_T'(Elt.Reg.all)));
             when Cluster_Element =>
-               Result.Content.Append
-                 ((Cluster_Element, Deep_Copy (Elt.Cluster)));
+               Result.Content.Append ((Cluster_Element, Deep_Copy (Elt.Cluster)));
          end case;
       end loop;
 
@@ -256,7 +253,7 @@ package body Descriptors.Cluster is
    begin
       for Elt of Db.Content loop
          if Elt.Kind = Register_Element
-           and then Ada.Strings.Unbounded.To_String (Elt.Reg.Xml_Id) = XML_Id
+           and then To_String (Elt.Reg.Xml_Id) = XML_Id
          then
             return Elt.Reg;
          end if;
@@ -276,7 +273,7 @@ package body Descriptors.Cluster is
    begin
       for Elt of Db.Content loop
          if Elt.Kind = Cluster_Element
-           and then Unbounded.To_String (Elt.Cluster.Xml_Id) = XML_Id
+           and then To_String (Elt.Cluster.Xml_Id) = XML_Id
          then
             return Elt.Cluster;
          end if;
@@ -335,8 +332,7 @@ package body Descriptors.Cluster is
 
       Added := False;
 
-      for J in 1 ..
-        Integer (Peripheral_Element_Vectors.Length (Cluster.Content))
+      for J in 1 .. Integer (Peripheral_Element_Vectors.Length (Cluster.Content))
       loop
          case Cluster.Content (J).Kind is
             when Register_Element =>
@@ -366,26 +362,11 @@ package body Descriptors.Cluster is
    function Find_Overlapping_Registers
      (Reg_Set : Peripheral_Element_Vectors.Vector) return Boolean
    is
-      use Unbounded;
-
       Result   : Boolean := False;
       Idx      : Positive;
       Off      : Natural;
       Last     : Natural;
       Enum_Idx : Natural;
-
-      function Image (N : Natural) return String;
-
-      -----------
-      -- Image --
-      -----------
-
-      function Image (N : Natural) return String
-      is
-         S : constant String := N'Img;
-      begin
-         return S (S'First + 1 .. S'Last);
-      end Image;
 
    begin
       for J in Reg_Set.First_Index .. Reg_Set.Last_Index - 1 loop
@@ -474,11 +455,9 @@ package body Descriptors.Cluster is
                      --  No common name found: let's imagine one
                      case Elt.Kind is
                         when Register_Element =>
-                           Elt.Reg.Overlap_Suffix :=
-                             To_Unbounded_String ("Mode_" & Image (Enum_Idx));
+                           Elt.Reg.Overlap_Suffix := To_Unbounded_String ("Mode_" & Image (Enum_Idx));
                         when Cluster_Element =>
-                           Elt.Cluster.Overlap_Suffix :=
-                             To_Unbounded_String ("Mode_" & Image (Enum_Idx));
+                           Elt.Cluster.Overlap_Suffix := To_Unbounded_String ("Mode_" & Image (Enum_Idx));
                      end case;
 
                      Enum_Idx := Enum_Idx + 1;
@@ -486,11 +465,9 @@ package body Descriptors.Cluster is
                   elsif Last = Prefix'Last then
                      case Elt.Kind is
                         when Register_Element =>
-                           Elt.Reg.Overlap_Suffix :=
-                             To_Unbounded_String ("Default");
+                           Elt.Reg.Overlap_Suffix := To_Unbounded_String ("Default");
                         when Cluster_Element =>
-                           Elt.Cluster.Overlap_Suffix :=
-                             To_Unbounded_String ("Default");
+                           Elt.Cluster.Overlap_Suffix := To_Unbounded_String ("Default");
                      end case;
 
                   else
@@ -506,13 +483,9 @@ package body Descriptors.Cluster is
 
                         case Elt.Kind is
                            when Register_Element =>
-                              Elt.Reg.Overlap_Suffix :=
-                                To_Unbounded_String
-                                  (Prefix (Skip .. Prefix'Last));
+                              Elt.Reg.Overlap_Suffix := To_Unbounded_String (Prefix (Skip .. Prefix'Last));
                            when Cluster_Element =>
-                              Elt.Cluster.Overlap_Suffix :=
-                                To_Unbounded_String
-                                  (Prefix (Skip .. Prefix'Last));
+                              Elt.Cluster.Overlap_Suffix := To_Unbounded_String (Prefix (Skip .. Prefix'Last));
                         end case;
                      end;
                   end if;
@@ -534,7 +507,6 @@ package body Descriptors.Cluster is
 
    function Equal (C1, C2 : Cluster_Access) return Boolean
    is
-      use Unbounded;
       use type Ada.Containers.Count_Type;
    begin
       if C1.Name /= C2.Name
@@ -592,10 +564,10 @@ package body Descriptors.Cluster is
 
                   else
                      declare
-                        Prefix : constant Unbounded.Unbounded_String :=
+                        Prefix : constant Unbounded_String :=
                                    Similar_Type (Elts (J).Reg, Elts (K).Reg);
                      begin
-                        if Unbounded.Length (Prefix) > 0 then
+                        if Length (Prefix) > 0 then
                            --  We have similar types, but with different names.
                            --  In such situation, it'd be nice to generate a
                            --  common type definition.
@@ -629,7 +601,6 @@ package body Descriptors.Cluster is
       Spec      : in out Ada_Gen.Ada_Spec;
       Type_Name : String) return Ada_Type_Enum
    is
-      use Unbounded;
       Result : Ada_Type_Enum := New_Type_Enum (Id => Type_Name & "_Disc");
       Values : String_List.Vector;
       Val    : Ada_Enum_Value;
@@ -677,7 +648,6 @@ package body Descriptors.Cluster is
      (Parent : in out Ada_Type_Record'Class;
       Elts   : Peripheral_Element_Vectors.Vector)
    is
-      use Ada.Strings.Unbounded;
 
       function Dim (Elt : Peripheral_Element) return Positive
       is (case Elt.Kind is
@@ -816,7 +786,6 @@ package body Descriptors.Cluster is
       Cluster   : in out Cluster_T;
       Type_Name : String)
    is
-      use Ada.Strings.Unbounded;
 
       function Create_Record return Ada_Type_Record'Class;
 
@@ -824,8 +793,7 @@ package body Descriptors.Cluster is
       -- Create_Record --
       -------------------
 
-      function Create_Record return Ada_Type_Record'Class
-      is
+      function Create_Record return Ada_Type_Record'Class is
       begin
          if Find_Overlapping_Registers (Cluster.Content) then
             declare
@@ -849,7 +817,7 @@ package body Descriptors.Cluster is
          end if;
       end Create_Record;
 
-      Rec        : Ada_Type_Record'Class := Create_Record;
+      Rec : Ada_Type_Record'Class := Create_Record;
 
    begin
       Add_Size_Aspect (Rec, Get_Size (Cluster));
@@ -868,15 +836,11 @@ package body Descriptors.Cluster is
      (Spec    : in out Ada_Gen.Ada_Spec;
       Cluster : Cluster_Access)
    is
-      use Ada.Strings.Unbounded;
-
    begin
       if not Cluster.Content.Is_Empty then
          Add
            (Spec,
-            New_Comment_Box
-              (To_String (Cluster.Type_Name) &
-                 " cluster's Registers"));
+            New_Comment_Box (To_String (Cluster.Type_Name) & " cluster's Registers"));
       end if;
 
       Find_Common_Types (Cluster.Content);
@@ -890,8 +854,7 @@ package body Descriptors.Cluster is
          end case;
       end loop;
 
-      Dump_Cluster_Type
-        (Spec, Cluster.all, To_String (Cluster.Type_Name) & "_Cluster");
+      Dump_Cluster_Type (Spec, Cluster.all, To_String (Cluster.Type_Name) & "_Cluster");
 
       if Cluster.Dim > 1 then
          declare
@@ -910,5 +873,15 @@ package body Descriptors.Cluster is
          end;
       end if;
    end Dump;
+
+   -----------
+   -- Image --
+   -----------
+
+   function Image (N : Natural) return String    is
+      S : constant String := N'Img;
+   begin
+      return S (S'First + 1 .. S'Last);
+   end Image;
 
 end Descriptors.Cluster;

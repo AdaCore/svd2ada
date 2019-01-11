@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                    Copyright (C) 2015-2019, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -18,7 +18,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Containers.Vectors;
-with Ada.Strings.Unbounded;          use Ada.Strings;
+with Ada.Strings.Unbounded;          use Ada.Strings.Unbounded;
 
 with DOM.Core;
 
@@ -77,9 +77,9 @@ package Descriptors.Cluster is
       Elts   : Peripheral_Element_Vectors.Vector);
 
    type Cluster_T is new Register_Db and Cluster_Db with record
-      Name            : Unbounded.Unbounded_String;
-      Xml_Id          : Unbounded.Unbounded_String;
-      Type_Name       : Unbounded.Unbounded_String;
+      Name            : Unbounded_String;
+      Xml_Id          : Unbounded_String;
+      Type_Name       : Unbounded_String;
 
       --  When two clusters are identical, the second register will not
       --  generate an Ada type. We reference the first register here to
@@ -87,18 +87,18 @@ package Descriptors.Cluster is
       Type_Holder     : Cluster_Access := null;
 
       Ada_Type        : Type_Holders.Holder;
-      Description     : Unbounded.Unbounded_String;
+      Description     : Unbounded_String;
 
       --  When two registers are at the same location, we specify a shared
       --  common union type name here to support this overlapping
       Is_Overlapping   : Boolean := False;
-      Overlap_Suffix   : Unbounded.Unbounded_String;
+      Overlap_Suffix   : Unbounded_String;
 
       Address_Offset  : Natural;
       Reg_Properties  : Register_Properties_T := Null_Register_Property;
       Dim             : Positive := 1;
       Dim_Increment   : Natural := 4;
-      Dim_Index       : Unbounded.Unbounded_String;
+      Dim_Index       : Unbounded_String;
       Content         : Peripheral_Element_Vectors.Vector;
    end record;
 
@@ -106,8 +106,8 @@ package Descriptors.Cluster is
 
    function Read_Cluster
      (Elt            : DOM.Core.Element;
-      Prepend        : Unbounded.Unbounded_String;
-      Append         : Unbounded.Unbounded_String;
+      Prepend        : Unbounded_String;
+      Append         : Unbounded_String;
       Reg_Properties : Register_Properties_T;
       Db             : Cluster_Db'Class) return Cluster_T;
 
@@ -129,7 +129,7 @@ package Descriptors.Cluster is
 
 private
 
-   function Name (Elt : Peripheral_Element) return Unbounded.Unbounded_String
+   function Name (Elt : Peripheral_Element) return Unbounded_String
    is (case Elt.Kind is
           when Register_Element => Elt.Reg.Name,
           when Cluster_Element => Elt.Cluster.Name);
@@ -145,7 +145,7 @@ private
           when Cluster_Element => Elt.Cluster.Is_Overlapping);
 
    function Overlap_Suffix
-     (Elt : Peripheral_Element) return Unbounded.Unbounded_String
+     (Elt : Peripheral_Element) return Unbounded_String
    is (case Elt.Kind is
           when Register_Element => Elt.Reg.Overlap_Suffix,
           when Cluster_Element => Elt.Cluster.Overlap_Suffix);
