@@ -40,6 +40,10 @@ package body Descriptors.Cluster is
    function Image (N : Natural) return String;
    --  convenience routine, truncates leading blank from 'Image
 
+   function Computed_Name (Input : Cluster_T) return Unbounded_String;
+   --  if Input.Dim = 1 then returns the Input.XML_Id unchanged, otherwise
+   --  computes it by removing the "[%s]" substring of the Xml_Id
+
    package String_List is new Ada.Containers.Indefinite_Vectors
      (Positive, String);
 
@@ -58,58 +62,10 @@ package body Descriptors.Cluster is
 
       List         : constant Node_List := Nodes.Child_Nodes (Elt);
       Result       : Cluster_T;
-      Derived_From : constant String :=
-                       Elements.Get_Attribute (Elt, "derivedFrom");
+      Derived_From : constant String := Elements.Get_Attribute (Elt, "derivedFrom");
       Register     : Register_Access;
       Reg2         : Register_Access;
       Cluster      : Cluster_Access;
-
-      function Compute_Name return Unbounded_String;
-
-      ------------------
-      -- Compute_Name --
-      ------------------
-
-      function Compute_Name return Unbounded_String
-      is
-      begin
-         if Result.Dim = 1 then
-            return Result.Xml_Id;
-         else
-            declare
-               Name   : constant String := To_String (Result.Xml_Id);
-               Result : String (Name'Range);
-               Idx    : Natural;
-               Skip   : Boolean := False;
-            begin
-               Idx := Result'First - 1;
-
-               for J in Name'Range loop
-                  if Skip then
-                     Skip := False;
-
-                  elsif Name (J) in '[' | ']' then
-                     null;
-
-                  elsif J < Name'Last and then Name (J .. J + 1) = "%s" then
-                     --  Skip the next character (e.g. 's')
-                     Skip := True;
-
-                  else
-                     Idx := Idx + 1;
-                     Result (Idx) := Name (J);
-                  end if;
-               end loop;
-
-               if Idx in Result'Range and then Result (Idx) = '_' then
-                  Idx := Idx - 1;
-               end if;
-
-               return To_Unbounded_String (Result (Result'First .. Idx));
-            end;
-         end if;
-      end Compute_Name;
-
    begin
       Result.Reg_Properties := Reg_Properties;
 
@@ -140,7 +96,7 @@ package body Descriptors.Cluster is
             begin
                if Tag = "name" then
                   Result.Xml_Id := Get_Value (Child);
-                  Result.Name := Prepend & Compute_Name & Append;
+                  Result.Name := Prepend & Computed_Name (Result) & Append;
                   Result.Type_Name := Result.Name;
                   --  Type_Name might be overloaded by headerStructName
 
@@ -160,7 +116,7 @@ package body Descriptors.Cluster is
                   Result.Dim := Get_Value (Child);
 
                   if Length (Result.Xml_Id) > 0 then
-                     Result.Name := Compute_Name;
+                     Result.Name := Computed_Name (Result);
                   end if;
 
                elsif Tag = "dimIncrement" then
@@ -355,20 +311,24 @@ package body Descriptors.Cluster is
       end if;
    end Insert_Element;
 
-   --------------------------------
-   -- Find_Overlapping_Registers --
-   --------------------------------
+   -----------------------------------
+   -- Process_Overlapping_Registers --
+   -----------------------------------
 
-   function Find_Overlapping_Registers
-     (Reg_Set : Peripheral_Element_Vectors.Vector) return Boolean
+   procedure Process_Overlapping_Registers
+     (Reg_Set : Peripheral_Element_Vectors.Vector;
+      Found   : out Boolean)
    is
-      Result   : Boolean := False;
       Idx      : Positive;
       Off      : Natural;
       Last     : Natural;
       Enum_Idx : Natural;
 
    begin
+      Found := False;
+
+      --  search the vector of elements to see if any overlap and, if so, set
+      --  Found to True and mark them (within the vector) as overlapping
       for J in Reg_Set.First_Index .. Reg_Set.Last_Index - 1 loop
          declare
             Elt  : Peripheral_Element renames Reg_Set (J);
@@ -390,26 +350,28 @@ package body Descriptors.Cluster is
                      when Register_Element =>
                         Reg_Set (J).Reg.Is_Overlapping := True;
                         Reg_Set (K).Reg.Is_Overlapping := True;
-                        Result := True;
+                        Found := True;
                      when Cluster_Element =>
                         Reg_Set (J).Cluster.Is_Overlapping := True;
                         Reg_Set (K).Cluster.Is_Overlapping := True;
-                        Result := True;
+                        Found := True;
                   end case;
                end;
             end loop;
          end;
       end loop;
 
-      if not Result then
-         return Result;
+      if not Found then
+         return;
       end if;
 
       Idx := Reg_Set.First_Index;
       while Idx < Reg_Set.Last_Index loop
          --  Do not perform a second pass if the register has already been
          --  detected as aliased
-         if Is_Overlapping (Reg_Set (Idx)) then
+         if not Is_Overlapping (Reg_Set (Idx)) then
+            Idx := Idx + 1;
+         else
             declare
                Elt    : constant Peripheral_Element := Reg_Set (Idx);
                Prefix : constant String := To_String (Name (Elt));
@@ -493,13 +455,9 @@ package body Descriptors.Cluster is
                   Idx := Idx + 1;
                end;
             end loop;
-         else
-            Idx := Idx + 1;
          end if;
       end loop;
-
-      return Result;
-   end Find_Overlapping_Registers;
+   end Process_Overlapping_Registers;
 
    -----------
    -- Equal --
@@ -794,8 +752,10 @@ package body Descriptors.Cluster is
       -------------------
 
       function Create_Record return Ada_Type_Record'Class is
+         Found : Boolean;
       begin
-         if Find_Overlapping_Registers (Cluster.Content) then
+         Process_Overlapping_Registers (Cluster.Content, Found);
+         if Found then
             declare
                Enum : Ada_Type_Enum :=
                         Get_Discriminent_Type (Cluster.Content,
@@ -878,10 +838,54 @@ package body Descriptors.Cluster is
    -- Image --
    -----------
 
-   function Image (N : Natural) return String    is
+   function Image (N : Natural) return String is
       S : constant String := N'Img;
    begin
       return S (S'First + 1 .. S'Last);
    end Image;
+
+   -------------------
+   -- Computed_Name --
+   -------------------
+
+   function Computed_Name (Input : Cluster_T) return Unbounded_String
+   is
+   begin
+      if Input.Dim = 1 then
+         return Input.Xml_Id;
+      else
+         declare
+            Name   : constant String := To_String (Input.Xml_Id);
+            Result : String (Name'Range);
+            Idx    : Natural;
+            Skip   : Boolean := False;
+         begin
+            Idx := Result'First - 1;
+
+            for J in Name'Range loop
+               if Skip then
+                  Skip := False;
+
+               elsif Name (J) in '[' | ']' then
+                  null;
+
+               elsif J < Name'Last and then Name (J .. J + 1) = "%s" then
+                  --  Skip the next character (e.g. 's')
+                  Skip := True;
+
+               else
+                  Idx := Idx + 1;
+                  Result (Idx) := Name (J);
+               end if;
+            end loop;
+
+            if Idx in Result'Range and then Result (Idx) = '_' then
+               Idx := Idx - 1;
+            end if;
+
+            return To_Unbounded_String (Result (Result'First .. Idx));
+         end;
+      end if;
+   end Computed_Name;
 
 end Descriptors.Cluster;

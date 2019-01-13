@@ -62,8 +62,12 @@ package Descriptors.Cluster is
    package Peripheral_Element_Vectors is new Ada.Containers.Vectors
      (Positive, Peripheral_Element, Equal);
 
-   function Find_Overlapping_Registers
-     (Reg_Set : Peripheral_Element_Vectors.Vector) return Boolean;
+   procedure Process_Overlapping_Registers
+     (Reg_Set : Peripheral_Element_Vectors.Vector;
+      Found   : out Boolean);
+   --  Detect any overlapping registers and, for those that overlap together,
+   --  mark them as such and determine a common name. Found indicates whether
+   --  any overlapping registers were identified.
 
    procedure Find_Common_Types (Elts : Peripheral_Element_Vectors.Vector);
 
