@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2018, AdaCore                      --
+--                    Copyright (C) 2015-2019, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -364,8 +364,10 @@ package body Descriptors.Peripheral is
 
       function Create_Record return Ada_Type_Record'Class
       is
+         Found : Boolean;
       begin
-         if Find_Overlapping_Registers (Peripheral.Content) then
+         Process_Overlapping_Registers (Peripheral.Content, Found);
+         if Found then
             declare
                Enum : Ada_Type_Enum :=
                         Get_Discriminent_Type
