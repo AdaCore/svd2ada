@@ -403,9 +403,9 @@
       <interrupt><name>GPIO_10_IRQ</name><value>18</value></interrupt>
       <interrupt><name>GPIO_11_IRQ</name><value>19</value></interrupt>
       <interrupt><name>GPIO_12_IRQ</name><value>20</value></interrupt>
-      <interrupt><name>GPIO_12_IRQ</name><value>21</value></interrupt>
+      <interrupt><name>GPIO_13_IRQ</name><value>21</value></interrupt>
       <interrupt><name>GPIO_14_IRQ</name><value>22</value></interrupt>
-      <interrupt><name>GPIO_14_IRQ</name><value>23</value></interrupt>
+      <interrupt><name>GPIO_15_IRQ</name><value>23</value></interrupt>
       <interrupt><name>GPIO_16_IRQ</name><value>24</value></interrupt>
       <interrupt><name>GPIO_17_IRQ</name><value>25</value></interrupt>
       <interrupt><name>GPIO_18_IRQ</name><value>26</value></interrupt>
@@ -419,7 +419,7 @@
       <interrupt><name>GPIO_26_IRQ</name><value>34</value></interrupt>
       <interrupt><name>GPIO_27_IRQ</name><value>35</value></interrupt>
       <interrupt><name>GPIO_28_IRQ</name><value>36</value></interrupt>
-      <interrupt><name>GPIO_28_IRQ</name><value>37</value></interrupt>
+      <interrupt><name>GPIO_29_IRQ</name><value>37</value></interrupt>
       <interrupt><name>GPIO_30_IRQ</name><value>38</value></interrupt>
       <interrupt><name>GPIO_31_IRQ</name><value>39</value></interrupt>
       
