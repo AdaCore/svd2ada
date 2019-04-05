@@ -257,6 +257,7 @@
             <dimIncrement>4</dimIncrement>
             <name>ENABLE[%s]</name>
             <description>PLIC Interrupt Enable Register.</description>
+            <addressOffset>0x0</addressOffset>
             <fields>
               <field><name>INT0</name><lsb>0</lsb><msb>0</msb></field>
               <field><name>INT1</name><lsb>1</lsb><msb>1</msb></field>
