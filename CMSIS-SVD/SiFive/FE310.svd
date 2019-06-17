@@ -495,7 +495,7 @@
           <addressOffset>0x018</addressOffset>
         </register>
         <register derivedFrom="VALUE">
-          <name>RISE_INT_PEMD</name>
+          <name>RISE_INT_PEND</name>
           <description>Rise interrupt pending.</description>
           <addressOffset>0x01C</addressOffset>
         </register>
