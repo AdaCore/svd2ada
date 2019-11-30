@@ -1397,14 +1397,14 @@
               <access>read-write</access>
               <enumeratedValues>
                 <enumeratedValue>
-                  <name>Enable</name>
-                  <description>Counting down to zero does not assert the
+                  <name>Disable</name>
+                  <description>Counting down to zero asserts the
                   SysTick exception request</description>
                   <value>0</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>Disable</name>
-                  <description>Counting down to zero asserts the
+                  <name>Enable</name>
+                  <description>Counting down to zero does not assert the
                   SysTick exception request</description>
                   <value>1</value>
                 </enumeratedValue>
