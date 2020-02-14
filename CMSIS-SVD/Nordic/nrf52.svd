@@ -12,11 +12,11 @@ Copyright (c) 2010 - 2018, Nordic Semiconductor ASA\n
 \n
 All rights reserved.\n
 \n
-Redistribution and use in source and binary forms, with or without\n
-modification, are permitted provided that the following conditions are met:\n
+Redistribution and use in source and binary forms, with or without modification,\n
+are permitted provided that the following conditions are met:\n
 \n
-1. Redistributions of source code must retain the above copyright notice,\n
-   this list of conditions and the following disclaimer.\n
+1. Redistributions of source code must retain the above copyright notice, this\n
+   list of conditions and the following disclaimer.\n
 \n
 2. Redistributions in binary form, except as embedded into a Nordic\n
    Semiconductor ASA integrated circuit in a product or a software update for\n
@@ -31,20 +31,19 @@ modification, are permitted provided that the following conditions are met:\n
 4. This software, with or without modification, must only be used with a\n
    Nordic Semiconductor ASA integrated circuit.\n
 \n
-5. Any software provided in binary form under this license must not be\n
-   reverse engineered, decompiled, modified and/or disassembled.\n
+5. Any software provided in binary form under this license must not be reverse\n
+   engineered, decompiled, modified and/or disassembled.\n
 \n
-THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY\n
-EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n
-WARRANTIES OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A\n
-PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR\n
-ASA OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,\n
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED\n
-TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR\n
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF\n
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING\n
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
+THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS\n
+OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES\n
+OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE\n
+DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE\n
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR\n
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE\n
+GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)\n
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT\n
+OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
         </licenseText>
   <addressUnitBits>8</addressUnitBits>
   <width>32</width>
@@ -3395,65 +3394,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Enable constant latency mode</description>
           <addressOffset>0x078</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_CONSTLAT</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_LOWPWR</name>
           <description>Enable low power mode (variable latency)</description>
           <addressOffset>0x07C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_LOWPWR</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_POFWARN</name>
           <description>Power failure warning</description>
           <addressOffset>0x108</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_POFWARN</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_SLEEPENTER</name>
           <description>CPU entered WFI/WFE sleep</description>
           <addressOffset>0x114</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_SLEEPENTER</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_SLEEPEXIT</name>
           <description>CPU exited WFI/WFE sleep</description>
           <addressOffset>0x118</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_SLEEPEXIT</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>INTENSET</name>
@@ -4431,143 +4395,66 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Start HFCLK crystal oscillator</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_HFCLKSTART</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_HFCLKSTOP</name>
           <description>Stop HFCLK crystal oscillator</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_HFCLKSTOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_LFCLKSTART</name>
           <description>Start LFCLK source</description>
           <addressOffset>0x008</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_LFCLKSTART</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_LFCLKSTOP</name>
           <description>Stop LFCLK source</description>
           <addressOffset>0x00C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_LFCLKSTOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_CAL</name>
           <description>Start calibration of LFRC oscillator</description>
           <addressOffset>0x010</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_CAL</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_CTSTART</name>
           <description>Start calibration timer</description>
           <addressOffset>0x014</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_CTSTART</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_CTSTOP</name>
           <description>Stop calibration timer</description>
           <addressOffset>0x018</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_CTSTOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_HFCLKSTARTED</name>
           <description>HFCLK oscillator started</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_HFCLKSTARTED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_LFCLKSTARTED</name>
           <description>LFCLK started</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_LFCLKSTARTED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_DONE</name>
           <description>Calibration of LFCLK RC oscillator complete event</description>
           <addressOffset>0x10C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_DONE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_CTTO</name>
           <description>Calibration timer timeout</description>
           <addressOffset>0x110</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_CTTO</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>INTENSET</name>
@@ -5141,260 +5028,120 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Enable RADIO in TX mode</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_TXEN</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_RXEN</name>
           <description>Enable RADIO in RX mode</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_RXEN</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_START</name>
           <description>Start RADIO</description>
           <addressOffset>0x008</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_START</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOP</name>
           <description>Stop RADIO</description>
           <addressOffset>0x00C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_DISABLE</name>
           <description>Disable RADIO</description>
           <addressOffset>0x010</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_DISABLE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_RSSISTART</name>
           <description>Start the RSSI and take one single sample of the receive signal strength.</description>
           <addressOffset>0x014</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_RSSISTART</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_RSSISTOP</name>
           <description>Stop the RSSI measurement</description>
           <addressOffset>0x018</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_RSSISTOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_BCSTART</name>
           <description>Start the bit counter</description>
           <addressOffset>0x01C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_BCSTART</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_BCSTOP</name>
           <description>Stop the bit counter</description>
           <addressOffset>0x020</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_BCSTOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_READY</name>
           <description>RADIO has ramped up and is ready to be started</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_READY</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ADDRESS</name>
           <description>Address sent or received</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ADDRESS</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_PAYLOAD</name>
           <description>Packet payload sent or received</description>
           <addressOffset>0x108</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_PAYLOAD</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_END</name>
           <description>Packet sent or received</description>
           <addressOffset>0x10C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_END</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_DISABLED</name>
           <description>RADIO has been disabled</description>
           <addressOffset>0x110</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_DISABLED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_DEVMATCH</name>
           <description>A device address match occurred on the last received packet</description>
           <addressOffset>0x114</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_DEVMATCH</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_DEVMISS</name>
           <description>No device address match occurred on the last received packet</description>
           <addressOffset>0x118</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_DEVMISS</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_RSSIEND</name>
           <description>Sampling of receive signal strength complete.</description>
           <addressOffset>0x11C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_RSSIEND</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_BCMATCH</name>
           <description>Bit counter reached bit count value.</description>
           <addressOffset>0x128</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_BCMATCH</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_CRCOK</name>
           <description>Packet received with CRC ok</description>
           <addressOffset>0x130</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_CRCOK</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_CRCERROR</name>
           <description>Packet received with CRC error</description>
           <addressOffset>0x134</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_CRCERROR</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>SHORTS</name>
@@ -7302,208 +7049,96 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Start UART receiver</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STARTRX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOPRX</name>
           <description>Stop UART receiver</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOPRX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STARTTX</name>
           <description>Start UART transmitter</description>
           <addressOffset>0x008</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STARTTX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOPTX</name>
           <description>Stop UART transmitter</description>
           <addressOffset>0x00C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOPTX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_FLUSHRX</name>
           <description>Flush RX FIFO into RX buffer</description>
           <addressOffset>0x02C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_FLUSHRX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_CTS</name>
           <description>CTS is activated (set low). Clear To Send.</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_CTS</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_NCTS</name>
           <description>CTS is deactivated (set high). Not Clear To Send.</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_NCTS</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_RXDRDY</name>
           <description>Data received in RXD (but potentially not yet transferred to Data RAM)</description>
           <addressOffset>0x108</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_RXDRDY</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ENDRX</name>
           <description>Receive buffer is filled up</description>
           <addressOffset>0x110</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ENDRX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_TXDRDY</name>
           <description>Data sent from TXD</description>
           <addressOffset>0x11C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_TXDRDY</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ENDTX</name>
           <description>Last TX byte transmitted</description>
           <addressOffset>0x120</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ENDTX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ERROR</name>
           <description>Error detected</description>
           <addressOffset>0x124</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ERROR</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_RXTO</name>
           <description>Receiver timeout</description>
           <addressOffset>0x144</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_RXTO</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_RXSTARTED</name>
           <description>UART receiver has started</description>
           <addressOffset>0x14C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_RXSTARTED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_TXSTARTED</name>
           <description>UART transmitter has started</description>
           <addressOffset>0x150</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_TXSTARTED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_TXSTOPPED</name>
           <description>Transmitter stopped</description>
           <addressOffset>0x158</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_TXSTOPPED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>SHORTS</name>
@@ -8886,143 +8521,66 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Start UART receiver</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STARTRX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOPRX</name>
           <description>Stop UART receiver</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOPRX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STARTTX</name>
           <description>Start UART transmitter</description>
           <addressOffset>0x008</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STARTTX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOPTX</name>
           <description>Stop UART transmitter</description>
           <addressOffset>0x00C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOPTX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_SUSPEND</name>
           <description>Suspend UART</description>
           <addressOffset>0x01C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_SUSPEND</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_CTS</name>
           <description>CTS is activated (set low). Clear To Send.</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_CTS</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_NCTS</name>
           <description>CTS is deactivated (set high). Not Clear To Send.</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_NCTS</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_RXDRDY</name>
           <description>Data received in RXD</description>
           <addressOffset>0x108</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_RXDRDY</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_TXDRDY</name>
           <description>Data sent from TXD</description>
           <addressOffset>0x11C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_TXDRDY</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ERROR</name>
           <description>Error detected</description>
           <addressOffset>0x124</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ERROR</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_RXTO</name>
           <description>Receiver timeout</description>
           <addressOffset>0x144</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_RXTO</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>SHORTS</name>
@@ -9811,117 +9369,54 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Start SPI transaction</description>
           <addressOffset>0x010</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_START</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOP</name>
           <description>Stop SPI transaction</description>
           <addressOffset>0x014</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_SUSPEND</name>
           <description>Suspend SPI transaction</description>
           <addressOffset>0x01C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_SUSPEND</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_RESUME</name>
           <description>Resume SPI transaction</description>
           <addressOffset>0x020</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_RESUME</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_STOPPED</name>
           <description>SPI transaction has stopped</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_STOPPED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ENDRX</name>
           <description>End of RXD buffer reached</description>
           <addressOffset>0x110</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ENDRX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_END</name>
           <description>End of RXD buffer and TXD buffer reached</description>
           <addressOffset>0x118</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_END</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ENDTX</name>
           <description>End of TXD buffer reached</description>
           <addressOffset>0x120</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ENDTX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_STARTED</name>
           <description>Transaction started</description>
           <addressOffset>0x14C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_STARTED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>SHORTS</name>
@@ -10667,65 +10162,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Acquire SPI semaphore</description>
           <addressOffset>0x024</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_ACQUIRE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_RELEASE</name>
           <description>Release SPI semaphore, enabling the SPI slave to acquire it</description>
           <addressOffset>0x028</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_RELEASE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_END</name>
           <description>Granted transaction completed</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_END</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ENDRX</name>
           <description>End of RXD buffer reached</description>
           <addressOffset>0x110</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ENDRX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ACQUIRED</name>
           <description>Semaphore acquired</description>
           <addressOffset>0x128</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ACQUIRED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>SHORTS</name>
@@ -11405,156 +10865,72 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Start TWI receive sequence</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STARTRX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STARTTX</name>
           <description>Start TWI transmit sequence</description>
           <addressOffset>0x008</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STARTTX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOP</name>
           <description>Stop TWI transaction. Must be issued while the TWI master is not suspended.</description>
           <addressOffset>0x014</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_SUSPEND</name>
           <description>Suspend TWI transaction</description>
           <addressOffset>0x01C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_SUSPEND</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_RESUME</name>
           <description>Resume TWI transaction</description>
           <addressOffset>0x020</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_RESUME</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_STOPPED</name>
           <description>TWI stopped</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_STOPPED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ERROR</name>
           <description>TWI error</description>
           <addressOffset>0x124</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ERROR</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_SUSPENDED</name>
           <description>Last byte has been sent out after the SUSPEND task has been issued, TWI traffic is now suspended.</description>
           <addressOffset>0x148</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_SUSPENDED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_RXSTARTED</name>
           <description>Receive sequence started</description>
           <addressOffset>0x14C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_RXSTARTED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_TXSTARTED</name>
           <description>Transmit sequence started</description>
           <addressOffset>0x150</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_TXSTARTED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_LASTRX</name>
           <description>Byte boundary, starting to receive the last byte</description>
           <addressOffset>0x15C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_LASTRX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_LASTTX</name>
           <description>Byte boundary, starting to transmit the last byte</description>
           <addressOffset>0x160</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_LASTTX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>SHORTS</name>
@@ -12562,143 +11938,66 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Stop TWI transaction</description>
           <addressOffset>0x014</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_SUSPEND</name>
           <description>Suspend TWI transaction</description>
           <addressOffset>0x01C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_SUSPEND</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_RESUME</name>
           <description>Resume TWI transaction</description>
           <addressOffset>0x020</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_RESUME</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_PREPARERX</name>
           <description>Prepare the TWI slave to respond to a write command</description>
           <addressOffset>0x030</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_PREPARERX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_PREPARETX</name>
           <description>Prepare the TWI slave to respond to a read command</description>
           <addressOffset>0x034</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_PREPARETX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_STOPPED</name>
           <description>TWI stopped</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_STOPPED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ERROR</name>
           <description>TWI error</description>
           <addressOffset>0x124</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ERROR</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_RXSTARTED</name>
           <description>Receive sequence started</description>
           <addressOffset>0x14C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_RXSTARTED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_TXSTARTED</name>
           <description>Transmit sequence started</description>
           <addressOffset>0x150</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_TXSTARTED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_WRITE</name>
           <description>Write command received</description>
           <addressOffset>0x164</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_WRITE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_READ</name>
           <description>Read command received</description>
           <addressOffset>0x168</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_READ</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>SHORTS</name>
@@ -13571,13 +12870,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>TXD byte sent and RXD byte received</description>
           <addressOffset>0x108</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_READY</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>INTENSET</name>
@@ -13915,143 +13207,66 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Start TWI receive sequence</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STARTRX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STARTTX</name>
           <description>Start TWI transmit sequence</description>
           <addressOffset>0x008</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STARTTX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOP</name>
           <description>Stop TWI transaction</description>
           <addressOffset>0x014</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_SUSPEND</name>
           <description>Suspend TWI transaction</description>
           <addressOffset>0x01C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_SUSPEND</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_RESUME</name>
           <description>Resume TWI transaction</description>
           <addressOffset>0x020</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_RESUME</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_STOPPED</name>
           <description>TWI stopped</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_STOPPED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_RXDREADY</name>
           <description>TWI RXD byte received</description>
           <addressOffset>0x108</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_RXDREADY</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_TXDSENT</name>
           <description>TWI TXD byte sent</description>
           <addressOffset>0x11C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_TXDSENT</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ERROR</name>
           <description>TWI error</description>
           <addressOffset>0x124</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ERROR</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_BB</name>
           <description>TWI byte boundary, generated before each byte that is sent or received</description>
           <addressOffset>0x138</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_BB</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_SUSPENDED</name>
           <description>TWI entered the suspended state</description>
           <addressOffset>0x148</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_SUSPENDED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>SHORTS</name>
@@ -14754,286 +13969,132 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Activate NFC peripheral for incoming and outgoing frames, change state to activated</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_ACTIVATE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_DISABLE</name>
           <description>Disable NFC peripheral</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_DISABLE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_SENSE</name>
           <description>Enable NFC sense field mode, change state to sense mode</description>
           <addressOffset>0x008</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_SENSE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STARTTX</name>
           <description>Start transmission of a outgoing frame, change state to transmit</description>
           <addressOffset>0x00C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STARTTX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_ENABLERXDATA</name>
           <description>Initializes the EasyDMA for receive.</description>
           <addressOffset>0x01C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_ENABLERXDATA</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_GOIDLE</name>
           <description>Force state machine to IDLE state</description>
           <addressOffset>0x024</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_GOIDLE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_GOSLEEP</name>
           <description>Force state machine to SLEEP_A state</description>
           <addressOffset>0x028</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_GOSLEEP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_READY</name>
           <description>The NFC peripheral is ready to receive and send frames</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_READY</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_FIELDDETECTED</name>
           <description>Remote NFC field detected</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_FIELDDETECTED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_FIELDLOST</name>
           <description>Remote NFC field lost</description>
           <addressOffset>0x108</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_FIELDLOST</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_TXFRAMESTART</name>
           <description>Marks the start of the first symbol of a transmitted frame</description>
           <addressOffset>0x10C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_TXFRAMESTART</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_TXFRAMEEND</name>
           <description>Marks the end of the last transmitted on-air symbol of a frame</description>
           <addressOffset>0x110</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_TXFRAMEEND</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_RXFRAMESTART</name>
           <description>Marks the end of the first symbol of a received frame</description>
           <addressOffset>0x114</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_RXFRAMESTART</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_RXFRAMEEND</name>
           <description>Received data have been checked (CRC, parity) and transferred to RAM, and EasyDMA has ended accessing the RX buffer</description>
           <addressOffset>0x118</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_RXFRAMEEND</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ERROR</name>
           <description>NFC error reported. The ERRORSTATUS register contains details on the source of the error.</description>
           <addressOffset>0x11C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ERROR</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_RXERROR</name>
           <description>NFC RX frame error reported. The FRAMESTATUS.RX register contains details on the source of the error.</description>
           <addressOffset>0x128</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_RXERROR</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ENDRX</name>
           <description>RX buffer (as defined by PACKETPTR and MAXLEN) in Data RAM full.</description>
           <addressOffset>0x12C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ENDRX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ENDTX</name>
           <description>Transmission of data in RAM has ended, and EasyDMA has ended accessing the TX buffer</description>
           <addressOffset>0x130</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ENDTX</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_AUTOCOLRESSTARTED</name>
           <description>Auto collision resolution process has started</description>
           <addressOffset>0x138</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_AUTOCOLRESSTARTED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_COLLISION</name>
           <description>NFC Auto collision resolution error reported.</description>
           <addressOffset>0x148</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_COLLISION</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_SELECTED</name>
           <description>NFC Auto collision resolution successfully completed</description>
           <addressOffset>0x14C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_SELECTED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_STARTED</name>
           <description>EasyDMA is ready to receive or send frames.</description>
           <addressOffset>0x150</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_STARTED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>SHORTS</name>
@@ -16874,13 +15935,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Description collection[0]:  Task for writing to pin specified in CONFIG[0].PSEL. Action on pin is configured in CONFIG[0].POLARITY.</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_OUT</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <dim>8</dim>
@@ -16889,13 +15943,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Description collection[0]:  Task for writing to pin specified in CONFIG[0].PSEL. Action on pin is to set it high.</description>
           <addressOffset>0x030</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_SET</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <dim>8</dim>
@@ -16904,13 +15951,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Description collection[0]:  Task for writing to pin specified in CONFIG[0].PSEL. Action on pin is to set it low.</description>
           <addressOffset>0x060</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_CLR</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <dim>8</dim>
@@ -16919,26 +15959,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Description collection[0]:  Event generated from pin specified in CONFIG[0].PSEL</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_IN</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_PORT</name>
           <description>Event generated from multiple input GPIO pins with SENSE mechanism enabled</description>
           <addressOffset>0x17C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_PORT</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>INTENSET</name>
@@ -17550,130 +16576,60 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Start the ADC and prepare the result buffer in RAM</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_START</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_SAMPLE</name>
           <description>Take one ADC sample, if scan is enabled all channels are sampled</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_SAMPLE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOP</name>
           <description>Stop the ADC and terminate any on-going conversion</description>
           <addressOffset>0x008</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_CALIBRATEOFFSET</name>
           <description>Starts offset auto-calibration</description>
           <addressOffset>0x00C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_CALIBRATEOFFSET</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_STARTED</name>
           <description>The ADC has started</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_STARTED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_END</name>
           <description>The ADC has filled up the Result buffer</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_END</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_DONE</name>
           <description>A conversion task has been completed. Depending on the mode, multiple conversions might be needed for a result to be transferred to RAM.</description>
           <addressOffset>0x108</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_DONE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_RESULTDONE</name>
           <description>A result is ready to get transferred to RAM.</description>
           <addressOffset>0x10C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_RESULTDONE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_CALIBRATEDONE</name>
           <description>Calibration is complete</description>
           <addressOffset>0x110</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_CALIBRATEDONE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_STOPPED</name>
           <description>The ADC has stopped</description>
           <addressOffset>0x114</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_STOPPED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <cluster>
           <dim>8</dim>
@@ -19922,65 +18878,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Start Timer</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_START</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOP</name>
           <description>Stop Timer</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_COUNT</name>
           <description>Increment Timer (Counter mode only)</description>
           <addressOffset>0x008</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_COUNT</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_CLEAR</name>
           <description>Clear time</description>
           <addressOffset>0x00C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_CLEAR</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_SHUTDOWN</name>
           <description>Deprecated register -  Shut down timer</description>
           <addressOffset>0x010</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_SHUTDOWN</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <dim>6</dim>
@@ -19989,13 +18910,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Description collection[0]:  Capture Timer value to CC[0] register</description>
           <addressOffset>0x040</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_CAPTURE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <dim>6</dim>
@@ -20004,13 +18918,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Description collection[0]:  Compare event on CC[0] match</description>
           <addressOffset>0x140</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_COMPARE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>SHORTS</name>
@@ -20716,78 +19623,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Start RTC COUNTER</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_START</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOP</name>
           <description>Stop RTC COUNTER</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_CLEAR</name>
           <description>Clear RTC COUNTER</description>
           <addressOffset>0x008</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_CLEAR</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_TRIGOVRFLW</name>
           <description>Set COUNTER to 0xFFFFF0</description>
           <addressOffset>0x00C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_TRIGOVRFLW</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_TICK</name>
           <description>Event on COUNTER increment</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_TICK</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_OVRFLW</name>
           <description>Event on COUNTER overflow</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_OVRFLW</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <dim>4</dim>
@@ -20796,13 +19661,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Description collection[0]:  Compare event on CC[0] match</description>
           <addressOffset>0x140</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_COMPARE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>INTENSET</name>
@@ -21667,39 +20525,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Start temperature measurement</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_START</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOP</name>
           <description>Stop temperature measurement</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_DATARDY</name>
           <description>Temperature measurement complete, data ready</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_DATARDY</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>INTENSET</name>
@@ -22064,39 +20901,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Task starting the random number generator</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_START</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOP</name>
           <description>Task stopping the random number generator</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_VALRDY</name>
           <description>Event being generated for every new random number written to the VALUE register</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_VALRDY</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>SHORTS</name>
@@ -22257,52 +21073,24 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Start ECB block encrypt</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STARTECB</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOPECB</name>
           <description>Abort a possible executing ECB operation</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOPECB</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ENDECB</name>
           <description>ECB block encrypt complete</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ENDECB</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ERRORECB</name>
           <description>ECB block encrypt aborted because of a STOPECB task or due to an error</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ERRORECB</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>INTENSET</name>
@@ -22465,78 +21253,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Start generation of key-stream. This operation will stop by itself when completed.</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_KSGEN</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_CRYPT</name>
           <description>Start encryption/decryption. This operation will stop by itself when completed.</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_CRYPT</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOP</name>
           <description>Stop encryption/decryption</description>
           <addressOffset>0x008</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ENDKSGEN</name>
           <description>Key-stream generation complete</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ENDKSGEN</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ENDCRYPT</name>
           <description>Encrypt/decrypt complete</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ENDCRYPT</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ERROR</name>
           <description>CCM error event</description>
           <addressOffset>0x108</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ERROR</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>SHORTS</name>
@@ -22937,65 +21683,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Start resolving addresses based on IRKs specified in the IRK data structure</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_START</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOP</name>
           <description>Stop resolving addresses</description>
           <addressOffset>0x008</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_END</name>
           <description>Address resolution procedure complete</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_END</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_RESOLVED</name>
           <description>Address resolved</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_RESOLVED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_NOTRESOLVED</name>
           <description>Address not resolved</description>
           <addressOffset>0x108</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_NOTRESOLVED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>INTENSET</name>
@@ -23295,26 +22006,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Start the watchdog</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_START</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_TIMEOUT</name>
           <description>Watchdog timeout</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_TIMEOUT</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>INTENSET</name>
@@ -23833,130 +22530,60 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Task starting the quadrature decoder</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_START</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOP</name>
           <description>Task stopping the quadrature decoder</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_READCLRACC</name>
           <description>Read and clear ACC and ACCDBL</description>
           <addressOffset>0x008</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_READCLRACC</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_RDCLRACC</name>
           <description>Read and clear ACC</description>
           <addressOffset>0x00C</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_RDCLRACC</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_RDCLRDBL</name>
           <description>Read and clear ACCDBL</description>
           <addressOffset>0x010</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_RDCLRDBL</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_SAMPLERDY</name>
           <description>Event being generated for every new sample value written to the SAMPLE register</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_SAMPLERDY</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_REPORTRDY</name>
           <description>Non-null report ready</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_REPORTRDY</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_ACCOF</name>
           <description>ACC or ACCDBL register overflow</description>
           <addressOffset>0x108</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_ACCOF</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_DBLRDY</name>
           <description>Double displacement(s) detected</description>
           <addressOffset>0x10C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_DBLRDY</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_STOPPED</name>
           <description>QDEC has been stopped</description>
           <addressOffset>0x110</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_STOPPED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>SHORTS</name>
@@ -24803,91 +23430,42 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Start comparator</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_START</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOP</name>
           <description>Stop comparator</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_SAMPLE</name>
           <description>Sample comparator value</description>
           <addressOffset>0x008</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_SAMPLE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_READY</name>
           <description>COMP is ready and output is valid</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_READY</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_DOWN</name>
           <description>Downward crossing</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_DOWN</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_UP</name>
           <description>Upward crossing</description>
           <addressOffset>0x108</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_UP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_CROSS</name>
           <description>Downward or upward crossing</description>
           <addressOffset>0x10C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_CROSS</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>SHORTS</name>
@@ -25661,91 +24239,42 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Start comparator</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_START</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOP</name>
           <description>Stop comparator</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_SAMPLE</name>
           <description>Sample comparator value</description>
           <addressOffset>0x008</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_SAMPLE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_READY</name>
           <description>LPCOMP is ready and output is valid</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_READY</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_DOWN</name>
           <description>Downward crossing</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_DOWN</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_UP</name>
           <description>Upward crossing</description>
           <addressOffset>0x108</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_UP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_CROSS</name>
           <description>Downward or upward crossing</description>
           <addressOffset>0x10C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_CROSS</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>SHORTS</name>
@@ -26418,13 +24947,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Description collection[0]:  Trigger 0 for triggering the corresponding TRIGGERED[0] event</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_TRIGGER</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <dim>16</dim>
@@ -26433,13 +24955,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Description collection[0]:  Event number 0 generated by triggering the corresponding TRIGGER[0] task</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_TRIGGERED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>INTEN</name>
@@ -27754,13 +26269,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Stops PWM pulse generation on all channels at the end of current PWM period, and stops sequence playback</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <dim>2</dim>
@@ -27769,39 +26277,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Description collection[0]:  Loads the first PWM value on all enabled channels from sequence 0, and starts playing that sequence at the rate defined in SEQ[0]REFRESH and/or DECODER.MODE. Causes PWM generation to start it was not running.</description>
           <addressOffset>0x008</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_SEQSTART</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_NEXTSTEP</name>
           <description>Steps by one value in the current sequence on all enabled channels if DECODER.MODE=NextStep. Does not cause PWM generation to start it was not running.</description>
           <addressOffset>0x010</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_NEXTSTEP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_STOPPED</name>
           <description>Response to STOP task, emitted when PWM pulses are no longer generated</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_STOPPED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <dim>2</dim>
@@ -27810,13 +26297,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Description collection[0]:  First PWM period started on sequence 0</description>
           <addressOffset>0x108</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_SEQSTARTED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <dim>2</dim>
@@ -27825,39 +26305,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Description collection[0]:  Emitted at end of every sequence 0, when last value from RAM has been applied to wave counter</description>
           <addressOffset>0x110</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_SEQEND</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_PWMPERIODEND</name>
           <description>Emitted at the end of each PWM period</description>
           <addressOffset>0x118</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_PWMPERIODEND</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_LOOPSDONE</name>
           <description>Concatenated sequences have been played the amount of times defined in LOOP.CNT</description>
           <addressOffset>0x11C</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_LOOPSDONE</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>SHORTS</name>
@@ -28834,65 +27293,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Starts continuous PDM transfer</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_START</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOP</name>
           <description>Stops PDM transfer</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_STARTED</name>
           <description>PDM transfer has started</description>
           <addressOffset>0x100</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_STARTED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_STOPPED</name>
           <description>PDM transfer has finished</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_STOPPED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_END</name>
           <description>The PDM has written the last sample specified by SAMPLE.MAXCNT (or the last sample after a STOP task has been received) to Data RAM</description>
           <addressOffset>0x108</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_END</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>INTEN</name>
@@ -37282,65 +35706,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n
           <description>Starts continuous I2S transfer. Also starts MCK generator when this is enabled.</description>
           <addressOffset>0x000</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_START</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>TASKS_STOP</name>
           <description>Stops I2S transfer. Also stops MCK generator. Triggering this task will cause the {event:STOPPED} event to be generated.</description>
           <addressOffset>0x004</addressOffset>
           <access>write-only</access>
-          <fields>
-            <field>
-              <name>TASKS_STOP</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_RXPTRUPD</name>
           <description>The RXD.PTR register has been copied to internal double-buffers. When the I2S module is started and RX is enabled, this event will be generated for every RXTXD.MAXCNT words that are received on the SDIN pin.</description>
           <addressOffset>0x104</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_RXPTRUPD</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_STOPPED</name>
           <description>I2S transfer stopped.</description>
           <addressOffset>0x108</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_STOPPED</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>EVENTS_TXPTRUPD</name>
           <description>The TDX.PTR register has been copied to internal double-buffers. When the I2S module is started and TX is enabled, this event will be generated for every RXTXD.MAXCNT words that are sent on the SDOUT pin.</description>
           <addressOffset>0x114</addressOffset>
           <access>read-write</access>
-          <fields>
-            <field>
-              <name>EVENTS_TXPTRUPD</name>
-              <lsb>0</lsb>
-              <msb>0</msb>
-            </field>
-          </fields>
         </register>
         <register>
           <name>INTEN</name>
