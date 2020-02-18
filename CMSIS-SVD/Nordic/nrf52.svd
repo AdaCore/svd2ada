@@ -12967,78 +12967,24 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\
             </field>
           </fields>
         </register>
-        <cluster>
-          <name>PSEL</name>
-          <description>Unspecified</description>
-          <headerStructName>SPI_PSEL</headerStructName>
+        <register>
+          <name>PSELSCK</name>
+          <description>Pin select for SCK.</description>
           <addressOffset>0x508</addressOffset>
-          <register>
-            <name>SCK</name>
-            <description>Pin select for SCK</description>
-            <addressOffset>0x000</addressOffset>
-            <access>read-write</access>
-            <resetValue>0xFFFFFFFF</resetValue>
-            <fields>
-              <field>
-                <name>PSELSCK</name>
-                <description>Pin number configuration for SPI SCK signal</description>
-                <lsb>0</lsb>
-                <msb>31</msb>
-                <enumeratedValues>
-                  <enumeratedValue>
-                    <name>Disconnected</name>
-                    <description>Disconnect</description>
-                    <value>0xFFFFFFFF</value>
-                  </enumeratedValue>
-                </enumeratedValues>
-              </field>
-            </fields>
-          </register>
-          <register>
-            <name>MOSI</name>
-            <description>Pin select for MOSI</description>
-            <addressOffset>0x004</addressOffset>
-            <access>read-write</access>
-            <resetValue>0xFFFFFFFF</resetValue>
-            <fields>
-              <field>
-                <name>PSELMOSI</name>
-                <description>Pin number configuration for SPI MOSI signal</description>
-                <lsb>0</lsb>
-                <msb>31</msb>
-                <enumeratedValues>
-                  <enumeratedValue>
-                    <name>Disconnected</name>
-                    <description>Disconnect</description>
-                    <value>0xFFFFFFFF</value>
-                  </enumeratedValue>
-                </enumeratedValues>
-              </field>
-            </fields>
-          </register>
-          <register>
-            <name>MISO</name>
-            <description>Pin select for MISO</description>
-            <addressOffset>0x008</addressOffset>
-            <access>read-write</access>
-            <resetValue>0xFFFFFFFF</resetValue>
-            <fields>
-              <field>
-                <name>PSELMISO</name>
-                <description>Pin number configuration for SPI MISO signal</description>
-                <lsb>0</lsb>
-                <msb>31</msb>
-                <enumeratedValues>
-                  <enumeratedValue>
-                    <name>Disconnected</name>
-                    <description>Disconnect</description>
-                    <value>0xFFFFFFFF</value>
-                  </enumeratedValue>
-                </enumeratedValues>
-              </field>
-            </fields>
-          </register>
-        </cluster>
+          <resetValue>0xFFFFFFFF</resetValue>
+        </register>
+        <register>
+          <name>PSELMISO</name>
+          <description>Pin select for MISO.</description>
+          <addressOffset>0x50C</addressOffset>
+          <resetValue>0xFFFFFFFF</resetValue>
+        </register>
+        <register>
+          <name>PSELMOSI</name>
+          <description>Pin select for MOSI.</description>
+          <addressOffset>0x510</addressOffset>
+          <resetValue>0xFFFFFFFF</resetValue>
+        </register>
         <register>
           <name>RXD</name>
           <description>RXD register</description>
