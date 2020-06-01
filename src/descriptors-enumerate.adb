@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                    Copyright (C) 2015-2020, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -76,8 +76,7 @@ package body Descriptors.Enumerate is
       for J in 0 .. Nodes.Length (List) - 1 loop
          if Nodes.Node_Type (Nodes.Item (List, J)) = Element_Node then
             declare
-               Child : constant DOM.Core.Element :=
-                         DOM.Core.Element (Nodes.Item (List, J));
+               Child : constant DOM.Core.Element := DOM.Core.Element (Nodes.Item (List, J));
                Tag   : String renames Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
@@ -107,9 +106,7 @@ package body Descriptors.Enumerate is
                         end loop;
 
                         if not Has_X then
-                           Result.Value :=
-                             Interfaces.Unsigned_64'Value
-                               ("2#" & S (S'First + 1 .. S'Last) & "#");
+                           Result.Value := Interfaces.Unsigned_64'Value ("2#" & S (S'First + 1 .. S'Last) & "#");
                         else
                            Read_Value (S, To_String (Result.Name));
                         end if;
@@ -126,8 +123,7 @@ package body Descriptors.Enumerate is
                   Result.IsDefault := True;
 
                else
-                  Ada.Text_IO.Put_Line
-                    ("*** WARNING: ignoring enumerate element " & Tag);
+                  Ada.Text_IO.Put_Line ("*** WARNING: ignoring enumerate element " & Tag);
                end if;
             end;
          end if;
@@ -150,8 +146,7 @@ package body Descriptors.Enumerate is
    is
       List         : constant Node_List := Nodes.Child_Nodes (Elt);
       Result       : Enumerate_T;
-      Derived_From : constant String :=
-                       Elements.Get_Attribute (Elt, "derivedFrom");
+      Derived_From : constant String := Elements.Get_Attribute (Elt, "derivedFrom");
    begin
       if Derived_From /= "" then
          declare
@@ -176,8 +171,7 @@ package body Descriptors.Enumerate is
       for J in 0 .. Nodes.Length (List) - 1 loop
          if Nodes.Node_Type (Nodes.Item (List, J)) = Element_Node then
             declare
-               Child : constant DOM.Core.Element :=
-                         DOM.Core.Element (Nodes.Item (List, J));
+               Child : constant DOM.Core.Element := DOM.Core.Element (Nodes.Item (List, J));
                Tag   : String renames Elements.Get_Tag_Name (Child);
             begin
                if Tag = "name" then
@@ -190,8 +184,7 @@ package body Descriptors.Enumerate is
                   Read_Value (Child, Write_Only, Result.Values);
 
                else
-                  Ada.Text_IO.Put_Line
-                    ("*** WARNING: ignoring enumerate element " & Tag);
+                  Ada.Text_IO.Put_Line ("*** WARNING: ignoring enumerate element " & Tag);
                end if;
             end;
          end if;
