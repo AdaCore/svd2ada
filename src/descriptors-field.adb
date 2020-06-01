@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2018, AdaCore                      --
+--                    Copyright (C) 2015-2020, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -50,9 +50,8 @@ package body Descriptors.Field is
       return Field_T
    is
       List         : constant Node_List := Nodes.Child_Nodes (Elt);
-      Result          : Field_T;
-      Derived_From : constant String :=
-                       Elements.Get_Attribute (Elt, "derivedFrom");
+      Result       : Field_T;
+      Derived_From : constant String := Elements.Get_Attribute (Elt, "derivedFrom");
 
    begin
       Result.Acc := Default_Access;
@@ -253,8 +252,7 @@ package body Descriptors.Field is
             --  Most common case
             return 0;
          else
-            Default :=
-              Shift_Right (Properties.Reset_Value, Index);
+            Default := Shift_Right (Properties.Reset_Value, Index);
             Mask := 0;
 
             for J in 0 .. Size - 1 loop
@@ -265,8 +263,7 @@ package body Descriptors.Field is
          end if;
       end Get_Default;
 
-      Fields        : array (0 .. Properties.Size - 1) of Field_T :=
-                        (others => Null_Field);
+      Fields        : array (0 .. Properties.Size - 1) of Field_T := (others => Null_Field);
       Index         : Natural;
       Index2        : Natural;
       Length        : Natural;
@@ -287,7 +284,7 @@ package body Descriptors.Field is
          Fields (Field.LSB) := Field;
       end loop;
 
-      Index        := 0;
+      Index := 0;
 
       while Index < Properties.Size loop
          if Fields (Index) /= Null_Field
@@ -300,7 +297,7 @@ package body Descriptors.Field is
          Index := Index + 1;
       end loop;
 
-      Index        := 0;
+      Index := 0;
       while Index < Properties.Size loop
          Ada_Type := Type_Holders.Empty_Holder;
 
@@ -322,8 +319,7 @@ package body Descriptors.Field is
             if not All_RO and then SVD2Ada_Utils.Gen_Fields_Default then
                Ada_Gen.Add_Field
                  (Rec,
-                  "Reserved_" & To_String (Index) &
-                    "_" & To_String (Index + Length - 1),
+                  "Reserved_" & To_String (Index) & "_" & To_String (Index + Length - 1),
                   Target_Type (Length),
                   Offset      => 0,
                   LSB         => Index,
@@ -335,8 +331,7 @@ package body Descriptors.Field is
             else
                Ada_Gen.Add_Field
                  (Rec,
-                  "Reserved_" & To_String (Index) &
-                    "_" & To_String (Index + Length - 1),
+                  "Reserved_" & To_String (Index) & "_" & To_String (Index + Length - 1),
                   Target_Type (Length),
                   Offset      => 0,
                   LSB         => Index,
@@ -346,7 +341,7 @@ package body Descriptors.Field is
                   Comment     => "unspecified");
             end if;
 
-            Index    := Index + Length;
+            Index := Index + Length;
 
          else --  Not a reserved field case:
 
@@ -366,21 +361,19 @@ package body Descriptors.Field is
             if not Fields (Index).Enums.Is_Empty then
                for Enum of Fields (Index).Enums loop
                   declare
-                     Enum_Name   : constant String :=
+                     Enum_Name : constant String :=
                                      To_String (Reg.Name) & "_" &
                                      (if Unbounded.Length (Enum.Name) > 0
                                       then To_String (Enum.Name)
                                       else To_String (Fields (Index).Name) &
                                         "_Field");
 
-                     Enum_T      : Ada_Type_Enum :=
+                     Enum_T : Ada_Type_Enum :=
                                      New_Type_Enum
                                        (Id      => Enum_Name,
                                         Size    => Ada_Type_Size,
-                                        Comment =>
-                                          To_String
-                                            (Fields (Index).Description));
-                     Enum_Val    : Ada_Enum_Value;
+                                        Comment => To_String (Fields (Index).Description));
+                     Enum_Val      : Ada_Enum_Value;
                      Found_Default : Boolean := False;
                      --  True when the enumerate contains the default field
                      --  value. Set to true by default in case of read-only
@@ -623,17 +616,13 @@ package body Descriptors.Field is
                when Read_Write =>
                   null;
                when Read_Only =>
-                  Description :=
-                    To_Unbounded_String ("Read-only. ") & Description;
+                  Description := To_Unbounded_String ("Read-only. ") & Description;
                when Write_Only =>
-                  Description :=
-                    To_Unbounded_String ("Write-only. ") & Description;
+                  Description := To_Unbounded_String ("Write-only. ") & Description;
                when Write_Once =>
-                  Description :=
-                    To_Unbounded_String ("Write-once. ") & Description;
+                  Description := To_Unbounded_String ("Write-once. ") & Description;
                when Read_Write_Once =>
-                  Description :=
-                    To_Unbounded_String ("Read-Write-once. ") & Description;
+                  Description := To_Unbounded_String ("Read-Write-once. ") & Description;
             end case;
 
             case Fields (Index).Mod_Write_Values is

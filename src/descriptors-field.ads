@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2016, AdaCore                      --
+--                    Copyright (C) 2015-2020, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -38,8 +38,7 @@ package Descriptors.Field is
       LSB              : Natural;
       Size             : Natural;
       Acc              : Access_Type;
-      Mod_Write_Values : Modified_Write_Values_Type :=
-                           Modify;
+      Mod_Write_Values : Modified_Write_Values_Type := Modify;
       Read_Action      : Read_Action_Type := Undefined_Read_Action;
       Enums            : Descriptors.Enumerate.Enumerate_Vectors.Vector;
    end record;

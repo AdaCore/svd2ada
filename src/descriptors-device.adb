@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2019, AdaCore                      --
+--                    Copyright (C) 2015-2020, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -506,11 +506,10 @@ package body Descriptors.Device is
       for Periph of Device.Peripherals loop
          Add (Spec,
               New_Constant_Value
-                (Id       => To_String (Periph.Name) & "_Base",
-                 Align_Id => 0,
-                 Type_Name      => "System.Address",
-                 Value    => "System'To_Address (" &
-                   To_Hex (Periph.Base_Address) & ")"));
+                (Id        => To_String (Periph.Name) & "_Base",
+                 Align_Id  => 0,
+                 Type_Name => "System.Address",
+                 Value     => "System'To_Address (" & To_Hex (Periph.Base_Address) & ")"));
       end loop;
 
       ----------------------------------
