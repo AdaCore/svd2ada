@@ -171,7 +171,11 @@ procedure SVD2Ada is
         (Cmd_Line_Cfg,
          Output      => No_VFA_On_Types'Access,
          Long_Switch => "--no-vfa-on-types",
-         Help        => "apply Volatile_Full_Access to enclosing peripheral fields. Forces --no-arrays",
+         Help        => "apply Volatile_Full_Access to fields rather than register types. " &
+                        "Forces --no-arrays",
+                        --  Apply it to individual fields of some enclosing
+                        --  register record type when those fields are
+                        --  themselves represented as register types
          Value       => True);
    end Configure_Command_Line;
 
