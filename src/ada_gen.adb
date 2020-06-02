@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2019, AdaCore                      --
+--                    Copyright (C) 2015-2020, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -1881,38 +1881,18 @@ package body Ada_Gen is
       return Ada_Enum_Value
    is
       Enum_Value : Ada_Enum_Value;
-      Camel_C    : String := Id;
-      First      : Boolean := True;
       The_Id     : Unbounded_String;
       Suffix     : Natural := 0;
       Done       : Boolean;
    begin
-      for J in Camel_C'Range loop
-         if First then
-            if Camel_C (J) in 'a' .. 'z' then
-               Camel_C (J) := Ada.Characters.Handling.To_Upper (Camel_C (J));
-            elsif Camel_C (J) in 'A' .. 'Z' then
-               First := False;
-            end if;
-
-         else
-            if Camel_C (J) in 'A' .. 'Z' then
-               Camel_C (J) := Ada.Characters.Handling.To_Lower (Camel_C (J));
-            elsif Camel_C (J) not in 'a' .. 'z' then
-               First := True;
-            end if;
-         end if;
-      end loop;
-
-      The_Id := Ada_Identifier (Camel_C, "Val");
+      The_Id := Ada_Identifier (Id, "Val");
 
       --  Check duplicated names
       Suffix := 0;
-      Enum_Value :=
-        (Id       => The_Id,
-         Has_Repr => Has_Repr,
-         Repr     => Repr,
-         Comment  => New_Comment (Comment, Strip => True));
+      Enum_Value := (Id       => The_Id,
+                     Has_Repr => Has_Repr,
+                     Repr     => Repr,
+                     Comment  => New_Comment (Comment, Strip => True));
 
       loop
          Done   := True;
@@ -2128,7 +2108,7 @@ package body Ada_Gen is
       declare
          Typ : Ada_Type'Class := Find (Elt.Fields.First_Element.Typ);
       begin
-         Typ.Id      := Elt.Id;
+         Typ.Id := Elt.Id;
          for Aspect of Elt.Aspects loop
             if not Typ.Aspects.Contains (Aspect) then
                Typ.Aspects.Append (Aspect);
