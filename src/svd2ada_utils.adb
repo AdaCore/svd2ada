@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2018, AdaCore                      --
+--                    Copyright (C) 2015-200, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -40,8 +40,8 @@ package body SVD2Ada_Utils is
    -------------------------
 
    --  Executable_Location is extracted from the gnatcoll library
-   function Executable_Location return String
-   is
+   function Executable_Location return String is
+
       Exec_Name : constant String := Ada.Command_Line.Command_Name;
 
       function Get_Install_Dir (S : String) return String;
@@ -58,10 +58,8 @@ package body SVD2Ada_Utils is
       ---------------------
 
       function Get_Install_Dir (S : String) return String is
-         Exec      : String  := GNAT.OS_Lib.Normalize_Pathname
-            (S, Resolve_Links => True);
+         Exec      : String  := GNAT.OS_Lib.Normalize_Pathname (S, Resolve_Links => True);
          Path_Last : Integer := 0;
-
       begin
          for J in reverse Exec'Range loop
             if Is_Directory_Separator (Exec (J)) then
@@ -124,8 +122,7 @@ package body SVD2Ada_Utils is
    -- Set_Use_Boolean_For_Bit --
    -----------------------------
 
-   procedure Set_Use_Boolean_For_Bit (Value : Boolean)
-   is
+   procedure Set_Use_Boolean_For_Bit (Value : Boolean) is
    begin
       G_Use_Boolean := Value;
    end Set_Use_Boolean_For_Bit;
@@ -134,8 +131,7 @@ package body SVD2Ada_Utils is
    -- Use_Boolean_For_Bit --
    -------------------------
 
-   function Use_Boolean_For_Bit return Boolean
-   is
+   function Use_Boolean_For_Bit return Boolean is
    begin
       return G_Use_Boolean;
    end Use_Boolean_For_Bit;
@@ -144,8 +140,7 @@ package body SVD2Ada_Utils is
    -- Set_Use_UInt --
    ------------------
 
-   procedure Set_Use_UInt (Value : Boolean)
-   is
+   procedure Set_Use_UInt (Value : Boolean) is
    begin
       G_Use_UInt := Value;
    end Set_Use_UInt;
@@ -154,8 +149,7 @@ package body SVD2Ada_Utils is
    -- Use_UInt_Always --
    ---------------------
 
-   function Use_UInt_Always return Boolean
-   is
+   function Use_UInt_Always return Boolean is
    begin
       return G_Use_UInt;
    end Use_UInt_Always;
@@ -164,8 +158,7 @@ package body SVD2Ada_Utils is
    -- Set_No_UInt_Subtype --
    -------------------------
 
-   procedure Set_No_UInt_Subtype (Value : Boolean)
-   is
+   procedure Set_No_UInt_Subtype (Value : Boolean) is
    begin
       G_Gen_UInt_Subtype := not Value;
    end Set_No_UInt_Subtype;
@@ -174,8 +167,7 @@ package body SVD2Ada_Utils is
    -- Gen_UInt_Subtype --
    ----------------------
 
-   function Gen_UInt_Subtype return Boolean
-   is
+   function Gen_UInt_Subtype return Boolean is
    begin
       return G_Gen_UInt_Subtype;
    end Gen_UInt_Subtype;
@@ -184,8 +176,7 @@ package body SVD2Ada_Utils is
    -- Set_No_Defaults --
    ---------------------
 
-   procedure Set_No_Defaults (Value : Boolean)
-   is
+   procedure Set_No_Defaults (Value : Boolean) is
    begin
       G_Gen_Fields_Default := not Value;
    end Set_No_Defaults;
@@ -194,8 +185,7 @@ package body SVD2Ada_Utils is
    -- Gen_Fields_Default --
    ------------------------
 
-   function Gen_Fields_Default return Boolean
-   is
+   function Gen_Fields_Default return Boolean is
    begin
       return G_Gen_Fields_Default;
    end Gen_Fields_Default;
@@ -204,8 +194,7 @@ package body SVD2Ada_Utils is
    -- Set_Base_Types_Package --
    ----------------------------
 
-   procedure Set_Base_Types_Package (Value : String)
-   is
+   procedure Set_Base_Types_Package (Value : String) is
    begin
       G_Types_Pkg := To_Unbounded_String (Value);
    end Set_Base_Types_Package;
@@ -214,8 +203,7 @@ package body SVD2Ada_Utils is
    -- Base_Types_Package --
    ------------------------
 
-   function Base_Types_Package return String
-   is
+   function Base_Types_Package return String is
    begin
       return To_String (G_Types_Pkg);
    end Base_Types_Package;
@@ -224,8 +212,7 @@ package body SVD2Ada_Utils is
    -- External_Base_Types_Package --
    ---------------------------------
 
-   function External_Base_Types_Package return Boolean
-   is
+   function External_Base_Types_Package return Boolean is
    begin
       return G_Types_Pkg /= Null_Unbounded_String;
    end External_Base_Types_Package;
@@ -234,8 +221,7 @@ package body SVD2Ada_Utils is
    -- Set_Root_Package --
    ----------------------
 
-   procedure Set_Root_Package (Value : String)
-   is
+   procedure Set_Root_Package (Value : String) is
    begin
       G_Root_Pkg := To_Unbounded_String (Value);
    end Set_Root_Package;
@@ -244,8 +230,7 @@ package body SVD2Ada_Utils is
    -- Root_Package --
    ------------------
 
-   function Root_Package return String
-   is
+   function Root_Package return String is
    begin
       return To_String (G_Root_Pkg);
    end Root_Package;
@@ -254,8 +239,7 @@ package body SVD2Ada_Utils is
    -- In_Runtime --
    ----------------
 
-   function In_Runtime return Boolean
-   is
+   function In_Runtime return Boolean is
       Intf : constant String := "Interfaces.";
       Root : constant String := Root_Package;
    begin
@@ -272,8 +256,7 @@ package body SVD2Ada_Utils is
    -- Set_No_VFA_On_Reg_Types --
    -----------------------------
 
-   procedure Set_No_VFA_On_Reg_Types (Value : Boolean)
-   is
+   procedure Set_No_VFA_On_Reg_Types (Value : Boolean) is
    begin
       G_No_VFA_On_Reg_Types := Value;
    end Set_No_VFA_On_Reg_Types;
@@ -282,8 +265,7 @@ package body SVD2Ada_Utils is
    -- No_VFA_On_Reg_Types --
    -------------------------
 
-   function No_VFA_On_Reg_Types return Boolean
-   is
+   function No_VFA_On_Reg_Types return Boolean is
    begin
       return G_No_VFA_On_Reg_Types;
    end No_VFA_On_Reg_Types;
@@ -292,8 +274,7 @@ package body SVD2Ada_Utils is
    -- Set_Gen_Arrays --
    --------------------
 
-   procedure Set_Gen_Arrays (Value : Boolean)
-   is
+   procedure Set_Gen_Arrays (Value : Boolean) is
    begin
       G_Gen_Arrays := Value;
    end Set_Gen_Arrays;
@@ -302,8 +283,7 @@ package body SVD2Ada_Utils is
    -- Gen_Arrays --
    ----------------
 
-   function Gen_Arrays return Boolean
-   is
+   function Gen_Arrays return Boolean is
    begin
       return G_Gen_Arrays;
    end Gen_Arrays;
