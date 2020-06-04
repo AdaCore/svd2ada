@@ -43,8 +43,9 @@ package body Ada_Gen is
       With_Clause : Ada_With_Clause) return Boolean;
 
    function Ada_Identifier
-     (S            : String;
+     (Id           : String;
       Container_Id : String) return Unbounded_String;
+   --  return Id with any changes required to conform to Ada syntax
 
    procedure Dump_Aspects
      (Aspects : String_Vectors.Vector;
@@ -81,113 +82,38 @@ package body Ada_Gen is
    ----------------------
 
    function Ada_Identifier
-     (S            : String;
+     (Id           : String;
       Container_Id : String)
       return Unbounded_String
    is
-      Low_Id : constant String := Ada.Characters.Handling.To_Lower (S);
-
+      Low_Id : constant String := Ada.Characters.Handling.To_Lower (Id);
    begin
       --  If the last character is an underscore, remove it
-      if S (S'Last) = '_' then
-         return Ada_Identifier (S (S'First .. S'Last - 1), Container_Id);
+      if Id (Id'Last) = '_' then
+         return Ada_Identifier (Id (Id'First .. Id'Last - 1), Container_Id);
       --  Same for the first character
-      elsif S (S'First) = '_' then
-         return Ada_Identifier (S (S'First + 1 .. S'Last), Container_Id);
+      elsif Id (Id'First) = '_' then
+         return Ada_Identifier (Id (Id'First + 1 .. Id'Last), Container_Id);
       else
          --  change two successive underscores into one
-         for J in S'First + 1 .. S'Last loop
-            if S (J) = '_' and then S (J - 1) = '_' then
+         for J in Id'First + 1 .. Id'Last loop
+            if Id (J) = '_' and then Id (J - 1) = '_' then
                return Ada_Identifier
-                 (S (S'First .. J - 1) & S (J + 1 .. S'Last), Container_Id);
+                 (Id (Id'First .. J - 1) & Id (J + 1 .. Id'Last), Container_Id);
             end if;
          end loop;
       end if;
 
-      --  Now check that the identifier is not a keyword
-      if Low_Id = "abort"
-        or else Low_Id = "abs"
-        or else Low_Id = "abstract"
-        or else Low_Id = "accept"
-        or else Low_Id = "access"
-        or else Low_Id = "aliased"
-        or else Low_Id = "all"
-        or else Low_Id = "and"
-        or else Low_Id = "array"
-        or else Low_Id = "at"
-        or else Low_Id = "begin"
-        or else Low_Id = "body"
-        or else Low_Id = "case"
-        or else Low_Id = "constant"
-        or else Low_Id = "declare"
-        or else Low_Id = "delay"
-        or else Low_Id = "delta"
-        or else Low_Id = "digits"
-        or else Low_Id = "do"
-        or else Low_Id = "else"
-        or else Low_Id = "elsif"
-        or else Low_Id = "end"
-        or else Low_Id = "entry"
-        or else Low_Id = "exception"
-        or else Low_Id = "exit"
-        or else Low_Id = "for"
-        or else Low_Id = "function"
-        or else Low_Id = "generic"
-        or else Low_Id = "goto"
-        or else Low_Id = "if"
-        or else Low_Id = "in"
-        or else Low_Id = "interface"
-        or else Low_Id = "is"
-        or else Low_Id = "limited"
-        or else Low_Id = "loop"
-        or else Low_Id = "mod"
-        or else Low_Id = "new"
-        or else Low_Id = "not"
-        or else Low_Id = "null"
-        or else Low_Id = "of"
-        or else Low_Id = "or"
-        or else Low_Id = "others"
-        or else Low_Id = "out"
-        or else Low_Id = "overriding"
-        or else Low_Id = "package"
-        or else Low_Id = "pragma"
-        or else Low_Id = "private"
-        or else Low_Id = "procedure"
-        or else Low_Id = "protected"
-        or else Low_Id = "raise"
-        or else Low_Id = "range"
-        or else Low_Id = "record"
-        or else Low_Id = "rem"
-        or else Low_Id = "renames"
-        or else Low_Id = "requeue"
-        or else Low_Id = "return"
-        or else Low_Id = "reverse"
-        or else Low_Id = "select"
-        or else Low_Id = "separate"
-        or else Low_Id = "some"
-        or else Low_Id = "subtype"
-        or else Low_Id = "synchronized"
-        or else Low_Id = "tagged"
-        or else Low_Id = "task"
-        or else Low_Id = "terminate"
-        or else Low_Id = "then"
-        or else Low_Id = "type"
-        or else Low_Id = "until"
-        or else Low_Id = "use"
-        or else Low_Id = "when"
-        or else Low_Id = "while"
-        or else Low_Id = "with"
-        or else Low_Id = "xor"
-      then
-         return To_Unbounded_String (S & "_k");
+      if SVD2Ada_Utils.Is_Reserved_Word (Low_Id) then
+         return To_Unbounded_String (Id & "_k");
       end if;
 
       --  Now check that the first character is a letter
       if Low_Id (Low_Id'First) not in 'a' .. 'z' then
-         return To_Unbounded_String (Container_Id & "_" & S);
+         return To_Unbounded_String (Container_Id & "_" & Id);
       end if;
 
-      return To_Unbounded_String (S);
+      return To_Unbounded_String (Id);
    end Ada_Identifier;
 
    -------------------------
