@@ -72,4 +72,8 @@ package SVD2Ada_Utils is
    --  Whether to generate trap handler assembly file and Interrupts.Names
    --  package
 
+   function Is_Reserved_Word (Word : String) return Boolean;
+   --  Check if Word one of the Ada languuage reserved words.
+   --  Word is required to be in lower case.
+
 end SVD2Ada_Utils;
