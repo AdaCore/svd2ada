@@ -35,72 +35,38 @@ package body SVD2Ada_Utils is
    G_Gen_UInt_Subtype    : Boolean := True;
    G_Gen_Fields_Default  : Boolean := True;
 
+   function Installation_Dir (Exec_with_Path : String) return String;
+   --  Exec_with_Path is the executable name preceeded by the absolute or
+   --  relative path, e.g. "c:\usr\bin\gcc.exe" or "..\bin\gcc". Returns
+   --  the absolute or relative directory where "bin" lies (in the example
+   --  "C:\usr" or ".."). If the executable is not a "bin" directory, return
+   --  "".
+
+   ----------------------------
+   -- Is_Directory_Separator --
+   ----------------------------
+
+   function Is_Directory_Separator (C : Character) return Boolean is
+     (C = Directory_Separator or else C = '/');
+
    -------------------------
    -- Executable_Location --
    -------------------------
 
    --  Executable_Location is extracted from the gnatcoll library
    function Executable_Location return String is
-
       Exec_Name : constant String := Ada.Command_Line.Command_Name;
-
-      function Get_Install_Dir (S : String) return String;
-      --  S is the executable name preceeded by the absolute or relative
-      --  path, e.g. "c:\usr\bin\gcc.exe" or "..\bin\gcc". Returns the absolute
-      --  or relative directory where "bin" lies (in the example "C:\usr"
-      --  or ".."). If the executable is not a "bin" directory, return "".
-
-      function Is_Directory_Separator (C : Character) return Boolean is
-        (C = Directory_Separator or else C = '/');
-
-      ---------------------
-      -- Get_Install_Dir --
-      ---------------------
-
-      function Get_Install_Dir (S : String) return String is
-         Exec      : String  := GNAT.OS_Lib.Normalize_Pathname (S, Resolve_Links => True);
-         Path_Last : Integer := 0;
-      begin
-         for J in reverse Exec'Range loop
-            if Is_Directory_Separator (Exec (J)) then
-               Path_Last := J - 1;
-               exit;
-            end if;
-         end loop;
-
-         if Path_Last >= Exec'First + 2 then
-            GNAT.Case_Util.To_Lower (Exec (Path_Last - 2 .. Path_Last));
-         end if;
-
-         --  If we are not in a bin/ directory
-
-         if Path_Last < Exec'First + 2
-           or else Exec (Path_Last - 2 .. Path_Last) /= "bin"
-           or else (Path_Last - 3 >= Exec'First
-                    and then not Is_Directory_Separator (Exec (Path_Last - 3)))
-         then
-            return Exec (Exec'First .. Path_Last)
-               & GNAT.OS_Lib.Directory_Separator;
-
-         else
-            --  Skip bin/, but keep the last directory separator
-            return Exec (Exec'First .. Path_Last - 3);
-         end if;
-      end Get_Install_Dir;
-
-   --  Beginning of Executable_Location
-
    begin
       --  First determine if a path prefix was placed in front of the
       --  executable name.
 
       for J in reverse Exec_Name'Range loop
          if Is_Directory_Separator (Exec_Name (J)) then
-            return Get_Install_Dir (Exec_Name);
+            return Installation_Dir (Exec_Name);
          end if;
       end loop;
 
-      --  If you are here, the user has typed the executable name with no
+      --  If we are here, the user has typed the executable name with no
       --  directory prefix.
       --  There is a potential issue here (see K112-046) where GNAT.OS_Lib
       --  will in fact return any non-executable file found in the PATH,
@@ -109,9 +75,8 @@ package body SVD2Ada_Utils is
       --  found by the shell.
 
       declare
-         Ex  : GNAT.OS_Lib.String_Access :=
-                 GNAT.OS_Lib.Locate_Exec_On_Path (Exec_Name);
-         Dir : constant String := Get_Install_Dir (Ex.all);
+         Ex  : GNAT.OS_Lib.String_Access := GNAT.OS_Lib.Locate_Exec_On_Path (Exec_Name);
+         Dir : constant String := Installation_Dir (Ex.all);
       begin
          Free (Ex);
          return Dir;
@@ -305,5 +270,38 @@ package body SVD2Ada_Utils is
    begin
       return G_Gen_IRQ_Support or else In_Runtime;
    end Gen_IRQ_Support;
+
+   ----------------------
+   -- Installation_Dir --
+   ----------------------
+
+   function Installation_Dir (Exec_with_Path : String) return String is
+      Exec      : String := GNAT.OS_Lib.Normalize_Pathname (Exec_with_Path, Resolve_Links => True);
+      Path_Last : Integer := 0;
+   begin
+      for J in reverse Exec'Range loop
+         if Is_Directory_Separator (Exec (J)) then
+            Path_Last := J - 1;
+            exit;
+         end if;
+      end loop;
+
+      if Path_Last >= Exec'First + 2 then
+         GNAT.Case_Util.To_Lower (Exec (Path_Last - 2 .. Path_Last));
+      end if;
+
+      --  If we are not in a bin/ directory
+
+      if Path_Last < Exec'First + 2
+        or else Exec (Path_Last - 2 .. Path_Last) /= "bin"
+        or else (Path_Last - 3 >= Exec'First
+                 and then not Is_Directory_Separator (Exec (Path_Last - 3)))
+      then
+         return Exec (Exec'First .. Path_Last) & GNAT.OS_Lib.Directory_Separator;
+      else
+         --  Skip bin/, but keep the last directory separator
+         return Exec (Exec'First .. Path_Last - 3);
+      end if;
+   end Installation_Dir;
 
 end SVD2Ada_Utils;
