@@ -16598,7 +16598,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <name>RAM_PARITY_CHECK</name>
               <description>RAM_PARITY_CHECK</description>
               <bitOffset>14</bitOffset>
-              <bitWidth>0</bitWidth>
+              <bitWidth>1</bitWidth>
             </field>
             <field>
               <name>BOOT_SEL</name>
