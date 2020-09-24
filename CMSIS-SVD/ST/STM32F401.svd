@@ -8118,31 +8118,17 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <access>read-write</access>
             </field>
             <field>
-              <name>SWS1</name>
-              <description>System clock switch status</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>SWS0</name>
+              <name>SWS</name>
               <description>System clock switch status</description>
               <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
+              <bitWidth>2</bitWidth>
               <access>read-only</access>
             </field>
             <field>
-              <name>SW1</name>
-              <description>System clock switch</description>
-              <bitOffset>1</bitOffset>
-              <bitWidth>1</bitWidth>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>SW0</name>
+              <name>SW</name>
               <description>System clock switch</description>
               <bitOffset>0</bitOffset>
-              <bitWidth>1</bitWidth>
+              <bitWidth>2</bitWidth>
               <access>read-write</access>
             </field>
           </fields>
