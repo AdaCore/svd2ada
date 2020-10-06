@@ -1100,6 +1100,9 @@ package body Ada_Gen is
          Ada.Text_IO.New_Line (F);
       end if;
 
+      Ada.Text_IO.Put_Line (F, "pragma Style_Checks (Off);");
+      Ada.Text_IO.New_Line (F);
+
       if Length (Trim (G_License_Text, Both)) > 0 then
          Ada.Text_IO.Put_Line (F, To_String (G_License_Text));
          Ada.Text_IO.New_Line (F);
@@ -1120,9 +1123,6 @@ package body Ada_Gen is
               (F, "pragma Restrictions (No_Elaboration_Code);");
          end if;
 
-         Ada.Text_IO.Put_Line
-           (F, "pragma Ada_2012;");
-         Ada.Text_IO.Put_Line (F, "pragma Style_Checks (Off);");
          Ada.Text_IO.New_Line (F);
          G_Empty_Line := True;
       end if;
@@ -1682,7 +1682,7 @@ package body Ada_Gen is
    is
    begin
       if Element.Size in 8 | 16 | 32 | 64 then
-         Add (Spec, New_With_Clause ("Interfaces", True));
+         Add (Spec, New_With_Clause ("Interfaces", Use_Visible => False));
       end if;
    end Added_In_Spec;
 
