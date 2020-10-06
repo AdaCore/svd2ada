@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2019, AdaCore                      --
+--                    Copyright (C) 2015-2020, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -1174,8 +1174,6 @@ package body Ada_Gen is
          Ada.Text_IO.New_Line (F);
       end if;
 
-      Ada.Text_IO.Put_Line
-        (F, "pragma Ada_2012;");
       Ada.Text_IO.Put_Line (F, "pragma Style_Checks (Off);");
       Ada.Text_IO.New_Line (F);
 
