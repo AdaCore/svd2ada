@@ -24175,7 +24175,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <bitWidth>1</bitWidth>
             </field>
             <field>
-              <name>RAM</name>
+              <name>PAM</name>
               <description>no description available</description>
               <bitOffset>4</bitOffset>
               <bitWidth>1</bitWidth>
@@ -24190,7 +24190,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
               <name>PCF</name>
               <description>no description available</description>
               <bitOffset>6</bitOffset>
-              <bitWidth>1</bitWidth>
+              <bitWidth>2</bitWidth>
             </field>
             <field>
               <name>SAIF</name>
@@ -24446,50 +24446,86 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         </register>
         <register>
           <name>MACDBGR</name>
-          <displayName>MACDBGR</displayName>
-          <description>Ethernet MAC debug register</description>
-          <addressOffset>0x34</addressOffset>
-          <size>0x20</size>
-          <access>read-only</access>
-          <resetValue>0x00000000</resetValue>
-          <fields>
-            <field>
-              <name>CR</name>
-              <description>CR</description>
-              <bitOffset>0</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>CSR</name>
-              <description>CSR</description>
-              <bitOffset>1</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>ROR</name>
-              <description>ROR</description>
-              <bitOffset>2</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>MCF</name>
-              <description>MCF</description>
-              <bitOffset>3</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>MCP</name>
-              <description>MCP</description>
-              <bitOffset>4</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-            <field>
-              <name>MCFHP</name>
-              <description>MCFHP</description>
-              <bitOffset>5</bitOffset>
-              <bitWidth>1</bitWidth>
-            </field>
-          </fields>
+               <displayName>MACDBGR</displayName>
+               <description>Ethernet MAC debug register</description>
+               <addressOffset>0x34</addressOffset>
+               <size>0x20</size>
+               <access>read-only</access>
+               <resetValue>0x00000000</resetValue>
+               <fields>
+                  <field>
+                     <name>MMRPEA</name>
+                     <description>MMRPEA</description>
+                     <bitOffset>0</bitOffset>
+                     <bitWidth>1</bitWidth>
+                  </field>
+                  <field>
+                     <name>MSFRWCS</name>
+                     <description>MSFRWCS</description>
+                     <bitOffset>1</bitOffset>
+                     <bitWidth>2</bitWidth>
+                  </field>
+                  <field>
+                     <name>RFWRA</name>
+                     <description>RFWRA</description>
+                     <bitOffset>4</bitOffset>
+                     <bitWidth>1</bitWidth>
+                  </field>
+                  <field>
+                     <name>RFRCS</name>
+                     <description>RFRCS</description>
+                     <bitOffset>5</bitOffset>
+                     <bitWidth>2</bitWidth>
+                  </field>            
+                  <field>
+                     <name>RFFL</name>
+                     <description>RFFL</description>
+                     <bitOffset>8</bitOffset>
+                     <bitWidth>2</bitWidth>
+                  </field>
+                  <field>
+                     <name>MMTEA</name>
+                     <description>MMTEA</description>
+                     <bitOffset>16</bitOffset>
+                     <bitWidth>1</bitWidth>
+                  </field>            
+                  <field>
+                     <name>MTFCS</name>
+                     <description>MTFCS</description>
+                     <bitOffset>17</bitOffset>
+                     <bitWidth>2</bitWidth>
+                  </field>
+                  <field>
+                     <name>MTP</name>
+                     <description>MTP</description>
+                     <bitOffset>19</bitOffset>
+                     <bitWidth>1</bitWidth>
+                  </field>
+                  <field>
+                     <name>TFRS</name>
+                     <description>TFRS</description>
+                     <bitOffset>20</bitOffset>
+                     <bitWidth>2</bitWidth>
+                  </field>            
+                  <field>
+                     <name>TFWA</name>
+                     <description>TFWA</description>
+                     <bitOffset>22</bitOffset>
+                     <bitWidth>1</bitWidth>
+                  </field>
+                  <field>
+                     <name>TFNE</name>
+                     <description>TFNE</description>
+                     <bitOffset>24</bitOffset>
+                     <bitWidth>1</bitWidth>
+                  </field>
+                  <field>
+                     <name>TFF</name>
+                     <description>TFF</description>
+                     <bitOffset>25</bitOffset>
+                     <bitWidth>1</bitWidth>
+                  </field>            
+               </fields>
         </register>
         <register>
           <name>MACSR</name>
