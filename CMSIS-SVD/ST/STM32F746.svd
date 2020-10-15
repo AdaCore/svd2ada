@@ -23386,55 +23386,55 @@ Copyright (c) 2020 STMicroelectronics.
                      <description>RFRCS</description>
                      <bitOffset>5</bitOffset>
                      <bitWidth>2</bitWidth>
-                  </field>				  
-				  <field>
+                  </field>            
+                  <field>
                      <name>RFFL</name>
                      <description>RFFL</description>
                      <bitOffset>8</bitOffset>
                      <bitWidth>2</bitWidth>
                   </field>
-				  <field>
+                  <field>
                      <name>MMTEA</name>
                      <description>MMTEA</description>
                      <bitOffset>16</bitOffset>
                      <bitWidth>1</bitWidth>
-                  </field>				  
-				  <field>
+                  </field>            
+                  <field>
                      <name>MTFCS</name>
                      <description>MTFCS</description>
                      <bitOffset>17</bitOffset>
                      <bitWidth>2</bitWidth>
                   </field>
-				  <field>
+                  <field>
                      <name>MTP</name>
                      <description>MTP</description>
                      <bitOffset>19</bitOffset>
                      <bitWidth>1</bitWidth>
                   </field>
-				  <field>
+                  <field>
                      <name>TFRS</name>
                      <description>TFRS</description>
                      <bitOffset>20</bitOffset>
                      <bitWidth>2</bitWidth>
-                  </field>				  
-				  <field>
+                  </field>            
+                  <field>
                      <name>TFWA</name>
                      <description>TFWA</description>
                      <bitOffset>22</bitOffset>
                      <bitWidth>1</bitWidth>
                   </field>
-				  <field>
+                  <field>
                      <name>TFNE</name>
                      <description>TFNE</description>
                      <bitOffset>24</bitOffset>
                      <bitWidth>1</bitWidth>
                   </field>
-				  <field>
+                  <field>
                      <name>TFF</name>
                      <description>TFF</description>
                      <bitOffset>25</bitOffset>
                      <bitWidth>1</bitWidth>
-                  </field>				  
+                  </field>            
                </fields>
             </register>
             <register>
