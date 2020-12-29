@@ -28,6 +28,8 @@ package body Base_Types is
 
    package Unsigned_IO is new Ada.Text_IO.Modular_IO (Unsigned);
 
+   use type DOM.Core.Node;
+
    procedure Read_Range_Elts
      (Tag : String;
       Elt : DOM.Core.Element;
@@ -669,5 +671,39 @@ package body Base_Types is
 
       return To_Unbounded_String (Slice (Name1, 1, Prefix));
    end Common_Prefix;
+
+   -------------------
+   -- Get_Full_Name --
+   -------------------
+
+   function Get_Full_Name (Elt : DOM.Core.Node) return String
+   is
+      Parent : constant DOM.Core.Node := DOM.Core.Nodes.Parent_Node (Elt);
+      Str    : Ada.Strings.Unbounded.Unbounded_String;
+   begin
+
+      if Parent /= null then
+         Str := Ada.Strings.Unbounded.To_Unbounded_String (Get_Full_Name (Parent));
+      else
+         Str := Ada.Strings.Unbounded.To_Unbounded_String ("");
+      end if;
+
+      declare
+         Children_List : constant DOM.Core.Node_List := DOM.Core.Nodes.Child_Nodes (Elt);
+      begin
+         for N in 0 .. DOM.Core.Nodes.Length (Children_List) - 1 loop
+            declare
+               Child_Node : constant DOM.Core.Node := DOM.Core.Nodes.Item (Children_List, N);
+               Text : String renames DOM.Core.Nodes.Node_Name (Child_Node);
+            begin
+               if Text = "name" then
+                  Ada.Strings.Unbounded.Append (Str, "/" & Get_Value (Child_Node));
+               end if;
+            end;
+         end loop;
+      end;
+
+      return Ada.Strings.Unbounded.To_String (Str);
+   end Get_Full_Name;
 
 end Base_Types;

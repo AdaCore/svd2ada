@@ -135,7 +135,7 @@ package body Descriptors.Field is
 
                else
                   Ada.Text_IO.Put_Line
-                    ("*** WARNING: ignoring field element " & Tag);
+                    ("*** WARNING: ignoring field element " & Tag & " at " & Get_Full_Name (Child));
                end if;
             end;
          end if;

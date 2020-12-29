@@ -167,7 +167,7 @@ package body Descriptors.Cluster is
 
                else
                   Ada.Text_IO.Put_Line
-                    ("*** WARNING: ignoring cluster element " & Tag);
+                    ("*** WARNING: ignoring cluster element " & Tag & " at " & Get_Full_Name (Child));
                end if;
             end;
          end if;
