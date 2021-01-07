@@ -676,18 +676,19 @@ package body Base_Types is
    -- Get_Full_Name --
    -------------------
 
-   function Get_Full_Name (Elt : DOM.Core.Node) return String
+   function Full_Name (Elt : DOM.Core.Node) return String
    is
       Parent : constant DOM.Core.Node := DOM.Core.Nodes.Parent_Node (Elt);
       Str    : Ada.Strings.Unbounded.Unbounded_String;
    begin
 
       if Parent /= null then
-         Str := Ada.Strings.Unbounded.To_Unbounded_String (Get_Full_Name (Parent));
+         Str := Ada.Strings.Unbounded.To_Unbounded_String (Full_Name (Parent));
       else
          Str := Ada.Strings.Unbounded.To_Unbounded_String ("");
       end if;
 
+      --  Search for "name" tag and add it's content to Str
       declare
          Children_List : constant DOM.Core.Node_List := DOM.Core.Nodes.Child_Nodes (Elt);
       begin
@@ -704,6 +705,6 @@ package body Base_Types is
       end;
 
       return Ada.Strings.Unbounded.To_String (Str);
-   end Get_Full_Name;
+   end Full_Name;
 
 end Base_Types;

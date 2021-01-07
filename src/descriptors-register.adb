@@ -180,7 +180,7 @@ package body Descriptors.Register is
 
                else
                   Ada.Text_IO.Put_Line
-                    ("*** WARNING: ignoring register element " & Tag & " at " & Get_Full_Name (Child));
+                    ("*** WARNING: ignoring register element " & Tag & " at " & Full_Name (Child));
                end if;
             end;
          end if;
