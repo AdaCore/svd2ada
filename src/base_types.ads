@@ -194,4 +194,6 @@ package Base_Types is
    --  Returns the prefix common to Name1 and Name2 if any, or
    --  Null_Unbounded_String
 
+   function Full_Name (Elt : DOM.Core.Node) return String;
+
 end Base_Types;

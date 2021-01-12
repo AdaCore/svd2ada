@@ -123,7 +123,7 @@ package body Descriptors.Enumerate is
                   Result.IsDefault := True;
 
                else
-                  Ada.Text_IO.Put_Line ("*** WARNING: ignoring enumerate element " & Tag);
+                  Ada.Text_IO.Put_Line ("*** WARNING: ignoring enumerate element " & Tag & " at " & Full_Name (Child));
                end if;
             end;
          end if;
@@ -184,7 +184,7 @@ package body Descriptors.Enumerate is
                   Read_Value (Child, Write_Only, Result.Values);
 
                else
-                  Ada.Text_IO.Put_Line ("*** WARNING: ignoring enumerate element " & Tag);
+                  Ada.Text_IO.Put_Line ("*** WARNING: ignoring enumerate element " & Tag & " at " & Full_Name (Child));
                end if;
             end;
          end if;

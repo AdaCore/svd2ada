@@ -164,7 +164,7 @@ package body Descriptors.Device is
 
                else
                   Ada.Text_IO.Put_Line
-                    ("*** WARNING: ignoring device element " & Tag);
+                    ("*** WARNING: ignoring device element " & Tag & " at " & Full_Name (Child));
                end if;
             end;
          end if;
