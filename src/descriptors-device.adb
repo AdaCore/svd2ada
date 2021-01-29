@@ -385,7 +385,7 @@ package body Descriptors.Device is
                ("System tick"),
              Value       => -1));
 
-         if Slice (Device.Description, 1, 5) = "STM32"
+         if Length (Device.Description) >= 5 and then Slice (Device.Description, 1, 5) = "STM32"
            and then Slice (Device.Description, 6, 7) /= "F0"
          then
             --  ??? Workaround for the STM32F* svd files that do not define the
