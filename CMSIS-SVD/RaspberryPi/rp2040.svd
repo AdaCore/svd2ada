@@ -22939,6 +22939,7 @@
         <value>20</value>
       </interrupt>
       <name>UART0</name>
+      <groupName>UART</groupName>
       <registers>
         <register>
           <addressOffset>0x0000</addressOffset>
