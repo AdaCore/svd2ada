@@ -23771,6 +23771,7 @@
         <value>18</value>
       </interrupt>
       <name>SPI0</name>
+      <groupName>SPI</groupName>
       <registers>
         <register>
           <addressOffset>0x0000</addressOffset>
@@ -24213,6 +24214,7 @@
         <value>23</value>
       </interrupt>
       <name>I2C0</name>
+      <groupName>I2C</groupName>
       <registers>
         <register>
           <addressOffset>0x0000</addressOffset>
