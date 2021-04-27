@@ -18,7 +18,6 @@
 ------------------------------------------------------------------------------
 
 with Ada.Text_IO;
-with Ada.Containers.Indefinite_Vectors;
 
 with DOM.Core;
 with DOM.Core.Elements;  use DOM.Core.Elements;
@@ -37,9 +36,6 @@ package body Descriptors.Peripheral is
 
    package Peripheral_Sort is new Peripheral_Vectors.Generic_Sorting
      (Less);
-
-   package String_List is new Ada.Containers.Indefinite_Vectors
-     (Positive, String);
 
    procedure Dump_Periph_Type
      (Spec       : in out Ada_Gen.Ada_Spec;
