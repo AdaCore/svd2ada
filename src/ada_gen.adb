@@ -1235,6 +1235,7 @@ package body Ada_Gen is
    -- Add --
    ---------
 
+   overriding
    procedure Add
      (Spec : in out Ada_Spec;
       Elt  : Ada_Comment_Box)
@@ -1913,6 +1914,7 @@ package body Ada_Gen is
    -- "=" --
    ---------
 
+   overriding
    function "=" (V1, V2 : Ada_Enum_Value) return Boolean
    is
    begin
@@ -2175,6 +2177,7 @@ package body Ada_Gen is
    -- "=" --
    ---------
 
+   overriding
    function "=" (R1, R2 : Record_Field) return Boolean
    is
    begin

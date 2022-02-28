@@ -43,6 +43,7 @@ package Descriptors.Field is
       Enums            : Descriptors.Enumerate.Enumerate_Vectors.Vector;
    end record;
 
+   overriding
    function "=" (F1, F2 : Field_T) return Boolean;
 
    Null_Field : constant Field_T :=
