@@ -565,6 +565,7 @@ private
       Comment     : Ada_Comment;
    end record;
 
+   overriding
    function "=" (R1, R2 : Record_Field) return Boolean;
 
    package Record_Field_Vectors is new Ada.Containers.Vectors

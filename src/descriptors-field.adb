@@ -148,6 +148,7 @@ package body Descriptors.Field is
    -- "=" --
    ---------
 
+   overriding
    function "=" (F1, F2 : Field_T) return Boolean
    is
       use Unbounded;

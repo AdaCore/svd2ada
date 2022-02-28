@@ -78,6 +78,7 @@ package body Base_Types is
    -- "=" --
    ---------
 
+   overriding
    function "=" (I1, I2 : Interrupt_Type) return Boolean
    is
       use Unbounded;

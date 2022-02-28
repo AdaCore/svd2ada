@@ -144,6 +144,7 @@ package Base_Types is
       Value       : Integer;
    end record;
 
+   overriding
    function "=" (I1, I2 : Interrupt_Type) return Boolean;
 
    function "<" (I1, I2 : Interrupt_Type) return Boolean;
