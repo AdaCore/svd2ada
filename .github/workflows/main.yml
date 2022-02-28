@@ -1,0 +1,25 @@
+
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+env:
+  SVD2ADA_COMPILE_CHECKS: enabled
+  SVD2ADA_RUNTIME_CHECKS: enabled
+  SVD2ADA_STYLE_CHECKS: enabled
+  SVD2ADA_CONTRACTS: enabled
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+        gnat_version: [^11]
+        gprbuild_version: [^21]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: alire-project/setup-alire@v1
+        with:
+          toolchain: gprbuild${{ matrix.gprbuild_version }} gnat_native${{ matrix.gnat_version }} --disable-assistant
+      - run: alr build
