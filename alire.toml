@@ -1,0 +1,15 @@
+name = "svd2ada"
+description = "Ada binding generator from CMSIS-SVD hardware descriptions files"
+version = "0.1.0"
+
+authors = ["AdaCore"]
+maintainers = ["Fabien Chouteau <fabien.chouteau@gmail.com>"]
+maintainers-logins = ["Fabien-Chouteau"]
+
+executables = ["svd2ada"]
+
+[[depends-on]]
+xmlada = "^22.0.0"
+
+[configuration]
+disabled = true

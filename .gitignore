@@ -1,12 +1,5 @@
-# Object file
-obj/*
-.DS_Store
-
-# Ada Library Information
-*.ali
-
-# Temporary files
-*~
-
-# executable
-svd2ada
+/lib/
+/alire/
+/config/
+/obj/
+/bin/

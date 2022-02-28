@@ -1,37 +1,82 @@
 with "xmlada";
 
-project SVD2Ada is
-
-   type Build_Kind is ("release", "debug");
-   Build : Build_Kind := external ("APP_BUILD", "release");
+project SVD2ada is
 
    for Source_Dirs use ("src");
-   for Main use ("svd2ada.adb");
-   for Object_Dir use "obj/" & Build;
-   for Exec_Dir use ".";
+   for Object_Dir use "obj";
    for Create_Missing_Dirs use "True";
+   for Exec_Dir use "bin";
+   for Main use ("svd2ada.adb");
 
-   package Builder is
-      for Default_Switches ("ada") use ("-s");
-   end Builder;
+   type Enabled_Kind is ("enabled", "disabled");
+   Compile_Checks : Enabled_Kind := External ("SVD2ADA_COMPILE_CHECKS", "disabled");
+   Runtime_Checks : Enabled_Kind := External ("SVD2ADA_RUNTIME_CHECKS", "enabled");
+   Style_Checks : Enabled_Kind := External ("SVD2ADA_STYLE_CHECKS", "disabled");
+   Contracts_Checks : Enabled_Kind := External ("SVD2ADA_CONTRACTS", "disabled");
 
-   Common_Compiler_Switches := (
-                                "-gnatwae",
-                                "-gnatQ",
-                                --  "-gnatw.X",
-                                "-gnatyyg",
-                                "-gnatyM120"  -- allow lines longer than 80
-                               );
+   type Build_Kind is ("debug", "optimize");
+   Build_Mode : Build_Kind := External ("SVD2ADA_BUILD_MODE", "optimize");
+
+   Compile_Checks_Switches := ();
+   case Compile_Checks is
+      when "enabled" =>
+         Compile_Checks_Switches :=
+           ("-gnatwa",  -- All warnings
+            "-gnatVa",  -- All validity checks
+            "-gnatwe"); -- Warnings as errors
+      when others => null;
+   end case;
+
+   Runtime_Checks_Switches := ();
+   case Runtime_Checks is
+      when "enabled" => null;
+      when others =>
+         Runtime_Checks_Switches :=
+           ("-gnatp"); -- Suppress checks
+   end case;
+
+   Style_Checks_Switches := ();
+   case Style_Checks is
+      when "enabled" =>
+         Style_Checks_Switches :=
+           ("-gnatyg",    -- GNAT Style checks
+            "-gnaty-d",   -- Disable no DOS line terminators
+            "-gnatyM120", -- Maximum line length
+            "-gnatyO");   -- Overriding subprograms explicitly marked as such
+      when others => null;
+   end case;
+
+   Contracts_Switches := ();
+   case Contracts_Checks is
+      when "enabled" =>
+         Contracts_Switches :=
+           ("-gnata"); --  Enable assertions and contracts
+      when others => null;
+   end case;
+
+   Build_Switches := ();
+   case Build_Mode is
+      when "optimize" =>
+         Build_Switches := ("-O3",     -- Optimization
+                            "-gnatn"); -- Enable inlining
+      when "debug" =>
+         Build_Switches := ("-g",   -- Debug info
+                            "-Og"); -- No optimization
+   end case;
 
    package Compiler is
-      case Build is
-         when "release" =>
-            for Default_Switches ("ada") use
-              ("-O2") & Common_Compiler_Switches;
-         when "debug" =>
-            for Default_Switches ("ada") use
-              ("-g", "-gnata") & Common_Compiler_Switches;
-      end case;
+      for Default_Switches ("Ada") use
+        Compile_Checks_Switches &
+        Build_Switches &
+        Runtime_Checks_Switches &
+        Style_Checks_Switches &
+        Contracts_Switches &
+        ("-gnatw.X", -- Disable warnings for No_Exception_Propagation
+         "-gnatQ");  -- Don't quit. Generate ALI and tree files even if illegalities
    end Compiler;
 
-end SVD2Ada;
+   package Binder is
+      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+   end Binder;
+
+end SVD2ada;
