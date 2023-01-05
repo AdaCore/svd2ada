@@ -81,6 +81,7 @@ package body Descriptors.Field is
             declare
                Child : constant Element := Element (Nodes.Item (List, J));
                Tag   : String renames Elements.Get_Tag_Name (Child);
+               Size_Calculated : Bool := False;
             begin
                if Tag = "name" then
                   Result.Name := Get_Value (Child);
@@ -95,9 +96,10 @@ package body Descriptors.Field is
 
                elsif Tag = "bitWidth" then
                   Result.Size := Get_Value (Child);
+                  Size_Calculated := True;
 
                elsif Tag = "msb" then
-                  Result.Size := Get_Value (Child) - Result.LSB + 1;
+                  Result.MSB := Get_Value (Child);
 
                elsif Tag = "bitRange" then
                   --  bitRange has the form: [XX:YY] where XX is the MSB,
@@ -113,6 +115,7 @@ package body Descriptors.Field is
                              Natural'Value (Val (2 .. K - 1)) - Result.LSB + 1;
                         end if;
                      end loop;
+                     Size_Calculated := True;
                   end;
 
                elsif Tag = "access" then
@@ -137,6 +140,12 @@ package body Descriptors.Field is
                   Ada.Text_IO.Put_Line
                     ("*** WARNING: ignoring field element " & Tag & " at " & Full_Name (Child));
                end if;
+
+               --  Neither bitRange nor bitWidth has been used
+               if not Size_Calculated then
+                  Result.Size := Result.MSB - Result.LSB + 1;
+               end if;
+
             end;
          end if;
       end loop;

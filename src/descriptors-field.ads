@@ -36,6 +36,7 @@ package Descriptors.Field is
       Name             : Unbounded.Unbounded_String;
       Description      : Unbounded.Unbounded_String;
       LSB              : Natural;
+      MSB              : Natural;
       Size             : Natural;
       Acc              : Access_Type;
       Mod_Write_Values : Modified_Write_Values_Type := Modify;
@@ -49,6 +50,7 @@ package Descriptors.Field is
    Null_Field : constant Field_T :=
                   (Unbounded.Null_Unbounded_String,
                    Unbounded.Null_Unbounded_String,
+                   0,
                    0,
                    0,
                    Read_Write,
