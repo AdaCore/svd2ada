@@ -76,79 +76,83 @@ package body Descriptors.Field is
          end;
       end if;
 
-      for J in 0 .. Nodes.Length (List) - 1 loop
-         if Nodes.Node_Type (Nodes.Item (List, J)) = Element_Node then
-            declare
-               Child : constant Element := Element (Nodes.Item (List, J));
-               Tag   : String renames Elements.Get_Tag_Name (Child);
-               Size_Calculated : Bool := False;
-            begin
-               if Tag = "name" then
-                  Result.Name := Get_Value (Child);
+      declare
+         Size_Calculated : Boolean := False;
+      begin
+         for J in 0 .. Nodes.Length (List) - 1 loop
+            if Nodes.Node_Type (Nodes.Item (List, J)) = Element_Node then
+               declare
+                  Child : constant Element := Element (Nodes.Item (List, J));
+                  Tag   : String renames Elements.Get_Tag_Name (Child);
+               begin
+                  if Tag = "name" then
+                     Result.Name := Get_Value (Child);
 
-               elsif Tag = "description" then
-                  Result.Description := Get_Value (Child);
+                  elsif Tag = "description" then
+                     Result.Description := Get_Value (Child);
 
-               elsif Tag = "bitOffset"
-                 or else Tag = "lsb"
-               then
-                  Result.LSB := Get_Value (Child);
+                  elsif Tag = "bitOffset"
+                    or else Tag = "lsb"
+                  then
+                     Result.LSB := Get_Value (Child);
 
-               elsif Tag = "bitWidth" then
-                  Result.Size := Get_Value (Child);
-                  Size_Calculated := True;
-
-               elsif Tag = "msb" then
-                  Result.MSB := Get_Value (Child);
-
-               elsif Tag = "bitRange" then
-                  --  bitRange has the form: [XX:YY] where XX is the MSB,
-                  --  and YY is the LSB
-                  declare
-                     Val : String renames Get_Value (Child);
-                  begin
-                     for K in Val'Range loop
-                        if Val (K) = ':' then
-                           Result.LSB :=
-                             Natural'Value (Val (K + 1 .. Val'Last - 1));
-                           Result.Size :=
-                             Natural'Value (Val (2 .. K - 1)) - Result.LSB + 1;
-                        end if;
-                     end loop;
+                  elsif Tag = "bitWidth" then
+                     Result.Size := Get_Value (Child);
                      Size_Calculated := True;
-                  end;
 
-               elsif Tag = "access" then
-                  Result.Acc := Get_Value (Child);
+                  elsif Tag = "msb" then
+                     Result.MSB := Get_Value (Child);
 
-               elsif Tag = "modifiedWriteValues" then
-                  Result.Mod_Write_Values := Get_Value (Child);
+                  elsif Tag = "bitRange" then
+                     --  bitRange has the form: [XX:YY] where XX is the MSB,
+                     --  and YY is the LSB
+                     declare
+                        Val : String renames Get_Value (Child);
+                     begin
+                        for K in Val'Range loop
+                           if Val (K) = ':' then
+                              Result.LSB :=
+                                Natural'Value (Val (K + 1 .. Val'Last - 1));
+                              Result.Size :=
+                                Natural'Value (Val (2 .. K - 1)) - Result.LSB + 1;
+                           end if;
+                        end loop;
+                     end;
+                     Size_Calculated := True;
 
-               elsif Tag = "readAction" then
-                  Result.Read_Action := Get_Value (Child);
+                  elsif Tag = "access" then
+                     Result.Acc := Get_Value (Child);
 
-               elsif Tag = "enumeratedValues" then
-                  declare
-                     Enum : constant Descriptors.Enumerate.Enumerate_T :=
-                              Descriptors.Enumerate.Read_Enumerate
-                                (Child, Result.Enums, Result.Acc = Write_Only);
-                  begin
-                     Result.Enums.Append (Enum);
-                  end;
+                  elsif Tag = "modifiedWriteValues" then
+                     Result.Mod_Write_Values := Get_Value (Child);
 
-               else
-                  Ada.Text_IO.Put_Line
-                    ("*** WARNING: ignoring field element " & Tag & " at " & Full_Name (Child));
-               end if;
+                  elsif Tag = "readAction" then
+                     Result.Read_Action := Get_Value (Child);
 
-               --  Neither bitRange nor bitWidth has been used
-               if not Size_Calculated then
-                  Result.Size := Result.MSB - Result.LSB + 1;
-               end if;
+                  elsif Tag = "enumeratedValues" then
+                     declare
+                        Enum : constant Descriptors.Enumerate.Enumerate_T :=
+                          Descriptors.Enumerate.Read_Enumerate
+                            (Child, Result.Enums, Result.Acc = Write_Only);
+                     begin
+                        Result.Enums.Append (Enum);
+                     end;
 
-            end;
+                  else
+                     Ada.Text_IO.Put_Line
+                       ("*** WARNING: ignoring field element " & Tag & " at " & Full_Name (Child));
+                  end if;
+
+               end;
+            end if;
+         end loop;
+
+         --  Neither bitRange nor bitWidth has been used
+         if not Size_Calculated then
+            Result.Size := Result.MSB - Result.LSB + 1;
          end if;
-      end loop;
+
+      end;
 
       return Result;
    end Read_Field;
