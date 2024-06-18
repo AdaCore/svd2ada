@@ -43,6 +43,10 @@ package SVD2Ada_Utils is
 
    function External_Base_Types_Package return Boolean;
 
+   procedure Set_Unsigned_Type (Value : String);
+
+   function Unsigned_Type return String;
+
    procedure Set_Root_Package (Value : String);
 
    function Root_Package return String;

@@ -288,6 +288,7 @@ package body Descriptors.Field is
       Ada_Type      : Descriptors.Register.Type_Holders.Holder;
       Ada_Type_Size : Natural;
       Ada_Name      : Unbounded_String;
+      Constraint    : Field_Constraint;
       As_Boolean    : Boolean;
       Description   : Unbounded_String;
       All_RO        : Boolean := True;
@@ -314,6 +315,7 @@ package body Descriptors.Field is
       Index := 0;
       while Index < Properties.Size loop
          Ada_Type := Type_Holders.Empty_Holder;
+         Constraint := None;
 
          if Fields (Index) = Null_Field then
             --  First look for undefined/reserved parts of the register
@@ -335,6 +337,7 @@ package body Descriptors.Field is
                  (Rec,
                   "Reserved_" & To_String (Index) & "_" & To_String (Index + Length - 1),
                   Target_Type (Length),
+                  Constraint  => Target_Type_Constraint (Length),
                   Offset      => 0,
                   LSB         => Index,
                   MSB         => Index + Length - 1,
@@ -347,6 +350,7 @@ package body Descriptors.Field is
                  (Rec,
                   "Reserved_" & To_String (Index) & "_" & To_String (Index + Length - 1),
                   Target_Type (Length),
+                  Constraint  => Target_Type_Constraint (Length),
                   Offset      => 0,
                   LSB         => Index,
                   MSB         => Index + Length - 1,
@@ -431,6 +435,7 @@ package body Descriptors.Field is
                      Add (Spec, Enum_T);
 
                      Ada_Type := -Enum_T;
+                     Constraint := None;
                   end;
                end loop;
             end if;
@@ -462,6 +467,7 @@ package body Descriptors.Field is
                if Ada_Type_Size = 1 and then As_Boolean then
                   if Ada_Type.Is_Empty then
                      Ada_Type := -Get_Boolean;
+                     Constraint := None;
 
                      if not All_RO then
                         if Default = 0 then
@@ -477,6 +483,7 @@ package body Descriptors.Field is
                   --  subtype for it, so that programming conversion to this
                   --  field is allowed using FIELD_TYPE (Value).
                   Ada_Type := -Ada_Gen.Target_Type (Ada_Type_Size);
+                  Constraint := Target_Type_Constraint (Ada_Type_Size);
 
                   if SVD2Ada_Utils.Gen_UInt_Subtype then
                      declare
@@ -519,10 +526,12 @@ package body Descriptors.Field is
                   if Ada_Type_Size = 1 and then As_Boolean then
                      if Ada_Type.Is_Empty then
                         Ada_Type := -Get_Boolean;
+                        Constraint := None;
                      end if;
 
                   elsif Ada_Type.Is_Empty then
                      Ada_Type := -Target_Type (Ada_Type_Size);
+                     Constraint := Target_Type_Constraint (Ada_Type_Size);
 
                      if SVD2Ada_Utils.Gen_UInt_Subtype then
                         declare
@@ -547,6 +556,7 @@ package body Descriptors.Field is
                        Index_First  => First,
                        Index_Last   => First + Length - 1,
                        Element_Type => -Ada_Type,
+                       Constraint   => Constraint,
                        Comment      => T_Name & " array");
 
                   Add_Aspect
@@ -566,6 +576,7 @@ package body Descriptors.Field is
                      Enum_Val   => "True",
                      Id         => "Arr",
                      Typ        => Array_T,
+                     Constraint => None,
                      Offset     => 0,
                      LSB        => 0,
                      MSB        => Fields (Index).Size * Length - 1,
@@ -578,6 +589,8 @@ package body Descriptors.Field is
                      Id         => "Val",
                      Typ        =>
                        Target_Type (Fields (Index).Size * Length),
+                     Constraint =>
+                       Target_Type_Constraint (Fields (Index).Size * Length),
                      Offset     => 0,
                      LSB        => 0,
                      MSB        => Fields (Index).Size * Length - 1,
@@ -588,6 +601,7 @@ package body Descriptors.Field is
                   Add (Spec, Union_T);
 
                   Ada_Type := -Union_T;
+                  Constraint := None;
                   Ada_Type_Size := Fields (Index).Size * Length;
                   Ada_Name := To_Unbounded_String (F_Name);
 
@@ -681,6 +695,7 @@ package body Descriptors.Field is
                  (Rec,
                   Id         => To_String (Ada_Name),
                   Typ        => -Ada_Type,
+                  Constraint => Constraint,
                   Offset     => 0,
                   LSB        => Index,
                   MSB        => Index + Ada_Type_Size - 1,
@@ -693,6 +708,7 @@ package body Descriptors.Field is
                  (Rec,
                   Id         => To_String (Ada_Name),
                   Typ        => -Ada_Type,
+                  Constraint => Constraint,
                   Offset     => 0,
                   LSB        => Index,
                   MSB        => Index + Ada_Type_Size - 1,
@@ -706,6 +722,7 @@ package body Descriptors.Field is
                  (Rec,
                   Id         => To_String (Ada_Name),
                   Typ        => -Ada_Type,
+                  Constraint => Constraint,
                   Offset     => 0,
                   LSB        => Index,
                   MSB        => Index + Ada_Type_Size - 1,

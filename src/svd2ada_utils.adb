@@ -28,6 +28,7 @@ package body SVD2Ada_Utils is
    G_Use_Boolean         : Boolean := False;
    G_Types_Pkg           : Unbounded_String := Null_Unbounded_String;
    G_Root_Pkg            : Unbounded_String := Null_Unbounded_String;
+   G_Unsigned_Type       : Unbounded_String := Null_Unbounded_String;
    G_Use_UInt            : Boolean := False;
    G_Gen_Arrays          : Boolean := True;
    G_No_VFA_On_Reg_Types : Boolean := False;
@@ -270,6 +271,24 @@ package body SVD2Ada_Utils is
    begin
       return G_Gen_IRQ_Support or else In_Runtime;
    end Gen_IRQ_Support;
+
+   -----------------------
+   -- Set_Unsigned_Type --
+   -----------------------
+
+   procedure Set_Unsigned_Type (Value : String) is
+   begin
+      G_Unsigned_Type := To_Unbounded_String (Value);
+   end Set_Unsigned_Type;
+
+   -------------------
+   -- Unsigned_Type --
+   -------------------
+
+   function Unsigned_Type return String is
+   begin
+      return To_String (G_Unsigned_Type);
+   end Unsigned_Type;
 
    ----------------------
    -- Installation_Dir --

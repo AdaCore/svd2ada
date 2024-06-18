@@ -183,6 +183,7 @@ package Ada_Gen is
       Index_First  : Natural;
       Index_Last   : Natural;
       Element_Type : Ada_Type'Class;
+      Constraint   : Field_Constraint;
       Comment      : String := "") return Ada_Type_Array;
 
    overriding function Is_Similar
@@ -234,6 +235,7 @@ package Ada_Gen is
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
       Typ         : Ada_Type'Class;
+      Constraint  : Field_Constraint;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -244,6 +246,7 @@ package Ada_Gen is
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
       Typ         : Ada_Type'Class;
+      Constraint  : Field_Constraint;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -255,6 +258,7 @@ package Ada_Gen is
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
       Typ         : Ada_Type'Class;
+      Constraint  : Field_Constraint;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -296,6 +300,7 @@ package Ada_Gen is
       Enum_Val    : String;
       Id          : String;
       Typ         : Ada_Type'Class;
+      Constraint  : Field_Constraint;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -527,6 +532,7 @@ private
       Index_First  : Natural;
       Index_Last   : Natural;
       Element_Type : Unbounded_String;
+      Constraint   : Field_Constraint;
    end record;
 
    overriding procedure Dump
@@ -556,6 +562,7 @@ private
    type Record_Field is record
       Id          : Unbounded_String;
       Typ         : Unbounded_String;
+      Constraint  : Field_Constraint;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
