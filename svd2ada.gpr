@@ -80,8 +80,11 @@ project SVD2ada is
    end Binder;
 
    package Install is
+      for Mode use "usage";
       for Required_Artifacts ("schema")
       use ("schema/CMSIS-SVD_Schema_1_3_1.xsd");
+      for Required_Artifacts ("share/CMSIS-SVD")
+      use ("CMSIS-SVD/");
    end Install;
 
 end SVD2ada;
