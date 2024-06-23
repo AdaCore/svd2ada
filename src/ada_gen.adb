@@ -422,7 +422,8 @@ package body Ada_Gen is
       declare
          Subt_String : constant String :=
                          "   subtype " & To_String (Element.Id) & " is";
-         Val         : constant String := To_String (Element.Typ);
+         Val         : constant String := To_String (Element.Typ) &
+           Image (Element.Constraint);
       begin
          Ada.Text_IO.Put (File, Subt_String);
 
@@ -1670,15 +1671,16 @@ package body Ada_Gen is
    ---------------------
 
    function New_Subype_Scalar
-     (Id      : String;
-      Typ     : Ada_Type'Class;
-      Comment : String := "")
-      return Ada_Subtype_Scalar
+     (Id         : String;
+      Typ        : Ada_Type'Class;
+      Constraint : Field_Constraint;
+      Comment    : String := "") return Ada_Subtype_Scalar
    is
    begin
-      return (Id      => Ada_Identifier (Id, "Scalar"),
-              Comment => New_Comment (Comment, Strip => True),
-              Typ     => Typ.Id,
+      return (Id         => Ada_Identifier (Id, "Scalar"),
+              Comment    => New_Comment (Comment, Strip => True),
+              Typ        => Typ.Id,
+              Constraint => Constraint,
               others  => <>);
    end New_Subype_Scalar;
 

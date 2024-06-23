@@ -163,9 +163,10 @@ package Ada_Gen is
    --  A scalar subtype definition
 
    function New_Subype_Scalar
-     (Id      : String;
-      Typ     : Ada_Type'Class;
-      Comment : String := "") return Ada_Subtype_Scalar;
+     (Id         : String;
+      Typ        : Ada_Type'Class;
+      Constraint : Field_Constraint;
+      Comment    : String := "") return Ada_Subtype_Scalar;
 
    overriding function Is_Similar
      (T1, T2 : Ada_Subtype_Scalar) return Boolean;
@@ -520,7 +521,8 @@ private
       File    : Ada.Text_IO.File_Type);
 
    type Ada_Subtype_Scalar is new Ada_Type with record
-      Typ : Unbounded_String;
+      Typ        : Unbounded_String;
+      Constraint : Field_Constraint;
    end record;
 
    overriding procedure Dump

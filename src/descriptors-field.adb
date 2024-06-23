@@ -493,10 +493,12 @@ package body Descriptors.Field is
                                        "_" &
                                        To_String (Fields (Index).Name) &
                                        "_Field",
-                                     Typ => -Ada_Type);
+                                     Typ => -Ada_Type,
+                                     Constraint => Constraint);
                      begin
                         Add (Spec, Sub_T);
                         Ada_Type := -Sub_T;
+                        Constraint := None;
                      end;
                   end if;
                end if;
@@ -541,10 +543,12 @@ package body Descriptors.Field is
                                            Typ     =>
                                              Target_Type (Ada_Type_Size),
                                            Comment =>
-                                             T_Name & " array element");
+                                             T_Name & " array element",
+                                           Constraint => Constraint);
                         begin
                            Add (Spec, Scalar_T);
                            Ada_Type := -Scalar_T;
+                           Constraint := None;
                         end;
                      end if;
                   end if;
