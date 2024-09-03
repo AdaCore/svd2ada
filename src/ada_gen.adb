@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2020, AdaCore                      --
+--                    Copyright (C) 2015-2024, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -1757,16 +1757,16 @@ package body Ada_Gen is
 
    function Get_Boolean return Ada_Type_Enum
    is
-      Result : Ada_Type_Enum;
-      Dead   : Ada_Enum_Value;
-      Dead2  : constant Ada_Spec := New_Spec ("Standard", "", False);
+      Result   : Ada_Type_Enum;
+      Dummy    : Ada_Enum_Value;
+      Dummy_2  : constant Ada_Spec := New_Spec ("Standard", "", False);
    begin
       Result := (Id      => To_Unbounded_String ("Boolean"),
                  Comment => New_Comment ("", False),
                  Aspects => <>,
                  Values  => <>);
-      Dead := Add_Enum_Id (Dead2, Result, "False", 0);
-      Dead := Add_Enum_Id (Dead2, Result, "True", 0);
+      Dummy := Add_Enum_Id (Dummy_2, Result, "False", 0);
+      Dummy := Add_Enum_Id (Dummy_2, Result, "True", 0);
 
       return Result;
    end Get_Boolean;
