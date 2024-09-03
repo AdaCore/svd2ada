@@ -299,18 +299,20 @@ package body Descriptors.Field is
                Replacement :
                declare
                   Candidate : Field_T := Original;
-                  Addition : Natural := D - 1;
-                  Index : Natural := Original.Index + Addition;
-                  LSB : Natural := Original.LSB + Original.Increment * Addition;
-                  MSB : Natural := Original.MSB + Original.Increment * Addition;
+                  Addition : constant Natural := D - 1;
+                  Index : constant Natural := Original.Index + Addition;
+                  LSB : constant Natural
+                    := Original.LSB + Original.Increment * Addition;
+                  MSB : constant Natural
+                    := Original.MSB + Original.Increment * Addition;
                begin
                   Substitute :
                   loop
                      declare
-                        Percent_S : Natural
+                        Percent_S : constant Natural
                           := Unbounded.Index (Candidate.Name, Pattern => "%s");
                      begin
-                        exit when Percent_S = 0;
+                        exit Substitute when Percent_S = 0;
                         Unbounded.Replace_Slice
                           (Candidate.Name,
                            Low  => Percent_S,
@@ -353,7 +355,8 @@ package body Descriptors.Field is
          end if;
       end Get_Default;
 
-      Fields        : array (0 .. Properties.Size - 1) of Field_T := (others => Null_Field);
+      Fields        : array (0 .. Properties.Size - 1) of Field_T
+        := (others => Null_Field);
       Index         : Natural;
       Index2        : Natural;
       Length        : Natural;
@@ -369,7 +372,7 @@ package body Descriptors.Field is
       All_RO        : Boolean := True;
       use Descriptors.Register;
 
-      Full_Fields : Field_Vectors.Vector
+      Full_Fields : constant Field_Vectors.Vector
         := Insert_Dimensioned_Fields (Reg_Fields);
 
    begin
