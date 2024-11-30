@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2020, AdaCore                      --
+--                    Copyright (C) 2015-2024, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -67,21 +67,22 @@ procedure SVD2Ada is
                           Executable_Location);
 
    --  The generated Device
-   Device          : Descriptors.Device.Device_T;
-   SVD_File_Name   : Unbounded_String;
+   Device           : Descriptors.Device.Device_T;
+   SVD_File_Name    : Unbounded_String;
 
    --  Command line parser and switches/arguments
-   Cmd_Line_Cfg    : GNAT.Command_Line.Command_Line_Configuration;
-   Root_Pkg_Name   : aliased GNAT.Strings.String_Access;
-   Output_Dir      : aliased GNAT.Strings.String_Access;
-   Base_Types_Pkg  : aliased GNAT.Strings.String_Access;
-   Gen_Booleans    : aliased Boolean := False;
-   Gen_UInt_Always : aliased Boolean := False;
-   No_UInt_Subtype : aliased Boolean := False;
-   No_Arrays       : aliased Boolean := False;
-   No_Defaults     : aliased Boolean := False;
-   No_VFA_On_Types : aliased Boolean := False;
-   Gen_IRQ_Support : aliased Boolean := False;
+   Cmd_Line_Cfg     : GNAT.Command_Line.Command_Line_Configuration;
+   Root_Pkg_Name    : aliased GNAT.Strings.String_Access;
+   Output_Dir       : aliased GNAT.Strings.String_Access;
+   Base_Types_Pkg   : aliased GNAT.Strings.String_Access;
+   Gen_Booleans     : aliased Boolean := False;
+   Gen_UInt_Always  : aliased Boolean := False;
+   No_UInt_Subtype  : aliased Boolean := False;
+   No_Arrays        : aliased Boolean := False;
+   No_Defaults      : aliased Boolean := False;
+   No_VFA_On_Types  : aliased Boolean := False;
+   Gen_IRQ_Support  : aliased Boolean := False;
+   No_Elab_Code_All : aliased Boolean := False;
 
    use type GNAT.Strings.String_Access;
 
@@ -177,6 +178,12 @@ procedure SVD2Ada is
                         --  register record type when those fields are
                         --  themselves represented as register types
          Value       => True);
+      Define_Switch
+        (Cmd_Line_Cfg,
+         Output      => No_Elab_Code_All'Access,
+         Long_Switch => "--no-elaboration-code-all",
+         Help        => "use pragma No_Elaboration_Code_All",
+         Value       => True);
    end Configure_Command_Line;
 
    ------------------------
@@ -202,6 +209,7 @@ procedure SVD2Ada is
       Set_No_Defaults (No_Defaults);
       Set_No_UInt_Subtype (No_UInt_Subtype);
       Set_No_VFA_On_Reg_Types (No_VFA_On_Types);
+      Set_No_Elaboration_Code_All (No_Elab_Code_All);
 
       if Base_Types_Pkg.all /= "" then
          Set_Base_Types_Package (Base_Types_Pkg.all);

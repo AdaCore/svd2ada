@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2020, AdaCore                      --
+--                    Copyright (C) 2015-2024, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -48,6 +48,10 @@ package SVD2Ada_Utils is
    function Root_Package return String;
 
    function In_Runtime return Boolean;
+
+   function No_Elaboration_Code_All return Boolean;
+
+   procedure Set_No_Elaboration_Code_All (Value : Boolean);
 
    procedure Set_No_VFA_On_Reg_Types (Value : Boolean);
 
