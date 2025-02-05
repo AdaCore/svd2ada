@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-2020, AdaCore                      --
+--                    Copyright (C) 2015-2024, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -18,6 +18,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Text_IO;
+with Ada.Strings.Fixed;
 with Interfaces;              use Interfaces;
 
 with DOM.Core;                use DOM.Core;
@@ -54,6 +55,9 @@ package body Descriptors.Field is
       Derived_From : constant String := Elements.Get_Attribute (Elt, "derivedFrom");
 
    begin
+      Result.Dimensions := 1;
+      Result.Increment := 0;
+      Result.Index := 0;
       Result.Acc := Default_Access;
       Result.Read_Action := Default_Read;
 
@@ -90,6 +94,27 @@ package body Descriptors.Field is
 
                   elsif Tag = "description" then
                      Result.Description := Get_Value (Child);
+
+                  elsif Tag = "dim" then
+                     Result.Dimensions := Get_Value (Child);
+
+                  elsif Tag = "dimIncrement" then
+                     Result.Increment := Get_Value (Child);
+
+                  elsif Tag = "dimIndex" then
+                     declare
+                        Content : constant String := Get_Value (Child);
+                     begin
+                        for J in Content'Range loop
+                           if Content (J) = '-' then
+                              Result.Index := Natural'Value
+                                (Content (Content'First .. J - 1));
+                              goto End_Getting_Index;
+                           end if;
+                        end loop;
+                        Result.Index := 1;
+                        << End_Getting_Index >>
+                     end;
 
                   elsif Tag = "bitOffset"
                     or else Tag = "lsb"
@@ -250,8 +275,61 @@ package body Descriptors.Field is
    is
       use Unbounded, Ada_Gen;
 
+      function Insert_Dimensioned_Fields (Reg_Fields : Field_Vectors.Vector)
+                                         return Field_Vectors.Vector;
+
       function Get_Default (Index : Natural; Size : Natural) return Unsigned;
       --  Retrieves the field default value from the Register's reset value
+
+      -------------------------------
+      -- Insert_Dimensioned_Fields --
+      -------------------------------
+
+      function Insert_Dimensioned_Fields (Reg_Fields : Field_Vectors.Vector)
+                                         return Field_Vectors.Vector
+      is
+         Result : Field_Vectors.Vector;
+      begin
+         Each_Field :
+         for Original of Reg_Fields loop
+
+            Dimensions :
+            for D in 1 .. Original.Dimensions loop
+
+               Replacement :
+               declare
+                  Candidate : Field_T := Original;
+                  Addition : constant Natural := D - 1;
+                  Index : constant Natural := Original.Index + Addition;
+                  LSB : constant Natural
+                    := Original.LSB + Original.Increment * Addition;
+                  MSB : constant Natural
+                    := Original.MSB + Original.Increment * Addition;
+               begin
+                  Substitute :
+                  loop
+                     declare
+                        Percent_S : constant Natural
+                          := Unbounded.Index (Candidate.Name, Pattern => "%s");
+                     begin
+                        exit Substitute when Percent_S = 0;
+                        Unbounded.Replace_Slice
+                          (Candidate.Name,
+                           Low  => Percent_S,
+                           High => Percent_S + 1,
+                           By   => Fixed.Trim (Index'Image, Side => Both));
+                     end;
+                     Candidate.LSB := LSB;
+                     Candidate.MSB := MSB;
+                  end loop Substitute;
+                  Result.Append (Candidate);
+               end Replacement;
+
+            end loop Dimensions;
+
+         end loop Each_Field;
+         return Result;
+      end Insert_Dimensioned_Fields;
 
       -----------------
       -- Get_Default --
@@ -277,7 +355,8 @@ package body Descriptors.Field is
          end if;
       end Get_Default;
 
-      Fields        : array (0 .. Properties.Size - 1) of Field_T := (others => Null_Field);
+      Fields        : array (0 .. Properties.Size - 1) of Field_T
+        := (others => Null_Field);
       Index         : Natural;
       Index2        : Natural;
       Length        : Natural;
@@ -293,8 +372,11 @@ package body Descriptors.Field is
       All_RO        : Boolean := True;
       use Descriptors.Register;
 
+      Full_Fields : constant Field_Vectors.Vector
+        := Insert_Dimensioned_Fields (Reg_Fields);
+
    begin
-      for Field of Reg_Fields loop
+      for Field of Full_Fields loop
          Fields (Field.LSB) := Field;
       end loop;
 
