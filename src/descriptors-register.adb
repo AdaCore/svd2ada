@@ -340,6 +340,7 @@ package body Descriptors.Register is
                            Index_First  => 0,
                            Index_Last   => Reg.Dim - 1,
                            Element_Type => Get_Ada_Type (Reg),
+                           Constraint   => None,
                            Comment      => To_String (Reg.Description));
          begin
             Add (Spec, Array_T);

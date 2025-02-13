@@ -75,6 +75,7 @@ procedure SVD2Ada is
    Root_Pkg_Name   : aliased GNAT.Strings.String_Access;
    Output_Dir      : aliased GNAT.Strings.String_Access;
    Base_Types_Pkg  : aliased GNAT.Strings.String_Access;
+   Unsigned_Type   : aliased GNAT.Strings.String_Access;
    Gen_Booleans    : aliased Boolean := False;
    Gen_UInt_Always : aliased Boolean := False;
    No_UInt_Subtype : aliased Boolean := False;
@@ -177,6 +178,12 @@ procedure SVD2Ada is
                         --  register record type when those fields are
                         --  themselves represented as register types
          Value       => True);
+      Define_Switch
+        (Cmd_Line_Cfg,
+         Output      => Unsigned_Type'Access,
+         Long_Switch => "--use-unsigned-type=",
+         Help        => "use this type for each unsigned field in combination with a constraint",
+         Argument    => "Type_Name");
    end Configure_Command_Line;
 
    ------------------------
@@ -205,6 +212,10 @@ procedure SVD2Ada is
 
       if Base_Types_Pkg.all /= "" then
          Set_Base_Types_Package (Base_Types_Pkg.all);
+      end if;
+
+      if Unsigned_Type.all /= "" then
+         Set_Unsigned_Type (Unsigned_Type.all);
       end if;
    end Apply_Command_Line;
 

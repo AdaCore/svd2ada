@@ -685,6 +685,7 @@ package body Descriptors.Cluster is
                         Enum_Val   => Overlap_Suffix (Elt),
                         Id         => Name,
                         Typ        => Get_Ada_Type (Elt),
+                        Constraint => None,
                         Offset     => Address_Offset + J * Dim_Increment,
                         LSB        => 0,
                         MSB        => Elt_Size - 1,
@@ -695,6 +696,7 @@ package body Descriptors.Cluster is
                        (Parent,
                         Id         => Name,
                         Typ        => Get_Ada_Type (Elt),
+                        Constraint => None,
                         Offset     => Address_Offset + J * Dim_Increment,
                         LSB        => 0,
                         MSB        => Elt_Size - 1,
@@ -711,6 +713,7 @@ package body Descriptors.Cluster is
                   Enum_Val   => Overlap_Suffix (Elt),
                   Id         => Get_Name (Elt),
                   Typ        => Get_Ada_Type (Elt),
+                  Constraint => None,
                   Offset     => Address_Offset,
                   LSB        => 0,
                   MSB        => (if Dim (Elt) = 1
@@ -723,6 +726,7 @@ package body Descriptors.Cluster is
                  (Parent,
                   Id         => Get_Name (Elt),
                   Typ        => Get_Ada_Type (Elt),
+                  Constraint => None,
                   Offset     => Address_Offset,
                   LSB        => 0,
                   MSB        => (if Dim (Elt) = 1
@@ -827,6 +831,7 @@ package body Descriptors.Cluster is
                  Index_First  => 0,
                  Index_Last   => Cluster.Dim - 1,
                  Element_Type => -Cluster.Ada_Type,
+                 Constraint   => None,
                  Comment      => To_String (Cluster.Description));
             Add (Spec, Array_T);
             Cluster.Ada_Type := -Array_T;

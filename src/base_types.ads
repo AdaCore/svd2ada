@@ -197,4 +197,19 @@ package Base_Types is
 
    function Full_Name (Elt : DOM.Core.Node) return String;
 
+   type Field_Constraint_Kind is (No_Constraint, Range_Constraint);
+
+   type Field_Constraint (Kind : Field_Constraint_Kind := No_Constraint) is record
+      case Kind is
+         when Range_Constraint =>
+            From, To : Unsigned;
+         when No_Constraint =>
+            null;
+      end case;
+   end record;
+
+   function None return Field_Constraint is (Kind => No_Constraint);
+
+   function Target_Type_Constraint (Size : Natural) return Field_Constraint;
+
 end Base_Types;

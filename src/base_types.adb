@@ -64,8 +64,11 @@ package body Base_Types is
                then SVD2Ada_Utils.Root_Package & "."
                else SVD2Ada_Utils.Base_Types_Package & ".");
 
+      Unsigned_Type : constant String := SVD2Ada_Utils.Unsigned_Type;
    begin
-      if Size = 1 then
+      if Unsigned_Type /= "" then
+         return Pkg & Unsigned_Type;
+      elsif Size = 1 then
          return Pkg & "Bit";
       elsif Size = 8 and then not SVD2Ada_Utils.Use_UInt_Always then
          return Pkg & "Byte";
@@ -73,6 +76,20 @@ package body Base_Types is
          return Pkg & "UInt" & To_String (Size);
       end if;
    end Target_Type;
+
+   ----------------------------
+   -- Target_Type_Constraint --
+   ----------------------------
+
+   function Target_Type_Constraint (Size : Natural) return Field_Constraint is
+      Unsigned_Type : constant String := SVD2Ada_Utils.Unsigned_Type;
+   begin
+      if Unsigned_Type = "" or else Size = 32 then
+         return None;
+      else
+         return (Range_Constraint, From => 0, To => 2 ** Size - 1);
+      end if;
+   end Target_Type_Constraint;
 
    ---------
    -- "=" --

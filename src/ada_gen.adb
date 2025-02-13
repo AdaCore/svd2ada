@@ -69,6 +69,7 @@ package body Ada_Gen is
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
       Typ         : Ada_Type'Class;
+      Constraint  : Field_Constraint;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -76,6 +77,12 @@ package body Ada_Gen is
       Default     : Unbounded_String;
       Properties  : Field_Properties;
       Comment     : String := "");
+
+   function Image (Value : Field_Constraint) return String is
+     (case Value.Kind is
+        when No_Constraint => "",
+        when Range_Constraint =>
+           " range " & To_String (Value.From) & " .. " & To_String (Value.To));
 
    ----------------------
    -- Protect_Keywords --
@@ -415,7 +422,8 @@ package body Ada_Gen is
       declare
          Subt_String : constant String :=
                          "   subtype " & To_String (Element.Id) & " is";
-         Val         : constant String := To_String (Element.Typ);
+         Val         : constant String := To_String (Element.Typ) &
+           Image (Element.Constraint);
       begin
          Ada.Text_IO.Put (File, Subt_String);
 
@@ -465,6 +473,7 @@ package body Ada_Gen is
                   To_String (Element.Index_Last) & ")");
 
       Line2 := To_Unbounded_String (" of ") & Element.Element_Type;
+      Append (Line2, Image (Element.Constraint));
 
       if Length (Line) + Length (Line2) + 1 < Max_Width then
          Append (Line, Line2);
@@ -607,10 +616,11 @@ package body Ada_Gen is
 
          declare
             Id   : constant String := Get_Id (F);
+            Con  : constant String := Image (F.Constraint);
             Line : constant String :=
               (1 .. 6 => ' ') & Id & " : " &
               (if F.Properties.Is_Aliased then "aliased " else "") &
-              To_String (F.Typ);
+              To_String (F.Typ) & Con;
          begin
             Ada.Text_IO.Put (File, Line);
 
@@ -787,7 +797,7 @@ package body Ada_Gen is
             Ada.Text_IO.Put_Line
               (File, To_String (F.Id) & " : " &
                  (if F.Properties.Is_Aliased then "aliased " else "") &
-                 To_String (F.Typ) & ";");
+                 To_String (F.Typ) & Image (F.Constraint) & ";");
             if F.Properties.Is_Volatile_FA then
                Ada.Text_IO.Put (File, (1 .. 4 * 3 => ' '));
                Ada.Text_IO.Put_Line
@@ -1661,15 +1671,16 @@ package body Ada_Gen is
    ---------------------
 
    function New_Subype_Scalar
-     (Id      : String;
-      Typ     : Ada_Type'Class;
-      Comment : String := "")
-      return Ada_Subtype_Scalar
+     (Id         : String;
+      Typ        : Ada_Type'Class;
+      Constraint : Field_Constraint;
+      Comment    : String := "") return Ada_Subtype_Scalar
    is
    begin
-      return (Id      => Ada_Identifier (Id, "Scalar"),
-              Comment => New_Comment (Comment, Strip => True),
-              Typ     => Typ.Id,
+      return (Id         => Ada_Identifier (Id, "Scalar"),
+              Comment    => New_Comment (Comment, Strip => True),
+              Typ        => Typ.Id,
+              Constraint => Constraint,
               others  => <>);
    end New_Subype_Scalar;
 
@@ -1723,6 +1734,7 @@ package body Ada_Gen is
       Index_First  : Natural;
       Index_Last   : Natural;
       Element_Type : Ada_Type'Class;
+      Constraint   : Field_Constraint;
       Comment      : String := "")
       return Ada_Type_Array
    is
@@ -1733,7 +1745,8 @@ package body Ada_Gen is
               Index_Type   => To_Unbounded_String (Index_Type),
               Index_First  => Index_First,
               Index_Last   => Index_Last,
-              Element_Type => Element_Type.Id);
+              Element_Type => Element_Type.Id,
+              Constraint   => Constraint);
    end New_Type_Array;
 
    ----------------
@@ -2056,6 +2069,7 @@ package body Ada_Gen is
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
       Typ         : Ada_Type'Class;
+      Constraint  : Field_Constraint;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -2078,6 +2092,7 @@ package body Ada_Gen is
       Rec.Fields.Append
         ((Id          => Current,
           Typ         => Typ.Id,
+          Constraint  => Constraint,
           Offset      => Offset,
           LSB         => LSB,
           MSB         => MSB,
@@ -2095,6 +2110,7 @@ package body Ada_Gen is
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
       Typ         : Ada_Type'Class;
+      Constraint  : Field_Constraint;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -2106,6 +2122,7 @@ package body Ada_Gen is
         (Rec,
          Id          => Id,
          Typ         => Typ,
+         Constraint  => Constraint,
          Offset      => Offset,
          LSB         => LSB,
          MSB         => MSB,
@@ -2123,6 +2140,7 @@ package body Ada_Gen is
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
       Typ         : Ada_Type'Class;
+      Constraint  : Field_Constraint;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -2135,6 +2153,7 @@ package body Ada_Gen is
         (Rec,
          Id          => Id,
          Typ         => Typ,
+         Constraint  => Constraint,
          Offset      => Offset,
          LSB         => LSB,
          MSB         => MSB,
@@ -2152,6 +2171,7 @@ package body Ada_Gen is
      (Rec         : in out Ada_Type_Record'Class;
       Id          : String;
       Typ         : Ada_Type'Class;
+      Constraint  : Field_Constraint;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -2164,6 +2184,7 @@ package body Ada_Gen is
         (Rec,
          Id          => Id,
          Typ         => Typ,
+         Constraint  => Constraint,
          Offset      => Offset,
          LSB         => LSB,
          MSB         => MSB,
@@ -2244,6 +2265,7 @@ package body Ada_Gen is
       Enum_Val    : String;
       Id          : String;
       Typ         : Ada_Type'Class;
+      Constraint  : Field_Constraint;
       Offset      : Natural;
       LSB         : Natural;
       MSB         : Natural;
@@ -2266,6 +2288,7 @@ package body Ada_Gen is
       Rec.Disc_Fields (Enum_Val).Append
         ((Id          => Current,
           Typ         => Typ.Id,
+          Constraint  => Constraint,
           Offset      => Offset,
           LSB         => LSB,
           MSB         => MSB,
