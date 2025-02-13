@@ -1116,7 +1116,7 @@ package body Ada_Gen is
       G_Empty_Line := True;
 
       if Spec.Preelaborated then
-         if not SVD2Ada_Utils.In_Runtime then
+         if not SVD2Ada_Utils.No_Elaboration_Code_All then
             --  When part of the runtime, we need the more strict
             --  No_Elaboration_Code_All
             Ada.Text_IO.Put_Line
@@ -1172,7 +1172,7 @@ package body Ada_Gen is
       if Spec.Preelaborated then
          Ada.Text_IO.Put_Line
            (F, "   pragma Preelaborate;");
-         if SVD2Ada_Utils.In_Runtime then
+         if SVD2Ada_Utils.No_Elaboration_Code_All then
             Ada.Text_IO.Put_Line
               (F, "   pragma No_Elaboration_Code_All;");
          end if;

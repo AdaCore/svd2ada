@@ -2,7 +2,7 @@
 --                                                                          --
 --                          SVD Binding Generator                           --
 --                                                                          --
---                    Copyright (C) 2015-200, AdaCore                      --
+--                    Copyright (C) 2015-2004, AdaCore                      --
 --                                                                          --
 -- SVD2Ada is free software;  you can  redistribute it  and/or modify it    --
 -- under terms of the  GNU General Public License as published  by the Free --
@@ -25,15 +25,16 @@ with GNAT.OS_Lib;           use GNAT.OS_Lib;
 
 package body SVD2Ada_Utils is
 
-   G_Use_Boolean         : Boolean := False;
-   G_Types_Pkg           : Unbounded_String := Null_Unbounded_String;
-   G_Root_Pkg            : Unbounded_String := Null_Unbounded_String;
-   G_Use_UInt            : Boolean := False;
-   G_Gen_Arrays          : Boolean := True;
-   G_No_VFA_On_Reg_Types : Boolean := False;
-   G_Gen_IRQ_Support     : Boolean := False;
-   G_Gen_UInt_Subtype    : Boolean := True;
-   G_Gen_Fields_Default  : Boolean := True;
+   G_Use_Boolean             : Boolean := False;
+   G_Types_Pkg               : Unbounded_String := Null_Unbounded_String;
+   G_Root_Pkg                : Unbounded_String := Null_Unbounded_String;
+   G_Use_UInt                : Boolean := False;
+   G_Gen_Arrays              : Boolean := True;
+   G_No_VFA_On_Reg_Types     : Boolean := False;
+   G_Gen_IRQ_Support         : Boolean := False;
+   G_Gen_UInt_Subtype        : Boolean := True;
+   G_Gen_Fields_Default      : Boolean := True;
+   G_No_Elaboration_Code_All : Boolean := False;
 
    function Installation_Dir (Exec_with_Path : String) return String;
    --  Exec_with_Path is the executable name preceeded by the absolute or
@@ -382,5 +383,23 @@ package body SVD2Ada_Utils is
      or else Word = "while"
      or else Word = "with"
      or else Word = "xor");
+
+   -----------------------------
+   -- No_Elaboration_Code_All --
+   -----------------------------
+
+   function No_Elaboration_Code_All return Boolean is
+   begin
+      return In_Runtime or G_No_Elaboration_Code_All;
+   end No_Elaboration_Code_All;
+
+   ---------------------------------
+   -- Set_No_Elaboration_Code_All --
+   ---------------------------------
+
+   procedure Set_No_Elaboration_Code_All (Value : Boolean) is
+   begin
+      G_No_Elaboration_Code_All := Value;
+   end Set_No_Elaboration_Code_All;
 
 end SVD2Ada_Utils;
