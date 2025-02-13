@@ -36,6 +36,9 @@ package body Descriptors.Device is
    package Interrupt_Sort is new Interrupt_Vectors.Generic_Sorting
      (Base_Types."<");
 
+   function MCU_To_CPU
+     (Device : Device_T) return Unbounded_String;
+
    procedure Dump_Handler_ASM
      (Device     : Device_T;
       Ints       : Interrupt_Vectors.Vector;
@@ -71,6 +74,27 @@ package body Descriptors.Device is
    function Is_Group_Member (P : Peripheral_Access) return Boolean is
      (Length (P.Group_Name) /= 0);
    --  a convenience function for readability
+
+   -----------------
+   -- MCU_To_CPU --
+   -----------------
+
+   function MCU_To_CPU
+     (Device : Device_T) return Unbounded_String
+   is
+      Description_String : constant String := To_String (Device.Short_Desc);
+      CPU : Unbounded_String;
+   begin
+      if Starts_With (S1 => Description_String, S2 => "STM32F0") then
+         CPU := To_Unbounded_String ("cortex-m0");
+      elsif Starts_With (S1 => Description_String, S2 => "Cortex-M1") then
+         CPU := To_Unbounded_String ("cortex-m1");
+      else
+         CPU := To_Unbounded_String ("cortex-m4");
+      end if;
+
+      return CPU;
+   end MCU_To_CPU;
 
    -----------------
    -- Read_Device --
@@ -235,7 +259,8 @@ package body Descriptors.Device is
       New_Line (ASM);
       Put_Line (ASM, ASCII.HT & ".syntax unified");
       --  ??? target is m4/m7, but what about previous versions?
-      Put_Line (ASM, ASCII.HT & ".cpu cortex-m4");
+      Put_Line (ASM, ASCII.HT & ".cpu " &
+                  To_String (MCU_To_CPU (Device => Device)));
       Put_Line (ASM, ASCII.HT & ".thumb");
       New_Line (ASM);
 
