@@ -14,7 +14,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
   <size>0x20</size>
   <resetValue>0x0</resetValue>
   <resetMask>0xFFFFFFFF</resetMask>
-  <peripherals>
+  <peripheral>
     <peripheral>
       <name>RNG</name>
       <description>Random number generator</description>
@@ -30,7 +30,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>Hash and Rng global interrupt</description>
         <value>80</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>CR</name>
           <displayName>CR</displayName>
@@ -119,7 +119,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>HASH</name>
@@ -131,7 +131,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>CR</name>
           <displayName>CR</displayName>
@@ -1460,7 +1460,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>CRYP</name>
@@ -1472,7 +1472,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>CR</name>
           <displayName>CR</displayName>
@@ -4428,7 +4428,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>DCMI</name>
@@ -4445,7 +4445,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>DCMI global interrupt</description>
         <value>78</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>CR</name>
           <displayName>CR</displayName>
@@ -4890,7 +4890,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>FMC</name>
@@ -4907,7 +4907,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>FMC global interrupt</description>
         <value>48</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>BCR1</name>
           <displayName>BCR1</displayName>
@@ -6260,7 +6260,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>DMA2</name>
@@ -6312,7 +6312,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>DMA2 Stream7 global interrupt</description>
         <value>70</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>LISR</name>
           <displayName>LISR</displayName>
@@ -7174,7 +7174,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </fields>
           </register>
         </cluster>
-      </registers>
+      </register>
     </peripheral>
     <peripheral derivedFrom="DMA2">
       <name>DMA1</name>
@@ -7235,7 +7235,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>RCC global interrupt</description>
         <value>5</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>CR</name>
           <displayName>CR</displayName>
@@ -9805,7 +9805,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>GPIOD</name>
@@ -9817,7 +9817,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>MODER</name>
           <displayName>MODER</displayName>
@@ -11168,7 +11168,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral derivedFrom="GPIOD">
       <name>GPIOC</name>
@@ -11212,7 +11212,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>MODER</name>
           <displayName>MODER</displayName>
@@ -12563,7 +12563,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>GPIOA</name>
@@ -12575,7 +12575,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>MODER</name>
           <displayName>MODER</displayName>
@@ -13926,7 +13926,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>SYSCFG</name>
@@ -13979,7 +13979,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>EXTI Line[15:10] interrupts</description>
         <value>40</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>MEMRM</name>
           <displayName>MEMRM</displayName>
@@ -14230,7 +14230,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
    <peripheral>
       <name>SPI1</name>
@@ -14247,7 +14247,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>SPI1 global interrupt</description>
         <value>35</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>CR1</name>
           <displayName>CR1</displayName>
@@ -14820,7 +14820,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
    <peripheral derivedFrom="SPI1">
       <name>SPI2</name>
@@ -14882,7 +14882,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>ADC1 global interrupt</description>
         <value>18</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>SR</name>
           <displayName>SR</displayName>
@@ -15662,7 +15662,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral derivedFrom="ADC1">
       <name>ADC2</name>
@@ -15682,7 +15682,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>CSR</name>
           <displayName>CSR</displayName>
@@ -15897,7 +15897,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>DAC</name>
@@ -15909,7 +15909,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>CR</name>
           <displayName>CR</displayName>
@@ -16305,7 +16305,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>PWR</name>
@@ -16317,7 +16317,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>CR1</name>
           <displayName>CR1</displayName>
@@ -16696,7 +16696,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>IWDG</name>
@@ -16708,7 +16708,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>KR</name>
           <displayName>KR</displayName>
@@ -16805,7 +16805,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>WWDG</name>
@@ -16822,7 +16822,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>Window Watchdog interrupt</description>
         <value>0</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>CR</name>
           <displayName>CR</displayName>
@@ -16899,7 +16899,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>TIM1</name>
@@ -16935,7 +16935,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         interrupt</description>
         <value>27</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>CR1</name>
           <displayName>CR1</displayName>
@@ -18149,7 +18149,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral derivedFrom="TIM1">
       <name>TIM8</name>
@@ -18193,7 +18193,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>TIM2 global interrupt</description>
         <value>28</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>CR1</name>
           <displayName>CR1</displayName>
@@ -19153,7 +19153,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>TIM3</name>
@@ -19170,7 +19170,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>TIM3 global interrupt</description>
         <value>29</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>CR1</name>
           <displayName>CR1</displayName>
@@ -20118,7 +20118,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>TIM4</name>
@@ -20135,7 +20135,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>TIM4 global interrupt</description>
         <value>30</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>CR1</name>
           <displayName>CR1</displayName>
@@ -21049,7 +21049,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral derivedFrom="TIM4">
       <name>TIM5</name>
@@ -21070,7 +21070,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>CR1</name>
           <displayName>CR1</displayName>
@@ -21534,7 +21534,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral derivedFrom="TIM9">
       <name>TIM12</name>
@@ -21550,7 +21550,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>CR1</name>
           <displayName>CR1</displayName>
@@ -21920,7 +21920,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral derivedFrom="TIM10">
       <name>TIM11</name>
@@ -21950,7 +21950,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         error interrupt</description>
         <value>54</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>CR1</name>
           <displayName>CR1</displayName>
@@ -22117,7 +22117,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral derivedFrom="TIM6">
       <name>TIM7</name>
@@ -22151,7 +22151,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         interrupt</description>
         <value>62</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>MACCR</name>
           <displayName>MACCR</displayName>
@@ -22646,6 +22646,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
                      <bitWidth>1</bitWidth>
                   </field>
                </fields>
+        </register>
         <register>
           <name>MACSR</name>
           <displayName>MACSR</displayName>
@@ -22931,7 +22932,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           <access>read-write</access>
           <resetValue>0xFFFFFFFF</resetValue>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>CRC</name>
@@ -22943,7 +22944,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>DR</name>
           <displayName>DR</displayName>
@@ -23030,7 +23031,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>CAN1</name>
@@ -23062,7 +23063,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>CAN1 SCE interrupt</description>
         <value>22</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>MCR</name>
           <displayName>MCR</displayName>
@@ -36476,7 +36477,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral derivedFrom="CAN1">
       <name>CAN2</name>
@@ -36537,7 +36538,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x1001</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>ICTR</name>
           <displayName>ICTR</displayName>
@@ -37571,7 +37572,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>FLASH</name>
@@ -37588,7 +37589,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>Flash global interrupt</description>
         <value>4</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>ACR</name>
           <displayName>ACR</displayName>
@@ -37889,7 +37890,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>EXTI</name>
@@ -37902,7 +37903,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>IMR</name>
           <displayName>IMR</displayName>
@@ -38870,7 +38871,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>LTDC</name>
@@ -38892,7 +38893,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>LTDC Error global interrupt</description>
         <value>89</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>SSCR</name>
           <displayName>SSCR</displayName>
@@ -39921,7 +39922,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>SAI1</name>
@@ -39938,7 +39939,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>SAI1 global interrupt</description>
         <value>87</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>BCR1</name>
           <displayName>BCR1</displayName>
@@ -40790,7 +40791,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral derivedFrom="SAI1">
       <name>SAI2</name>
@@ -40816,7 +40817,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>DMA2D global interrupt</description>
         <value>90</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>CR</name>
           <displayName>CR</displayName>
@@ -41480,7 +41481,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>QUADSPI</name>
@@ -41497,7 +41498,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>QUADSPI global interrupt</description>
         <value>92</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>CR</name>
           <displayName>CR</displayName>
@@ -41948,7 +41949,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>CEC</name>
@@ -41965,7 +41966,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>CEC global interrupt</description>
         <value>94</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>CR</name>
           <displayName>CR</displayName>
@@ -42290,7 +42291,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>SPDIFRX</name>
@@ -42307,7 +42308,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>SPDIF_RX global interrupt</description>
         <value>97</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>CR</name>
           <displayName>CR</displayName>
@@ -42673,7 +42674,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>SDMMC1</name>
@@ -42691,7 +42692,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>SDMMC1 global interrupt</description>
         <value>49</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>POWER</name>
           <displayName>POWER</displayName>
@@ -43667,7 +43668,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral derivedFrom="SDMMC1">
       <name>SDMMC2</name>
@@ -43693,7 +43694,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>LPTIM1 global interrupt</description>
         <value>93</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>ISR</name>
           <displayName>ISR</displayName>
@@ -44043,7 +44044,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>I2C1</name>
@@ -44065,7 +44066,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>I2C1 error interrupt</description>
         <value>32</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>CR1</name>
           <displayName>CR1</displayName>
@@ -44691,7 +44692,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral derivedFrom="I2C1">
       <name>I2C2</name>
@@ -44757,7 +44758,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         interrupts</description>
         <value>41</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>TR</name>
           <displayName>TR</displayName>
@@ -46337,7 +46338,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>USART6</name>
@@ -46356,7 +46357,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         interrupt</description>
         <value>71</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>CR1</name>
           <displayName>CR1</displayName>
@@ -47191,7 +47192,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral derivedFrom="USART6">
       <name>USART1</name>
@@ -47267,7 +47268,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>OTG_FS_GOTGCTL</name>
           <displayName>OTG_FS_GOTGCTL</displayName>
@@ -48860,7 +48861,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>OTG_HS_GLOBAL</name>
@@ -48872,7 +48873,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>OTG_HS_GOTGCTL</name>
           <displayName>OTG_HS_GOTGCTL</displayName>
@@ -50351,7 +50352,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>MDIOS</name>
@@ -50368,7 +50369,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>MDIO slave global interrupt</description>
         <value>109</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>MDIOS_CR</name>
           <displayName>MDIOS_CR</displayName>
@@ -51701,7 +51702,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>DFSDM</name>
@@ -51734,7 +51735,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>DFSDM1 Filter 3 global interrupt</description>
         <value>102</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>DFSDM_CHCFG0R1</name>
           <displayName>DFSDM_CHCFG0R1</displayName>
@@ -55619,7 +55620,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>DSI</name>
@@ -55636,7 +55637,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>DSI global interrupt</description>
         <value>98</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>DSI_VR</name>
           <displayName>DSI_VR</displayName>
@@ -58443,7 +58444,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>JPEG</name>
@@ -58460,7 +58461,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <description>JPEG global interrupt</description>
         <value>108</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>JPEG_CONFR0</name>
           <displayName>JPEG_CONFR0</displayName>
@@ -59069,7 +59070,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
           <resetValue>0x00000000</resetValue>
           <dim>8</dim>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>Ethernet_MMC</name>
@@ -59081,7 +59082,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>MMCCR</name>
           <displayName>MMCCR</displayName>
@@ -59357,7 +59358,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>Ethernet_PTP</name>
@@ -59369,7 +59370,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>PTPTSCR</name>
           <displayName>PTPTSCR</displayName>
@@ -59682,7 +59683,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>Ethernet_DMA</name>
@@ -59694,7 +59695,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>DMABMR</name>
           <displayName>DMABMR</displayName>
@@ -60319,7 +60320,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>OTG_FS_HOST</name>
@@ -60331,7 +60332,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>OTG_FS_HCFG</name>
           <displayName>OTG_FS_HCFG</displayName>
@@ -63536,7 +63537,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>OTG_FS_DEVICE</name>
@@ -63548,7 +63549,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>OTG_FS_DCFG</name>
           <displayName>OTG_FS_DCFG</displayName>
@@ -66126,7 +66127,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>OTG_FS_PWRCLK</name>
@@ -66150,7 +66151,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         interrupt</description>
         <value>67</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>OTG_FS_PCGCCTL</name>
           <displayName>OTG_FS_PCGCCTL</displayName>
@@ -66181,7 +66182,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>OTG_HS_HOST</name>
@@ -66193,7 +66194,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>OTG_HS_HCFG</name>
           <displayName>OTG_HS_HCFG</displayName>
@@ -71666,7 +71667,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>OTG_HS_DEVICE</name>
@@ -71678,7 +71679,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         <size>0x400</size>
         <usage>registers</usage>
       </addressBlock>
-      <registers>
+      <register>
         <register>
           <name>OTG_HS_DCFG</name>
           <displayName>OTG_HS_DCFG</displayName>
@@ -75669,7 +75670,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
     <peripheral>
       <name>OTG_HS_PWRCLK</name>
@@ -75705,7 +75706,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
         interrupt</description>
         <value>77</value>
       </interrupt>
-      <registers>
+      <register>
         <register>
           <name>OTG_HS_PCGCR</name>
           <displayName>OTG_HS_PCGCR</displayName>
@@ -75736,7 +75737,7 @@ xs:noNamespaceSchemaLocation="CMSIS-SVD_Schema_1_1.xsd">
             </field>
           </fields>
         </register>
-      </registers>
+      </register>
     </peripheral>
-  </peripherals>
+  </peripheral>
 </device>
