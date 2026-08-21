@@ -156,11 +156,28 @@ package body Descriptors.Field is
 
                   elsif Tag = "enumeratedValues" then
                      declare
-                        Enum : constant Descriptors.Enumerate.Enumerate_T :=
-                          Descriptors.Enumerate.Read_Enumerate
-                            (Child, Result.Enums, Result.Acc = Write_Only);
+                        use Descriptors.Enumerate.Enumerate_Vectors;
+
+                        --  A derivedFrom attribute on this element may
+                        --  refer to a named enumeratedValues defined in a
+                        --  sibling field of the same register, not just
+                        --  one already defined within this field, so the
+                        --  lookup vector must include both.
+                        All_Enums : Vector := Result.Enums;
                      begin
-                        Result.Enums.Append (Enum);
+                        for F of Vec loop
+                           for E of F.Enums loop
+                              All_Enums.Append (E);
+                           end loop;
+                        end loop;
+
+                        declare
+                           Enum : constant Descriptors.Enumerate.Enumerate_T :=
+                             Descriptors.Enumerate.Read_Enumerate
+                               (Child, All_Enums, Result.Acc = Write_Only);
+                        begin
+                           Result.Enums.Append (Enum);
+                        end;
                      end;
 
                   else
