@@ -98,6 +98,13 @@ package body Descriptors.Peripheral is
       Derived_From : constant String :=
                        Elements.Get_Attribute (Elt, "derivedFrom");
 
+      Base_Type_Name          : Ada.Strings.Unbounded.Unbounded_String;
+      Has_Own_Registers       : Boolean := False;
+      Has_Own_Header_Struct   : Boolean := False;
+      --  Set while walking this peripheral's own child nodes below, to
+      --  detect whether it declares any <registers> or <headerStructName>
+      --  of its own (as opposed to merely inheriting them via derivedFrom).
+
    begin
       Result.Reg_Properties := Reg_Properties;
 
@@ -110,6 +117,7 @@ package body Descriptors.Peripheral is
 --              for P of Vector loop
 --                 if Unbounded.To_String (P.Name) = Derived_From then
                Result   := Oth.all;
+               Base_Type_Name := Oth.Type_Name;
                --  Deep copy of the registers list
                Result.Content.Clear;
 
@@ -139,6 +147,7 @@ package body Descriptors.Peripheral is
 
                elsif Tag = "headerStructName" then
                   Result.Type_Name := Get_Value (Child);
+                  Has_Own_Header_Struct := True;
 
                elsif Tag = "version" then
                   Result.Version := Get_Value (Child);
@@ -177,6 +186,7 @@ package body Descriptors.Peripheral is
                   end;
 
                elsif Tag = "registers" then
+                  Has_Own_Registers := True;
                   declare
                      Child_List : constant Node_List :=
                                     Nodes.Child_Nodes (Child);
@@ -249,6 +259,19 @@ package body Descriptors.Peripheral is
             end;
          end if;
       end loop;
+
+      if Derived_From /= ""
+        and then not Has_Own_Registers
+        and then not Has_Own_Header_Struct
+      then
+         --  This peripheral adds no registers of its own and does not
+         --  override the inherited header struct name: it is value-
+         --  identical to the peripheral it derives from, so it should
+         --  share that peripheral's Ada type (and the package it lives
+         --  in) instead of being generated as a redundant type of its
+         --  own.
+         Result.Type_Name := Base_Type_Name;
+      end if;
 
       return Result;
    end Read_Peripheral;
