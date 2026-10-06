@@ -137,7 +137,7 @@ package body Descriptors.Register is
                elsif Is_Register_Property (Tag) then
                   Read_Register_Property (Child, Result.Reg_Properties);
 
-               elsif Tag = "modifiedWriteValue" then
+               elsif Tag = "modifiedWriteValues" then
                   Result.Mod_Write_Values := Get_Value (Child);
 
                elsif Tag = "readAction" then
@@ -225,6 +225,10 @@ package body Descriptors.Register is
 
    begin
       if Length (R1.Fields) /= Length (R2.Fields) then
+         return Unbounded.Null_Unbounded_String;
+      end if;
+
+      if R1.Reg_Properties.Size /= R2.Reg_Properties.Size then
          return Unbounded.Null_Unbounded_String;
       end if;
 
