@@ -72,6 +72,19 @@ package body Descriptors.Device is
      (Length (P.Group_Name) /= 0);
    --  a convenience function for readability
 
+   procedure Gather_Peripheral_Type_Group
+     (Type_Name   : Unbounded_String;
+      Peripherals : in out Peripheral_Vectors.Vector;
+      Group       : in out Peripheral_Vectors.Vector)
+     with
+       Pre => Type_Name /= "" and Group.Length = 1;
+   --  Gather into Group each remaining peripheral in Peripherals that has
+   --  no groupName of its own but shares Type_Name with the peripheral
+   --  already in Group (e.g. a derivedFrom peripheral that declares no
+   --  registers of its own, and so keeps the Type_Name of the peripheral
+   --  it derives from). When finished, all gathered peripherals are no
+   --  longer in Peripherals.
+
    -----------------
    -- Read_Device --
    -----------------
@@ -533,16 +546,36 @@ package body Descriptors.Device is
          begin
             Peripherals.Delete_First;
 
-            if not Is_Group_Member (P) then
-               Dump (P.all,
-                     To_String (Device.Name),
-                     Output_Dir);
-            else
+            if Is_Group_Member (P) then
                Group.Append (P);
                Gather_Peripheral_Group (P.Group_Name, Peripherals, Group);
                Dump (Group,
                      To_String (Device.Name),
                      Output_Dir);
+            else
+               Group.Append (P);
+               Gather_Peripheral_Type_Group (P.Type_Name, Peripherals, Group);
+
+               if Group.Length = 1 then
+                  Dump (P.all,
+                        To_String (Device.Name),
+                        Output_Dir);
+               else
+                  --  Several groupless peripherals share the same
+                  --  Type_Name (typically a derivedFrom peripheral that
+                  --  adds no registers of its own, alongside the
+                  --  peripheral it derives from). Reuse the Group_Name-
+                  --  based Dump, which already folds identical content
+                  --  into a single shared type, by using the common
+                  --  Type_Name as the group label.
+                  for Member of Group loop
+                     Member.Group_Name := P.Type_Name;
+                  end loop;
+
+                  Dump (Group,
+                        To_String (Device.Name),
+                        Output_Dir);
+               end if;
             end if;
          end;
       end loop;
@@ -570,5 +603,30 @@ package body Descriptors.Device is
          end if;
       end loop;
    end Gather_Peripheral_Group;
+
+   ----------------------------------
+   -- Gather_Peripheral_Type_Group --
+   ----------------------------------
+
+   procedure Gather_Peripheral_Type_Group
+     (Type_Name   : Unbounded_String;
+      Peripherals : in out Peripheral_Vectors.Vector;
+      Group       : in out Peripheral_Vectors.Vector)
+   is
+      Index : Natural;
+   begin
+      Index := Peripherals.First_Index;
+
+      while Index <= Peripherals.Last_Index loop
+         if not Is_Group_Member (Peripherals (Index))
+           and then Peripherals (Index).Type_Name = Type_Name
+         then
+            Group.Append (Peripherals (Index));
+            Peripherals.Delete (Index);
+         else
+            Index := Index + 1;
+         end if;
+      end loop;
+   end Gather_Peripheral_Type_Group;
 
 end Descriptors.Device;
